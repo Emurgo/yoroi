@@ -164,7 +164,7 @@ export const createMultisigWallet = async (
  * This is used during multisig wallet creation flow
  */
 export const generateSharedWalletKey = async (
-  parentWalletId: string,
+  _parentWalletId: string,
   parentWalletRootKeyHex: string,
   accountVisual: number,
   implementation: Wallet.Implementation,

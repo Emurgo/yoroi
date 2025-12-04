@@ -172,13 +172,13 @@ export const ShareWalletDetailsScreen = () => {
         contentContainerStyle={[a.px_lg, a.pb_lg]}
       >
         <View style={[a.gap_md]}>
-          <Text style={[ta.heading_1]}>
+          <Text style={[a.heading_1_medium]}>
             {strings.setupWallet.shareWalletDetailsTitle}
           </Text>
 
           <Space.Height.md />
 
-          <Text style={[ta.body_1_lg_regular]}>
+          <Text style={[a.body_1_lg_regular]}>
             {strings.setupWallet.shareWalletDetailsDescription}
           </Text>
 
@@ -186,16 +186,16 @@ export const ShareWalletDetailsScreen = () => {
 
           {/* Wallet info summary */}
           <View style={[a.p_md, a.bg_gray_c50, a.rounded_sm]}>
-            <Text style={[ta.body_1_lg_medium]}>
+            <Text style={[a.body_1_lg_medium]}>
               {strings.setupWallet.walletName}: {walletMeta.name}
             </Text>
             <Space.Height.xs />
-            <Text style={[ta.body_1_lg_medium]}>
+            <Text style={[a.body_1_lg_medium]}>
               {strings.setupWallet.coSignersCount}:{' '}
               {multisigMeta.coSigners.length}
             </Text>
             <Space.Height.xs />
-            <Text style={[ta.body_1_lg_medium]}>
+            <Text style={[a.body_1_lg_medium]}>
               {strings.setupWallet.quorumRules}: {multisigMeta.quorumRules.kind}
               {multisigMeta.quorumRules.kind === 'RequireNOf' &&
                 ` (${multisigMeta.quorumRules.required} of ${multisigMeta.coSigners.length})`}
@@ -239,13 +239,13 @@ export const ShareWalletDetailsScreen = () => {
 
           {/* JSON preview */}
           <View style={[a.gap_sm]}>
-            <Text style={[ta.heading_3]}>
+            <Text style={[a.heading_3_medium]}>
               {strings.setupWallet.walletSetupJSON}
             </Text>
             <View style={[a.p_md, a.bg_gray_c100, a.rounded_sm]}>
               <Text
                 style={[
-                  ta.body_2_md_regular,
+                  a.body_2_md_regular,
                   {fontFamily: 'monospace', fontSize: 10},
                 ]}
                 numberOfLines={10}

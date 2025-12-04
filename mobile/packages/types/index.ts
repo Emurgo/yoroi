@@ -978,10 +978,11 @@ export namespace Wallet {
   export type QuorumRules = ImportedQuorumRules
   export type CoSigner = ImportedCoSigner
   export type MultisigWalletMeta = ImportedMultisigWalletMeta
-  // Branded types from './branded' - use type aliases to avoid namespace export issues
-  export type Bip32PublicKeyHex = ImportedBip32PublicKeyHex
-  export type ScriptCbor = ImportedScriptCbor
-  export type TransactionCbor = ImportedTransactionCbor
+  // Branded types - these are imported from './branded' at top level (lines 569-578)
+  // Use type imports to reference them within the namespace
+  export type Bip32PublicKeyHex = import('./branded/crypto').Bip32PublicKeyHex
+  export type ScriptCbor = import('./branded/cbor').ScriptCbor
+  export type TransactionCbor = import('./branded/cbor').TransactionCbor
 
   // Transaction types - use imported types directly to avoid circular references
   export const TransactionStatus = TRANSACTION_STATUS

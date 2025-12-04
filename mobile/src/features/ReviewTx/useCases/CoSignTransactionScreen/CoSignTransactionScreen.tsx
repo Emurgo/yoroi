@@ -16,6 +16,7 @@ import {
   parseMultisigTransactionJSON,
   signMultisigTransaction,
 } from '@yoroi/tx'
+import {ScriptCbor} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {useNavigation} from '@react-navigation/native'
@@ -37,7 +38,7 @@ import {errorMessages} from '~/kernel/i18n/messages/global'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {TxHistoryRouteNavigation} from '~/kernel/navigation/types'
 import {makeWalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
-import {Button} from '~/ui/Button/Button'
+import {Button, ButtonType} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
@@ -48,7 +49,7 @@ type TransactionType = 'multisig' | 'multiparty' | null
 export const CoSignTransactionScreen = () => {
   const logger = getLogger()
   const strings = useStrings()
-  const {atoms: ta} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {wallet, meta} = useSelectedWallet()
   const [importedTxJson, setImportedTxJson] = React.useState<string | null>(
@@ -94,7 +95,8 @@ export const CoSignTransactionScreen = () => {
     try {
       // Try to use expo-document-picker if available
       try {
-        const DocumentPicker = await import('expo-document-picker')
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        const DocumentPicker = require('expo-document-picker')
         const result = await DocumentPicker.getDocumentAsync({
           type: ['application/json', 'text/json', '*.json'],
           copyToCacheDirectory: true,
@@ -190,8 +192,8 @@ export const CoSignTransactionScreen = () => {
           coSignerKey: derivation.sharedWalletKey,
           parentWalletRootKeyHex: rootKeyHex,
           accountVisual: 0,
-          paymentScriptCbor: multisigMeta.paymentScriptCbor,
-          stakingScriptCbor: multisigMeta.stakingScriptCbor,
+          paymentScriptCbor: multisigMeta.paymentScriptCbor as ScriptCbor,
+          stakingScriptCbor: multisigMeta.stakingScriptCbor as ScriptCbor,
         })
 
         // Navigate to review screen with signed transaction
@@ -320,21 +322,27 @@ export const CoSignTransactionScreen = () => {
         contentContainerStyle={[a.px_lg, a.pb_lg]}
       >
         <View style={[a.gap_md]}>
-          <Text style={[ta.heading_1]}>
+          <Text style={[a.heading_1_medium]}>
             {strings.setupWallet.coSignTransactionTitle}
           </Text>
 
           <Space.Height.md />
 
-          <Text style={[ta.body_1_lg_regular]}>
+          <Text style={[a.body_1_lg_regular]}>
             {strings.setupWallet.coSignTransactionDescription}
           </Text>
 
           {transactionType && (
             <>
               <Space.Height.sm />
-              <View style={[a.p_md, a.bg_primary_light, a.rounded_sm]}>
-                <Text style={[ta.body_2_md_medium]}>
+              <View
+                style={[
+                  a.p_md,
+                  a.rounded_sm,
+                  {backgroundColor: p.primary_100},
+                ]}
+              >
+                <Text style={[a.body_2_md_medium]}>
                   {transactionType === 'multisig'
                     ? strings.setupWallet.multisigTransaction
                     : strings.setupWallet.multipartyTransaction}
@@ -355,7 +363,7 @@ export const CoSignTransactionScreen = () => {
                 />
               ) : (
                 <>
-                  <Text style={[ta.body_1_lg_regular]}>
+                  <Text style={[a.body_1_lg_regular]}>
                     {strings.setupWallet.pasteJSONManually}
                   </Text>
                   <RNTextInput
@@ -382,7 +390,7 @@ export const CoSignTransactionScreen = () => {
               {error && (
                 <>
                   <Space.Height.sm />
-                  <Text style={[ta.body_1_lg_medium, {color: ta.error.color}]}>
+                  <Text style={[a.body_1_lg_medium, ta.text_error]}>
                     {error}
                   </Text>
                 </>
@@ -390,8 +398,14 @@ export const CoSignTransactionScreen = () => {
             </>
           ) : (
             <>
-              <View style={[a.p_md, a.bg_success_light, a.rounded_sm]}>
-                <Text style={[ta.body_1_lg_medium]}>
+              <View
+                style={[
+                  a.p_md,
+                  a.rounded_sm,
+                  {backgroundColor: p.secondary_100},
+                ]}
+              >
+                <Text style={[a.body_1_lg_medium]}>
                   {strings.setupWallet.transactionImported}
                 </Text>
               </View>
@@ -399,17 +413,23 @@ export const CoSignTransactionScreen = () => {
               {formattedTx && (
                 <>
                   <Space.Height.md />
-                  <View style={[a.p_md, a.bg_gray_c50, a.rounded_sm]}>
-                    <Text style={[ta.heading_3]}>
+                  <View
+                    style={[
+                      a.p_md,
+                      a.rounded_sm,
+                      {backgroundColor: p.gray_50},
+                    ]}
+                  >
+                    <Text style={[a.heading_3_medium]}>
                       {strings.setupWallet.transactionDetails}
                     </Text>
                     <Space.Height.sm />
-                    <Text style={[ta.body_2_md_regular]}>
-                      {strings.setupWallet.fee}: {formattedTx.fee?.coin || '0'}{' '}
-                      ADA
+                    <Text style={[a.body_2_md_regular]}>
+                      {strings.setupWallet.fee}: {formattedTx.fee?.quantity || '0'}{' '}
+                      {formattedTx.fee?.tokenInfo?.ticker || 'ADA'}
                     </Text>
                     <Space.Height.xs />
-                    <Text style={[ta.body_2_md_regular]}>
+                    <Text style={[a.body_2_md_regular]}>
                       {strings.setupWallet.outputs}: {formattedTx.outputs.length}
                     </Text>
                   </View>
@@ -429,7 +449,7 @@ export const CoSignTransactionScreen = () => {
               {error && (
                 <>
                   <Space.Height.sm />
-                  <Text style={[ta.body_1_lg_medium, {color: ta.error.color}]}>
+                  <Text style={[a.body_1_lg_medium, ta.text_error]}>
                     {error}
                   </Text>
                 </>
@@ -445,7 +465,7 @@ export const CoSignTransactionScreen = () => {
               />
 
               {isSigning && (
-                <View style={[a.items_center, a.justify_center, a.py_lg]}>
+                <View style={[a.align_center, a.justify_center, a.py_lg]}>
                   <ActivityIndicator size="large" />
                 </View>
               )}
@@ -459,7 +479,7 @@ export const CoSignTransactionScreen = () => {
                   setError(null)
                   setPassword('')
                 }}
-                outline
+                type={ButtonType.Secondary}
                 testID="select-different-transaction-file-button"
               />
             </>

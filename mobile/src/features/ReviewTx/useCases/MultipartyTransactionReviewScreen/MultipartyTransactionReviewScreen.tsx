@@ -9,7 +9,7 @@ import {
   constructMultipartyTransactionJSON,
   getSignedWallets,
 } from '@yoroi/tx'
-import {Bip32PublicKeyHex} from '@yoroi/types'
+import {Bip32PublicKeyHex, TransactionCborHex, Wallet} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as Clipboard from 'expo-clipboard'
@@ -29,7 +29,7 @@ import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
-import {Text} from '~/ui/Text'
+import {Text} from '~/ui/Text/Text'
 
 import {ReviewTx} from '../ReviewTxScreen/ReviewTx/ReviewTx'
 
@@ -102,7 +102,7 @@ const MultipartyTransactionReviewContent = ({
     try {
       // Get chain ID from wallet
       const chainId =
-        `cip34:${wallet.networkManager.networkId}-${wallet.networkManager.networkMagic}` as `cip34:${number}-${number}`
+        `cip34:${wallet.networkManager.chainId}-${wallet.networkManager.network.magic}` as `cip34:${number}-${number}`
 
       // Get current wallet's key hash if it's one of the signers
       const currentSigner = multipartyInfo.requiredSigners.find(
@@ -113,7 +113,7 @@ const MultipartyTransactionReviewContent = ({
         '') as Bip32PublicKeyHex
 
       const txJson = constructMultipartyTransactionJSON({
-        cborHex: params.cbor as TransactionCborHex,
+        cborHex: params.cbor as Wallet.TransactionCborHex,
         chainId,
         createdBy,
         requiredSigners: multipartyInfo.requiredSigners.map((signer) => ({
@@ -205,7 +205,7 @@ const MultipartyTransactionReviewContent = ({
               <View style={[a.gap_md]}>
                 <View style={[a.flex_row, a.align_center, a.gap_sm]}>
                   <Icon.MultiParty size={24} color={p.primary_600} />
-                  <Text style={[ta.heading_3]}>
+                  <Text style={[a.heading_3_medium]}>
                     {strings.send.multipartyTransaction}
                   </Text>
                 </View>
@@ -214,11 +214,11 @@ const MultipartyTransactionReviewContent = ({
 
                 {/* Signer status summary */}
                 <View style={[a.gap_sm]}>
-                  <Text style={[ta.body_1_lg_medium]}>
+                  <Text style={[a.body_1_lg_medium]}>
                     {strings.setupWallet.signaturesRequired}:{' '}
                     {signerStatus.totalSigners}
                   </Text>
-                  <Text style={[ta.body_2_md_regular, ta.text_gray_low]}>
+                  <Text style={[a.body_2_md_regular, ta.text_gray_low]}>
                     {strings.setupWallet.signaturesReceived}:{' '}
                     {signerStatus.signedSigners.length}
                   </Text>
@@ -228,7 +228,7 @@ const MultipartyTransactionReviewContent = ({
 
                 {/* Signers list */}
                 <View style={[a.gap_sm]}>
-                  <Text style={[ta.body_1_lg_medium]}>
+                  <Text style={[a.body_1_lg_medium]}>
                     {strings.send.signers}:
                   </Text>
                   {multipartyInfo.requiredSigners.map((signer) => {
@@ -247,18 +247,18 @@ const MultipartyTransactionReviewContent = ({
                           a.p_md,
                           a.rounded_sm,
                           a.border,
-                          {borderColor: ta.gray_c200.color},
+                          {borderColor: p.gray_200},
                         ]}
                       >
                         <View style={[a.flex_1]}>
-                          <Text style={[ta.body_1_lg_medium]}>
+                          <Text style={[a.body_1_lg_medium]}>
                             {signer.walletName}
                             {isCurrentWallet && ' (You)'}
                           </Text>
                           <Space.Height.xs />
                           <Text
                             style={[
-                              ta.body_2_md_regular,
+                              a.body_2_md_regular,
                               {fontFamily: 'monospace'},
                             ]}
                             numberOfLines={1}
@@ -268,12 +268,12 @@ const MultipartyTransactionReviewContent = ({
                           </Text>
                         </View>
                         {hasSigned ? (
-                          <Icon.CheckCircle
+                          <Icon.CheckFilled
                             size={24}
-                            color={ta.success.color}
+                            color={p.secondary_500}
                           />
                         ) : (
-                          <Icon.Clock size={24} color={ta.warning.color} />
+                          <Icon.Clock size={24} color={p.sys_yellow_500} />
                         )}
                       </View>
                     )
@@ -284,7 +284,7 @@ const MultipartyTransactionReviewContent = ({
                   <>
                     <Space.Height.md />
                     <Text
-                      style={[ta.body_2_md_regular, {color: ta.warning.color}]}
+                      style={[a.body_2_md_regular, {color: p.sys_yellow_500}]}
                     >
                       {strings.setupWallet.notAllSignersSigned}
                     </Text>
