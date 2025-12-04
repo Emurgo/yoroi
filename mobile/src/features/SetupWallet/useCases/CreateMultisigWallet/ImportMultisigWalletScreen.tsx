@@ -20,7 +20,7 @@ import {showErrorDialog} from '~/kernel/dialogs'
 import {errorMessages} from '~/kernel/i18n/messages/global'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
-import {Button} from '~/ui/Button/Button'
+import {Button, ButtonType} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
@@ -43,7 +43,7 @@ type MultisigWalletSetupJSON = {
 
 export const ImportMultisigWalletScreen = () => {
   const strings = useStrings()
-  const {atoms: ta} = useTheme()
+  const {palette: p} = useTheme()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
   const {walletManager} = useWalletManager()
   const [importedData, setImportedData] =
@@ -176,16 +176,16 @@ export const ImportMultisigWalletScreen = () => {
       <SafeArea>
         <Space.Height.lg />
         <View style={[a.px_lg]}>
-          <Text style={[ta.heading_1]}>
+          <Text style={[a.heading_1_medium]}>
             {strings.setupWallet.noWalletSelected}
           </Text>
           <Space.Height.md />
-          <Text style={[ta.body_1_lg_regular]}>
+          <Text style={[a.body_1_lg_regular]}>
             {strings.setupWallet.selectWalletToImport}
           </Text>
           <Space.Height.lg />
           <Button
-            title={strings.global.back || 'Back'}
+            title={strings.global.cancel}
             onPress={() => navigation.goBack()}
           />
         </View>
@@ -202,13 +202,13 @@ export const ImportMultisigWalletScreen = () => {
         contentContainerStyle={[a.px_lg, a.pb_lg]}
       >
         <View style={[a.gap_md]}>
-          <Text style={[ta.heading_1]}>
+          <Text style={[a.heading_1_medium]}>
             {strings.setupWallet.importMultisigWalletTitle}
           </Text>
 
           <Space.Height.md />
 
-          <Text style={[ta.body_1_lg_regular]}>
+          <Text style={[a.body_1_lg_regular]}>
             {strings.setupWallet.importMultisigWalletDescription}
           </Text>
 
@@ -224,7 +224,7 @@ export const ImportMultisigWalletScreen = () => {
                 />
               ) : (
                 <>
-                  <Text style={[ta.body_1_lg_regular]}>
+                  <Text style={[a.body_1_lg_regular]}>
                     {strings.setupWallet.pasteJSONManually}
                   </Text>
                   <RNTextInput
@@ -251,7 +251,7 @@ export const ImportMultisigWalletScreen = () => {
               {error && (
                 <>
                   <Space.Height.sm />
-                  <Text style={[ta.body_1_lg_medium, {color: ta.error.color}]}>
+                  <Text style={[a.body_1_lg_medium, {color: p.sys_magenta_500}]}>
                     {error}
                   </Text>
                 </>
@@ -259,17 +259,17 @@ export const ImportMultisigWalletScreen = () => {
             </>
           ) : (
             <>
-              <View style={[a.p_md, a.bg_success_light, a.rounded_sm]}>
-                <Text style={[ta.body_1_lg_medium]}>
+              <View style={[a.p_md, {backgroundColor: p.secondary_100}, a.rounded_sm]}>
+                <Text style={[a.body_1_lg_medium]}>
                   {strings.setupWallet.fileImported}
                 </Text>
                 <Space.Height.xs />
-                <Text style={[ta.body_2_md_regular]}>
+                <Text style={[a.body_2_md_regular]}>
                   {strings.setupWallet.walletName}:{' '}
                   {importedData.metadata.walletName}
                 </Text>
                 <Space.Height.xs />
-                <Text style={[ta.body_2_md_regular]}>
+                <Text style={[a.body_2_md_regular]}>
                   {strings.setupWallet.coSignersCount}:{' '}
                   {importedData.multisig.coSigners.length}
                 </Text>
@@ -285,7 +285,7 @@ export const ImportMultisigWalletScreen = () => {
               />
 
               {isValidating && (
-                <View style={[a.items_center, a.justify_center, a.py_lg]}>
+                <View style={[a.align_center, a.justify_center, a.py_lg]}>
                   <ActivityIndicator size="large" />
                 </View>
               )}
@@ -298,7 +298,7 @@ export const ImportMultisigWalletScreen = () => {
                   setImportedData(null)
                   setError(null)
                 }}
-                outline
+                type={ButtonType.Secondary}
                 testID="select-different-file-button"
               />
             </>

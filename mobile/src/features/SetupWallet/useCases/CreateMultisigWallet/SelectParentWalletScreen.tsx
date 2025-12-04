@@ -18,7 +18,7 @@ import {Text} from '~/ui/Text/Text'
 
 export const SelectParentWalletScreen = () => {
   const strings = useStrings()
-  const {atoms: ta} = useTheme()
+  const {palette: p} = useTheme()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
   const {walletManager} = useWalletManager()
 
@@ -50,16 +50,16 @@ export const SelectParentWalletScreen = () => {
       <SafeArea>
         <Space.Height.lg />
         <View style={[a.px_lg]}>
-          <Text style={[ta.heading_1]}>
+          <Text style={[a.heading_1_medium]}>
             {strings.setupWallet.noParentWalletsAvailable}
           </Text>
           <Space.Height.md />
-          <Text style={[ta.body_1_lg_regular]}>
+          <Text style={[a.body_1_lg_regular]}>
             {strings.setupWallet.noParentWalletsDescription}
           </Text>
           <Space.Height.lg />
           <Button
-            title={strings.global.back || 'Back'}
+            title={strings.global.cancel}
             onPress={() => navigation.goBack()}
           />
         </View>
@@ -76,13 +76,13 @@ export const SelectParentWalletScreen = () => {
         contentContainerStyle={[a.px_lg, a.pb_lg]}
       >
         <View style={[a.gap_md]}>
-          <Text style={[ta.heading_1]}>
+          <Text style={[a.heading_1_medium]}>
             {strings.setupWallet.selectParentWalletTitle}
           </Text>
 
           <Space.Height.md />
 
-          <Text style={[ta.body_1_lg_regular]}>
+          <Text style={[a.body_1_lg_regular]}>
             {strings.setupWallet.selectParentWalletDescription}
           </Text>
 
@@ -99,17 +99,17 @@ export const SelectParentWalletScreen = () => {
                   a.p_md,
                   a.rounded_sm,
                   a.border,
-                  isSelected ? a.bg_primary_light : a.bg_white,
+                  isSelected ? {backgroundColor: p.primary_100} : {backgroundColor: p.white_static},
                   isSelected
-                    ? {borderColor: ta.primary.color}
-                    : {borderColor: ta.gray_c200.color},
+                    ? {borderColor: p.primary_600}
+                    : {borderColor: p.gray_200},
                 ]}
                 testID={`parent-wallet-option-${walletMeta.id}`}
               >
-                <Text style={[ta.heading_3]}>{walletMeta.name}</Text>
+                <Text style={[a.heading_3_medium]}>{walletMeta.name}</Text>
                 <Space.Height.xs />
                 <Text
-                  style={[ta.body_2_md_regular, {color: ta.gray_c600.color}]}
+                  style={[a.body_2_md_regular, {color: p.gray_600}]}
                 >
                   {walletMeta.implementation}
                 </Text>
@@ -120,7 +120,7 @@ export const SelectParentWalletScreen = () => {
           <Space.Height.lg />
 
           <Button
-            title={strings.global.continue || 'Continue'}
+            title={strings.global.proceed}
             onPress={handleContinue}
             disabled={!selectedWalletId}
             testID="continue-after-select-parent-button"

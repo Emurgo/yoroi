@@ -45,12 +45,12 @@ type RouteParams = {
 
 export const ReviewMultisigWalletScreen = () => {
   const strings = useStrings()
-  const {atoms: ta} = useTheme()
+  const {palette: p} = useTheme()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
   const route = useRoute()
   const storage = useAsyncStorage()
   const {walletManager} = useWalletManager()
-  const [walletName, setWalletName] = React.useState('')
+  const [walletName, setWalletName] = React.useState(initialWalletName || '')
   const [password, setPassword] = React.useState('')
   const [passwordConfirmation, setPasswordConfirmation] = React.useState('')
 
@@ -62,6 +62,7 @@ export const ReviewMultisigWalletScreen = () => {
     parentWalletImplementation,
     accountVisual,
     parentWalletRootKey,
+    walletName: initialWalletName,
   } = params
 
   const {
@@ -129,8 +130,15 @@ export const ReviewMultisigWalletScreen = () => {
     !passwordConfirmation
 
   const handleCreateWallet = React.useCallback(() => {
+    if (!parentWalletRootKey) {
+      showErrorDialog(errorMessages.generalError, undefined, {
+        message: 'Parent wallet root key is required',
+      })
+      return
+    }
+
     createWallet({
-      name: walletName.trim(),
+      name: walletName.trim() || 'Multisig Wallet',
       coSigners,
       quorumRules,
       parentWalletIds: [parentWalletId],
@@ -173,7 +181,7 @@ export const ReviewMultisigWalletScreen = () => {
         contentContainerStyle={[a.px_lg, a.pb_lg]}
       >
         <View style={[a.gap_md]}>
-          <Text style={[ta.heading_1]}>
+          <Text style={[a.heading_1_medium]}>
             {strings.setupWallet.reviewMultisigWalletTitle}
           </Text>
 
@@ -184,7 +192,7 @@ export const ReviewMultisigWalletScreen = () => {
             label={strings.setupWallet.walletNameInputLabel}
             value={walletName}
             onChangeText={setWalletName}
-            errorText={walletNameErrorText}
+            errorText={walletNameErrorText || undefined}
             autoFocus
             testID="multisig-wallet-name-input"
           />
@@ -213,31 +221,31 @@ export const ReviewMultisigWalletScreen = () => {
 
           {/* Review section */}
           <View style={[a.gap_sm]}>
-            <Text style={[ta.heading_3]}>
+            <Text style={[a.heading_3_medium]}>
               {strings.setupWallet.walletConfiguration}
             </Text>
 
-            <View style={[a.p_md, a.bg_gray_c50, a.rounded_sm]}>
-              <Text style={[ta.body_1_lg_medium]}>
+            <View style={[a.p_md, {backgroundColor: p.gray_50}, a.rounded_sm]}>
+              <Text style={[a.body_1_lg_medium]}>
                 {strings.setupWallet.coSignersCount}: {coSigners.length}
               </Text>
               <Space.Height.xs />
               {coSigners.map((cs, index) => (
                 <Text
                   key={index}
-                  style={[ta.body_2_md_regular, {color: ta.gray_c600.color}]}
+                  style={[a.body_2_md_regular, {color: p.gray_600}]}
                 >
                   • {cs.name}
                 </Text>
               ))}
             </View>
 
-            <View style={[a.p_md, a.bg_gray_c50, a.rounded_sm]}>
-              <Text style={[ta.body_1_lg_medium]}>
+            <View style={[a.p_md, {backgroundColor: p.gray_50}, a.rounded_sm]}>
+              <Text style={[a.body_1_lg_medium]}>
                 {strings.setupWallet.quorumRules}: {quorumRules.kind}
               </Text>
               <Space.Height.xs />
-              <Text style={[ta.body_2_md_regular, {color: ta.gray_c600.color}]}>
+              <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
                 {quorumDescription}
               </Text>
             </View>
@@ -253,7 +261,7 @@ export const ReviewMultisigWalletScreen = () => {
           />
 
           {isPending && (
-            <View style={[a.items_center, a.justify_center, a.py_lg]}>
+            <View style={[a.align_center, a.justify_center, a.py_lg]}>
               <ActivityIndicator size="large" />
             </View>
           )}
