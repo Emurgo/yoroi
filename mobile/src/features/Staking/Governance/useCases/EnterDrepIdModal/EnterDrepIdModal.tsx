@@ -31,14 +31,10 @@ const FIND_DREPS_LINKS: Record<Chain.SupportedNetworks, string> = {
   [Chain.Network.Preview]: 'https://preview.cexplorer.io/drep',
 }
 
-export const HEIGHT_WITH_CARD = 660
-export const HEIGHT_WITHOUT_CARD = 350
-
 export const EnterDrepIdModal = ({onSubmit}: Props) => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
   const [drepId, setDrepId] = React.useState('')
-  const [showCard, setShowCard] = React.useState(true)
   const {closeModal, setHeight} = useModal()
   const {
     wallet: {
@@ -51,20 +47,12 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
     enabled: drepId.length > 0,
   })
 
-  const handleFocus = React.useCallback(() => {
-    setShowCard(false)
-    setTimeout(() => setHeight(HEIGHT_WITHOUT_CARD), 150)
-  }, [setHeight])
-
-  const handleBlur = React.useCallback(() => {
-    if (drepId.length === 0) {
-      setShowCard(true)
-      setTimeout(() => setHeight(HEIGHT_WITH_CARD), 150)
-    }
-  }, [drepId.length, setHeight])
+  const {showCard, handleFocus, handleBlur, updateHasInput} =
+    useCardVisibility(setHeight)
 
   const handleDrepIdChange = (text: string) => {
     setDrepId(text)
+    updateHasInput(text)
   }
 
   const handleOnPress = () => {
@@ -176,4 +164,40 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
       />
     </Modal.Content>
   )
+}
+
+export const HEIGHT_WITH_CARD = 660
+export const HEIGHT_WITHOUT_CARD = 350
+
+const useCardVisibility = (setHeight: (height: number) => void) => {
+  const [showCard, setShowCard] = React.useState(true)
+  const [hasInput, setHasInput] = React.useState(false)
+  const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined)
+
+  React.useEffect(
+    () => () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    },
+    [],
+  )
+
+  const handleFocus = React.useCallback(() => {
+    setShowCard(false)
+    if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    timeoutRef.current = setTimeout(() => setHeight(HEIGHT_WITHOUT_CARD), 150)
+  }, [setHeight])
+
+  const handleBlur = React.useCallback(() => {
+    if (!hasInput) {
+      setShowCard(true)
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+      timeoutRef.current = setTimeout(() => setHeight(HEIGHT_WITH_CARD), 150)
+    }
+  }, [hasInput, setHeight])
+
+  const updateHasInput = React.useCallback((text: string) => {
+    setHasInput(text.length > 0)
+  }, [])
+
+  return {showCard, handleFocus, handleBlur, updateHasInput}
 }
