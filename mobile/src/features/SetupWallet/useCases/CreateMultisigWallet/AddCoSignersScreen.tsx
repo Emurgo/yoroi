@@ -15,7 +15,7 @@ import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
-import {Text} from '~/ui/Text'
+import {Text} from '~/ui/Text/Text'
 import {TextInput} from '~/ui/TextInput/TextInput'
 
 type RouteParams = {
@@ -28,7 +28,7 @@ type RouteParams = {
 
 export const AddCoSignersScreen = () => {
   const strings = useStrings()
-  const {atoms: ta} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
   const route = useRoute()
   const [coSigners, setCoSigners] = React.useState<
@@ -127,13 +127,13 @@ export const AddCoSignersScreen = () => {
         contentContainerStyle={[a.px_lg, a.pb_lg]}
       >
         <View style={[a.gap_md]}>
-          <Text style={[ta.heading_1]}>
+          <Text style={[a.heading_1_medium]}>
             {strings.setupWallet.addCoSignersTitle}
           </Text>
 
           <Space.Height.md />
 
-          <Text style={[ta.body_1_lg_regular]}>
+          <Text style={[a.body_1_lg_regular]}>
             {strings.setupWallet.addCoSignersDescription}
           </Text>
 
@@ -141,7 +141,7 @@ export const AddCoSignersScreen = () => {
 
           {/* Current co-signers list */}
           <View style={[a.gap_sm]}>
-            <Text style={[ta.heading_3]}>
+            <Text style={[a.heading_3_medium]}>
               {strings.setupWallet.coSignersList} ({coSigners.length})
             </Text>
 
@@ -151,17 +151,17 @@ export const AddCoSignersScreen = () => {
                 style={[
                   a.p_md,
                   a.rounded_sm,
-                  a.bg_gray_c50,
                   a.flex_row,
-                  a.items_center,
+                  a.align_center,
                   a.justify_between,
+                  {backgroundColor: p.gray_50},
                 ]}
               >
                 <View style={[a.flex_1]}>
-                  <Text style={[ta.body_1_lg_medium]}>{coSigner.name}</Text>
+                  <Text style={[a.body_1_lg_medium]}>{coSigner.name}</Text>
                   <Space.Height.xs />
                   <Text
-                    style={[ta.body_2_md_regular, {fontFamily: 'monospace'}]}
+                    style={[a.body_2_md_regular, {fontFamily: 'monospace'}]}
                     numberOfLines={1}
                     ellipsizeMode="middle"
                   >
@@ -174,7 +174,7 @@ export const AddCoSignersScreen = () => {
                     style={[a.p_sm]}
                     testID={`remove-cosigner-${index}`}
                   >
-                    <Icon.Trash size={20} color={ta.error.color} />
+                    <Icon.Delete size={20} color={p.sys_red_500} />
                   </TouchableOpacity>
                 )}
               </View>
@@ -185,7 +185,7 @@ export const AddCoSignersScreen = () => {
 
           {/* Add new co-signer form */}
           <View style={[a.gap_md]}>
-            <Text style={[ta.heading_3]}>
+            <Text style={[a.heading_3_medium]}>
               {strings.setupWallet.addNewCoSigner}
             </Text>
 
@@ -211,7 +211,7 @@ export const AddCoSignersScreen = () => {
               title={strings.setupWallet.addCoSignerButton}
               onPress={handleAddCoSigner}
               disabled={!newCoSignerName.trim() || !newCoSignerKey.trim()}
-              outline
+              type="secondary"
               testID="add-cosigner-button"
             />
           </View>
@@ -219,7 +219,7 @@ export const AddCoSignersScreen = () => {
           {error && (
             <>
               <Space.Height.sm />
-              <Text style={[ta.body_1_lg_medium, {color: ta.error.color}]}>
+              <Text style={[a.body_1_lg_medium, {color: p.sys_red_500}]}>
                 {error}
               </Text>
             </>
@@ -228,7 +228,7 @@ export const AddCoSignersScreen = () => {
           <Space.Height.lg />
 
           <Button
-            title={strings.global.continue || 'Continue'}
+            title={strings.global.proceed}
             onPress={handleContinue}
             disabled={coSigners.length < 2}
             testID="continue-after-add-cosigners-button"

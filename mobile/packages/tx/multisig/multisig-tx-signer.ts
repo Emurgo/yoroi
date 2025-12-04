@@ -333,9 +333,7 @@ export const getQuorumStatus = (
   const required = signPolicy.requiredCosigners
   const meetsQuorum = signed >= required
 
-  // Find missing signers (unused for now, but kept for future use)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const _unusedMissingSigners: Wallet.Bip32PublicKeyHex[] = []
+  // TODO: Implement proper missing signer detection
 
   return {
     signed,

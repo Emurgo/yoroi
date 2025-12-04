@@ -6,9 +6,11 @@ import {getWalletNameError} from '@yoroi/cardano-wallet'
 import {useAsyncStorage} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
-import {useCreateMultisigWallet} from '@yoroi/wallet-manager'
-import {parseWalletMeta} from '@yoroi/wallet-manager'
-import {useWalletManager} from '@yoroi/wallet-manager'
+import {
+  parseWalletMeta,
+  useCreateMultisigWallet,
+  useWalletManager,
+} from '@yoroi/wallet-manager'
 
 import {useNavigation, useRoute} from '@react-navigation/native'
 import * as React from 'react'
@@ -27,7 +29,7 @@ import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
-import {Text} from '~/ui/Text'
+import {Text} from '~/ui/Text/Text'
 import {TextInput} from '~/ui/TextInput/TextInput'
 
 type RouteParams = {

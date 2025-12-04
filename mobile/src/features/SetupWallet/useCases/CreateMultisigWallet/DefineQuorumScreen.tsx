@@ -14,7 +14,7 @@ import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
-import {Text} from '~/ui/Text'
+import {Text} from '~/ui/Text/Text'
 import {TextInput} from '~/ui/TextInput/TextInput'
 
 type RouteParams = {
@@ -30,7 +30,7 @@ type QuorumType = 'RequireAllOf' | 'RequireAnyOf' | 'RequireNOf'
 
 export const DefineQuorumScreen = () => {
   const strings = useStrings()
-  const {atoms: ta} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
   const route = useRoute()
   const [quorumType, setQuorumType] = React.useState<QuorumType>('RequireNOf')
@@ -92,13 +92,13 @@ export const DefineQuorumScreen = () => {
         contentContainerStyle={[a.px_lg, a.pb_lg]}
       >
         <View style={[a.gap_md]}>
-          <Text style={[ta.heading_1]}>
+          <Text style={[a.heading_1_medium]}>
             {strings.setupWallet.defineQuorumTitle}
           </Text>
 
           <Space.Height.md />
 
-          <Text style={[ta.body_1_lg_regular]}>
+          <Text style={[a.body_1_lg_regular]}>
             {strings.setupWallet.defineQuorumDescription}
           </Text>
 
@@ -106,7 +106,7 @@ export const DefineQuorumScreen = () => {
 
           {/* Quorum type options */}
           <View style={[a.gap_sm]}>
-            <Text style={[ta.heading_3]}>
+            <Text style={[a.heading_3_medium]}>
               {strings.setupWallet.quorumTypeLabel}
             </Text>
 
@@ -116,18 +116,20 @@ export const DefineQuorumScreen = () => {
                 a.p_md,
                 a.rounded_sm,
                 a.border,
-                quorumType === 'RequireAllOf' ? a.bg_primary_light : a.bg_white,
-                quorumType === 'RequireAllOf'
-                  ? {borderColor: ta.primary.color}
-                  : {borderColor: ta.gray_c200.color},
+                {
+                  backgroundColor:
+                    quorumType === 'RequireAllOf' ? p.primary_100 : p.white,
+                  borderColor:
+                    quorumType === 'RequireAllOf' ? p.primary_600 : p.gray_200,
+                },
               ]}
               testID="quorum-type-all"
             >
-              <Text style={[ta.heading_4]}>
+              <Text style={[a.heading_4_medium]}>
                 {strings.setupWallet.quorumAllOf}
               </Text>
               <Space.Height.xs />
-              <Text style={[ta.body_2_md_regular, {color: ta.gray_c600.color}]}>
+              <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
                 {strings.setupWallet.quorumAllOfDescription}
               </Text>
             </TouchableOpacity>
@@ -138,18 +140,20 @@ export const DefineQuorumScreen = () => {
                 a.p_md,
                 a.rounded_sm,
                 a.border,
-                quorumType === 'RequireAnyOf' ? a.bg_primary_light : a.bg_white,
-                quorumType === 'RequireAnyOf'
-                  ? {borderColor: ta.primary.color}
-                  : {borderColor: ta.gray_c200.color},
+                {
+                  backgroundColor:
+                    quorumType === 'RequireAnyOf' ? p.primary_100 : p.white,
+                  borderColor:
+                    quorumType === 'RequireAnyOf' ? p.primary_600 : p.gray_200,
+                },
               ]}
               testID="quorum-type-any"
             >
-              <Text style={[ta.heading_4]}>
+              <Text style={[a.heading_4_medium]}>
                 {strings.setupWallet.quorumAnyOf}
               </Text>
               <Space.Height.xs />
-              <Text style={[ta.body_2_md_regular, {color: ta.gray_c600.color}]}>
+              <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
                 {strings.setupWallet.quorumAnyOfDescription}
               </Text>
             </TouchableOpacity>
@@ -160,18 +164,20 @@ export const DefineQuorumScreen = () => {
                 a.p_md,
                 a.rounded_sm,
                 a.border,
-                quorumType === 'RequireNOf' ? a.bg_primary_light : a.bg_white,
-                quorumType === 'RequireNOf'
-                  ? {borderColor: ta.primary.color}
-                  : {borderColor: ta.gray_c200.color},
+                {
+                  backgroundColor:
+                    quorumType === 'RequireNOf' ? p.primary_100 : p.white,
+                  borderColor:
+                    quorumType === 'RequireNOf' ? p.primary_600 : p.gray_200,
+                },
               ]}
               testID="quorum-type-nof"
             >
-              <Text style={[ta.heading_4]}>
+              <Text style={[a.heading_4_medium]}>
                 {strings.setupWallet.quorumNOf}
               </Text>
               <Space.Height.xs />
-              <Text style={[ta.body_2_md_regular, {color: ta.gray_c600.color}]}>
+              <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
                 {strings.setupWallet.quorumNOfDescription}
               </Text>
             </TouchableOpacity>
@@ -195,7 +201,7 @@ export const DefineQuorumScreen = () => {
           {error && (
             <>
               <Space.Height.sm />
-              <Text style={[ta.body_1_lg_medium, {color: ta.error.color}]}>
+              <Text style={[a.body_1_lg_medium, {color: p.sys_red_500}]}>
                 {error}
               </Text>
             </>

@@ -33,7 +33,7 @@ import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {RemoveAmountButton} from '~/ui/RemoveAmountButton/RemoveAmountButton'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
-import {Text} from '~/ui/Text'
+import {Text} from '~/ui/Text/Text'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
 
 export const ListAmountsToSendScreen = () => {
@@ -44,6 +44,7 @@ export const ListAmountsToSendScreen = () => {
   const {clearSearch} = useSearch()
   const navigation = useNavigation()
   const {wallet, meta} = useSelectedWallet()
+  const {palette: p} = useTheme()
   const {walletManager} = useWalletManager()
   const {openSelectMultipleWalletsModal} = useSelectMultipleWalletsModal()
   const {
@@ -149,10 +150,11 @@ export const ListAmountsToSendScreen = () => {
       minSelection: 1,
       filter: (walletMeta) => {
         // Only show wallets on the same network
-        return walletMeta.networkId === meta.networkId
+        const otherWallet = walletManager.getWalletById(walletMeta.id)
+        return otherWallet?.networkManager.chainId === wallet.networkManager.chainId
       },
     })
-  }, [openSelectMultipleWalletsModal, selectedInputWalletIds, meta.networkId])
+  }, [openSelectMultipleWalletsModal, selectedInputWalletIds, wallet, walletManager])
 
   const createUnsignedTxPromise = React.useCallback(
     async (entries: TransactionOutput[]) => {
@@ -414,17 +416,17 @@ const SelectInputWalletsButton = ({
         a.p_md,
         a.rounded_sm,
         a.border,
-        {borderColor: ta.gray_c200.color, backgroundColor: p.gray_c50},
+        {borderColor: p.gray_200, backgroundColor: p.gray_50},
       ]}
     >
       <View style={[a.flex_row, a.align_center, a.gap_sm]}>
         <Icon.MultiParty size={20} color={p.primary_600} />
-        <Text style={[ta.body_1_lg_medium]}>
+        <Text style={[a.body_1_lg_medium]}>
           {strings.send.selectInputWallets}
         </Text>
       </View>
       <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-        <Text style={[ta.body_2_md_regular, ta.text_gray_low]}>
+        <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
           {selectedCount === 1
             ? strings.send.singleWallet
             : strings.send.multipleWallets(selectedCount)}

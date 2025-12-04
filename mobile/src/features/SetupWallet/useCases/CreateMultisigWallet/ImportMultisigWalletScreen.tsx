@@ -23,7 +23,7 @@ import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
-import {Text} from '~/ui/Text'
+import {Text} from '~/ui/Text/Text'
 
 type MultisigWalletSetupJSON = {
   version: string
@@ -264,7 +264,8 @@ export const ImportMultisigWalletScreen = () => {
                 </Text>
                 <Space.Height.xs />
                 <Text style={[ta.body_2_md_regular]}>
-                  {strings.setupWallet.walletName}: {importedData.metadata.walletName}
+                  {strings.setupWallet.walletName}:{' '}
+                  {importedData.metadata.walletName}
                 </Text>
                 <Space.Height.xs />
                 <Text style={[ta.body_2_md_regular]}>

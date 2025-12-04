@@ -14,7 +14,7 @@ import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
-import {Text} from '~/ui/Text'
+import {Text} from '~/ui/Text/Text'
 
 export const CreateMultisigWalletScreen = () => {
   const strings = useStrings()
@@ -50,21 +50,27 @@ export const CreateMultisigWalletScreen = () => {
         contentContainerStyle={[a.px_lg, a.pb_lg]}
       >
         <View style={[a.gap_md]}>
-          <Text style={[ta.heading_1, a.text_center]}>
+          <Text style={[a.heading_1_medium, a.text_center]}>
             {strings.setupWallet.createMultisigWalletTitle}
           </Text>
 
           <Space.Height.md />
 
-          <Text style={[ta.body_1_lg_regular, a.text_center]}>
+          <Text style={[a.body_1_lg_regular, a.text_center]}>
             {strings.setupWallet.createMultisigWalletDescription}
           </Text>
 
           <Space.Height.xl />
 
           {!canCreateMultisig && (
-            <View style={[a.bg_warning_light, a.p_md, a.rounded_sm]}>
-              <Text style={[ta.body_1_lg_medium]}>
+            <View
+              style={[
+                a.p_md,
+                a.rounded_sm,
+                {backgroundColor: p.sys_yellow_100},
+              ]}
+            >
+              <Text style={[a.body_1_lg_medium]}>
                 {strings.setupWallet.noParentWalletsAvailable}
               </Text>
             </View>
@@ -82,7 +88,7 @@ export const CreateMultisigWalletScreen = () => {
           <Button
             title={strings.setupWallet.importMultisigWalletButton}
             onPress={handleImportWallet}
-            outline
+            type="secondary"
             testID="import-multisig-wallet-button"
           />
         </View>

@@ -17,7 +17,7 @@ import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
-import {Text} from '~/ui/Text'
+import {Text} from '~/ui/Text/Text'
 
 // Note: We'll use JSON.stringify for now - serializeMultisigWalletSetupJSON may need to be created
 
@@ -164,8 +164,7 @@ export const MultisigWalletDetailsScreen = () => {
           {/* Co-Signers List */}
           <View style={[a.p_md, a.bg_gray_c50, a.rounded_sm]}>
             <Text style={[ta.heading_3]}>
-              {strings.setupWallet.coSigners} (
-              {multisigMeta.coSigners.length})
+              {strings.setupWallet.coSigners} ({multisigMeta.coSigners.length})
             </Text>
             <Space.Height.sm />
 
@@ -214,7 +213,9 @@ export const MultisigWalletDetailsScreen = () => {
 
             <Button
               title={
-                copied ? strings.setupWallet.copied : strings.setupWallet.copyJSON
+                copied
+                  ? strings.setupWallet.copied
+                  : strings.setupWallet.copyJSON
               }
               onPress={handleCopyJSON}
               outline

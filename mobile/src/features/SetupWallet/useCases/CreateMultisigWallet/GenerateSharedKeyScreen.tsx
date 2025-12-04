@@ -19,7 +19,7 @@ import {makeWalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
-import {Text} from '~/ui/Text'
+import {Text} from '~/ui/Text/Text'
 import {TextInput} from '~/ui/TextInput/TextInput'
 
 type RouteParams = {
@@ -165,9 +165,7 @@ export const GenerateSharedKeyScreen = () => {
 
           {!sharedKey || !parentRootKey ? (
             <Button
-              title={
-                strings.setupWallet.generateSharedKeyButton
-              }
+              title={strings.setupWallet.generateSharedKeyButton}
               onPress={handleGenerate}
               disabled={!password || isGenerating}
               testID="generate-shared-key-button"

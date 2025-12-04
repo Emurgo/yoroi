@@ -25,7 +25,7 @@ import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
-import {Text} from '~/ui/Text'
+import {Text} from '~/ui/Text/Text'
 
 import {WalletListItem} from '../screens/SelectWalletFromListScreen/WalletListItem'
 
@@ -136,8 +136,8 @@ export const SelectMultipleWalletsModal = ({
           {maxSelection && (
             <View style={[a.px_lg, a.pb_md]}>
               <Text style={[ta.body_2_md_regular, ta.text_gray_low]}>
-                {strings.send.selectUpToWallets(maxSelection)}{' '}
-                ({selectedCount}/{maxSelection})
+                {strings.send.selectUpToWallets(maxSelection)} ({selectedCount}/
+                {maxSelection})
               </Text>
             </View>
           )}
