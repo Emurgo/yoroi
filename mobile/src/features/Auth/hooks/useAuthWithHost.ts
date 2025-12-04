@@ -2,7 +2,7 @@ import * as AuthHost from 'expo-local-authentication'
 import {freeze} from 'immer'
 import * as React from 'react'
 
-import {useAppState} from '~/hooks/useAppState'
+import {useAppState} from '~/common/hooks/useAppState'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 

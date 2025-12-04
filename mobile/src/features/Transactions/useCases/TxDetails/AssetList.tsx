@@ -1,21 +1,23 @@
 import {
+  CardanoTypes,
+  asQuantity,
+  formatTokenAmount,
+  isEmptyString,
+} from '@yoroi/cardano-wallet'
+import {
   isPrimaryToken,
   normalizeTokenId,
   usePortfolioTokenInfo,
 } from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {FlatList, Text, TouchableOpacity, View} from 'react-native'
 
 import {usePrivacyMode} from '~/features/Settings/hooks/usePrivacyMode'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Boundary} from '~/ui/Boundary/Boundary'
-import {CardanoTypes} from '~/wallets/cardano/types'
-import {formatTokenAmount} from '~/wallets/utils/format'
-import {isEmptyString} from '~/wallets/utils/string'
-import {asQuantity} from '~/wallets/utils/utils'
 
 type AssetListProps = {
   assets: Array<CardanoTypes.TokenEntry>

@@ -1,10 +1,10 @@
 import {time} from '@yoroi/common'
 import {Portfolio} from '@yoroi/types'
+import {useSelectedNetwork} from '@yoroi/wallet-manager'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {useQuery} from '@tanstack/react-query'
 
-import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {logger} from '~/kernel/logger/logger'
 
 export const useSwapTokenActivity = (tokenIds: Portfolio.Token.Id[]) => {

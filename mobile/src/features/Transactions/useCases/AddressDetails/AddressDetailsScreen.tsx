@@ -1,11 +1,11 @@
 import {atoms as a} from '@yoroi/theme'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {useRoute} from '@react-navigation/native'
 import {fromPairs} from 'lodash'
 import * as React from 'react'
 
 import {AddressContent, AddressFooter} from '~/common/AddressModal/AddressModal'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {ScrollView} from '~/ui/ScrollView/ScrollView'
 import {useScrollView} from '~/ui/ScrollView/hooks/useScrollView'

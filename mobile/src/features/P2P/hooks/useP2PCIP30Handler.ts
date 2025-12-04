@@ -1,20 +1,20 @@
+import {cip30ExtensionMaker} from '@yoroi/cardano-wallet'
 import {
   type ConnectionManager,
   type WalletMessage,
   type WalletRequest,
   type WalletResponse,
 } from '@yoroi/p2p-communication'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {Buffer} from 'buffer'
 import * as React from 'react'
 
 import {userRejectedError} from '~/features/Discover/common/errors'
 import {usePromptRootKey} from '~/features/ReviewTx/common/hooks/usePromptRootKey'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
-import {cip30ExtensionMaker} from '~/wallets/cardano/cip30/cip30'
 
 type P2PCIP30HandlerOptions = {
   connectionManager: ConnectionManager | null
@@ -60,7 +60,9 @@ export const useP2PCIP30Handler = ({
             return
           }
 
-          const cip30 = cip30ExtensionMaker(wallet, meta)
+          const cip30 = cip30ExtensionMaker(wallet, meta, {
+            createCollateralEntry: wallet._dependencies.createCollateralEntry,
+          })
 
           switch (request.method) {
             case 'getBalance': {
@@ -228,7 +230,10 @@ export const useP2PCIP30Handler = ({
                   }
                 })
 
-                const cip30 = cip30ExtensionMaker(wallet, meta)
+                const cip30 = cip30ExtensionMaker(wallet, meta, {
+                  createCollateralEntry:
+                    wallet._dependencies.createCollateralEntry,
+                })
                 const result = await cip30.signData(rootKey, address, payload)
                 sendResponse(result)
               } catch (error) {

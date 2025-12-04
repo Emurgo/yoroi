@@ -1,6 +1,13 @@
+import {cip30ExtensionMaker} from '@yoroi/cardano-wallet'
+import {cip30LedgerExtensionMaker} from '@yoroi/cardano-wallet'
+import {BaseLedgerError} from '@yoroi/cardano-wallet'
+import {YoroiWallet} from '@yoroi/cardano-wallet'
+import {isEmptyString} from '@yoroi/cardano-wallet'
+import {collateralConfig} from '@yoroi/cardano-wallet'
 import {useAsyncStorage} from '@yoroi/common'
 import {DappConnection, DappConnector} from '@yoroi/dapp-connector'
 import {Branded} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {Transaction} from '@emurgo/cross-csl-core'
 import {useNavigation} from '@react-navigation/native'
@@ -8,7 +15,6 @@ import * as React from 'react'
 
 import {getTxIdFromArgs} from '~/features/ReviewTx/common/utils/getTxId'
 import {CollateralInfoModal} from '~/features/Settings/ui/screens/ChangeWalletSettingsScreen/ManageCollateralScreen/CollateralInfoModal'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {
@@ -17,12 +23,6 @@ import {
 } from '~/kernel/navigation/common/helpers'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
-import {cip30ExtensionMaker} from '~/wallets/cardano/cip30/cip30'
-import {cip30LedgerExtensionMaker} from '~/wallets/cardano/cip30/cip30-ledger'
-import {YoroiWallet} from '~/wallets/cardano/types'
-import {collateralConfig} from '~/wallets/cardano/utxoManager/utxos'
-import {BaseLedgerError} from '~/wallets/hw/hw'
-import {isEmptyString} from '~/wallets/utils/string'
 
 import {usePromptRootKey} from '../ReviewTx/common/hooks/usePromptRootKey'
 import {useBrowser} from './common/BrowserProvider'
@@ -268,7 +268,9 @@ export const useDappConnectorManager = () => {
         )
 
         // Build the reorganisation transaction
-        const cip30 = cip30ExtensionMaker(wallet, meta)
+        const cip30 = cip30ExtensionMaker(wallet, meta, {
+          createCollateralEntry: wallet._dependencies.createCollateralEntry,
+        })
         cip30
           .buildReorganisationTx(value)
           .then((cbor) => {
@@ -458,7 +460,9 @@ const useSignDataWithHW = () => {
           confirmHWConnection({
             onConfirm: async ({transportType, deviceInfo}) => {
               try {
-                const cip30 = cip30LedgerExtensionMaker(wallet, meta)
+                const cip30 = cip30LedgerExtensionMaker(wallet, meta, {
+                  toLedgerSignRequest: wallet._dependencies.toLedgerSignRequest,
+                })
                 const result = await cip30.signData(
                   address,
                   payload,

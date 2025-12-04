@@ -1,13 +1,13 @@
+import {createUnsignedGovernanceTxFromWallet} from '@yoroi/cardano-wallet'
+import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {Wallet} from '@yoroi/types'
 
 import {Certificate} from '@emurgo/cross-csl-core'
 import * as React from 'react'
 
+import {UsePromiseOptions, usePromise} from '~/common/hooks/usePromise'
 import {useNavigateTo} from '~/features/Staking/Governance/common/navigation'
 import {isInsufficientBalanceError} from '~/features/Staking/Governance/common/transactionErrorHandling'
-import {UsePromiseOptions, usePromise} from '~/hooks/usePromise'
-import {createUnsignedGovernanceTxFromWallet} from '~/wallets/cardano/transaction-recipes'
-import {YoroiWallet} from '~/wallets/cardano/types'
 
 export const useCreateGovernanceTx = (
   wallet: YoroiWallet,

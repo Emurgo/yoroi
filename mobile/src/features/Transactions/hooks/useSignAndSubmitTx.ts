@@ -1,11 +1,11 @@
 import {TxSubmissionStatus} from '@yoroi/api'
+import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {UnsignedTransaction} from '@yoroi/tx'
 
 import * as CSL from '@emurgo/cross-csl-core'
 import {UseMutationOptions} from '@tanstack/react-query'
 
 import {useSubmitTx} from '~/features/Transactions/hooks/useSubmitTx'
-import {YoroiWallet} from '~/wallets/cardano/types'
 
 import {useSignTx} from './useSignTx'
 

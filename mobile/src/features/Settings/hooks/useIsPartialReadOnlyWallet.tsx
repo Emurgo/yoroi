@@ -1,6 +1,7 @@
+import {useSelectedWallet} from '@yoroi/wallet-manager'
+
 import * as React from 'react'
 
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {makeWalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
 
 /**

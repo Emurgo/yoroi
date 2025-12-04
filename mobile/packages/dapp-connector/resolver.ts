@@ -1,3 +1,4 @@
+import {collateralConfig} from '@yoroi/cardano-wallet'
 import {
   createTypeGuardFromSchema,
   getLogger,
@@ -10,7 +11,6 @@ import {Address, TransactionUnspentOutput, Value} from '@emurgo/cross-csl-core'
 import BigNumber from 'bignumber.js'
 import {z} from 'zod'
 
-import {collateralConfig} from '../../src/wallets/cardano/utxoManager/utxos'
 import {Storage} from './adapters/async-storage'
 
 type Context = {

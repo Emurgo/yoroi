@@ -1,7 +1,16 @@
+import {YoroiWallet} from '@yoroi/cardano-wallet'
+import {
+  formatDateRelative,
+  formatTime,
+  formatTokenFractional,
+  formatTokenInteger,
+} from '@yoroi/cardano-wallet'
+import {Amounts, Quantities, asQuantity} from '@yoroi/cardano-wallet'
 import {isNonNullable} from '@yoroi/common'
 import {infoExtractName, isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Balance, Portfolio, WalletTransaction} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {useNavigation} from '@react-navigation/native'
 import {BigNumber} from 'bignumber.js'
@@ -13,21 +22,12 @@ import {Text, TouchableOpacity, View, ViewProps} from 'react-native'
 import {useCurrencyPairing} from '~/features/Settings/context/CurrencyProvider'
 import {usePrivacyMode} from '~/features/Settings/hooks/usePrivacyMode'
 import {TransactionSummary} from '~/features/Transactions/common/types'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {TxHistoryRouteNavigation} from '~/kernel/navigation/types'
 import {Boundary, ResetError} from '~/ui/Boundary/Boundary'
 import {Icon} from '~/ui/Icon'
 import {styleMap} from '~/ui/Icon/Direction'
 import {BalanceError} from '~/ui/PairedBalance/PairedBalance'
-import {YoroiWallet} from '~/wallets/cardano/types'
-import {
-  formatDateRelative,
-  formatTime,
-  formatTokenFractional,
-  formatTokenInteger,
-} from '~/wallets/utils/format'
-import {Amounts, Quantities, asQuantity} from '~/wallets/utils/utils'
 
 import {getOperationDisplayText} from '../../common/operationDisplay'
 import {useTxFilter} from './TxFilterProvider'

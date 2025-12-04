@@ -1,3 +1,4 @@
+import {isValidPoolIdOrHash, normalizeToPoolHash} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {useQuery} from '@tanstack/react-query'
@@ -8,10 +9,6 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
 import {TextInput} from '~/ui/TextInput/TextInput'
-import {
-  isValidPoolIdOrHash,
-  normalizeToPoolHash,
-} from '~/wallets/cardano/delegationUtils'
 
 type Props = {
   onPressDelegate: (poolHash: string) => void

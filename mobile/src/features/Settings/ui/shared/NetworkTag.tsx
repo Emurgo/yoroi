@@ -1,6 +1,8 @@
 import {networkConfigs} from '@yoroi/blockchains'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
+import {useWalletManager} from '@yoroi/wallet-manager'
+import {availableNetworks} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {
@@ -13,8 +15,6 @@ import {
 } from 'react-native'
 
 import {useAuth} from '~/features/Auth/context/AuthProvider'
-import {availableNetworks} from '~/features/WalletManager/common/constants'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button, ButtonType} from '~/ui/Button/Button'

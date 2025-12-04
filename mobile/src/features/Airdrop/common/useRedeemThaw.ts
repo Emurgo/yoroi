@@ -1,15 +1,16 @@
+import {RawUtxo} from '@yoroi/api'
+import {getTransactionSigners} from '@yoroi/cardano-wallet'
+import {createRawTxSigningKey} from '@yoroi/cardano-wallet'
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import type {SelectionStrategy} from '@yoroi/tx'
 import {rawUtxoToModernUtxo, selectUtxos, signRawTransaction} from '@yoroi/tx'
 import {Balance} from '@yoroi/types'
+import {useWalletManager} from '@yoroi/wallet-manager'
 
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {Buffer} from 'buffer'
 
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {logger} from '~/kernel/logger/logger'
-import {getTransactionSigners} from '~/wallets/cardano/common/signatureUtils'
-import {createRawTxSigningKey} from '~/wallets/cardano/utils'
-import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 
 import {redemptionApi} from '../api/redemptionApi'
 import type {BuildTransactionRequest} from '../types'
@@ -75,7 +76,7 @@ export const useRedeemThaw = () => {
       const fundingUtxosHex = await CardanoMobileWrapped.cslScope(
         async (csl) => {
           // Convert RawUtxo[] to ModernUtxo[] using current pattern
-          const modernUtxos = wallet.utxos().map((rawUtxo) => {
+          const modernUtxos = wallet.utxos().map((rawUtxo: RawUtxo) => {
             const addressing = wallet.getAddressing(rawUtxo.receiver)
             return rawUtxoToModernUtxo(
               rawUtxo as Parameters<typeof rawUtxoToModernUtxo>[0],

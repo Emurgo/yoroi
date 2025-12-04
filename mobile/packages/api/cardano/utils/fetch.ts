@@ -25,7 +25,6 @@ export const fetchDefault = async <T = Record<string, unknown>>(
 ): Promise<T> => {
   const fullPath = `${apiBaseUrl}/${path}`
   const yoroiVersion = `${Platform.OS} / ${DeviceInfo.getVersion()}`
-  const logger = getLogger()
 
   const response = await fetchData<T>(
     {
@@ -53,7 +52,7 @@ export const fetchDefault = async <T = Record<string, unknown>>(
   const {status, message, responseData} = response.error
 
   // Log error
-  logger.error('fetchDefault: Backend returned error response', {
+  getLogger().error('fetchDefault: Backend returned error response', {
     origin: 'fetchDefault',
     type: 'http',
     status,

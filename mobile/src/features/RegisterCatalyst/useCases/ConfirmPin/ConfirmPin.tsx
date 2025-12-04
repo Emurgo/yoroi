@@ -1,20 +1,20 @@
+import {generatePrivateKeyForCatalyst} from '@yoroi/cardano-wallet'
+import {encryptWithPassword} from '@yoroi/cardano-wallet'
+import {createVotingRegTxFromWallet} from '@yoroi/cardano-wallet'
 import {useCatalyst} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {UseMutationOptions, useMutation} from '@tanstack/react-query'
 import * as React from 'react'
 import {ActivityIndicator, ScrollView, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
 import {BACKSPACE, NumericKeyboard} from '~/ui/NumericKeyboard'
 import {Space} from '~/ui/Space/Space'
-import {generatePrivateKeyForCatalyst} from '~/wallets/cardano/catalyst'
-import {encryptWithPassword} from '~/wallets/cardano/catalyst/catalystCipher'
-import {createVotingRegTxFromWallet} from '~/wallets/cardano/transaction-recipes'
 
 import {
   Actions,

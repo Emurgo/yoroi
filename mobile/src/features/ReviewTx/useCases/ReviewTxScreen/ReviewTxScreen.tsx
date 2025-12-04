@@ -1,4 +1,6 @@
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import {validateTransactionCbor} from '@yoroi/tx'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 
@@ -15,12 +17,10 @@ import {
   FormattedTx,
   TransactionBody,
 } from '~/features/ReviewTx/common/types'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
 import {ReviewTxRoutes} from '~/kernel/navigation/types'
 import {ReviewContext} from '~/kernel/navigation/types'
 import {OperationContext} from '~/ui/ResultScreen/types'
-import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 
 import {ReviewTx} from './ReviewTx/ReviewTx'
 

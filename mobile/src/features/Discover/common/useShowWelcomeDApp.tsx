@@ -1,8 +1,7 @@
 import {isBoolean, parseSafe, useAsyncStorage} from '@yoroi/common'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
-
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 
 const storageRootDAppExplorer = 'dapp-explorer'
 const storageDAppWelcome = 'dapp-explorer-welcome-dialog'

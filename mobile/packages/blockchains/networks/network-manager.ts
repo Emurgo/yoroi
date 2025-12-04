@@ -19,7 +19,6 @@ export function buildNetworkManagers({
   tokenManagers: TokenManagerByNetwork
   apiMaker: ({network}: {network: Chain.SupportedNetworks}) => Api.Cardano.Api
 }): Readonly<Record<Chain.SupportedNetworks, Network.Manager>> {
-  const logger = getLogger()
   const managers = Object.entries(networkConfigs).reduce<
     Record<Chain.SupportedNetworks, Network.Manager>
   >(
@@ -36,7 +35,7 @@ export function buildNetworkManagers({
       const api = {
         protocolParams: () =>
           getProtocolParams().catch((error) => {
-            logger.error(
+            getLogger().error(
               `networkManager: ${network} protocolParams has failed, using hardcoded`,
               {error},
             )

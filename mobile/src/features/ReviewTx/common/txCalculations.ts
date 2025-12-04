@@ -1,6 +1,5 @@
+import {Quantities} from '@yoroi/cardano-wallet'
 import {Balance, Portfolio} from '@yoroi/types'
-
-import {Quantities} from '~/wallets/utils/utils'
 
 import {FormattedOutput, FormattedOutputs} from './types'
 

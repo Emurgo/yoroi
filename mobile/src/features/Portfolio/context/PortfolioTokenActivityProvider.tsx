@@ -1,17 +1,17 @@
 import {isNonNullable, time} from '@yoroi/common'
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {Chain, Portfolio} from '@yoroi/types'
+import {useSelectedNetwork} from '@yoroi/wallet-manager'
+import {useWalletManager} from '@yoroi/wallet-manager'
 
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 import {freeze, produce} from 'immer'
 import * as React from 'react'
 import {merge, switchMap} from 'rxjs'
 
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
+import {portfolioQueryKeys} from '~/common/queries'
+import {throttle} from '~/common/utils/rxjs-operators'
 import {logger} from '~/kernel/logger/logger'
-import {portfolioQueryKeys} from '~/queries'
-import {throttle} from '~/utils/rxjs-operators'
 
 const queryKey = portfolioQueryKeys.tokenActivityBase()
 const defaultPortfolioTokenActivityState: PortfolioTokenActivityState = freeze(

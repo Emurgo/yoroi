@@ -1,17 +1,17 @@
+import {formatDateAndTime} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Network} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {Text, View} from 'react-native'
 
 import {FormattedMetadata, FormattedTx} from '~/features/ReviewTx/common/types'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {Divider} from '~/ui/Divider/Divider'
 import {Space} from '~/ui/Space/Space'
-import {formatDateAndTime} from '~/wallets/utils/format'
 
 export const DetailsTab = ({
   tx,

@@ -1,20 +1,20 @@
+import {isEmptyString} from '@yoroi/cardano-wallet'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useLaunchWalletAfterSyncing} from '@yoroi/wallet-manager'
+import {useSyncTemporarilyPaused} from '@yoroi/wallet-manager'
+import {useWalletManager} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useAuth} from '~/features/Auth/context/AuthProvider'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import {useLaunchWalletAfterSyncing} from '~/features/WalletManager/hooks/useLaunchWalletAfterSyncing'
-import {useSyncTemporarilyPaused} from '~/features/WalletManager/hooks/useSyncTemporarilyPaused'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
-import {isEmptyString} from '~/wallets/utils/string'
 
 /**
  * It requests the global syncing to stop on mounting to favor the sync of a specific wallet

@@ -7,6 +7,7 @@ import {
   initialWindowMetrics,
 } from 'react-native-safe-area-context'
 
+import {BackgroundTimerProvider} from '~/common/providers/BackgroundTimerContext'
 import {AnalyticsRootProvider} from '~/features/Analytics/context/AnalyticsRootProvider'
 import {routeToEvent} from '~/features/Analytics/events/route-events'
 import {createPosthogClient} from '~/features/Analytics/helpers/createPosthogClient'
@@ -17,8 +18,6 @@ import {
   metricsEnabledStorageKeyManager,
 } from '~/kernel/storage/storages'
 import {ModalProvider} from '~/ui/Modal/context/ModalContext'
-
-import {BackgroundTimerProvider} from './src/hooks/BackgroundTimerContext'
 
 export function PlatformShell({children}: React.PropsWithChildren) {
   const [metricsEnabled, setMetricsEnabled] = React.useState<boolean>(

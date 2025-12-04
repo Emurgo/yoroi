@@ -1,3 +1,4 @@
+import {CardanoMobile} from '@yoroi/cardano-wallet'
 import {isNonNullable, isString, useAsyncStorage} from '@yoroi/common'
 import {
   type StakingKeyState,
@@ -11,15 +12,14 @@ import {
   useVotingCertificate,
 } from '@yoroi/staking'
 import {NotEnoughMoneyToSendError} from '@yoroi/tx'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
+import {useWalletEvent} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
 import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {useWalletTransactions} from '~/features/Transactions/hooks/useWalletTransactions'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
-import {CardanoMobile} from '~/wallets/wallets'
 
 import {GovernanceVote} from '../types'
 import {formatDrepHashToCIP129Format} from './drep'

@@ -1,6 +1,6 @@
-import * as React from 'react'
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 
-import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
+import * as React from 'react'
 
 import {TransactionBody} from '../types'
 

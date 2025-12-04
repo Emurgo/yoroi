@@ -1,5 +1,6 @@
 // Ledger signing functions
 // Functions for building signed transactions from Ledger signatures
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import {Address, PublicKeyHex} from '@yoroi/types'
 
 import {
@@ -16,7 +17,6 @@ import {
   WasmModuleProxy,
 } from '@emurgo/cross-csl-core'
 
-import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
 import {
   createCIP15VotingMetadata,
   createCIP36VotingMetadata,

@@ -1,5 +1,6 @@
 // Ledger Plutus transaction payload building
 // Functions for building Ledger payloads for Plutus (smart contract) transactions
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import {getLogger} from '@yoroi/common'
 
 import {
@@ -9,8 +10,6 @@ import {
   TxRequiredSignerType,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {Ed25519KeyHash, TransactionBody} from '@emurgo/cross-csl-core'
-
-import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
 
 import {Addressing, AddressingAddress} from '../types'
 import {
@@ -91,8 +90,6 @@ export const createLedgerPlutusPayload = async (
       return {type: TxRequiredSignerType.PATH as const, path}
     })
 
-    const logger = getLogger()
-
     const inputs = body.inputs()
     const inputsArray: TxInput[] = []
     for (let i = 0; i < inputs.len(); i++) {
@@ -101,7 +98,7 @@ export const createLedgerPlutusPayload = async (
       const txIndex = input.index()
       const path = getAddressingPath(txId, txIndex)
       if (!path) {
-        logger.warn(
+        getLogger().warn(
           'createLedgerPlutusPayload: Could not find addressing path for transaction input',
           {
             txId,

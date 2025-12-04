@@ -1,6 +1,7 @@
 import {useLinks} from '@yoroi/links'
 import {atoms as a} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
+import {useWalletManagerSelector, useWalletMetas} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {ScrollView, useWindowDimensions} from 'react-native'
@@ -14,8 +15,6 @@ import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 
-import {useWalletManagerSelector} from '../../context/WalletManagerProvider'
-import {useWalletMetas} from '../../hooks/useWalletMetas'
 import {WalletListItem} from '../screens/SelectWalletFromListScreen/WalletListItem'
 
 type Props = {

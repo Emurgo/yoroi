@@ -1,4 +1,8 @@
 import {RawUtxo} from '@yoroi/api'
+import {YoroiWallet} from '@yoroi/cardano-wallet'
+import {deriveRewardAddressFromAddress} from '@yoroi/cardano-wallet'
+import {asQuantity} from '@yoroi/cardano-wallet'
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import {isNonNullable} from '@yoroi/common'
 import {
   type ChainValidationResult,
@@ -12,18 +16,14 @@ import {
   parseTokenList,
 } from '@yoroi/tx'
 import {Api, Balance, Branded, Network, Portfolio} from '@yoroi/types'
+import {useSelectedNetwork} from '@yoroi/wallet-manager'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {CredKind, WasmModuleProxy} from '@emurgo/cross-csl-core'
 import * as _ from 'lodash'
 import * as React from 'react'
 
 import {usePortfolioTokenInfos} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'
-import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {YoroiWallet} from '~/wallets/cardano/types'
-import {deriveRewardAddressFromAddress} from '~/wallets/cardano/utils'
-import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
-import {asQuantity} from '~/wallets/utils/utils'
 
 import {
   FormattedCertificate,

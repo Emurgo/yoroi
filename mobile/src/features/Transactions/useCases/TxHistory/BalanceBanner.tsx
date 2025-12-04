@@ -1,13 +1,13 @@
 import {amountFormatter} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {Text, TouchableOpacity, View} from 'react-native'
 
 import {usePortfolioPrimaryBalance} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBalance'
 import {usePrivacyMode} from '~/features/Settings/hooks/usePrivacyMode'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {ResetErrorRef} from '~/ui/Boundary/Boundary'
 import {Icon} from '~/ui/Icon'
 import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'

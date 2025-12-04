@@ -1,8 +1,13 @@
+import {isEmptyString} from '@yoroi/cardano-wallet'
+import {getWalletNameError, validatePassword} from '@yoroi/cardano-wallet'
 import {useAsyncStorage} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Api, Wallet} from '@yoroi/types'
+import {useCreateWalletMnemonic} from '@yoroi/wallet-manager'
+import {useWalletManager} from '@yoroi/wallet-manager'
+import {parseWalletMeta} from '@yoroi/wallet-manager'
 
 import {walletChecksum} from '@emurgo/cip4-js'
 import {useNavigation} from '@react-navigation/native'
@@ -18,11 +23,8 @@ import {
   useWindowDimensions,
 } from 'react-native'
 
+import {useBold} from '~/common/hooks/useBold'
 import {YoroiHelpLink} from '~/features/SetupWallet/common/constants'
-import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet-meta'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import {useCreateWalletMnemonic} from '~/features/WalletManager/hooks/useCreateWalletMnemonic'
-import {useBold} from '~/hooks/useBold'
 import {requiredPasswordLength} from '~/kernel/constants'
 import {showErrorDialog} from '~/kernel/dialogs'
 import {debugWalletInfo, features} from '~/kernel/features'
@@ -41,8 +43,6 @@ import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {TextInput} from '~/ui/TextInput/TextInput'
-import {isEmptyString} from '~/wallets/utils/string'
-import {getWalletNameError, validatePassword} from '~/wallets/utils/validators'
 
 const useSizeModal = () => {
   const HEIGHT_SCREEN = useWindowDimensions().height

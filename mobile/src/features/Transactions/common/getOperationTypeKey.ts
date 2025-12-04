@@ -1,3 +1,5 @@
+import {Amounts, Quantities, asQuantity} from '@yoroi/cardano-wallet'
+import {collateralConfig} from '@yoroi/cardano-wallet'
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {CertificateKind} from '@yoroi/tx'
 import {Balance, TransactionDirection, WalletTransaction} from '@yoroi/types'
@@ -5,8 +7,6 @@ import {Balance, TransactionDirection, WalletTransaction} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 
 import {isContractAddress} from '~/features/ReviewTx/common/services/contract-service'
-import {collateralConfig} from '~/wallets/cardano/utxoManager/utxos'
-import {Amounts, Quantities, asQuantity} from '~/wallets/utils/utils'
 
 import {isSwapTransaction} from './operationDisplay'
 

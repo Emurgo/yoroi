@@ -1,4 +1,5 @@
 // Functional Transaction Builder using CSL TransactionBuilder directly
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import {getLogger} from '@yoroi/common'
 import {primaryTokenId as defaultPrimaryTokenId} from '@yoroi/portfolio'
 import {
@@ -22,8 +23,6 @@ import type {
 } from '@emurgo/cross-csl-core'
 import {Buffer} from 'buffer'
 
-import {getTokenIdParts} from '../../../src/features/Portfolio/common/helpers/get-token-id-parts'
-import {CardanoMobileWrapped} from '../../../src/wallets/cardano/wrappedCsl'
 import {NoOutputsError, NotEnoughMoneyToSendError} from '../errors'
 import {CardanoHaskellConfig, Datum} from '../types'
 import {ModernUtxo} from '../utxo/models'
@@ -408,21 +407,22 @@ function amountsToValue(
   amounts: Balance.Amounts,
   primaryTokenId: Portfolio.Token.Id = defaultPrimaryTokenId,
 ): Value {
-  const logger = getLogger()
-
   const adaAmount = amounts[primaryTokenId] || '0'
 
   const adaBigNum = csl.BigNum.fromStr(adaAmount)
   if (!adaBigNum) {
-    logger.error('amountsToValue: Failed to create BigNum from ADA amount', {
-      adaAmount,
-    })
+    getLogger().error(
+      'amountsToValue: Failed to create BigNum from ADA amount',
+      {
+        adaAmount,
+      },
+    )
     throw new Error(`Failed to create BigNum from ADA amount: ${adaAmount}`)
   }
 
   const value = csl.Value.new(adaBigNum)
   if (!value) {
-    logger.error('amountsToValue: Failed to create Value', {
+    getLogger().error('amountsToValue: Failed to create Value', {
       adaAmount,
     })
     throw new Error(`Failed to create Value from ADA amount: ${adaAmount}`)
@@ -434,7 +434,7 @@ function amountsToValue(
   if (tokenIds.length > 0) {
     const multiAsset = csl.MultiAsset.new()
     if (!multiAsset) {
-      logger.error('amountsToValue: Failed to create MultiAsset')
+      getLogger().error('amountsToValue: Failed to create MultiAsset')
       throw new Error('Failed to create MultiAsset')
     }
 
@@ -443,7 +443,9 @@ function amountsToValue(
     const groupedByPolicyId = tokenIds.reduce(
       (acc, tokenIdStr) => {
         const tokenId = tokenIdStr as Portfolio.Token.Id
-        const {policyId, assetName: assetNameHex} = getTokenIdParts(tokenId)
+        const [policyId, assetNameHex] = (tokenId as Portfolio.Token.Id).split(
+          '.',
+        )
         if (!policyId || !assetNameHex) {
           // Invalid format, skip
           return acc
@@ -468,7 +470,7 @@ function amountsToValue(
           new Uint8Array(Buffer.from(policyIdStr, 'hex')),
         )
         if (!policyId) {
-          logger.error('amountsToValue: Failed to create ScriptHash', {
+          getLogger().error('amountsToValue: Failed to create ScriptHash', {
             policyIdStr,
           })
           throw new Error(
@@ -478,7 +480,7 @@ function amountsToValue(
 
         const assets = csl.Assets.new()
         if (!assets) {
-          logger.error('amountsToValue: Failed to create Assets', {
+          getLogger().error('amountsToValue: Failed to create Assets', {
             policyIdStr,
           })
           throw new Error(`Failed to create Assets for policy: ${policyIdStr}`)
@@ -489,7 +491,7 @@ function amountsToValue(
             new Uint8Array(Buffer.from(assetNameHex, 'hex')),
           )
           if (!name) {
-            logger.error('amountsToValue: Failed to create AssetName', {
+            getLogger().error('amountsToValue: Failed to create AssetName', {
               tokenId,
               assetNameHex,
             })
@@ -498,7 +500,7 @@ function amountsToValue(
 
           const amount = csl.BigNum.fromStr(amounts[tokenId] ?? '0')
           if (!amount) {
-            logger.error(
+            getLogger().error(
               'amountsToValue: Failed to create BigNum for asset amount',
               {
                 tokenId,
@@ -515,7 +517,7 @@ function amountsToValue(
 
         multiAsset.insert(policyId, assets)
       } catch (error) {
-        logger.error('amountsToValue: Error processing policy assets', {
+        getLogger().error('amountsToValue: Error processing policy assets', {
           policyIdStr,
           error: error instanceof Error ? error.message : String(error),
         })
@@ -537,11 +539,9 @@ function outputToCSL(
   output: TransactionOutput,
   primaryTokenId: Portfolio.Token.Id = defaultPrimaryTokenId,
 ): CSLTransactionOutput {
-  const logger = getLogger()
-
   const address = csl.Address.fromBech32(output.address)
   if (!address) {
-    logger.error('outputToCSL: Invalid address', {
+    getLogger().error('outputToCSL: Invalid address', {
       address: output.address,
     })
     throw new Error(`Invalid address: ${output.address}`)
@@ -549,7 +549,7 @@ function outputToCSL(
 
   const value = amountsToValue(csl, output.amounts, primaryTokenId)
   if (!value) {
-    logger.error('outputToCSL: Failed to create Value', {
+    getLogger().error('outputToCSL: Failed to create Value', {
       address: output.address,
       amounts: output.amounts,
     })
@@ -558,7 +558,7 @@ function outputToCSL(
 
   const cslOutput = csl.TransactionOutput.new(address, value)
   if (!cslOutput) {
-    logger.error('outputToCSL: Failed to create TransactionOutput', {
+    getLogger().error('outputToCSL: Failed to create TransactionOutput', {
       address: output.address,
     })
     throw new Error(
@@ -636,8 +636,6 @@ export async function buildTransaction(
   protocolParams: CardanoHaskellConfig,
   primaryTokenId: Portfolio.Token.Id = defaultPrimaryTokenId,
 ): Promise<UnsignedTransaction> {
-  const logger = getLogger()
-
   return CardanoMobileWrapped.cslScope((csl) => {
     // Validate inputs
     validateInputs(state)
@@ -646,14 +644,16 @@ export async function buildTransaction(
     // Allow transactions with no explicit outputs if they have a change address
     // (CSL will create change outputs automatically)
     if (state.outputs.length === 0 && !state.options.changeAddress) {
-      logger.error('buildTransaction: No outputs in transaction')
+      getLogger().error('buildTransaction: No outputs in transaction')
       throw new NoOutputsError()
     }
 
     // Create CSL TransactionBuilder
     const cslTxBuilder = createCSLTransactionBuilder(csl, protocolParams)
     if (!cslTxBuilder) {
-      logger.error('buildTransaction: Failed to create CSL TransactionBuilder')
+      getLogger().error(
+        'buildTransaction: Failed to create CSL TransactionBuilder',
+      )
       throw new Error('Failed to create CSL TransactionBuilder')
     }
 
@@ -664,7 +664,7 @@ export async function buildTransaction(
       try {
         const cslOutput = outputToCSL(csl, output, primaryTokenId)
         if (!cslOutput) {
-          logger.error('buildTransaction: Failed to create CSL output', {
+          getLogger().error('buildTransaction: Failed to create CSL output', {
             outputIndex: i,
             address: output.address,
           })
@@ -672,7 +672,7 @@ export async function buildTransaction(
         }
         cslTxBuilder.addOutput(cslOutput)
       } catch (error) {
-        logger.error('buildTransaction: Error adding output', {
+        getLogger().error('buildTransaction: Error adding output', {
           outputIndex: i,
           address: output.address,
           error: error instanceof Error ? error.message : String(error),
@@ -686,7 +686,7 @@ export async function buildTransaction(
     // Certificates must be added BEFORE withdrawals to satisfy this requirement
     // Create CSL Certificate objects from certificate data within this CSL scope
     if (state.certificates.length > 0) {
-      logger.info('buildTransaction: Processing certificates', {
+      getLogger().info('buildTransaction: Processing certificates', {
         certificatesCount: state.certificates.length,
         certificates: state.certificates.map((c) => ({
           kind: 'kind' in c ? c.kind : 'unknown',
@@ -699,7 +699,7 @@ export async function buildTransaction(
 
       const certs = csl.Certificates.new()
       if (!certs) {
-        logger.error('buildTransaction: Failed to create Certificates')
+        getLogger().error('buildTransaction: Failed to create Certificates')
         throw new Error('Failed to create Certificates')
       }
       for (let i = 0; i < state.certificates.length; i++) {
@@ -707,7 +707,7 @@ export async function buildTransaction(
         if (!certData) continue
 
         const certKind = 'kind' in certData ? certData.kind : 'unknown'
-        logger.info('buildTransaction: Processing certificate', {
+        getLogger().info('buildTransaction: Processing certificate', {
           certificateIndex: i,
           certificateKind: certKind,
         })
@@ -716,12 +716,12 @@ export async function buildTransaction(
           // Create certificate using shared helper
           const cslCert = createCertificateFromData(csl, certData)
           certs.add(cslCert)
-          logger.info('buildTransaction: Successfully added certificate', {
+          getLogger().info('buildTransaction: Successfully added certificate', {
             certificateIndex: i,
             certificateKind: certKind,
           })
         } catch (error) {
-          logger.error('buildTransaction: Error adding certificate', {
+          getLogger().error('buildTransaction: Error adding certificate', {
             certificateIndex: i,
             certificateKind: certKind,
             error: error instanceof Error ? error.message : String(error),
@@ -730,16 +730,19 @@ export async function buildTransaction(
         }
       }
       cslTxBuilder.setCerts(certs)
-      logger.info('buildTransaction: Set certificates on transaction builder', {
-        certificatesCount: state.certificates.length,
-      })
+      getLogger().info(
+        'buildTransaction: Set certificates on transaction builder',
+        {
+          certificatesCount: state.certificates.length,
+        },
+      )
     }
 
     // Add withdrawals
     // NOTE: Certificates are only required when explicitly deregistering (matches yoroi-lib behavior)
     // Normal withdrawals don't require certificates
     if (state.withdrawals.length > 0) {
-      logger.info('buildTransaction: Processing withdrawals', {
+      getLogger().info('buildTransaction: Processing withdrawals', {
         withdrawalsCount: state.withdrawals.length,
         withdrawals: state.withdrawals,
         certificatesCount: state.certificates.length,
@@ -747,14 +750,14 @@ export async function buildTransaction(
 
       const withdrawals = csl.Withdrawals.new()
       if (!withdrawals) {
-        logger.error('buildTransaction: Failed to create Withdrawals')
+        getLogger().error('buildTransaction: Failed to create Withdrawals')
         throw new Error('Failed to create Withdrawals')
       }
       for (let i = 0; i < state.withdrawals.length; i++) {
         const withdrawal = state.withdrawals[i]
         if (!withdrawal) continue
 
-        logger.info('buildTransaction: Processing withdrawal', {
+        getLogger().info('buildTransaction: Processing withdrawal', {
           withdrawalIndex: i,
           rewardAddress: withdrawal.rewardAddress,
           amount: withdrawal.amount,
@@ -763,7 +766,7 @@ export async function buildTransaction(
         try {
           const address = csl.Address.fromBech32(withdrawal.rewardAddress)
           if (!address) {
-            logger.error('buildTransaction: Invalid withdrawal address', {
+            getLogger().error('buildTransaction: Invalid withdrawal address', {
               withdrawalIndex: i,
               rewardAddress: withdrawal.rewardAddress,
             })
@@ -773,10 +776,13 @@ export async function buildTransaction(
           }
           const rewardAddr = csl.RewardAddress.fromAddress(address)
           if (!rewardAddr) {
-            logger.error('buildTransaction: Failed to create RewardAddress', {
-              withdrawalIndex: i,
-              rewardAddress: withdrawal.rewardAddress,
-            })
+            getLogger().error(
+              'buildTransaction: Failed to create RewardAddress',
+              {
+                withdrawalIndex: i,
+                rewardAddress: withdrawal.rewardAddress,
+              },
+            )
             throw new Error(
               `Invalid reward address: ${withdrawal.rewardAddress}`,
             )
@@ -789,7 +795,7 @@ export async function buildTransaction(
             const withdrawalKeyHashHex = withdrawalKeyHash?.toHex()
 
             if (!withdrawalKeyHashHex) {
-              logger.error(
+              getLogger().error(
                 'buildTransaction: Failed to extract stake credential from withdrawal',
                 {
                   withdrawalIndex: i,
@@ -815,7 +821,7 @@ export async function buildTransaction(
             }
 
             if (!hasMatchingCert) {
-              logger.error(
+              getLogger().error(
                 'buildTransaction: No matching certificate for withdrawal',
                 {
                   withdrawalIndex: i,
@@ -844,7 +850,7 @@ export async function buildTransaction(
 
           const amount = csl.BigNum.fromStr(withdrawal.amount)
           if (!amount) {
-            logger.error(
+            getLogger().error(
               'buildTransaction: Failed to create BigNum for withdrawal',
               {
                 withdrawalIndex: i,
@@ -854,13 +860,13 @@ export async function buildTransaction(
             throw new Error(`Invalid withdrawal amount: ${withdrawal.amount}`)
           }
           withdrawals.insert(rewardAddr, amount)
-          logger.info('buildTransaction: Successfully added withdrawal', {
+          getLogger().info('buildTransaction: Successfully added withdrawal', {
             withdrawalIndex: i,
             rewardAddress: withdrawal.rewardAddress,
             amount: withdrawal.amount,
           })
         } catch (error) {
-          logger.error('buildTransaction: Error adding withdrawal', {
+          getLogger().error('buildTransaction: Error adding withdrawal', {
             withdrawalIndex: i,
             rewardAddress: withdrawal.rewardAddress,
             error: error instanceof Error ? error.message : String(error),
@@ -869,9 +875,12 @@ export async function buildTransaction(
         }
       }
       cslTxBuilder.setWithdrawals(withdrawals)
-      logger.info('buildTransaction: Set withdrawals on transaction builder', {
-        withdrawalsCount: state.withdrawals.length,
-      })
+      getLogger().info(
+        'buildTransaction: Set withdrawals on transaction builder',
+        {
+          withdrawalsCount: state.withdrawals.length,
+        },
+      )
     }
 
     // Set TTL
@@ -887,7 +896,7 @@ export async function buildTransaction(
       try {
         const cslAddr = csl.Address.fromBech32(utxo.receiver)
         if (!cslAddr) {
-          logger.error('buildTransaction: Invalid address for input', {
+          getLogger().error('buildTransaction: Invalid address for input', {
             inputIndex: i,
             receiver: utxo.receiver,
           })
@@ -896,7 +905,7 @@ export async function buildTransaction(
 
         const txHash = csl.TransactionHash.fromHex(utxo.txHash)
         if (!txHash) {
-          logger.error('buildTransaction: Invalid transaction hash', {
+          getLogger().error('buildTransaction: Invalid transaction hash', {
             inputIndex: i,
             txHash: utxo.txHash,
           })
@@ -905,11 +914,14 @@ export async function buildTransaction(
 
         const txInput = csl.TransactionInput.new(txHash, utxo.txIndex)
         if (!txInput) {
-          logger.error('buildTransaction: Failed to create TransactionInput', {
-            inputIndex: i,
-            txHash: utxo.txHash,
-            txIndex: utxo.txIndex,
-          })
+          getLogger().error(
+            'buildTransaction: Failed to create TransactionInput',
+            {
+              inputIndex: i,
+              txHash: utxo.txHash,
+              txIndex: utxo.txIndex,
+            },
+          )
           throw new Error(
             `Failed to create TransactionInput for ${utxo.txHash}:${utxo.txIndex}`,
           )
@@ -917,7 +929,7 @@ export async function buildTransaction(
 
         const cslAmount = amountsToValue(csl, utxo.balance, primaryTokenId)
         if (!cslAmount) {
-          logger.error('buildTransaction: Failed to create Value', {
+          getLogger().error('buildTransaction: Failed to create Value', {
             inputIndex: i,
             balance: utxo.balance,
           })
@@ -926,7 +938,7 @@ export async function buildTransaction(
 
         cslTxBuilder.addRegularInput(cslAddr, txInput, cslAmount)
       } catch (error) {
-        logger.error('buildTransaction: Error adding input', {
+        getLogger().error('buildTransaction: Error adding input', {
           inputIndex: i,
           txHash: utxo.txHash,
           txIndex: utxo.txIndex,
@@ -941,7 +953,7 @@ export async function buildTransaction(
       const feeAmount = state.options.manualFee[primaryTokenId] || '0'
       const feeBigNum = csl.BigNum.fromStr(feeAmount)
       if (!feeBigNum) {
-        logger.error(
+        getLogger().error(
           'buildTransaction: Failed to create BigNum for manual fee',
           {
             feeAmount,
@@ -957,7 +969,7 @@ export async function buildTransaction(
     if (state.options.mints && state.options.mints.length > 0) {
       const mint = csl.Mint.new()
       if (!mint) {
-        logger.error('buildTransaction: Failed to create Mint')
+        getLogger().error('buildTransaction: Failed to create Mint')
         throw new Error('Failed to create Mint')
       }
 
@@ -972,7 +984,7 @@ export async function buildTransaction(
           // Create policy ID
           const policyId = csl.ScriptHash.fromHex(mintAction.policyId)
           if (!policyId) {
-            logger.error('buildTransaction: Invalid policy ID', {
+            getLogger().error('buildTransaction: Invalid policy ID', {
               mintIndex: i,
               policyId: mintAction.policyId,
             })
@@ -982,14 +994,14 @@ export async function buildTransaction(
           // Create mint assets map for this policy (uses Int, not BigNum)
           const mintAssets = csl.MintAssets.new()
           if (!mintAssets) {
-            logger.error('buildTransaction: Failed to create MintAssets')
+            getLogger().error('buildTransaction: Failed to create MintAssets')
             throw new Error('Failed to create MintAssets')
           }
 
           for (const asset of mintAction.assets) {
             const assetName = csl.AssetName.fromHex(asset.assetName)
             if (!assetName) {
-              logger.error('buildTransaction: Invalid asset name', {
+              getLogger().error('buildTransaction: Invalid asset name', {
                 mintIndex: i,
                 assetName: asset.assetName,
               })
@@ -998,7 +1010,7 @@ export async function buildTransaction(
 
             const amount = csl.Int.fromStr(asset.amount)
             if (!amount) {
-              logger.error('buildTransaction: Invalid mint amount', {
+              getLogger().error('buildTransaction: Invalid mint amount', {
                 mintIndex: i,
                 amount: asset.amount,
               })
@@ -1028,7 +1040,7 @@ export async function buildTransaction(
             }
           }
         } catch (error) {
-          logger.error('buildTransaction: Error adding mint action', {
+          getLogger().error('buildTransaction: Error adding mint action', {
             mintIndex: i,
             policyId: mintAction.policyId,
             error: error instanceof Error ? error.message : String(error),
@@ -1058,7 +1070,9 @@ export async function buildTransaction(
         primaryTokenId,
       )
       if (!cslChangeOutput) {
-        logger.error('buildTransaction: Failed to create manual change output')
+        getLogger().error(
+          'buildTransaction: Failed to create manual change output',
+        )
         throw new Error('Failed to create manual change output')
       }
       cslTxBuilder.addOutput(cslChangeOutput)
@@ -1066,7 +1080,7 @@ export async function buildTransaction(
       // Use CSL's automatic change handling
       const changeAddr = csl.Address.fromBech32(state.options.changeAddress)
       if (!changeAddr) {
-        logger.error('buildTransaction: Invalid change address', {
+        getLogger().error('buildTransaction: Invalid change address', {
           changeAddress: state.options.changeAddress,
         })
         throw new Error(
@@ -1136,7 +1150,7 @@ export async function buildTransaction(
 
       const expectedRemainingAda = availableAdaBeforeFee - estimatedFee
 
-      logger.info('buildTransaction: About to add change if needed', {
+      getLogger().info('buildTransaction: About to add change if needed', {
         totalInputAda: totalInput[primaryTokenId] || '0',
         totalInputTokens: inputTokenIds.length,
         inputTokenIds: inputTokenIds.slice(0, 10), // Limit to first 10
@@ -1295,7 +1309,7 @@ export async function buildTransaction(
               const feeBigNum = csl.BigNum.fromStr(totalFee.toString())
               if (feeBigNum) {
                 cslTxBuilder.setFee(feeBigNum)
-                logger.info(
+                getLogger().info(
                   'buildTransaction: Set manual fee accounting for native scripts',
                   {
                     estimatedBodySize,
@@ -1317,7 +1331,9 @@ export async function buildTransaction(
         }
 
         cslTxBuilder.addChangeIfNeeded(changeAddr)
-        logger.info('buildTransaction: Successfully added change if needed')
+        getLogger().info(
+          'buildTransaction: Successfully added change if needed',
+        )
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : String(error)
@@ -1325,7 +1341,7 @@ export async function buildTransaction(
           errorMessage.includes('Not enough ADA leftover') ||
           errorMessage.includes('add_change_if_needed')
 
-        logger.error('buildTransaction: Failed to add change if needed', {
+        getLogger().error('buildTransaction: Failed to add change if needed', {
           error: errorMessage,
           errorStack: error instanceof Error ? error.stack : undefined,
           totalInputAda: totalInput[primaryTokenId] || '0',
@@ -1361,12 +1377,12 @@ export async function buildTransaction(
     if (state.metadata.length > 0) {
       auxData = csl.AuxiliaryData.new()
       if (!auxData) {
-        logger.error('buildTransaction: Failed to create AuxiliaryData')
+        getLogger().error('buildTransaction: Failed to create AuxiliaryData')
         throw new Error('Failed to create AuxiliaryData')
       }
       const metadataMap = csl.GeneralTransactionMetadata.new()
       if (!metadataMap) {
-        logger.error(
+        getLogger().error(
           'buildTransaction: Failed to create GeneralTransactionMetadata',
         )
         throw new Error('Failed to create GeneralTransactionMetadata')
@@ -1385,7 +1401,7 @@ export async function buildTransaction(
             1, // MetadataJsonSchema.BasicConversions
           )
           if (!metadata) {
-            logger.error('buildTransaction: Failed to encode metadata', {
+            getLogger().error('buildTransaction: Failed to encode metadata', {
               metadataIndex: i,
               label,
             })
@@ -1393,7 +1409,7 @@ export async function buildTransaction(
           }
           const labelBigNum = csl.BigNum.fromStr(label.toString())
           if (!labelBigNum) {
-            logger.error(
+            getLogger().error(
               'buildTransaction: Failed to create BigNum for label',
               {
                 metadataIndex: i,
@@ -1404,7 +1420,7 @@ export async function buildTransaction(
           }
           metadataMap.insert(labelBigNum, metadata)
         } catch (error) {
-          logger.error('buildTransaction: Error adding metadata entry', {
+          getLogger().error('buildTransaction: Error adding metadata entry', {
             metadataIndex: i,
             label: meta.label,
             error: error instanceof Error ? error.message : String(error),
@@ -1420,7 +1436,7 @@ export async function buildTransaction(
     // Build the transaction body
     const txBody = cslTxBuilder.build()
     if (!txBody) {
-      logger.error('buildTransaction: Failed to build transaction body')
+      getLogger().error('buildTransaction: Failed to build transaction body')
       throw new Error('Failed to build transaction body')
     }
 
@@ -1452,7 +1468,7 @@ export async function buildTransaction(
     const outputAda = BigInt(totalOutput[primaryTokenId] || '0')
 
     if (inputAda < outputAda + feeAda) {
-      logger.error('buildTransaction: Insufficient funds', {
+      getLogger().error('buildTransaction: Insufficient funds', {
         inputAda: inputAda.toString(),
         outputAda: outputAda.toString(),
         feeAda: feeAda.toString(),
@@ -1465,7 +1481,9 @@ export async function buildTransaction(
     // Native scripts used in minting need to be in the witness set
     const witnessSet = csl.TransactionWitnessSet.new()
     if (!witnessSet) {
-      logger.error('buildTransaction: Failed to create TransactionWitnessSet')
+      getLogger().error(
+        'buildTransaction: Failed to create TransactionWitnessSet',
+      )
       throw new Error('Failed to create TransactionWitnessSet')
     }
 
@@ -1488,9 +1506,12 @@ export async function buildTransaction(
 
       if (nativeScriptsForWitness.len() > 0) {
         witnessSet.setNativeScripts(nativeScriptsForWitness)
-        logger.info('buildTransaction: Added native scripts to witness set', {
-          nativeScriptCount: nativeScriptsForWitness.len(),
-        })
+        getLogger().info(
+          'buildTransaction: Added native scripts to witness set',
+          {
+            nativeScriptCount: nativeScriptsForWitness.len(),
+          },
+        )
       }
     }
 
@@ -1498,14 +1519,16 @@ export async function buildTransaction(
     // auxData was already created above if metadata exists
     const fullTx = csl.Transaction.new(txBody, witnessSet, auxData)
     if (!fullTx) {
-      logger.error('buildTransaction: Failed to create Transaction')
+      getLogger().error('buildTransaction: Failed to create Transaction')
       throw new Error('Failed to create Transaction')
     }
 
     // Serialize full transaction to CBOR (not just the body)
     const txBytes = fullTx.toBytes()
     if (!txBytes || txBytes.length === 0) {
-      logger.error('buildTransaction: Failed to serialize transaction to bytes')
+      getLogger().error(
+        'buildTransaction: Failed to serialize transaction to bytes',
+      )
       throw new Error('Failed to serialize transaction to bytes')
     }
     const cbor: TransactionCbor = Buffer.from(txBytes).toString(

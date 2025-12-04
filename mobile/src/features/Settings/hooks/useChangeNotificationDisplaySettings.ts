@@ -4,8 +4,7 @@ import {
   useMutationWithInvalidations,
 } from '@yoroi/common'
 import {App} from '@yoroi/types'
-
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {useWalletManager} from '@yoroi/wallet-manager'
 
 export const useChangeNotificationDisplaySettings = () => {
   const storage = useAsyncStorage()

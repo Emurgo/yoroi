@@ -1,14 +1,14 @@
+import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {StakingInfo} from '@yoroi/staking'
 import {useTheme} from '@yoroi/theme'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {UseSuspenseQueryOptions, useQueryClient} from '@tanstack/react-query'
 import * as React from 'react'
 import {ActivityIndicator, View} from 'react-native'
 
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {ButtonProps} from '~/ui/Button/Button'
-import {YoroiWallet} from '~/wallets/cardano/types'
 
 import {StakePoolInfo} from './StakePoolInfo'
 

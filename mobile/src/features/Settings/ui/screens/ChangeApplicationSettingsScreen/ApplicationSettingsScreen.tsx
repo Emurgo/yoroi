@@ -1,5 +1,6 @@
 import {networkConfigs} from '@yoroi/blockchains'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useSelectedNetwork} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {ScrollView} from 'react-native'
@@ -13,7 +14,6 @@ import {
   SettingsItem,
   SettingsSection,
 } from '~/features/Settings/ui/shared/SettingsItems'
-import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {LanguageRecord, supportedLanguages} from '~/kernel/i18n/localization'
 import {useStrings} from '~/kernel/i18n/useStrings'

@@ -994,6 +994,7 @@ export type {
   TxMetadataInfo,
   WalletTransaction,
 }
+export type {TransactionInfo} from './wallet/transactions'
 
 export namespace Exchange {
   export type BlockchainCode = ExchangeBlockchainCode
