@@ -1,5 +1,4 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {Explorers} from '@yoroi/types'
 
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 import {StackNavigationProp} from '@react-navigation/stack'
@@ -42,7 +41,7 @@ const calculateTimeRemaining = (endDate: string): string => {
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
     const seconds = Math.floor((diff % (1000 * 60)) / 1000)
 
-    return `${days}d : ${hours}h : ${minutes}m : ${seconds}s`
+    return `${days}d / ${hours}h / ${minutes}m / ${seconds}s`
   } catch {
     return ''
   }
@@ -132,21 +131,6 @@ export const AirdropMainScreen = () => {
     navigation.navigate('airdrop-thaw-schedule', {allocation})
   }
 
-  const getExplorerUrl = (explorer: 'cardanoscan' | 'adaex'): string => {
-    if (!wallet) return ''
-    const explorers = wallet.networkManager.explorers
-    if (explorer === 'cardanoscan') {
-      const exp = explorers[Explorers.Explorer.Cardanoscan]
-      return exp ? exp.address(allocation.address) : ''
-    }
-    return `https://adaex.org/${allocation.address}`
-  }
-
-  const truncateAddress = (address: string): string => {
-    if (address.length <= 24) return address
-    return `${address.slice(0, 12)}...${address.slice(-8)}`
-  }
-
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
@@ -156,10 +140,7 @@ export const AirdropMainScreen = () => {
         {/* Phase Announcement */}
         <View style={[a.flex_row, a.align_start, a.gap_sm]}>
           <Text style={[a.body_1_lg_regular, ta.text_gray_max, a.flex_1]}>
-            <Text style={[a.body_1_lg_medium]}>
-              🧩 Phase 3. Lost and Found NIGHT
-            </Text>{' '}
-            of midnight airdrop has started.
+            {strings.airdrop.phaseAnnouncement}
           </Text>
         </View>
 
@@ -201,8 +182,14 @@ export const AirdropMainScreen = () => {
             <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
               {strings.airdrop.destinationAddress}
             </Text>
-            <Text style={[a.body_2_md_medium, ta.text_gray_max]}>
-              {truncateAddress(allocation.address)}
+            <Text numberOfLines={1} ellipsizeMode="middle">
+              <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
+                {allocation.address.slice(0, -6)}
+              </Text>
+              <Text style={[a.body_2_md_medium, ta.text_gray_max]}>
+                {' '}
+                {allocation.address.slice(-6)}
+              </Text>
             </Text>
           </View>
         </TouchableOpacity>
@@ -291,20 +278,40 @@ export const AirdropMainScreen = () => {
           </Text>
           <Space.Height.sm />
           <View style={[a.flex_row, a.gap_lg]}>
-            <TouchableOpacity
-              onPress={() => Linking.openURL(getExplorerUrl('cardanoscan'))}
-            >
-              <Text style={[a.body_2_md_medium, ta.el_primary_medium]}>
-                Cardanoscan
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => Linking.openURL(getExplorerUrl('adaex'))}
-            >
-              <Text style={[a.body_2_md_medium, ta.el_primary_medium]}>
-                Adaex
-              </Text>
-            </TouchableOpacity>
+            {wallet && (
+              <>
+                {wallet.networkManager.explorers.cardanoscan && (
+                  <TouchableOpacity
+                    onPress={() =>
+                      Linking.openURL(
+                        wallet.networkManager.explorers.cardanoscan.address(
+                          allocation.address,
+                        ),
+                      )
+                    }
+                  >
+                    <Text style={[a.body_2_md_medium, ta.el_primary_medium]}>
+                      Cardanoscan
+                    </Text>
+                  </TouchableOpacity>
+                )}
+                {wallet.networkManager.explorers.cexplorer && (
+                  <TouchableOpacity
+                    onPress={() =>
+                      Linking.openURL(
+                        wallet.networkManager.explorers.cexplorer.address(
+                          allocation.address,
+                        ),
+                      )
+                    }
+                  >
+                    <Text style={[a.body_2_md_medium, ta.el_primary_medium]}>
+                      Cexplorer
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              </>
+            )}
           </View>
         </Accordion>
       </ScrollView>

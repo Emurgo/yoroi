@@ -89,9 +89,7 @@ export type TxHistoryRoutes = {
     signature: string
     key: string
   }
-  'airdrop-main': {
-    address: string
-  }
+  'airdrop': undefined
   'mint-burn': undefined
   'receive-single': undefined
   'receive-specific-amount': undefined

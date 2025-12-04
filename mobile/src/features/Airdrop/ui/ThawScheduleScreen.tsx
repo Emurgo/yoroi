@@ -236,7 +236,9 @@ const ThawItem = ({thaw, index, totalThaws, isLast}: ThawItemProps) => {
       {/* Content */}
       <View style={[a.flex_1, {paddingBottom: isLast ? 0 : 24}]}>
         <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>
-          Thaw {index + 1}/{totalThaws}
+          {strings.airdrop.thawNumber
+            .replace('{current}', String(index + 1))
+            .replace('{total}', String(totalThaws))}
         </Text>
 
         <Space.Height._2xs />
