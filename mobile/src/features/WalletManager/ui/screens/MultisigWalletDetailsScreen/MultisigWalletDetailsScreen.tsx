@@ -23,7 +23,7 @@ import {Text} from '~/ui/Text/Text'
 
 export const MultisigWalletDetailsScreen = () => {
   const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const {wallet, meta} = useSelectedWallet()
   const [copied, setCopied] = React.useState(false)
 
@@ -38,8 +38,8 @@ export const MultisigWalletDetailsScreen = () => {
         metadata: {
           walletId: meta.id,
           walletName: meta.name,
-          createdAt: meta.createdAt?.toISOString() || new Date().toISOString(),
-          network: meta.network,
+          createdAt: new Date().toISOString(),
+          network: 'cardano', // TODO: Get from wallet network manager
         },
         multisig: {
           coSigners: multisigMeta.coSigners,
@@ -80,8 +80,8 @@ export const MultisigWalletDetailsScreen = () => {
         metadata: {
           walletId: meta.id,
           walletName: meta.name,
-          createdAt: meta.createdAt?.toISOString() || new Date().toISOString(),
-          network: meta.network,
+          createdAt: new Date().toISOString(),
+          network: 'cardano', // TODO: Get from wallet network manager
         },
         multisig: {
           coSigners: multisigMeta.coSigners,
@@ -108,11 +108,11 @@ export const MultisigWalletDetailsScreen = () => {
       <SafeArea>
         <Space.Height.lg />
         <View style={[a.px_lg]}>
-          <Text style={[ta.heading_1]}>
+          <Text style={[a.heading_1_medium]}>
             {strings.setupWallet.notMultisigWallet}
           </Text>
           <Space.Height.md />
-          <Text style={[ta.body_1_lg_regular]}>
+          <Text style={[a.body_1_lg_regular]}>
             {strings.setupWallet.selectMultisigWallet}
           </Text>
         </View>
@@ -142,19 +142,19 @@ export const MultisigWalletDetailsScreen = () => {
         <Space.Height.lg />
 
         <View style={[a.gap_md]}>
-          <Text style={[ta.heading_1]}>{meta.name}</Text>
+          <Text style={[a.heading_1_medium]}>{meta.name}</Text>
 
           <Space.Height.md />
 
           {/* Quorum Rules */}
-          <View style={[a.p_md, a.bg_gray_c50, a.rounded_sm]}>
-            <Text style={[ta.heading_3]}>
+          <View style={[a.p_md, {backgroundColor: p.gray_50}, a.rounded_sm]}>
+            <Text style={[a.heading_3_medium]}>
               {strings.setupWallet.quorumRules}
             </Text>
             <Space.Height.sm />
-            <Text style={[ta.body_1_lg_regular]}>{getQuorumDescription()}</Text>
+            <Text style={[a.body_1_lg_regular]}>{getQuorumDescription()}</Text>
             <Space.Height.xs />
-            <Text style={[ta.body_2_md_regular, ta.text_gray_low]}>
+            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
               Type: {multisigMeta.quorumRules.kind}
             </Text>
           </View>
@@ -162,8 +162,8 @@ export const MultisigWalletDetailsScreen = () => {
           <Space.Height.md />
 
           {/* Co-Signers List */}
-          <View style={[a.p_md, a.bg_gray_c50, a.rounded_sm]}>
-            <Text style={[ta.heading_3]}>
+          <View style={[a.p_md, {backgroundColor: p.gray_50}, a.rounded_sm]}>
+            <Text style={[a.heading_3_medium]}>
               {strings.setupWallet.coSigners} ({multisigMeta.coSigners.length})
             </Text>
             <Space.Height.sm />
@@ -174,25 +174,25 @@ export const MultisigWalletDetailsScreen = () => {
                   key={index}
                   style={[
                     a.p_sm,
-                    a.bg_gray_c100,
+                    {backgroundColor: p.gray_100},
                     a.rounded_xs,
                     a.flex_row,
-                    a.items_center,
+                    a.align_center,
                     a.justify_between,
                   ]}
                 >
                   <View style={[a.flex_1]}>
-                    <Text style={[ta.body_1_lg_medium]}>{coSigner.name}</Text>
+                    <Text style={[a.body_1_lg_medium]}>{coSigner.name}</Text>
                     <Space.Height.xs />
                     <Text
-                      style={[ta.body_2_md_regular, {fontFamily: 'monospace'}]}
+                      style={[a.body_2_md_regular, {fontFamily: 'monospace'}]}
                       numberOfLines={1}
                       ellipsizeMode="middle"
                     >
                       {coSigner.sharedWalletKey.substring(0, 20)}...
                     </Text>
                   </View>
-                  <Icon.User size={24} color={p.gray_600} />
+                  <Icon.Person size={24} color={p.gray_600} />
                 </View>
               ))}
             </View>
@@ -202,10 +202,10 @@ export const MultisigWalletDetailsScreen = () => {
 
           {/* Export Options */}
           <View style={[a.gap_md]}>
-            <Text style={[ta.heading_3]}>
+            <Text style={[a.heading_3_medium]}>
               {strings.setupWallet.exportWalletSetup}
             </Text>
-            <Text style={[ta.body_1_lg_regular]}>
+            <Text style={[a.body_1_lg_regular]}>
               {strings.setupWallet.exportWalletSetupDescription}
             </Text>
 
@@ -218,7 +218,7 @@ export const MultisigWalletDetailsScreen = () => {
                   : strings.setupWallet.copyJSON
               }
               onPress={handleCopyJSON}
-              outline
+              type={ButtonType.Secondary}
               testID="copy-wallet-setup-json-button"
             />
 

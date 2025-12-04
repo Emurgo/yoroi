@@ -49,7 +49,7 @@ export const SelectMultipleWalletsModal = ({
   filter,
 }: Props) => {
   const walletMetas = useWalletMetas()
-  const {atoms: ta} = useTheme()
+  const {palette: p} = useTheme()
   const strings = useStrings()
   const [selectedWalletIds, setSelectedWalletIds] = React.useState<Set<string>>(
     new Set(initialSelectedWalletIds),
@@ -135,7 +135,7 @@ export const SelectMultipleWalletsModal = ({
 
           {maxSelection && (
             <View style={[a.px_lg, a.pb_md]}>
-              <Text style={[ta.body_2_md_regular, ta.text_gray_low]}>
+              <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
                 {strings.send.selectUpToWallets(maxSelection)} ({selectedCount}/
                 {maxSelection})
               </Text>
@@ -166,7 +166,7 @@ const MultiSelectWalletItem = ({
   isSelected,
   onToggle,
 }: MultiSelectWalletItemProps) => {
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
 
   return (
     <TouchableOpacity
@@ -178,8 +178,8 @@ const MultiSelectWalletItem = ({
         a.rounded_sm,
         a.border,
         isSelected
-          ? {borderColor: ta.primary.color, backgroundColor: p.primary_50}
-          : {borderColor: ta.gray_c200.color, backgroundColor: 'transparent'},
+          ? {borderColor: p.primary_600, backgroundColor: p.primary_100}
+          : {borderColor: p.gray_200, backgroundColor: 'transparent'},
       ]}
     >
       <View style={[a.flex_1]}>
@@ -192,14 +192,14 @@ const MultiSelectWalletItem = ({
       <Space.Width.md />
 
       {isSelected ? (
-        <Icon.CheckCircle size={24} color={p.primary_600} />
+        <Icon.CheckFilled size={24} color={p.primary_600} />
       ) : (
         <View
           style={[
             {width: 24, height: 24},
             a.rounded_full,
             a.border,
-            {borderColor: ta.gray_c300.color},
+            {borderColor: p.gray_300},
           ]}
         />
       )}
@@ -249,11 +249,8 @@ const SelectMultipleWalletsModalFooter = ({
         disabled={!canConfirm}
         title={
           canConfirm
-            ? strings.global.confirm || 'Confirm'
-            : strings.send.selectAtLeastWallets?.replace(
-                '{count}',
-                String(minSelection),
-              ) || `Select at least ${minSelection} wallet(s)`
+            ? strings.global.ok
+            : strings.send.selectAtLeastWallets(minSelection)
         }
       />
     </Modal.Footer>

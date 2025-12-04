@@ -624,14 +624,6 @@ export const setupWalletMessages = defineMessages({
     id: 'setupWallet.reviewMultisigWalletTitle',
     defaultMessage: '!!!Review Multisig Wallet',
   },
-  walletNameInputLabel: {
-    id: 'setupWallet.walletNameInputLabel',
-    defaultMessage: '!!!Wallet Name',
-  },
-  repeatPasswordInputLabel: {
-    id: 'setupWallet.repeatPasswordInputLabel',
-    defaultMessage: '!!!Repeat Password',
-  },
   walletConfiguration: {
     id: 'setupWallet.walletConfiguration',
     defaultMessage: '!!!Wallet Configuration',

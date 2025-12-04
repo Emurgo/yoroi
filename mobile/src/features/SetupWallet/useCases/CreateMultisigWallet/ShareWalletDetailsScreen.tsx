@@ -16,7 +16,7 @@ import Share from 'react-native-share'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
-import {Button} from '~/ui/Button/Button'
+import {Button, ButtonType} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
@@ -44,7 +44,7 @@ type MultisigWalletSetupJSON = {
 
 export const ShareWalletDetailsScreen = () => {
   const strings = useStrings()
-  const {atoms: ta} = useTheme()
+  const {palette: p} = useTheme()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
   const route = useRoute()
 
@@ -69,7 +69,7 @@ export const ShareWalletDetailsScreen = () => {
         network: 'cardano', // TODO: Get from wallet meta
       },
       multisig: {
-        coSigners: multisigMeta.coSigners,
+        coSigners: multisigMeta.coSigners as ReadonlyArray<Wallet.CoSigner>,
         quorumRules: multisigMeta.quorumRules,
         paymentScriptCbor: multisigMeta.paymentScriptCbor,
         stakingScriptCbor: multisigMeta.stakingScriptCbor,
@@ -185,7 +185,7 @@ export const ShareWalletDetailsScreen = () => {
           <Space.Height.lg />
 
           {/* Wallet info summary */}
-          <View style={[a.p_md, a.bg_gray_c50, a.rounded_sm]}>
+          <View style={[a.p_md, {backgroundColor: p.gray_50}, a.rounded_sm]}>
             <Text style={[a.body_1_lg_medium]}>
               {strings.setupWallet.walletName}: {walletMeta.name}
             </Text>
@@ -214,7 +214,7 @@ export const ShareWalletDetailsScreen = () => {
           <Button
             title={strings.setupWallet.copyJSON}
             onPress={handleCopyJSON}
-            outline
+            type={ButtonType.Secondary}
             testID="copy-json-button"
           />
 
@@ -224,11 +224,11 @@ export const ShareWalletDetailsScreen = () => {
               <Button
                 title="Copy Restoration Link"
                 onPress={handleCopyLink}
-                outline
+                type={ButtonType.Secondary}
                 testID="copy-link-button"
               />
               <Space.Height.xs />
-              <Text style={[ta.body_2_md_regular, ta.text_gray_max]}>
+              <Text style={[a.body_2_md_regular, {color: p.gray_max}]}>
                 Share this link or QR code with co-signers. They can open it in
                 Yoroi to restore the multisig wallet.
               </Text>
@@ -242,7 +242,7 @@ export const ShareWalletDetailsScreen = () => {
             <Text style={[a.heading_3_medium]}>
               {strings.setupWallet.walletSetupJSON}
             </Text>
-            <View style={[a.p_md, a.bg_gray_c100, a.rounded_sm]}>
+            <View style={[a.p_md, {backgroundColor: p.gray_100}, a.rounded_sm]}>
               <Text
                 style={[
                   a.body_2_md_regular,
@@ -258,7 +258,7 @@ export const ShareWalletDetailsScreen = () => {
           <Space.Height.lg />
 
           <Button
-            title={strings.global.done || 'Done'}
+            title={strings.global.close}
             onPress={() => navigation.navigate('setup-wallet-preparing-wallet')}
             testID="done-after-share-button"
           />

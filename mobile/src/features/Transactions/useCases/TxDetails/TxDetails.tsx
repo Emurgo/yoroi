@@ -165,9 +165,9 @@ export const TxDetails = () => {
         <View style={[a.flex_col, a.gap_sm]}>
           {isMultisig && multisigMeta && quorumInfo && (
             <View
-              style={[a.p_md, {backgroundColor: p.primary_50}, a.rounded_sm]}
+              style={[a.p_md, {backgroundColor: p.primary_100}, a.rounded_sm]}
             >
-              <View style={[a.flex_row, a.align_center, a.gap_sm, a.mb_sm]}>
+              <View style={[a.flex_row, a.align_center, a.gap_sm, a.pb_sm]}>
                 <Icon.MultiParty size={20} color={p.primary_600} />
                 <Text style={[a.body_1_lg_medium, {color: p.primary_900}]}>
                   Multisig Transaction

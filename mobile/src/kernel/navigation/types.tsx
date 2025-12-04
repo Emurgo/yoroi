@@ -1,4 +1,4 @@
-import {Chain, Links, Portfolio, Scan} from '@yoroi/types'
+import {Chain, Links, Portfolio, Scan, Wallet} from '@yoroi/types'
 
 import {NavigatorScreenParams, useNavigation} from '@react-navigation/native'
 import {StackNavigationProp} from '@react-navigation/stack'
@@ -93,7 +93,9 @@ export type WalletInitRoutes = {
     walletId: string
     walletMeta: Wallet.Meta
   }
-  'setup-wallet-multisig-import': undefined
+  'setup-wallet-multisig-import': {
+    importedWalletSetup: unknown
+  }
   'setup-wallet-multisig-validate-cosigner': {
     importedWalletSetup: unknown
     currentWalletId: string

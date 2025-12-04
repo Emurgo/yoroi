@@ -150,10 +150,17 @@ export const ListAmountsToSendScreen = () => {
       filter: (walletMeta) => {
         // Only show wallets on the same network
         const otherWallet = walletManager.getWalletById(walletMeta.id)
-        return otherWallet?.networkManager.chainId === wallet.networkManager.chainId
+        return (
+          otherWallet?.networkManager.chainId === wallet.networkManager.chainId
+        )
       },
     })
-  }, [openSelectMultipleWalletsModal, selectedInputWalletIds, wallet, walletManager])
+  }, [
+    openSelectMultipleWalletsModal,
+    selectedInputWalletIds,
+    wallet,
+    walletManager,
+  ])
 
   const createUnsignedTxPromise = React.useCallback(
     async (entries: TransactionOutput[]) => {
