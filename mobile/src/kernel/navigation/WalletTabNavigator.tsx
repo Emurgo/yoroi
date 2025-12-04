@@ -7,7 +7,9 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs'
 import * as React from 'react'
+import {View} from 'react-native'
 
+import {useHasRedeemableThaws} from '~/features/Airdrop/common/useHasRedeemableThaws'
 import {DiscoverNavigator} from '~/features/Discover/DiscoverNavigator'
 import {MenuNavigator} from '~/features/Menu/Menu'
 import {P2PConnectionProviderWrapper} from '~/features/P2P/components/P2PConnectionProviderWrapper'
@@ -19,6 +21,7 @@ import {SwapProvider} from '~/features/Swap/common/SwapProvider'
 import {TxHistoryNavigator} from '~/features/Transactions/TxHistoryNavigator'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
+import {WalletTabNotification} from '~/ui/WalletTabNotification/WalletTabNotification'
 
 import {shouldShowTabBarForRoutes} from './common/helpers'
 import {WalletTabRoutes} from './types'
@@ -30,10 +33,29 @@ const TabBarWithHiddenContent = (props: BottomTabBarProps) => {
   return shouldShow ? <BottomTabBar {...props} /> : null
 }
 
+// Helper to create tab icon with optional notification
+const createTabIcon =
+  (
+    ActiveIcon: React.ComponentType<{size: number; color: string}>,
+    InactiveIcon: React.ComponentType<{size: number; color: string}>,
+    showNotification: boolean,
+  ) =>
+  ({focused, color, size}: {focused: boolean; color: string; size: number}) => (
+    <View style={a.relative}>
+      {focused ? (
+        <ActiveIcon size={size} color={color} />
+      ) : (
+        <InactiveIcon size={size} color={color} />
+      )}
+      <WalletTabNotification show={showNotification} />
+    </View>
+  )
+
 export const WalletTabNavigator = () => {
   const {palette: p, atoms: ta} = useTheme()
   const strings = useStrings()
   const manager = useGovernanceManagerMaker()
+  const {hasRedeemableThaws} = useHasRedeemableThaws()
 
   // Memoize screenOptions to prevent recreation on every render
   const screenOptions = React.useMemo(
@@ -57,76 +79,24 @@ export const WalletTabNavigator = () => {
   )
 
   // Memoize tab bar icons to prevent recreation on every render
-  const historyTabBarIcon = React.useCallback(
-    ({
-      focused,
-      color,
-      size,
-    }: {
-      focused: boolean
-      color: string
-      size: number
-    }) =>
-      focused ? (
-        <Icon.TabWalletActive size={size} color={color} />
-      ) : (
-        <Icon.TabWallet size={size} color={color} />
-      ),
+  const historyTabBarIcon = React.useMemo(
+    () => createTabIcon(Icon.TabWalletActive, Icon.TabWallet, false),
     [],
   )
 
-  const portfolioTabBarIcon = React.useCallback(
-    ({
-      focused,
-      color,
-      size,
-    }: {
-      focused: boolean
-      color: string
-      size: number
-    }) =>
-      focused ? (
-        <Icon.TabPortfolioActive size={size} color={color} />
-      ) : (
-        <Icon.TabPortfolio size={size} color={color} />
-      ),
+  const portfolioTabBarIcon = React.useMemo(
+    () => createTabIcon(Icon.TabPortfolioActive, Icon.TabPortfolio, false),
     [],
   )
 
-  const discoverTabBarIcon = React.useCallback(
-    ({
-      focused,
-      color,
-      size,
-    }: {
-      focused: boolean
-      color: string
-      size: number
-    }) =>
-      focused ? (
-        <Icon.TabDiscoverActive size={size} color={color} />
-      ) : (
-        <Icon.TabDiscover size={size} color={color} />
-      ),
+  const discoverTabBarIcon = React.useMemo(
+    () => createTabIcon(Icon.TabDiscoverActive, Icon.TabDiscover, false),
     [],
   )
 
-  const menuTabBarIcon = React.useCallback(
-    ({
-      focused,
-      color,
-      size,
-    }: {
-      focused: boolean
-      color: string
-      size: number
-    }) =>
-      focused ? (
-        <Icon.TabMenuActive size={size} color={color} />
-      ) : (
-        <Icon.TabMenu size={size} color={color} />
-      ),
-    [],
+  const menuTabBarIcon = React.useMemo(
+    () => createTabIcon(Icon.TabMenuActive, Icon.TabMenu, hasRedeemableThaws),
+    [hasRedeemableThaws],
   )
 
   // Memoize screen options to prevent recreation on every render

@@ -15,6 +15,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
 import {useAuth} from '~/features/Auth/context/AuthProvider'
+import {useHasRedeemableThaws} from '~/features/Airdrop/common/useHasRedeemableThaws'
 import {usePrefetchStakingInfo} from '~/features/Dashboard/ui/shared/StakePoolInfos'
 import {useCanVote} from '~/features/RegisterCatalyst/common/hooks'
 import {NetworkTag} from '~/features/Settings/ui/shared/NetworkTag'
@@ -22,6 +23,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {MenuRoutes} from '~/kernel/navigation/types'
+import {Badge} from '~/ui/Badge/Badge'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
@@ -61,6 +63,7 @@ export const Menu = () => {
   const {isAuthDev} = useAuth()
   const {config} = useRemoteConfig()
   const isAirdropEnabled = config?.features?.midnightAirdrop?.enabled ?? false
+  const {hasRedeemableThaws} = useHasRedeemableThaws()
 
   return (
     <SafeAreaView edges={['left', 'right']} style={[ta.bg_color_max, a.flex_1]}>
@@ -113,6 +116,11 @@ export const Menu = () => {
             label={strings.menu.airdrop}
             onPress={navigateTo.airdrop}
             left={<Icon.Airdrop size={24} color={p.gray_600} />}
+            right={
+              hasRedeemableThaws ? (
+                <Badge label={strings.airdrop.redeem} color={p.bg_gradient_4} />
+              ) : null
+            }
           />
         )}
 
@@ -200,11 +208,12 @@ const Item = ({
 
       <Space.Width.lg />
 
-      <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>{label}</Text>
+      <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+        <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>{label}</Text>
+        {right}
+      </View>
 
       <Space.Height.sm fill />
-
-      {right}
 
       <Space.Width.sm />
 

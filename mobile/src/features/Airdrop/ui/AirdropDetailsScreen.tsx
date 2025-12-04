@@ -179,16 +179,14 @@ export const AirdropDetailsScreen = () => {
 
           <Space.Height.md />
 
-          <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-            <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
-              {strings.airdrop.destinationAddress}
-            </Text>
-            <Address
-              address={allocation.address}
-              style={a.flex_1}
-              textStyle={[a.body_2_md_regular, ta.text_gray_medium]}
-            />
-          </View>
+          <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
+            {strings.airdrop.destinationAddress}
+          </Text>
+          <Address
+            address={allocation.address}
+            style={a.flex_1}
+            textStyle={[a.body_2_md_regular, ta.text_gray_medium]}
+          />
         </TouchableOpacity>
 
         <Space.Height.lg />

@@ -28,7 +28,7 @@ export const Badge = ({label, color, style, ...props}: Props) => {
     style,
   ]
 
-  const textStyle = [a.body_3_sm_medium, {color: p.white_static}]
+  const textStyle = [a.body_3_sm_regular, {color: p.white_static}]
 
   if (isGradient) {
     return (
