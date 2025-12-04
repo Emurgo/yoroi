@@ -317,6 +317,9 @@ export const useStrings = () => {
         redeemSuccess: f(airdropMessages.redeemSuccess),
         redeemError: f(airdropMessages.redeemError),
         insufficientFunds: f(airdropMessages.insufficientFunds),
+        redeemableThaws: f(airdropMessages.redeemableThaws),
+        readOnlyWallet: f(airdropMessages.readOnlyWallet),
+        noRedeemableThaws: f(airdropMessages.noRedeemableThaws),
         status: {
           upcoming: f(airdropMessages.statusUpcoming),
           redeemable: f(airdropMessages.statusRedeemable),

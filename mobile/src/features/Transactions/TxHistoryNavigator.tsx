@@ -317,7 +317,7 @@ export const TxHistoryNavigator = () => {
           <Stack.Screen
             name="airdrop"
             options={{
-              title: strings.menu.airdrop,
+              headerShown: false,
             }}
             getComponent={() => AirdropScreen}
           />

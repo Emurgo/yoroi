@@ -183,4 +183,16 @@ export const airdropMessages = defineMessages({
     id: 'airdrop.detailsOn',
     defaultMessage: '!!!Details on',
   },
+  redeemableThaws: {
+    id: 'airdrop.redeemableThaws',
+    defaultMessage: '!!!Redeemable thaws',
+  },
+  readOnlyWallet: {
+    id: 'airdrop.readOnlyWallet',
+    defaultMessage: '!!!Read-only wallets cannot redeem tokens',
+  },
+  noRedeemableThaws: {
+    id: 'airdrop.noRedeemableThaws',
+    defaultMessage: '!!!No thaws are currently redeemable',
+  },
 })

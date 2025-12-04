@@ -1,6 +1,8 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Explorers} from '@yoroi/types'
 
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
+import {StackNavigationProp} from '@react-navigation/stack'
 import {BigNumber} from 'bignumber.js'
 import * as React from 'react'
 import {Linking, ScrollView, Text, TouchableOpacity, View} from 'react-native'
@@ -16,7 +18,8 @@ import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 
 import {useRedeemThaw} from '../common/useRedeemThaw'
-import type {AddressAllocation, Thaw} from '../types'
+import type {Thaw} from '../types'
+import type {AirdropRoutes} from './types'
 
 const NIGHT_DECIMALS = 6
 
@@ -58,14 +61,13 @@ const getCurrentThawIndex = (thaws: ReadonlyArray<Thaw>): number => {
   return thaws.length - 1
 }
 
-type Props = {
-  allocation: AddressAllocation
-  onBack: () => void
-}
-
-export const AirdropMainScreen = ({allocation}: Props) => {
+export const AirdropMainScreen = () => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
+  const route = useRoute<RouteProp<AirdropRoutes, 'airdrop-main'>>()
+  const navigation = useNavigation<StackNavigationProp<AirdropRoutes>>()
+  const {allocation} = route.params
+
   const walletManager = useWalletManager()
   const wallet = walletManager.selected.wallet
   const meta = walletManager.selected.meta ?? null
@@ -126,6 +128,10 @@ export const AirdropMainScreen = ({allocation}: Props) => {
     })
   }
 
+  const handleOpenThawSchedule = () => {
+    navigation.navigate('airdrop-thaw-schedule', {allocation})
+  }
+
   const getExplorerUrl = (explorer: 'cardanoscan' | 'adaex'): string => {
     if (!wallet) return ''
     const explorers = wallet.networkManager.explorers
@@ -149,10 +155,9 @@ export const AirdropMainScreen = ({allocation}: Props) => {
       <ScrollView contentContainerStyle={[a.p_lg]} style={a.flex_1}>
         {/* Phase Announcement */}
         <View style={[a.flex_row, a.align_start, a.gap_sm]}>
-          <Text style={{fontSize: 18}}>🎉</Text>
           <Text style={[a.body_1_lg_regular, ta.text_gray_max, a.flex_1]}>
             <Text style={[a.body_1_lg_medium]}>
-              Phase 3. Lost and Found NIGHT
+              🧩 Phase 3. Lost and Found NIGHT
             </Text>{' '}
             of midnight airdrop has started.
           </Text>
@@ -167,9 +172,7 @@ export const AirdropMainScreen = ({allocation}: Props) => {
             a.p_lg,
             a.rounded_sm,
             {
-              backgroundColor: p.sys_cyan_100,
-              borderWidth: 1,
-              borderColor: p.primary_300,
+              backgroundColor: p.bg_gradient_2[0],
             },
           ]}
         >
@@ -180,7 +183,6 @@ export const AirdropMainScreen = ({allocation}: Props) => {
               </Text>
               <Icon.InfoCircle size={16} color={p.gray_600} />
             </View>
-            <Icon.Chevron direction="right" size={24} color={p.gray_600} />
           </View>
 
           <Space.Height.md />
@@ -209,6 +211,7 @@ export const AirdropMainScreen = ({allocation}: Props) => {
 
         {/* Current Thaw Card */}
         <TouchableOpacity
+          onPress={handleOpenThawSchedule}
           activeOpacity={0.8}
           style={[
             a.p_lg,

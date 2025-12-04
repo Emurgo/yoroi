@@ -1,5 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
+import {useNavigation} from '@react-navigation/native'
+import {StackNavigationProp} from '@react-navigation/stack'
 import {BigNumber} from 'bignumber.js'
 import * as React from 'react'
 import {
@@ -12,12 +14,12 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 
 import {useAirdropEligibility} from '../common/useAirdropEligibility'
 import type {AddressAllocation} from '../types'
+import type {AirdropRoutes} from './types'
 
 // NIGHT token has 6 decimals
 const NIGHT_DECIMALS = 6
@@ -28,33 +30,15 @@ const formatAmount = (amount: number): string => {
   return normalized.toFormat(2)
 }
 
-type Props = {
-  onSelectAddress: (allocation: AddressAllocation) => void
-}
-
-export const DestinationAddressScreen = ({onSelectAddress}: Props) => {
+export const DestinationAddressScreen = () => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
+  const navigation = useNavigation<StackNavigationProp<AirdropRoutes>>()
 
   const {allocations, isLoading, isError} = useAirdropEligibility()
-  const [selectedAddress, setSelectedAddress] = React.useState<string | null>(
-    null,
-  )
 
-  // Auto-select first address if available
-  React.useEffect(() => {
-    if (allocations.length > 0 && !selectedAddress) {
-      setSelectedAddress(allocations[0]?.address ?? null)
-    }
-  }, [allocations, selectedAddress])
-
-  const handleApply = () => {
-    const selectedAllocation = allocations.find(
-      (a) => a.address === selectedAddress,
-    )
-    if (selectedAllocation) {
-      onSelectAddress(selectedAllocation)
-    }
+  const handleSelectAddress = (allocation: AddressAllocation) => {
+    navigation.navigate('airdrop-main', {allocation})
   }
 
   if (isLoading) {
@@ -117,28 +101,15 @@ export const DestinationAddressScreen = ({onSelectAddress}: Props) => {
       style={[ta.bg_color_max, a.flex_1]}
     >
       <ScrollView contentContainerStyle={[a.p_lg, a.gap_md]} style={a.flex_1}>
-        {allocations.map((allocation, index) => {
-          const isSelected = selectedAddress === allocation.address
-          return (
-            <AddressCard
-              key={allocation.address}
-              allocation={allocation}
-              index={index + 1}
-              isSelected={isSelected}
-              onPress={() => setSelectedAddress(allocation.address)}
-            />
-          )
-        })}
+        {allocations.map((allocation, index) => (
+          <AddressCard
+            key={allocation.address}
+            allocation={allocation}
+            index={index + 1}
+            onPress={() => handleSelectAddress(allocation)}
+          />
+        ))}
       </ScrollView>
-
-      <View style={[a.p_lg, {paddingBottom: 24}]}>
-        <Button
-          title={strings.airdrop.apply}
-          onPress={handleApply}
-          disabled={!selectedAddress}
-          size="M"
-        />
-      </View>
     </SafeAreaView>
   )
 }
@@ -146,16 +117,10 @@ export const DestinationAddressScreen = ({onSelectAddress}: Props) => {
 type AddressCardProps = {
   allocation: AddressAllocation
   index: number
-  isSelected: boolean
   onPress: () => void
 }
 
-const AddressCard = ({
-  allocation,
-  index,
-  isSelected,
-  onPress,
-}: AddressCardProps) => {
+const AddressCard = ({allocation, index, onPress}: AddressCardProps) => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
 
@@ -170,21 +135,11 @@ const AddressCard = ({
         a.rounded_sm,
         {
           backgroundColor: p.gray_min,
-          borderWidth: isSelected ? 0 : 1,
-          borderColor: p.gray_200,
           overflow: 'hidden',
         },
       ]}
     >
-      <View style={[a.flex_row]}>
-        {/* Left accent border for selected state */}
-        <View
-          style={{
-            width: 4,
-            backgroundColor: isSelected ? p.primary_500 : 'transparent',
-          }}
-        />
-
+      <View style={[a.flex_row, {backgroundColor: p.bg_gradient_1[0]}]}>
         <View style={[a.flex_1, a.p_lg]}>
           {/* Header row */}
           <View style={[a.flex_row, a.justify_between, a.align_center]}>
@@ -215,7 +170,7 @@ const AddressCard = ({
           {/* Redeemable row */}
           <View style={[a.flex_row, a.justify_between, a.align_center]}>
             <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
-              {strings.airdrop.statusRedeemable}
+              {strings.airdrop.status.redeemable}
             </Text>
             <Text style={[a.body_2_md_medium, ta.text_gray_max]}>
               {redeemableAmount} NIGHT
