@@ -43,4 +43,3 @@ export const WalletTabNotification = ({show}: Props) => {
     </View>
   )
 }
-

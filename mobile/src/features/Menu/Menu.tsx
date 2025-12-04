@@ -14,8 +14,8 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
-import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {useHasRedeemableThaws} from '~/features/Airdrop/common/useHasRedeemableThaws'
+import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {usePrefetchStakingInfo} from '~/features/Dashboard/ui/shared/StakePoolInfos'
 import {useCanVote} from '~/features/RegisterCatalyst/common/hooks'
 import {NetworkTag} from '~/features/Settings/ui/shared/NetworkTag'
