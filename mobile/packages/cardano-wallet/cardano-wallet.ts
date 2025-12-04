@@ -18,6 +18,7 @@ import {
   buildVotingLedgerPayloadV5,
   createSignedLedgerTxFromCbor,
   modernUtxosToCardanoAddressedUtxos,
+  rawUtxoToModernUtxo,
   signRawTransaction,
 } from '@yoroi/tx'
 import {
@@ -34,6 +35,7 @@ import {
   TransactionCborBase64,
   Wallet,
   WalletTransaction,
+  Wallet as WalletTypes,
 } from '@yoroi/types'
 
 import type {SignedTransactionData} from '@cardano-foundation/ledgerjs-hw-app-cardano'
@@ -115,7 +117,10 @@ type WalletState = {
   id: string
   publicKeyHex: string
   rewardAddressHex: string
-  accountManager: AccountManager | ReadOnlyAccountManager
+  accountManager:
+    | AccountManager
+    | ReadOnlyAccountManager
+    | MultisigAccountManager
   accountVisual: number
   utxoManager: UtxoManager
   utxos: RawUtxo[]
@@ -133,6 +138,7 @@ type WalletState = {
     CardanoWalletDependencies,
     'toLedgerSignRequest' | 'toBalanceManagerSyncArgs' | 'createCollateralEntry'
   >
+  multisigMeta?: WalletTypes.MultisigWalletMeta
 }
 
 const _getUtxos = defaultMemoize((utxos: RawUtxo[], collateralId: string) => {
@@ -520,7 +526,7 @@ function createWalletObject(
         canIncrease: false,
       },
       addSubscriberToNewAddresses: () => {},
-    } as AccountManager['externalChain']
+    } as unknown as AccountManager['externalChain']
   }
   const addressesInBlocks = () => {
     if ('getAddressesInBlocks' in state.accountManager) {
@@ -808,14 +814,29 @@ function createWalletObject(
       if (!baseAddress) {
         return []
       }
-      return utxos().map((utxo) => ({
-        ...utxo,
-        receiver: baseAddress,
-        addressing: {
-          path: [],
-          startLevel: 0,
-        },
-      }))
+      return utxos().map((utxo) =>
+        rawUtxoToModernUtxo(
+          {
+            amount: utxo.amount,
+            receiver: baseAddress,
+            tx_hash: utxo.tx_hash,
+            tx_index: utxo.tx_index,
+            utxo_id: utxo.utxo_id,
+            assets: utxo.assets.map((asset) => ({
+              amount: asset.amount,
+              tokenId: asset.tokenId,
+              policyId: asset.policyId,
+              name: asset.name,
+            })),
+          },
+          {
+            path: [],
+            startLevel: 0,
+          },
+          undefined,
+          state.portfolioPrimaryTokenInfo.id,
+        ),
+      )
     }
     // Regular wallets use the existing logic
     return getAddressedUtxosOp(

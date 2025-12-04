@@ -136,8 +136,7 @@ export const SelectMultipleWalletsModal = ({
           {maxSelection && (
             <View style={[a.px_lg, a.pb_md]}>
               <Text style={[ta.body_2_md_regular, ta.text_gray_low]}>
-                {strings.send.selectUpToWallets ||
-                  `Select up to ${maxSelection} wallets`}{' '}
+                {strings.send.selectUpToWallets(maxSelection)}{' '}
                 ({selectedCount}/{maxSelection})
               </Text>
             </View>
@@ -290,9 +289,7 @@ export const useSelectMultipleWalletsModal = () => {
       }
 
       openModal({
-        title:
-          strings.send.selectInputWallets ||
-          'Select Input Wallets for Multiparty Transaction',
+        title: strings.send.selectInputWallets,
         content: (
           <SelectMultipleWalletsModal
             onSelect={(selected) => {

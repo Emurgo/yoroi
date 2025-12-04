@@ -19,7 +19,7 @@ import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
-import {Text} from '~/ui/Text'
+import {Text} from '~/ui/Text/Text'
 
 type RouteParams = {
   walletId: string
@@ -52,6 +52,10 @@ export const ShareWalletDetailsScreen = () => {
   const {walletId, walletMeta} = params
 
   const multisigMeta = walletMeta.multisigMeta
+  if (!multisigMeta) {
+    // This screen should only be accessed for multisig wallets
+    return null
+  }
 
   // Always call hooks before early returns
   const walletSetupJSON: MultisigWalletSetupJSON | null = React.useMemo(() => {
@@ -107,17 +111,14 @@ export const ShareWalletDetailsScreen = () => {
       await Share.open({
         url: `file://${fileUri}`,
         type: 'application/json',
-        title: strings.setupWallet.shareWalletSetup || 'Share Wallet Setup',
+        title: strings.setupWallet.shareWalletSetup,
       })
     } catch (error) {
       // User cancelled or error occurred - ignore cancellation
       if (error && typeof error === 'object' && 'message' in error) {
         const errorMessage = String(error.message)
         if (!errorMessage.includes('User did not share')) {
-          Alert.alert(
-            strings.setupWallet.shareError || 'Share Error',
-            errorMessage,
-          )
+          Alert.alert(strings.setupWallet.shareError, errorMessage)
         }
       }
     }
@@ -128,13 +129,12 @@ export const ShareWalletDetailsScreen = () => {
     try {
       await Clipboard.setStringAsync(jsonString)
       Alert.alert(
-        strings.setupWallet.copied || 'Copied',
-        strings.setupWallet.walletSetupCopied ||
-          'Wallet setup JSON copied to clipboard',
+        strings.setupWallet.copied,
+        strings.setupWallet.walletSetupCopied,
       )
     } catch (error) {
       Alert.alert(
-        strings.setupWallet.copyError || 'Copy Error',
+        strings.setupWallet.copyError,
         error instanceof Error ? error.message : 'Failed to copy wallet setup',
       )
     }
@@ -143,7 +143,7 @@ export const ShareWalletDetailsScreen = () => {
   const handleCopyLink = React.useCallback(async () => {
     if (!restorationLink) {
       Alert.alert(
-        strings.setupWallet.copyError || 'Copy Error',
+        strings.setupWallet.copyError,
         'Failed to generate restoration link',
       )
       return
@@ -152,12 +152,12 @@ export const ShareWalletDetailsScreen = () => {
     try {
       await Clipboard.setStringAsync(restorationLink)
       Alert.alert(
-        strings.setupWallet.copied || 'Copied',
+        strings.setupWallet.copied,
         'Restoration link copied to clipboard',
       )
     } catch (error) {
       Alert.alert(
-        strings.setupWallet.copyError || 'Copy Error',
+        strings.setupWallet.copyError,
         error instanceof Error ? error.message : 'Failed to copy link',
       )
     }
@@ -173,15 +173,13 @@ export const ShareWalletDetailsScreen = () => {
       >
         <View style={[a.gap_md]}>
           <Text style={[ta.heading_1]}>
-            {strings.setupWallet.shareWalletDetailsTitle ||
-              'Share Wallet Details'}
+            {strings.setupWallet.shareWalletDetailsTitle}
           </Text>
 
           <Space.Height.md />
 
           <Text style={[ta.body_1_lg_regular]}>
-            {strings.setupWallet.shareWalletDetailsDescription ||
-              'Share the wallet setup JSON with other co-signers so they can import this multisig wallet.'}
+            {strings.setupWallet.shareWalletDetailsDescription}
           </Text>
 
           <Space.Height.lg />
@@ -189,18 +187,16 @@ export const ShareWalletDetailsScreen = () => {
           {/* Wallet info summary */}
           <View style={[a.p_md, a.bg_gray_c50, a.rounded_sm]}>
             <Text style={[ta.body_1_lg_medium]}>
-              {strings.setupWallet.walletName || 'Wallet Name'}:{' '}
-              {walletMeta.name}
+              {strings.setupWallet.walletName}: {walletMeta.name}
             </Text>
             <Space.Height.xs />
             <Text style={[ta.body_1_lg_medium]}>
-              {strings.setupWallet.coSignersCount || 'Co-Signers'}:{' '}
+              {strings.setupWallet.coSignersCount}:{' '}
               {multisigMeta.coSigners.length}
             </Text>
             <Space.Height.xs />
             <Text style={[ta.body_1_lg_medium]}>
-              {strings.setupWallet.quorumRules || 'Quorum'}:{' '}
-              {multisigMeta.quorumRules.kind}
+              {strings.setupWallet.quorumRules}: {multisigMeta.quorumRules.kind}
               {multisigMeta.quorumRules.kind === 'RequireNOf' &&
                 ` (${multisigMeta.quorumRules.required} of ${multisigMeta.coSigners.length})`}
             </Text>
@@ -210,13 +206,13 @@ export const ShareWalletDetailsScreen = () => {
 
           {/* Action buttons */}
           <Button
-            title={strings.setupWallet.shareWalletSetup || 'Share Wallet Setup'}
+            title={strings.setupWallet.shareWalletSetup}
             onPress={handleShare}
             testID="share-wallet-setup-button"
           />
 
           <Button
-            title={strings.setupWallet.copyJSON || 'Copy JSON'}
+            title={strings.setupWallet.copyJSON}
             onPress={handleCopyJSON}
             outline
             testID="copy-json-button"
@@ -244,7 +240,7 @@ export const ShareWalletDetailsScreen = () => {
           {/* JSON preview */}
           <View style={[a.gap_sm]}>
             <Text style={[ta.heading_3]}>
-              {strings.setupWallet.walletSetupJSON || 'Wallet Setup JSON'}
+              {strings.setupWallet.walletSetupJSON}
             </Text>
             <View style={[a.p_md, a.bg_gray_c100, a.rounded_sm]}>
               <Text

@@ -447,4 +447,337 @@ export const setupWalletMessages = defineMessages({
     id: 'components.walletinit.restorewalletfromlink.securityWarning.continueButton',
     defaultMessage: '!!!I Understand, Continue',
   },
+  shareWalletSetup: {
+    id: 'setupWallet.shareWalletSetup',
+    defaultMessage: '!!!Share Wallet Setup',
+  },
+  shareError: {
+    id: 'setupWallet.shareError',
+    defaultMessage: '!!!Share Error',
+  },
+  copied: {
+    id: 'setupWallet.copied',
+    defaultMessage: '!!!Copied',
+  },
+  walletSetupCopied: {
+    id: 'setupWallet.walletSetupCopied',
+    defaultMessage: '!!!Wallet setup copied to clipboard',
+  },
+  copyError: {
+    id: 'setupWallet.copyError',
+    defaultMessage: '!!!Copy Error',
+  },
+  shareWalletDetailsTitle: {
+    id: 'setupWallet.shareWalletDetailsTitle',
+    defaultMessage: '!!!Share Wallet Details',
+  },
+  shareWalletDetailsDescription: {
+    id: 'setupWallet.shareWalletDetailsDescription',
+    defaultMessage:
+      '!!!Share the wallet setup JSON with other co-signers so they can import this multisig wallet.',
+  },
+  walletName: {
+    id: 'setupWallet.walletName',
+    defaultMessage: '!!!Wallet Name',
+  },
+  coSignersCount: {
+    id: 'setupWallet.coSignersCount',
+    defaultMessage: '!!!Co-Signers',
+  },
+  quorumRules: {
+    id: 'setupWallet.quorumRules',
+    defaultMessage: '!!!Quorum',
+  },
+  copyJSON: {
+    id: 'setupWallet.copyJSON',
+    defaultMessage: '!!!Copy JSON',
+  },
+  walletSetupJSON: {
+    id: 'setupWallet.walletSetupJSON',
+    defaultMessage: '!!!Wallet Setup JSON',
+  },
+  transactionCopiedToClipboard: {
+    id: 'setupWallet.transactionCopiedToClipboard',
+    defaultMessage: '!!!Transaction copied to clipboard',
+  },
+  notAllSignersSigned: {
+    id: 'setupWallet.notAllSignersSigned',
+    defaultMessage: '!!!Not All Signers Signed',
+  },
+  exportAndShareWithSigners: {
+    id: 'setupWallet.exportAndShareWithSigners',
+    defaultMessage: '!!!Export and share with signers',
+  },
+  signaturesRequired: {
+    id: 'setupWallet.signaturesRequired',
+    defaultMessage: '!!!Signatures Required',
+  },
+  signaturesReceived: {
+    id: 'setupWallet.signaturesReceived',
+    defaultMessage: '!!!Signatures Received',
+  },
+  exportTransaction: {
+    id: 'setupWallet.exportTransaction',
+    defaultMessage: '!!!Export Transaction',
+  },
+  submitTransaction: {
+    id: 'setupWallet.submitTransaction',
+    defaultMessage: '!!!Submit Transaction',
+  },
+  coSignTransactionTitle: {
+    id: 'setupWallet.coSignTransactionTitle',
+    defaultMessage: '!!!Co-Sign Transaction',
+  },
+  coSignTransactionDescription: {
+    id: 'setupWallet.coSignTransactionDescription',
+    defaultMessage: '!!!Import a transaction JSON file to sign it with your wallet.',
+  },
+  multisigTransaction: {
+    id: 'setupWallet.multisigTransaction',
+    defaultMessage: '!!!Multisig Transaction',
+  },
+  multipartyTransaction: {
+    id: 'setupWallet.multipartyTransaction',
+    defaultMessage: '!!!Multiparty Transaction',
+  },
+  selectJSONFile: {
+    id: 'setupWallet.selectJSONFile',
+    defaultMessage: '!!!Select JSON File',
+  },
+  pasteJSONManually: {
+    id: 'setupWallet.pasteJSONManually',
+    defaultMessage: '!!!Paste JSON Manually',
+  },
+  parseJSON: {
+    id: 'setupWallet.parseJSON',
+    defaultMessage: '!!!Parse JSON',
+  },
+  transactionImported: {
+    id: 'setupWallet.transactionImported',
+    defaultMessage: '!!!Transaction Imported',
+  },
+  transactionDetails: {
+    id: 'setupWallet.transactionDetails',
+    defaultMessage: '!!!Transaction Details',
+  },
+  fee: {
+    id: 'setupWallet.fee',
+    defaultMessage: '!!!Fee',
+  },
+  outputs: {
+    id: 'setupWallet.outputs',
+    defaultMessage: '!!!Outputs',
+  },
+  passwordInputLabel: {
+    id: 'setupWallet.passwordInputLabel',
+    defaultMessage: '!!!Password',
+  },
+  signTransaction: {
+    id: 'setupWallet.signTransaction',
+    defaultMessage: '!!!Sign Transaction',
+  },
+  selectDifferentFile: {
+    id: 'setupWallet.selectDifferentFile',
+    defaultMessage: '!!!Select Different File',
+  },
+  multisigSigningStatus: {
+    id: 'setupWallet.multisigSigningStatus',
+    defaultMessage: '!!!Multisig Signing Status',
+  },
+  quorumNotMet: {
+    id: 'setupWallet.quorumNotMet',
+    defaultMessage: '!!!Quorum Not Met',
+  },
+  transactionExported: {
+    id: 'setupWallet.transactionExported',
+    defaultMessage: '!!!Transaction Exported',
+  },
+  addCoSignersTitle: {
+    id: 'setupWallet.addCoSignersTitle',
+    defaultMessage: '!!!Add Co-Signers',
+  },
+  addCoSignersDescription: {
+    id: 'setupWallet.addCoSignersDescription',
+    defaultMessage: '!!!Add co-signers by entering their public keys.',
+  },
+  coSignersList: {
+    id: 'setupWallet.coSignersList',
+    defaultMessage: '!!!Co-Signers',
+  },
+  addNewCoSigner: {
+    id: 'setupWallet.addNewCoSigner',
+    defaultMessage: '!!!Add New Co-Signer',
+  },
+  coSignerNameLabel: {
+    id: 'setupWallet.coSignerNameLabel',
+    defaultMessage: '!!!Co-Signer Name',
+  },
+  publicKeyLabel: {
+    id: 'setupWallet.publicKeyLabel',
+    defaultMessage: '!!!Public Key',
+  },
+  addCoSignerButton: {
+    id: 'setupWallet.addCoSignerButton',
+    defaultMessage: '!!!Add Co-Signer',
+  },
+  reviewMultisigWalletTitle: {
+    id: 'setupWallet.reviewMultisigWalletTitle',
+    defaultMessage: '!!!Review Multisig Wallet',
+  },
+  walletNameInputLabel: {
+    id: 'setupWallet.walletNameInputLabel',
+    defaultMessage: '!!!Wallet Name',
+  },
+  repeatPasswordInputLabel: {
+    id: 'setupWallet.repeatPasswordInputLabel',
+    defaultMessage: '!!!Repeat Password',
+  },
+  walletConfiguration: {
+    id: 'setupWallet.walletConfiguration',
+    defaultMessage: '!!!Wallet Configuration',
+  },
+  createWalletButton: {
+    id: 'setupWallet.createWalletButton',
+    defaultMessage: '!!!Create Multisig Wallet',
+  },
+  createMultisigWalletTitle: {
+    id: 'setupWallet.createMultisigWalletTitle',
+    defaultMessage: '!!!Create Multisig Wallet',
+  },
+  createMultisigWalletDescription: {
+    id: 'setupWallet.createMultisigWalletDescription',
+    defaultMessage: '!!!Create a multisig wallet with multiple co-signers.',
+  },
+  noParentWalletsAvailable: {
+    id: 'setupWallet.noParentWalletsAvailable',
+    defaultMessage: '!!!No Parent Wallets Available',
+  },
+  createMultisigWalletButton: {
+    id: 'setupWallet.createMultisigWalletButton',
+    defaultMessage: '!!!Create Multisig Wallet',
+  },
+  importMultisigWalletButton: {
+    id: 'setupWallet.importMultisigWalletButton',
+    defaultMessage: '!!!Import Multisig Wallet',
+  },
+  noWalletSelected: {
+    id: 'setupWallet.noWalletSelected',
+    defaultMessage: '!!!No Wallet Selected',
+  },
+  selectWalletToImport: {
+    id: 'setupWallet.selectWalletToImport',
+    defaultMessage: '!!!Select a wallet to import the multisig wallet.',
+  },
+  importMultisigWalletTitle: {
+    id: 'setupWallet.importMultisigWalletTitle',
+    defaultMessage: '!!!Import Multisig Wallet',
+  },
+  importMultisigWalletDescription: {
+    id: 'setupWallet.importMultisigWalletDescription',
+    defaultMessage: '!!!Import a multisig wallet from a JSON file.',
+  },
+  fileImported: {
+    id: 'setupWallet.fileImported',
+    defaultMessage: '!!!File Imported',
+  },
+  validateAndImport: {
+    id: 'setupWallet.validateAndImport',
+    defaultMessage: '!!!Validate & Import',
+  },
+  defineQuorumTitle: {
+    id: 'setupWallet.defineQuorumTitle',
+    defaultMessage: '!!!Define Quorum Rules',
+  },
+  defineQuorumDescription: {
+    id: 'setupWallet.defineQuorumDescription',
+    defaultMessage: '!!!Configure how many signatures are required for transactions.',
+  },
+  quorumTypeLabel: {
+    id: 'setupWallet.quorumTypeLabel',
+    defaultMessage: '!!!Quorum Type',
+  },
+  quorumAllOf: {
+    id: 'setupWallet.quorumAllOf',
+    defaultMessage: '!!!Require All Of',
+  },
+  quorumAllOfDescription: {
+    id: 'setupWallet.quorumAllOfDescription',
+    defaultMessage: '!!!All co-signers must sign',
+  },
+  quorumAnyOf: {
+    id: 'setupWallet.quorumAnyOf',
+    defaultMessage: '!!!Require Any Of',
+  },
+  quorumAnyOfDescription: {
+    id: 'setupWallet.quorumAnyOfDescription',
+    defaultMessage: '!!!Any co-signer can sign',
+  },
+  quorumNOf: {
+    id: 'setupWallet.quorumNOf',
+    defaultMessage: '!!!Require N Of K',
+  },
+  quorumNOfDescription: {
+    id: 'setupWallet.quorumNOfDescription',
+    defaultMessage: '!!!N of K co-signers must sign',
+  },
+  requiredSignaturesLabel: {
+    id: 'setupWallet.requiredSignaturesLabel',
+    defaultMessage: '!!!Required Signatures',
+  },
+  noParentWalletsDescription: {
+    id: 'setupWallet.noParentWalletsDescription',
+    defaultMessage: '!!!You need at least one regular wallet to create a multisig wallet.',
+  },
+  selectParentWalletTitle: {
+    id: 'setupWallet.selectParentWalletTitle',
+    defaultMessage: '!!!Select Parent Wallet',
+  },
+  selectParentWalletDescription: {
+    id: 'setupWallet.selectParentWalletDescription',
+    defaultMessage: '!!!Select a wallet to generate a shared key from.',
+  },
+  parentWalletNotFound: {
+    id: 'setupWallet.parentWalletNotFound',
+    defaultMessage: '!!!Parent wallet not found',
+  },
+  generateSharedKeyTitle: {
+    id: 'setupWallet.generateSharedKeyTitle',
+    defaultMessage: '!!!Generate Shared Key',
+  },
+  generateSharedKeyDescription: {
+    id: 'setupWallet.generateSharedKeyDescription',
+    defaultMessage: '!!!Generate a shared wallet key from your parent wallet.',
+  },
+  generateSharedKeyButton: {
+    id: 'setupWallet.generateSharedKeyButton',
+    defaultMessage: '!!!Generate Shared Key',
+  },
+  sharedKeyGenerated: {
+    id: 'setupWallet.sharedKeyGenerated',
+    defaultMessage: '!!!Shared Key Generated',
+  },
+  createMultisigWalletButtonCard: {
+    id: 'setupWallet.createMultisigWalletButtonCard',
+    defaultMessage: '!!!Create Multisig Wallet',
+  },
+  coSigners: {
+    id: 'setupWallet.coSigners',
+    defaultMessage: '!!!Co-Signers',
+  },
+  exportWalletSetup: {
+    id: 'setupWallet.exportWalletSetup',
+    defaultMessage: '!!!Export Wallet Setup',
+  },
+  exportWalletSetupDescription: {
+    id: 'setupWallet.exportWalletSetupDescription',
+    defaultMessage: '!!!Export wallet setup JSON to share with co-signers.',
+  },
+  notMultisigWallet: {
+    id: 'setupWallet.notMultisigWallet',
+    defaultMessage: '!!!Not a Multisig Wallet',
+  },
+  selectMultisigWallet: {
+    id: 'setupWallet.selectMultisigWallet',
+    defaultMessage: '!!!Please select a multisig wallet.',
+  },
 })

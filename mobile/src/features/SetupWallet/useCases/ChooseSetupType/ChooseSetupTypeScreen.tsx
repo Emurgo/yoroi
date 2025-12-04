@@ -106,8 +106,7 @@ export const ChooseSetupTypeScreen = () => {
 
           <ButtonCard
             title={
-              strings.setupWallet.createMultisigWalletButtonCard ||
-              'Create Multisig Wallet'
+              strings.setupWallet.createMultisigWalletButtonCard
             }
             icon={<RestoreWallet style={[a.absolute, {right: 0}]} />}
             onPress={handleMultisig}

@@ -109,12 +109,11 @@ export const MultisigWalletDetailsScreen = () => {
         <Space.Height.lg />
         <View style={[a.px_lg]}>
           <Text style={[ta.heading_1]}>
-            {strings.setupWallet.notMultisigWallet || 'Not a Multisig Wallet'}
+            {strings.setupWallet.notMultisigWallet}
           </Text>
           <Space.Height.md />
           <Text style={[ta.body_1_lg_regular]}>
-            {strings.setupWallet.selectMultisigWallet ||
-              'This wallet is not a multisig wallet.'}
+            {strings.setupWallet.selectMultisigWallet}
           </Text>
         </View>
       </SafeArea>
@@ -150,7 +149,7 @@ export const MultisigWalletDetailsScreen = () => {
           {/* Quorum Rules */}
           <View style={[a.p_md, a.bg_gray_c50, a.rounded_sm]}>
             <Text style={[ta.heading_3]}>
-              {strings.setupWallet.quorumRules || 'Quorum Rules'}
+              {strings.setupWallet.quorumRules}
             </Text>
             <Space.Height.sm />
             <Text style={[ta.body_1_lg_regular]}>{getQuorumDescription()}</Text>
@@ -165,7 +164,7 @@ export const MultisigWalletDetailsScreen = () => {
           {/* Co-Signers List */}
           <View style={[a.p_md, a.bg_gray_c50, a.rounded_sm]}>
             <Text style={[ta.heading_3]}>
-              {strings.setupWallet.coSigners || 'Co-Signers'} (
+              {strings.setupWallet.coSigners} (
               {multisigMeta.coSigners.length})
             </Text>
             <Space.Height.sm />
@@ -205,20 +204,17 @@ export const MultisigWalletDetailsScreen = () => {
           {/* Export Options */}
           <View style={[a.gap_md]}>
             <Text style={[ta.heading_3]}>
-              {strings.setupWallet.exportWalletSetup || 'Export Wallet Setup'}
+              {strings.setupWallet.exportWalletSetup}
             </Text>
             <Text style={[ta.body_1_lg_regular]}>
-              {strings.setupWallet.exportWalletSetupDescription ||
-                'Share the wallet setup JSON with other co-signers so they can import this multisig wallet.'}
+              {strings.setupWallet.exportWalletSetupDescription}
             </Text>
 
             <Space.Height.md />
 
             <Button
               title={
-                copied
-                  ? strings.setupWallet.copied || 'Copied!'
-                  : strings.setupWallet.copyJSON || 'Copy JSON'
+                copied ? strings.setupWallet.copied : strings.setupWallet.copyJSON
               }
               onPress={handleCopyJSON}
               outline
@@ -226,9 +222,7 @@ export const MultisigWalletDetailsScreen = () => {
             />
 
             <Button
-              title={
-                strings.setupWallet.shareWalletSetup || 'Share Wallet Setup'
-              }
+              title={strings.setupWallet.shareWalletSetup}
               onPress={handleExportWalletSetup}
               testID="share-wallet-setup-button"
             />

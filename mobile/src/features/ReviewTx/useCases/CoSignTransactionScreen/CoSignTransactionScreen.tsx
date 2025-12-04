@@ -40,7 +40,7 @@ import {makeWalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
-import {Text} from '~/ui/Text'
+import {Text} from '~/ui/Text/Text'
 import {TextInput} from '~/ui/TextInput/TextInput'
 
 type TransactionType = 'multisig' | 'multiparty' | null
@@ -321,15 +321,13 @@ export const CoSignTransactionScreen = () => {
       >
         <View style={[a.gap_md]}>
           <Text style={[ta.heading_1]}>
-            {strings.setupWallet.coSignTransactionTitle ||
-              'Co-Sign Transaction'}
+            {strings.setupWallet.coSignTransactionTitle}
           </Text>
 
           <Space.Height.md />
 
           <Text style={[ta.body_1_lg_regular]}>
-            {strings.setupWallet.coSignTransactionDescription ||
-              'Import a transaction JSON file to add your signature. Supports both multisig (shared wallet) and multiparty (multiple wallets) transactions. The transaction will be updated with your signature and can be shared with other signers.'}
+            {strings.setupWallet.coSignTransactionDescription}
           </Text>
 
           {transactionType && (
@@ -338,10 +336,8 @@ export const CoSignTransactionScreen = () => {
               <View style={[a.p_md, a.bg_primary_light, a.rounded_sm]}>
                 <Text style={[ta.body_2_md_medium]}>
                   {transactionType === 'multisig'
-                    ? strings.setupWallet.multisigTransaction ||
-                      'Multisig Transaction'
-                    : strings.setupWallet.multipartyTransaction ||
-                      'Multiparty Transaction'}
+                    ? strings.setupWallet.multisigTransaction
+                    : strings.setupWallet.multipartyTransaction}
                 </Text>
               </View>
             </>
@@ -353,17 +349,14 @@ export const CoSignTransactionScreen = () => {
             <>
               {useFilePicker ? (
                 <Button
-                  title={
-                    strings.setupWallet.selectJSONFile || 'Select JSON File'
-                  }
+                  title={strings.setupWallet.selectJSONFile}
                   onPress={handlePickFile}
                   testID="select-transaction-json-button"
                 />
               ) : (
                 <>
                   <Text style={[ta.body_1_lg_regular]}>
-                    {strings.setupWallet.pasteJSONManually ||
-                      'Paste the transaction JSON below:'}
+                    {strings.setupWallet.pasteJSONManually}
                   </Text>
                   <RNTextInput
                     style={[
@@ -379,7 +372,7 @@ export const CoSignTransactionScreen = () => {
                     testID="transaction-json-input"
                   />
                   <Button
-                    title={strings.setupWallet.parseJSON || 'Parse JSON'}
+                    title={strings.setupWallet.parseJSON}
                     onPress={handlePasteJSON}
                     testID="parse-transaction-json-button"
                   />
@@ -399,8 +392,7 @@ export const CoSignTransactionScreen = () => {
             <>
               <View style={[a.p_md, a.bg_success_light, a.rounded_sm]}>
                 <Text style={[ta.body_1_lg_medium]}>
-                  {strings.setupWallet.transactionImported ||
-                    'Transaction imported successfully!'}
+                  {strings.setupWallet.transactionImported}
                 </Text>
               </View>
 
@@ -409,18 +401,16 @@ export const CoSignTransactionScreen = () => {
                   <Space.Height.md />
                   <View style={[a.p_md, a.bg_gray_c50, a.rounded_sm]}>
                     <Text style={[ta.heading_3]}>
-                      {strings.setupWallet.transactionDetails ||
-                        'Transaction Details'}
+                      {strings.setupWallet.transactionDetails}
                     </Text>
                     <Space.Height.sm />
                     <Text style={[ta.body_2_md_regular]}>
-                      {strings.setupWallet.fee || 'Fee'}:{' '}
-                      {formattedTx.fee?.coin || '0'} ADA
+                      {strings.setupWallet.fee}: {formattedTx.fee?.coin || '0'}{' '}
+                      ADA
                     </Text>
                     <Space.Height.xs />
                     <Text style={[ta.body_2_md_regular]}>
-                      {strings.setupWallet.outputs || 'Outputs'}:{' '}
-                      {formattedTx.outputs.length}
+                      {strings.setupWallet.outputs}: {formattedTx.outputs.length}
                     </Text>
                   </View>
                 </>
@@ -429,7 +419,7 @@ export const CoSignTransactionScreen = () => {
               <Space.Height.lg />
 
               <TextInput
-                label={strings.setupWallet.passwordInputLabel || 'Password'}
+                label={strings.setupWallet.passwordInputLabel}
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
@@ -448,9 +438,7 @@ export const CoSignTransactionScreen = () => {
               <Space.Height.lg />
 
               <Button
-                title={
-                  strings.setupWallet.signTransaction || 'Sign Transaction'
-                }
+                title={strings.setupWallet.signTransaction}
                 onPress={handleSignTransaction}
                 disabled={!password || isSigning}
                 testID="sign-transaction-button"
@@ -465,10 +453,7 @@ export const CoSignTransactionScreen = () => {
               <Space.Height.md />
 
               <Button
-                title={
-                  strings.setupWallet.selectDifferentFile ||
-                  'Select Different File'
-                }
+                title={strings.setupWallet.selectDifferentFile}
                 onPress={() => {
                   setImportedTxJson(null)
                   setError(null)

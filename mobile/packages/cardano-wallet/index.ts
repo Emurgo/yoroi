@@ -140,3 +140,4 @@ export * from './delegationUtils'
 
 // Multisig utilities
 export * from './multisig'
+export {getMultisigMeta, isMultisigWallet, isScriptWallet} from './types'

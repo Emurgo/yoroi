@@ -51,15 +51,13 @@ export const CreateMultisigWalletScreen = () => {
       >
         <View style={[a.gap_md]}>
           <Text style={[ta.heading_1, a.text_center]}>
-            {strings.setupWallet.createMultisigWalletTitle ||
-              'Create Multisig Wallet'}
+            {strings.setupWallet.createMultisigWalletTitle}
           </Text>
 
           <Space.Height.md />
 
           <Text style={[ta.body_1_lg_regular, a.text_center]}>
-            {strings.setupWallet.createMultisigWalletDescription ||
-              'A multisig wallet requires multiple signatures to authorize transactions. This provides enhanced security for shared funds.'}
+            {strings.setupWallet.createMultisigWalletDescription}
           </Text>
 
           <Space.Height.xl />
@@ -67,17 +65,13 @@ export const CreateMultisigWalletScreen = () => {
           {!canCreateMultisig && (
             <View style={[a.bg_warning_light, a.p_md, a.rounded_sm]}>
               <Text style={[ta.body_1_lg_medium]}>
-                {strings.setupWallet.noParentWalletsAvailable ||
-                  'You need at least one regular wallet to create a multisig wallet. Please create a regular wallet first.'}
+                {strings.setupWallet.noParentWalletsAvailable}
               </Text>
             </View>
           )}
 
           <Button
-            title={
-              strings.setupWallet.createMultisigWalletButton ||
-              'Create Multisig Wallet'
-            }
+            title={strings.setupWallet.createMultisigWalletButton}
             onPress={handleStartCreation}
             disabled={!canCreateMultisig}
             testID="create-multisig-wallet-button"
@@ -86,10 +80,7 @@ export const CreateMultisigWalletScreen = () => {
           <Space.Height.md />
 
           <Button
-            title={
-              strings.setupWallet.importMultisigWalletButton ||
-              'Import Multisig Wallet'
-            }
+            title={strings.setupWallet.importMultisigWalletButton}
             onPress={handleImportWallet}
             outline
             testID="import-multisig-wallet-button"

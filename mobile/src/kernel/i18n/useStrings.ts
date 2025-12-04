@@ -962,6 +962,16 @@ export const useStrings = () => {
         unknownAsset: f(sendMessages.unknownAsset),
         walletAddress: f(sendMessages.walletAddress),
         youHave: f(sendMessages.youHave),
+        multipartyTransaction: f(sendMessages.multipartyTransaction),
+        signers: f(sendMessages.signers),
+        selectInputWallets: f(sendMessages.selectInputWallets),
+        singleWallet: f(sendMessages.singleWallet),
+        multipleWallets: (count: number) =>
+          f(sendMessages.multipleWallets, {count}),
+        selectUpToWallets: (max: number) =>
+          f(sendMessages.selectUpToWallets, {max}),
+        selectAtLeastWallets: (min: number) =>
+          f(sendMessages.selectAtLeastWallets, {min}),
       },
 
       // Global strings
@@ -2308,6 +2318,133 @@ export const useStrings = () => {
         restoreWalletFromLinkContinueButton: f(
           setupWalletMessages.restoreWalletFromLinkContinueButton,
         ),
+        shareWalletSetup: f(setupWalletMessages.shareWalletSetup),
+        shareError: f(setupWalletMessages.shareError),
+        copied: f(setupWalletMessages.copied),
+        walletSetupCopied: f(setupWalletMessages.walletSetupCopied),
+        copyError: f(setupWalletMessages.copyError),
+        shareWalletDetailsTitle: f(setupWalletMessages.shareWalletDetailsTitle),
+        shareWalletDetailsDescription: f(
+          setupWalletMessages.shareWalletDetailsDescription,
+        ),
+        walletName: f(setupWalletMessages.walletName),
+        coSignersCount: f(setupWalletMessages.coSignersCount),
+        quorumRules: f(setupWalletMessages.quorumRules),
+        copyJSON: f(setupWalletMessages.copyJSON),
+        walletSetupJSON: f(setupWalletMessages.walletSetupJSON),
+        transactionCopiedToClipboard: f(
+          setupWalletMessages.transactionCopiedToClipboard,
+        ),
+        notAllSignersSigned: f(setupWalletMessages.notAllSignersSigned),
+        exportAndShareWithSigners: f(
+          setupWalletMessages.exportAndShareWithSigners,
+        ),
+        signaturesRequired: f(setupWalletMessages.signaturesRequired),
+        signaturesReceived: f(setupWalletMessages.signaturesReceived),
+        exportTransaction: f(setupWalletMessages.exportTransaction),
+        submitTransaction: f(setupWalletMessages.submitTransaction),
+        coSignTransactionTitle: f(setupWalletMessages.coSignTransactionTitle),
+        coSignTransactionDescription: f(
+          setupWalletMessages.coSignTransactionDescription,
+        ),
+        multisigTransaction: f(setupWalletMessages.multisigTransaction),
+        multipartyTransaction: f(setupWalletMessages.multipartyTransaction),
+        selectJSONFile: f(setupWalletMessages.selectJSONFile),
+        pasteJSONManually: f(setupWalletMessages.pasteJSONManually),
+        parseJSON: f(setupWalletMessages.parseJSON),
+        transactionImported: f(setupWalletMessages.transactionImported),
+        transactionDetails: f(setupWalletMessages.transactionDetails),
+        fee: f(setupWalletMessages.fee),
+        outputs: f(setupWalletMessages.outputs),
+        passwordInputLabel: f(setupWalletMessages.passwordInputLabel),
+        signTransaction: f(setupWalletMessages.signTransaction),
+        selectDifferentFile: f(setupWalletMessages.selectDifferentFile),
+        multisigSigningStatus: f(setupWalletMessages.multisigSigningStatus),
+        quorumNotMet: f(setupWalletMessages.quorumNotMet),
+        transactionExported: f(setupWalletMessages.transactionExported),
+        addCoSignersTitle: f(setupWalletMessages.addCoSignersTitle),
+        addCoSignersDescription: f(setupWalletMessages.addCoSignersDescription),
+        coSignersList: f(setupWalletMessages.coSignersList),
+        addNewCoSigner: f(setupWalletMessages.addNewCoSigner),
+        coSignerNameLabel: f(setupWalletMessages.coSignerNameLabel),
+        publicKeyLabel: f(setupWalletMessages.publicKeyLabel),
+        addCoSignerButton: f(setupWalletMessages.addCoSignerButton),
+        reviewMultisigWalletTitle: f(
+          setupWalletMessages.reviewMultisigWalletTitle,
+        ),
+        walletNameInputLabel: f(setupWalletMessages.walletNameInputLabel),
+        repeatPasswordInputLabel: f(
+          setupWalletMessages.repeatPasswordInputLabel,
+        ),
+        walletConfiguration: f(setupWalletMessages.walletConfiguration),
+        createWalletButton: f(setupWalletMessages.createWalletButton),
+        createMultisigWalletTitle: f(
+          setupWalletMessages.createMultisigWalletTitle,
+        ),
+        createMultisigWalletDescription: f(
+          setupWalletMessages.createMultisigWalletDescription,
+        ),
+        noParentWalletsAvailable: f(
+          setupWalletMessages.noParentWalletsAvailable,
+        ),
+        createMultisigWalletButton: f(
+          setupWalletMessages.createMultisigWalletButton,
+        ),
+        importMultisigWalletButton: f(
+          setupWalletMessages.importMultisigWalletButton,
+        ),
+        noWalletSelected: f(setupWalletMessages.noWalletSelected),
+        selectWalletToImport: f(setupWalletMessages.selectWalletToImport),
+        importMultisigWalletTitle: f(
+          setupWalletMessages.importMultisigWalletTitle,
+        ),
+        importMultisigWalletDescription: f(
+          setupWalletMessages.importMultisigWalletDescription,
+        ),
+        fileImported: f(setupWalletMessages.fileImported),
+        validateAndImport: f(setupWalletMessages.validateAndImport),
+        defineQuorumTitle: f(setupWalletMessages.defineQuorumTitle),
+        defineQuorumDescription: f(
+          setupWalletMessages.defineQuorumDescription,
+        ),
+        quorumTypeLabel: f(setupWalletMessages.quorumTypeLabel),
+        quorumAllOf: f(setupWalletMessages.quorumAllOf),
+        quorumAllOfDescription: f(setupWalletMessages.quorumAllOfDescription),
+        quorumAnyOf: f(setupWalletMessages.quorumAnyOf),
+        quorumAnyOfDescription: f(setupWalletMessages.quorumAnyOfDescription),
+        quorumNOf: f(setupWalletMessages.quorumNOf),
+        quorumNOfDescription: f(setupWalletMessages.quorumNOfDescription),
+        requiredSignaturesLabel: f(
+          setupWalletMessages.requiredSignaturesLabel,
+        ),
+        noParentWalletsDescription: f(
+          setupWalletMessages.noParentWalletsDescription,
+        ),
+        selectParentWalletTitle: f(
+          setupWalletMessages.selectParentWalletTitle,
+        ),
+        selectParentWalletDescription: f(
+          setupWalletMessages.selectParentWalletDescription,
+        ),
+        parentWalletNotFound: f(setupWalletMessages.parentWalletNotFound),
+        generateSharedKeyTitle: f(setupWalletMessages.generateSharedKeyTitle),
+        generateSharedKeyDescription: f(
+          setupWalletMessages.generateSharedKeyDescription,
+        ),
+        generateSharedKeyButton: f(
+          setupWalletMessages.generateSharedKeyButton,
+        ),
+        sharedKeyGenerated: f(setupWalletMessages.sharedKeyGenerated),
+        createMultisigWalletButtonCard: f(
+          setupWalletMessages.createMultisigWalletButtonCard,
+        ),
+        coSigners: f(setupWalletMessages.coSigners),
+        exportWalletSetup: f(setupWalletMessages.exportWalletSetup),
+        exportWalletSetupDescription: f(
+          setupWalletMessages.exportWalletSetupDescription,
+        ),
+        notMultisigWallet: f(setupWalletMessages.notMultisigWallet),
+        selectMultisigWallet: f(setupWalletMessages.selectMultisigWallet),
       },
 
       // Mapped strings for dynamic category mapping

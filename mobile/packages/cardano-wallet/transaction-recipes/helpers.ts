@@ -7,7 +7,7 @@ import {Address, Portfolio} from '@yoroi/types'
  */
 export function convertRawUtxosToModernUtxos(
   rawUtxos: RawUtxo[],
-  getAddressing: (address: Address | string) => {
+  getAddressing: (address: Address) => {
     path: number[]
     startLevel: number
   },

@@ -93,14 +93,13 @@ export const DefineQuorumScreen = () => {
       >
         <View style={[a.gap_md]}>
           <Text style={[ta.heading_1]}>
-            {strings.setupWallet.defineQuorumTitle || 'Define Quorum Rules'}
+            {strings.setupWallet.defineQuorumTitle}
           </Text>
 
           <Space.Height.md />
 
           <Text style={[ta.body_1_lg_regular]}>
-            {strings.setupWallet.defineQuorumDescription ||
-              `Configure how many co-signers need to sign transactions. You have ${coSignerCount} co-signer${coSignerCount > 1 ? 's' : ''}.`}
+            {strings.setupWallet.defineQuorumDescription}
           </Text>
 
           <Space.Height.lg />
@@ -108,7 +107,7 @@ export const DefineQuorumScreen = () => {
           {/* Quorum type options */}
           <View style={[a.gap_sm]}>
             <Text style={[ta.heading_3]}>
-              {strings.setupWallet.quorumTypeLabel || 'Quorum Type'}
+              {strings.setupWallet.quorumTypeLabel}
             </Text>
 
             <TouchableOpacity
@@ -125,12 +124,11 @@ export const DefineQuorumScreen = () => {
               testID="quorum-type-all"
             >
               <Text style={[ta.heading_4]}>
-                {strings.setupWallet.quorumAllOf || 'Require All Of'}
+                {strings.setupWallet.quorumAllOf}
               </Text>
               <Space.Height.xs />
               <Text style={[ta.body_2_md_regular, {color: ta.gray_c600.color}]}>
-                {strings.setupWallet.quorumAllOfDescription ||
-                  `All ${coSignerCount} co-signers must sign`}
+                {strings.setupWallet.quorumAllOfDescription}
               </Text>
             </TouchableOpacity>
 
@@ -148,12 +146,11 @@ export const DefineQuorumScreen = () => {
               testID="quorum-type-any"
             >
               <Text style={[ta.heading_4]}>
-                {strings.setupWallet.quorumAnyOf || 'Require Any Of'}
+                {strings.setupWallet.quorumAnyOf}
               </Text>
               <Space.Height.xs />
               <Text style={[ta.body_2_md_regular, {color: ta.gray_c600.color}]}>
-                {strings.setupWallet.quorumAnyOfDescription ||
-                  'Any 1 co-signer can sign'}
+                {strings.setupWallet.quorumAnyOfDescription}
               </Text>
             </TouchableOpacity>
 
@@ -171,12 +168,11 @@ export const DefineQuorumScreen = () => {
               testID="quorum-type-nof"
             >
               <Text style={[ta.heading_4]}>
-                {strings.setupWallet.quorumNOf || 'Require N Of K'}
+                {strings.setupWallet.quorumNOf}
               </Text>
               <Space.Height.xs />
               <Text style={[ta.body_2_md_regular, {color: ta.gray_c600.color}]}>
-                {strings.setupWallet.quorumNOfDescription ||
-                  'Specify how many co-signers must sign'}
+                {strings.setupWallet.quorumNOfDescription}
               </Text>
             </TouchableOpacity>
           </View>
@@ -186,10 +182,7 @@ export const DefineQuorumScreen = () => {
             <>
               <Space.Height.md />
               <TextInput
-                label={
-                  strings.setupWallet.requiredSignaturesLabel ||
-                  `Required Signatures (1-${coSignerCount})`
-                }
+                label={strings.setupWallet.requiredSignaturesLabel}
                 value={requiredCount}
                 onChangeText={handleRequiredCountChange}
                 keyboardType="numeric"

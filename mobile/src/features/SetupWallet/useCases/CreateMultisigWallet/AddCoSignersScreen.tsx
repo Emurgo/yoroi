@@ -128,14 +128,13 @@ export const AddCoSignersScreen = () => {
       >
         <View style={[a.gap_md]}>
           <Text style={[ta.heading_1]}>
-            {strings.setupWallet.addCoSignersTitle || 'Add Co-Signers'}
+            {strings.setupWallet.addCoSignersTitle}
           </Text>
 
           <Space.Height.md />
 
           <Text style={[ta.body_1_lg_regular]}>
-            {strings.setupWallet.addCoSignersDescription ||
-              'Add co-signers by entering their public keys. Each co-signer will need to sign transactions for the multisig wallet.'}
+            {strings.setupWallet.addCoSignersDescription}
           </Text>
 
           <Space.Height.lg />
@@ -143,8 +142,7 @@ export const AddCoSignersScreen = () => {
           {/* Current co-signers list */}
           <View style={[a.gap_sm]}>
             <Text style={[ta.heading_3]}>
-              {strings.setupWallet.coSignersList || 'Co-Signers'} (
-              {coSigners.length})
+              {strings.setupWallet.coSignersList} ({coSigners.length})
             </Text>
 
             {coSigners.map((coSigner, index) => (
@@ -188,11 +186,11 @@ export const AddCoSignersScreen = () => {
           {/* Add new co-signer form */}
           <View style={[a.gap_md]}>
             <Text style={[ta.heading_3]}>
-              {strings.setupWallet.addNewCoSigner || 'Add New Co-Signer'}
+              {strings.setupWallet.addNewCoSigner}
             </Text>
 
             <TextInput
-              label={strings.setupWallet.coSignerNameLabel || 'Co-Signer Name'}
+              label={strings.setupWallet.coSignerNameLabel}
               value={newCoSignerName}
               onChangeText={setNewCoSignerName}
               placeholder="Enter co-signer name"
@@ -200,7 +198,7 @@ export const AddCoSignersScreen = () => {
             />
 
             <TextInput
-              label={strings.setupWallet.publicKeyLabel || 'Public Key'}
+              label={strings.setupWallet.publicKeyLabel}
               value={newCoSignerKey}
               onChangeText={setNewCoSignerKey}
               placeholder="Enter BIP32 public key (hex)"
@@ -210,7 +208,7 @@ export const AddCoSignersScreen = () => {
             />
 
             <Button
-              title={strings.setupWallet.addCoSignerButton || 'Add Co-Signer'}
+              title={strings.setupWallet.addCoSignerButton}
               onPress={handleAddCoSigner}
               disabled={!newCoSignerName.trim() || !newCoSignerKey.trim()}
               outline

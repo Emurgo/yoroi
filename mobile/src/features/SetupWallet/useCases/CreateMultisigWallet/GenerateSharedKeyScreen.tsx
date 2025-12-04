@@ -110,8 +110,7 @@ export const GenerateSharedKeyScreen = () => {
         <Space.Height.lg />
         <View style={[a.px_lg]}>
           <Text style={[ta.heading_1]}>
-            {strings.setupWallet.parentWalletNotFound ||
-              'Parent Wallet Not Found'}
+            {strings.setupWallet.parentWalletNotFound}
           </Text>
           <Space.Height.md />
           <Button
@@ -133,21 +132,19 @@ export const GenerateSharedKeyScreen = () => {
       >
         <View style={[a.gap_md]}>
           <Text style={[ta.heading_1]}>
-            {strings.setupWallet.generateSharedKeyTitle ||
-              'Generate Shared Wallet Key'}
+            {strings.setupWallet.generateSharedKeyTitle}
           </Text>
 
           <Space.Height.md />
 
           <Text style={[ta.body_1_lg_regular]}>
-            {strings.setupWallet.generateSharedKeyDescription ||
-              `Enter the password for wallet "${parentWalletMeta.name}" to generate a shared wallet key. This key will be used as one of the co-signers for the multisig wallet.`}
+            {strings.setupWallet.generateSharedKeyDescription}
           </Text>
 
           <Space.Height.lg />
 
           <TextInput
-            label={strings.setupWallet.passwordInputLabel || 'Password'}
+            label={strings.setupWallet.passwordInputLabel}
             value={password}
             onChangeText={setPassword}
             secureTextEntry
@@ -169,8 +166,7 @@ export const GenerateSharedKeyScreen = () => {
           {!sharedKey || !parentRootKey ? (
             <Button
               title={
-                strings.setupWallet.generateSharedKeyButton ||
-                'Generate Shared Key'
+                strings.setupWallet.generateSharedKeyButton
               }
               onPress={handleGenerate}
               disabled={!password || isGenerating}
@@ -180,8 +176,7 @@ export const GenerateSharedKeyScreen = () => {
             <>
               <View style={[a.bg_success_light, a.p_md, a.rounded_sm]}>
                 <Text style={[ta.body_1_lg_medium]}>
-                  {strings.setupWallet.sharedKeyGenerated ||
-                    'Shared key generated successfully!'}
+                  {strings.setupWallet.sharedKeyGenerated}
                 </Text>
                 <Space.Height.sm />
                 <Text

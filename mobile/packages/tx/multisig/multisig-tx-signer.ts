@@ -57,6 +57,9 @@ export const signMultisigTransaction = async ({
 
   return CardanoMobileWrapped.cslScope(async (csl) => {
     // Parse the unsigned transaction
+    if (!unsignedTx.cbor) {
+      throw new Error('UnsignedTransaction must have CBOR to sign')
+    }
     const tx = csl.Transaction.fromHex(unsignedTx.cbor)
     if (!tx) {
       throw new Error('Failed to parse transaction CBOR')
@@ -101,6 +104,9 @@ export const signMultisigTransaction = async ({
     }
 
     // Create FixedTransaction for signing
+    if (!unsignedTx.cbor) {
+      throw new Error('UnsignedTransaction must have CBOR to sign')
+    }
     const fixedTx = csl.FixedTransaction.fromHex(unsignedTx.cbor)
 
     if (!fixedTx) {
@@ -329,7 +335,7 @@ export const getQuorumStatus = (
 
   // Find missing signers (unused for now, but kept for future use)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const _missingSigners = signPolicy.signers
+  const _missingSigners: Wallet.Bip32PublicKeyHex[] = signPolicy.signers
     .map((_signer) => {
       // Find the corresponding Bip32PublicKeyHex for this key hash
       // This requires matching the key hash to the co-signer key
@@ -337,7 +343,9 @@ export const getQuorumStatus = (
       // In practice, you'd need to match keyHash to Bip32PublicKeyHex
       return undefined
     })
-    .filter((key): key is Wallet.Bip32PublicKeyHex => key !== undefined)
+    .filter((key): key is Wallet.Bip32PublicKeyHex => {
+      return key !== undefined
+    })
 
   return {
     signed,

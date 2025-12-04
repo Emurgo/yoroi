@@ -9,8 +9,8 @@ export * from './ledger/transform'
 export * from './transaction-builder/builder'
 export * from './transaction-builder/helpers'
 export * from './transaction-builder/multiparty'
-export * from './types'
 export * from './transaction-builder/types'
+export * from './types'
 export * from './utils/adapters'
 export * from './utils/addresses'
 export * from './utils/assets'
@@ -65,6 +65,9 @@ export {
 
 // Export multiparty transaction building and signing
 export * from './multiparty'
+
+// Export multisig transaction building and signing
+export * from './multisig'
 
 export {createUtxoService, init as initUtxo} from './utxo'
 

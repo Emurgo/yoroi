@@ -172,15 +172,14 @@ export const ReviewMultisigWalletScreen = () => {
       >
         <View style={[a.gap_md]}>
           <Text style={[ta.heading_1]}>
-            {strings.setupWallet.reviewMultisigWalletTitle ||
-              'Review Multisig Wallet'}
+            {strings.setupWallet.reviewMultisigWalletTitle}
           </Text>
 
           <Space.Height.md />
 
           {/* Wallet name */}
           <TextInput
-            label={strings.setupWallet.walletNameInputLabel || 'Wallet Name'}
+            label={strings.setupWallet.walletNameInputLabel}
             value={walletName}
             onChangeText={setWalletName}
             errorText={walletNameErrorText}
@@ -190,7 +189,7 @@ export const ReviewMultisigWalletScreen = () => {
 
           {/* Password */}
           <TextInput
-            label={strings.setupWallet.passwordInputLabel || 'Password'}
+            label={strings.setupWallet.passwordInputLabel}
             value={password}
             onChangeText={setPassword}
             secureTextEntry
@@ -200,9 +199,7 @@ export const ReviewMultisigWalletScreen = () => {
 
           {/* Password confirmation */}
           <TextInput
-            label={
-              strings.setupWallet.repeatPasswordInputLabel || 'Repeat Password'
-            }
+            label={strings.setupWallet.repeatPasswordInputLabel}
             value={passwordConfirmation}
             onChangeText={setPasswordConfirmation}
             secureTextEntry
@@ -215,14 +212,12 @@ export const ReviewMultisigWalletScreen = () => {
           {/* Review section */}
           <View style={[a.gap_sm]}>
             <Text style={[ta.heading_3]}>
-              {strings.setupWallet.walletConfiguration ||
-                'Wallet Configuration'}
+              {strings.setupWallet.walletConfiguration}
             </Text>
 
             <View style={[a.p_md, a.bg_gray_c50, a.rounded_sm]}>
               <Text style={[ta.body_1_lg_medium]}>
-                {strings.setupWallet.coSignersCount || 'Co-Signers'}:{' '}
-                {coSigners.length}
+                {strings.setupWallet.coSignersCount}: {coSigners.length}
               </Text>
               <Space.Height.xs />
               {coSigners.map((cs, index) => (
@@ -237,8 +232,7 @@ export const ReviewMultisigWalletScreen = () => {
 
             <View style={[a.p_md, a.bg_gray_c50, a.rounded_sm]}>
               <Text style={[ta.body_1_lg_medium]}>
-                {strings.setupWallet.quorumRules || 'Quorum Rules'}:{' '}
-                {quorumRules.kind}
+                {strings.setupWallet.quorumRules}: {quorumRules.kind}
               </Text>
               <Space.Height.xs />
               <Text style={[ta.body_2_md_regular, {color: ta.gray_c600.color}]}>
@@ -250,9 +244,7 @@ export const ReviewMultisigWalletScreen = () => {
           <Space.Height.lg />
 
           <Button
-            title={
-              strings.setupWallet.createWalletButton || 'Create Multisig Wallet'
-            }
+            title={strings.setupWallet.createWalletButton}
             onPress={handleCreateWallet}
             disabled={disabled}
             testID="create-multisig-wallet-final-button"

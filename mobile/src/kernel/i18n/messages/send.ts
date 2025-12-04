@@ -319,4 +319,32 @@ export const sendMessages = defineMessages({
     id: 'components.send.sendscreen.favoriteContacts',
     defaultMessage: '!!!Favorite Contacts',
   },
+  multipartyTransaction: {
+    id: 'send.multipartyTransaction',
+    defaultMessage: '!!!Multiparty Transaction',
+  },
+  signers: {
+    id: 'send.signers',
+    defaultMessage: '!!!Signers',
+  },
+  selectInputWallets: {
+    id: 'send.selectInputWallets',
+    defaultMessage: '!!!Select Input Wallets',
+  },
+  singleWallet: {
+    id: 'send.singleWallet',
+    defaultMessage: '!!!1 wallet',
+  },
+  multipleWallets: {
+    id: 'send.multipleWallets',
+    defaultMessage: '!!!{count} wallets',
+  },
+  selectUpToWallets: {
+    id: 'send.selectUpToWallets',
+    defaultMessage: '!!!Select up to {max} wallets',
+  },
+  selectAtLeastWallets: {
+    id: 'send.selectAtLeastWallets',
+    defaultMessage: '!!!Select at least {min} wallets',
+  },
 })

@@ -113,7 +113,7 @@ const MultipartyTransactionReviewContent = ({
         '') as Bip32PublicKeyHex
 
       const txJson = constructMultipartyTransactionJSON({
-        cborHex: params.cbor,
+        cborHex: params.cbor as TransactionCborHex,
         chainId,
         createdBy,
         requiredSigners: multipartyInfo.requiredSigners.map((signer) => ({
@@ -128,14 +128,11 @@ const MultipartyTransactionReviewContent = ({
       const jsonString = JSON.stringify(txJson, null, 2)
       await Clipboard.setStringAsync(jsonString)
 
-      Alert.alert(
-        strings.setupWallet.transactionCopiedToClipboard ||
-          'Transaction JSON copied to clipboard. Share it with other signers.',
-      )
+      Alert.alert(strings.setupWallet.transactionCopiedToClipboard)
     } catch (error) {
       logger.error('Failed to export transaction', {error})
       Alert.alert(
-        strings.global.error || 'Error',
+        strings.global.error,
         error instanceof Error ? error.message : 'Failed to export transaction',
       )
     }
@@ -158,9 +155,8 @@ const MultipartyTransactionReviewContent = ({
   const handleOnConfirm = React.useCallback(() => {
     if (!signerStatus?.isFullySigned) {
       Alert.alert(
-        strings.setupWallet.notAllSignersSigned || 'Not All Signers Signed',
-        strings.setupWallet.exportAndShareWithSigners ||
-          'Export the transaction and share it with other signers to complete the signing process.',
+        strings.setupWallet.notAllSignersSigned,
+        strings.setupWallet.exportAndShareWithSigners,
       )
       return
     }
@@ -210,8 +206,7 @@ const MultipartyTransactionReviewContent = ({
                 <View style={[a.flex_row, a.align_center, a.gap_sm]}>
                   <Icon.MultiParty size={24} color={p.primary_600} />
                   <Text style={[ta.heading_3]}>
-                    {strings.send.multipartyTransaction ||
-                      'Multiparty Transaction'}
+                    {strings.send.multipartyTransaction}
                   </Text>
                 </View>
 
@@ -220,14 +215,12 @@ const MultipartyTransactionReviewContent = ({
                 {/* Signer status summary */}
                 <View style={[a.gap_sm]}>
                   <Text style={[ta.body_1_lg_medium]}>
-                    {strings.setupWallet.signaturesRequired ||
-                      'Signatures Required'}
-                    : {signerStatus.totalSigners}
+                    {strings.setupWallet.signaturesRequired}:{' '}
+                    {signerStatus.totalSigners}
                   </Text>
                   <Text style={[ta.body_2_md_regular, ta.text_gray_low]}>
-                    {strings.setupWallet.signaturesReceived ||
-                      'Signatures Received'}
-                    : {signerStatus.signedSigners.length}
+                    {strings.setupWallet.signaturesReceived}:{' '}
+                    {signerStatus.signedSigners.length}
                   </Text>
                 </View>
 
@@ -236,7 +229,7 @@ const MultipartyTransactionReviewContent = ({
                 {/* Signers list */}
                 <View style={[a.gap_sm]}>
                   <Text style={[ta.body_1_lg_medium]}>
-                    {strings.send.signers || 'Signers'}:
+                    {strings.send.signers}:
                   </Text>
                   {multipartyInfo.requiredSigners.map((signer) => {
                     const hasSigned = signerStatus.signedSigners.includes(
@@ -293,8 +286,7 @@ const MultipartyTransactionReviewContent = ({
                     <Text
                       style={[ta.body_2_md_regular, {color: ta.warning.color}]}
                     >
-                      {strings.setupWallet.notAllSignersSigned ||
-                        'Not all signers have signed. Export transaction and share with other signers.'}
+                      {strings.setupWallet.notAllSignersSigned}
                     </Text>
                   </>
                 )}
@@ -308,17 +300,13 @@ const MultipartyTransactionReviewContent = ({
         <View style={[a.gap_md]}>
           {!canSubmit ? (
             <Button
-              title={
-                strings.setupWallet.exportTransaction || 'Export Transaction'
-              }
+              title={strings.setupWallet.exportTransaction}
               onPress={handleExportTransaction}
               testID="export-multiparty-transaction-button"
             />
           ) : (
             <Button
-              title={
-                strings.setupWallet.submitTransaction || 'Submit Transaction'
-              }
+              title={strings.setupWallet.submitTransaction}
               onPress={handleOnConfirm}
               disabled={meta.isReadOnly}
               testID="submit-multiparty-transaction-button"

@@ -3,15 +3,15 @@
  * Builds transactions for script wallets with native scripts in witness set
  */
 import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
-import {ScriptCbor, TransactionCbor} from '@yoroi/types'
+import {ScriptCbor, TokenId, TransactionCbor} from '@yoroi/types'
 
 import {Buffer} from 'buffer'
 
 import {
   type TransactionBuilderState,
-  type UnsignedTransaction,
   buildTransaction,
 } from '../transaction-builder/builder'
+import type {UnsignedTransaction} from '../transaction-builder/types'
 import type {CardanoHaskellConfig} from '../types'
 
 /**
@@ -40,7 +40,7 @@ export const buildMultisigTransaction = async ({
   const unsignedTx = await buildTransaction(
     state,
     protocolParams,
-    primaryTokenId,
+    primaryTokenId as TokenId | undefined,
   )
 
   if (!unsignedTx.cbor) {
@@ -49,6 +49,9 @@ export const buildMultisigTransaction = async ({
 
   return CardanoMobileWrapped.cslScope((csl) => {
     // Parse the transaction CBOR to get the full transaction
+    if (!unsignedTx.cbor) {
+      throw new Error('UnsignedTransaction must have CBOR')
+    }
     const fullTx = csl.Transaction.fromHex(unsignedTx.cbor)
 
     if (!fullTx) {

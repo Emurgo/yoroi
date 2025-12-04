@@ -164,9 +164,7 @@ export const SetupWalletNavigator = () => {
         name="setup-wallet-multisig-create"
         getComponent={() => CreateMultisigWalletScreen}
         options={{
-          title:
-            strings.setupWallet.createMultisigWalletTitle ||
-            'Create Multisig Wallet',
+          title: strings.setupWallet.createMultisigWalletTitle,
         }}
       />
 
@@ -174,9 +172,7 @@ export const SetupWalletNavigator = () => {
         name="setup-wallet-multisig-select-parent"
         getComponent={() => SelectParentWalletScreen}
         options={{
-          title:
-            strings.setupWallet.selectParentWalletTitle ||
-            'Select Parent Wallet',
+          title: strings.setupWallet.selectParentWalletTitle,
         }}
       />
 
@@ -184,8 +180,7 @@ export const SetupWalletNavigator = () => {
         name="setup-wallet-multisig-generate-shared-key"
         getComponent={() => GenerateSharedKeyScreen}
         options={{
-          title:
-            strings.setupWallet.generateSharedKeyTitle || 'Generate Shared Key',
+          title: strings.setupWallet.generateSharedKeyTitle,
         }}
       />
 
@@ -193,7 +188,7 @@ export const SetupWalletNavigator = () => {
         name="setup-wallet-multisig-add-cosigners"
         getComponent={() => AddCoSignersScreen}
         options={{
-          title: strings.setupWallet.addCoSignersTitle || 'Add Co-Signers',
+          title: strings.setupWallet.addCoSignersTitle,
         }}
       />
 
@@ -201,7 +196,7 @@ export const SetupWalletNavigator = () => {
         name="setup-wallet-multisig-define-quorum"
         getComponent={() => DefineQuorumScreen}
         options={{
-          title: strings.setupWallet.defineQuorumTitle || 'Define Quorum Rules',
+          title: strings.setupWallet.defineQuorumTitle,
         }}
       />
 
@@ -209,9 +204,7 @@ export const SetupWalletNavigator = () => {
         name="setup-wallet-multisig-review"
         getComponent={() => ReviewMultisigWalletScreen}
         options={{
-          title:
-            strings.setupWallet.reviewMultisigWalletTitle ||
-            'Review Multisig Wallet',
+          title: strings.setupWallet.reviewMultisigWalletTitle,
         }}
       />
 
@@ -219,9 +212,7 @@ export const SetupWalletNavigator = () => {
         name="setup-wallet-multisig-share"
         getComponent={() => ShareWalletDetailsScreen}
         options={{
-          title:
-            strings.setupWallet.shareWalletDetailsTitle ||
-            'Share Wallet Details',
+          title: strings.setupWallet.shareWalletDetailsTitle,
         }}
       />
 
@@ -229,9 +220,7 @@ export const SetupWalletNavigator = () => {
         name="setup-wallet-multisig-import"
         getComponent={() => ImportMultisigWalletScreen}
         options={{
-          title:
-            strings.setupWallet.importMultisigWalletTitle ||
-            'Import Multisig Wallet',
+          title: strings.setupWallet.importMultisigWalletTitle,
         }}
       />
 

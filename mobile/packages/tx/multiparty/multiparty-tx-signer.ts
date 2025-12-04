@@ -80,8 +80,9 @@ export const signMultipartyTransaction = async ({
       .derive(wallet.meta.accountVisual + derivationConfig.hardStart)
 
     const paymentKey = accountPrivateKey.derive(0).derive(0).toRawKey() // external chain, index 0
+    const publicKey = paymentKey.toPublic()
     const keyHash = Buffer.from(
-      paymentKey.publicKey().hash().to_bytes(),
+      publicKey.hash().to_bytes(),
     ).toString('hex')
 
     logger.debug('signMultipartyTransaction: Transaction signed', {
@@ -102,7 +103,7 @@ export const signMultipartyTransaction = async ({
  */
 export const isSignedByWallet = async (
   cbor: string,
-  walletId: string,
+  _walletId: string,
   keyHash: string,
 ): Promise<boolean> => {
   return CardanoMobileWrapped.cslScope(async (csl) => {
@@ -128,8 +129,19 @@ export const isSignedByWallet = async (
       return false
     }
 
-    // Check if this key hash has a signature
-    return vkeys.has(ed25519KeyHash)
+    // Check if this key hash has a signature by iterating through witnesses
+    for (let i = 0; i < vkeys.len(); i++) {
+      const vkey = vkeys.get(i)
+      if (!vkey) continue
+
+      const publicKey = vkey.vkey().publicKey()
+      const witnessKeyHash = publicKey.hash()
+
+      if (witnessKeyHash.toHex() === ed25519KeyHash.toHex()) {
+        return true
+      }
+    }
+    return false
   })
 }
 

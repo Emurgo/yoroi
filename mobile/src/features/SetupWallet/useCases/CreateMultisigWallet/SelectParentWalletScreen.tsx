@@ -51,13 +51,11 @@ export const SelectParentWalletScreen = () => {
         <Space.Height.lg />
         <View style={[a.px_lg]}>
           <Text style={[ta.heading_1]}>
-            {strings.setupWallet.noParentWalletsAvailable ||
-              'No Parent Wallets Available'}
+            {strings.setupWallet.noParentWalletsAvailable}
           </Text>
           <Space.Height.md />
           <Text style={[ta.body_1_lg_regular]}>
-            {strings.setupWallet.noParentWalletsDescription ||
-              'You need at least one regular wallet to create a multisig wallet. Please create a regular wallet first.'}
+            {strings.setupWallet.noParentWalletsDescription}
           </Text>
           <Space.Height.lg />
           <Button
@@ -79,15 +77,13 @@ export const SelectParentWalletScreen = () => {
       >
         <View style={[a.gap_md]}>
           <Text style={[ta.heading_1]}>
-            {strings.setupWallet.selectParentWalletTitle ||
-              'Select Parent Wallet'}
+            {strings.setupWallet.selectParentWalletTitle}
           </Text>
 
           <Space.Height.md />
 
           <Text style={[ta.body_1_lg_regular]}>
-            {strings.setupWallet.selectParentWalletDescription ||
-              'Select a wallet to use as the parent for generating a shared wallet key. This wallet will be one of the co-signers for the multisig wallet.'}
+            {strings.setupWallet.selectParentWalletDescription}
           </Text>
 
           <Space.Height.lg />

@@ -1,7 +1,7 @@
 /**
  * Unit tests for multisig transaction signer
  */
-import {Bip32PublicKeyHex, ScriptCbor, TransactionCbor} from '@yoroi/types'
+import {Bip32PublicKeyHex, ScriptCbor, TransactionCborHex} from '@yoroi/types'
 
 import type {UnsignedTransaction} from '../transaction-builder/types'
 import {
@@ -119,11 +119,14 @@ jest.mock('@yoroi/cardano-wallet', () => ({
 
 describe('multisig-tx-signer', () => {
   const mockUnsignedTx: UnsignedTransaction = {
-    cbor: 'mockUnsignedTxCbor' as TransactionCbor,
+    cbor: 'mockUnsignedTxCbor' as TransactionCborHex,
     inputs: [],
     outputs: [],
     certificates: [],
     withdrawals: [],
+    referenceInputs: [],
+    collateralInputs: [],
+    options: {},
   }
 
   const mockCoSignerKey = 'acct_shared_xvk1z8kc04y...' as Bip32PublicKeyHex

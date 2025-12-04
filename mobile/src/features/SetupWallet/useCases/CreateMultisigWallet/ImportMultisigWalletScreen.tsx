@@ -176,12 +176,11 @@ export const ImportMultisigWalletScreen = () => {
         <Space.Height.lg />
         <View style={[a.px_lg]}>
           <Text style={[ta.heading_1]}>
-            {strings.setupWallet.noWalletSelected || 'No Wallet Selected'}
+            {strings.setupWallet.noWalletSelected}
           </Text>
           <Space.Height.md />
           <Text style={[ta.body_1_lg_regular]}>
-            {strings.setupWallet.selectWalletToImport ||
-              'Please select a wallet first to import the multisig wallet.'}
+            {strings.setupWallet.selectWalletToImport}
           </Text>
           <Space.Height.lg />
           <Button
@@ -203,15 +202,13 @@ export const ImportMultisigWalletScreen = () => {
       >
         <View style={[a.gap_md]}>
           <Text style={[ta.heading_1]}>
-            {strings.setupWallet.importMultisigWalletTitle ||
-              'Import Multisig Wallet'}
+            {strings.setupWallet.importMultisigWalletTitle}
           </Text>
 
           <Space.Height.md />
 
           <Text style={[ta.body_1_lg_regular]}>
-            {strings.setupWallet.importMultisigWalletDescription ||
-              'Import a multisig wallet setup JSON file. Make sure you are one of the co-signers for this wallet.'}
+            {strings.setupWallet.importMultisigWalletDescription}
           </Text>
 
           <Space.Height.lg />
@@ -220,17 +217,14 @@ export const ImportMultisigWalletScreen = () => {
             <>
               {useFilePicker ? (
                 <Button
-                  title={
-                    strings.setupWallet.selectJSONFile || 'Select JSON File'
-                  }
+                  title={strings.setupWallet.selectJSONFile}
                   onPress={handlePickFile}
                   testID="select-json-file-button"
                 />
               ) : (
                 <>
                   <Text style={[ta.body_1_lg_regular]}>
-                    {strings.setupWallet.pasteJSONManually ||
-                      'Paste the wallet setup JSON below:'}
+                    {strings.setupWallet.pasteJSONManually}
                   </Text>
                   <RNTextInput
                     style={[
@@ -246,7 +240,7 @@ export const ImportMultisigWalletScreen = () => {
                     testID="json-input"
                   />
                   <Button
-                    title={strings.setupWallet.parseJSON || 'Parse JSON'}
+                    title={strings.setupWallet.parseJSON}
                     onPress={handlePasteJSON}
                     testID="parse-json-button"
                   />
@@ -266,17 +260,15 @@ export const ImportMultisigWalletScreen = () => {
             <>
               <View style={[a.p_md, a.bg_success_light, a.rounded_sm]}>
                 <Text style={[ta.body_1_lg_medium]}>
-                  {strings.setupWallet.fileImported ||
-                    'File imported successfully!'}
+                  {strings.setupWallet.fileImported}
                 </Text>
                 <Space.Height.xs />
                 <Text style={[ta.body_2_md_regular]}>
-                  {strings.setupWallet.walletName || 'Wallet Name'}:{' '}
-                  {importedData.metadata.walletName}
+                  {strings.setupWallet.walletName}: {importedData.metadata.walletName}
                 </Text>
                 <Space.Height.xs />
                 <Text style={[ta.body_2_md_regular]}>
-                  {strings.setupWallet.coSignersCount || 'Co-Signers'}:{' '}
+                  {strings.setupWallet.coSignersCount}:{' '}
                   {importedData.multisig.coSigners.length}
                 </Text>
               </View>
@@ -284,9 +276,7 @@ export const ImportMultisigWalletScreen = () => {
               <Space.Height.lg />
 
               <Button
-                title={
-                  strings.setupWallet.validateAndImport || 'Validate & Import'
-                }
+                title={strings.setupWallet.validateAndImport}
                 onPress={handleValidateAndImport}
                 disabled={isValidating}
                 testID="validate-and-import-button"
@@ -301,10 +291,7 @@ export const ImportMultisigWalletScreen = () => {
               <Space.Height.md />
 
               <Button
-                title={
-                  strings.setupWallet.selectDifferentFile ||
-                  'Select Different File'
-                }
+                title={strings.setupWallet.selectDifferentFile}
                 onPress={() => {
                   setImportedData(null)
                   setError(null)

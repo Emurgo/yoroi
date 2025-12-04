@@ -5,14 +5,16 @@
  */
 import {
   CardanoMobileWrapped,
-  createSendTx,
-  convertRawUtxosToModernUtxos,
   type YoroiWallet,
+  convertRawUtxosToModernUtxos,
+  createSendTx,
 } from '@yoroi/cardano-wallet'
 import {getLogger} from '@yoroi/common'
-import {TransactionOutput} from '@yoroi/tx'
-import {Wallet} from '@yoroi/types'
+import {MetadataDataValue, ModernUtxo, TransactionOutput} from '@yoroi/tx'
 import type {Address} from '@yoroi/types'
+import {TransactionCborHex, Wallet} from '@yoroi/types'
+
+import {BigNumber} from 'bignumber.js'
 
 import type {UnsignedTransaction} from '../transaction-builder/types'
 
@@ -80,13 +82,13 @@ export const buildMultipartyTransaction = async ({
     const {wallet} = inputWallet
     const modernUtxos = convertRawUtxosToModernUtxos(
       wallet.utxos(),
-      (address: Address) => wallet.getAddressing(address),
+      (address: Address) => wallet.getAddressing(address as string),
       wallet.portfolioPrimaryTokenInfo.id,
     )
 
     const result = await createSendTx({
       utxos: modernUtxos,
-      entries,
+      entries: [...entries],
       primaryTokenId: wallet.portfolioPrimaryTokenInfo.id,
       protocolParams: wallet.protocolParams,
       networkId: wallet.networkManager.chainId,
@@ -97,7 +99,7 @@ export const buildMultipartyTransaction = async ({
             ({serverTime}: {serverTime?: number}) => serverTime || Date.now(),
           )
           .catch(() => Date.now())
-        return BigInt(
+        return new BigNumber(
           wallet.networkManager.epoch.progress(new Date(time)).absoluteSlot,
         )
       },
@@ -106,7 +108,7 @@ export const buildMultipartyTransaction = async ({
       addressMode,
       metadata: metadata?.map((meta) => ({
         label: String(meta.label),
-        data: meta.data,
+        data: meta.data as MetadataDataValue,
       })),
       subtractFeeFromAmount,
     })
@@ -121,7 +123,7 @@ export const buildMultipartyTransaction = async ({
     return {
       cbor: result.cbor,
       unsignedTx: {
-        cbor: result.cbor,
+        cbor: result.cbor as TransactionCborHex,
         inputs: [],
         outputs: [],
         certificates: [],
@@ -144,21 +146,14 @@ export const buildMultipartyTransaction = async ({
   )
 
   // Use the first wallet's network/protocol params (all should be on same network)
-  const primaryWallet = inputWallets[0].wallet
+  if (inputWallets.length === 0) {
+    throw new Error('At least one input wallet is required')
+  }
+  const primaryWallet = inputWallets[0]!.wallet
   const primaryTokenId = primaryWallet.portfolioPrimaryTokenInfo.id
 
   // Collect UTXOs from all wallets and track which wallet each UTXO belongs to
-  const allUtxos: Array<{
-    utxo: {
-      receiver: Address
-      amounts: Record<string, string>
-      utxoId: string
-    }
-    addressing: {
-      startLevel: number
-      path: ReadonlyArray<number>
-    }
-  }> = []
+  const allUtxos: ModernUtxo[] = []
 
   // Map UTXO addresses to wallet IDs for signer extraction
   const utxoToWalletMap = new Map<
@@ -173,13 +168,13 @@ export const buildMultipartyTransaction = async ({
   for (const {wallet, meta, walletId} of inputWallets) {
     const modernUtxos = convertRawUtxosToModernUtxos(
       wallet.utxos(),
-      (address: Address) => wallet.getAddressing(address),
+      (address: Address) => wallet.getAddressing(address as string),
       primaryTokenId,
     )
 
     // Track UTXO addresses for this wallet
     for (const modernUtxo of modernUtxos) {
-      const address = modernUtxo.utxo.receiver
+      const address = modernUtxo.receiver
       // Extract key hash from address for this wallet
       // We'll extract it properly in extractRequiredSigners, but store the mapping here
       utxoToWalletMap.set(address, {
@@ -195,7 +190,7 @@ export const buildMultipartyTransaction = async ({
   // Build transaction using combined UTXOs
   const result = await createSendTx({
     utxos: allUtxos,
-    entries,
+    entries: [...entries],
     primaryTokenId,
     protocolParams: primaryWallet.protocolParams,
     networkId: primaryWallet.networkManager.chainId,
@@ -204,9 +199,10 @@ export const buildMultipartyTransaction = async ({
         .checkServerStatus()
         .then(({serverTime}: {serverTime?: number}) => serverTime || Date.now())
         .catch(() => Date.now())
-      return BigInt(
-        primaryWallet.networkManager.epoch.progress(new Date(time))
-          .absoluteSlot,
+      return new BigNumber(
+        primaryWallet.networkManager.epoch.progress(
+          new Date(time),
+        ).absoluteSlot,
       )
     },
     getChangeAddress: (mode: Wallet.AddressMode) => {
@@ -216,7 +212,7 @@ export const buildMultipartyTransaction = async ({
     addressMode,
     metadata: metadata?.map((meta) => ({
       label: String(meta.label),
-      data: meta.data,
+      data: meta.data as MetadataDataValue,
     })),
     subtractFeeFromAmount,
   })
@@ -236,7 +232,7 @@ export const buildMultipartyTransaction = async ({
   return {
     cbor: result.cbor,
     unsignedTx: {
-      cbor: result.cbor,
+      cbor: result.cbor as TransactionCborHex,
       inputs: [],
       outputs: [],
       certificates: [],
@@ -311,7 +307,7 @@ const extractRequiredSigners = async (
           const addr = csl.Address.fromBytes(Buffer.from(addressHex, 'hex'))
           if (!addr) continue
 
-          const addressBech32 = addr.toBech32()
+          const addressBech32 = addr.toBech32(undefined)
           addressToWalletMap.set(addressBech32, {
             walletId,
             walletName: meta.name,

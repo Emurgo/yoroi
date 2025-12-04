@@ -4,7 +4,7 @@ import type {
   WalletEvent,
   YoroiWallet,
 } from '@yoroi/cardano-wallet'
-import {App, Chain, HW, Network, Portfolio} from '@yoroi/types'
+import {App, Chain, HW, Network, Portfolio, Wallet} from '@yoroi/types'
 
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 
@@ -53,6 +53,7 @@ export type WalletFactory = {
     accountVisual,
     readOnlyAddresses,
     rewardAddressHex,
+    multisigMeta,
   }: {
     id: string
     accountPubKeyHex?: string
@@ -65,6 +66,7 @@ export type WalletFactory = {
       enableDiscovery?: boolean
     }
     rewardAddressHex?: string
+    multisigMeta?: Wallet.MultisigWalletMeta
   }): Promise<YoroiWallet>
 
   calcChecksum(pubKeyHex: string): CardanoTypes.WalletChecksum

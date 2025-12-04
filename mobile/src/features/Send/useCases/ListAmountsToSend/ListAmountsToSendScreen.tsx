@@ -1,5 +1,7 @@
-import {createSendTxFromWallet} from '@yoroi/cardano-wallet'
-import {createMultipartySendTxFromWallets} from '@yoroi/cardano-wallet'
+import {
+  createMultipartySendTxFromWallets,
+  createSendTxFromWallet,
+} from '@yoroi/cardano-wallet'
 import {isNft, isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
@@ -418,17 +420,14 @@ const SelectInputWalletsButton = ({
       <View style={[a.flex_row, a.align_center, a.gap_sm]}>
         <Icon.MultiParty size={20} color={p.primary_600} />
         <Text style={[ta.body_1_lg_medium]}>
-          {strings.send.selectInputWallets || 'Select Input Wallets'}
+          {strings.send.selectInputWallets}
         </Text>
       </View>
       <View style={[a.flex_row, a.align_center, a.gap_xs]}>
         <Text style={[ta.body_2_md_regular, ta.text_gray_low]}>
           {selectedCount === 1
-            ? strings.send.singleWallet || '1 wallet'
-            : strings.send.multipleWallets?.replace(
-                '{count}',
-                String(selectedCount),
-              ) || `${selectedCount} wallets`}
+            ? strings.send.singleWallet
+            : strings.send.multipleWallets(selectedCount)}
         </Text>
         <Icon.Chevron direction="right" color={ta.el_gray_max.color} />
       </View>

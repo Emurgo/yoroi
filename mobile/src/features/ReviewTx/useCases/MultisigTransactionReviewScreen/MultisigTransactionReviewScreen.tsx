@@ -149,9 +149,8 @@ const MultisigTransactionReviewContent = ({
       const jsonString = JSON.stringify(txJson, null, 2)
       await Clipboard.setStringAsync(jsonString)
       Alert.alert(
-        strings.setupWallet.transactionExported || 'Transaction Exported',
-        strings.setupWallet.transactionCopiedToClipboard ||
-          'Transaction JSON copied to clipboard. Share it with co-signers.',
+        strings.setupWallet.transactionExported,
+        strings.setupWallet.transactionCopiedToClipboard,
       )
     } catch (error) {
       Alert.alert(
@@ -218,21 +217,17 @@ const MultisigTransactionReviewContent = ({
               <Space.Height.lg />
               <View style={[a.p_md, a.bg_gray_c50, a.rounded_sm]}>
                 <Text style={[ta.heading_3]}>
-                  {strings.setupWallet.multisigSigningStatus ||
-                    'Signing Status'}
+                  {strings.setupWallet.multisigSigningStatus}
                 </Text>
                 <Space.Height.sm />
                 <Text style={[ta.body_1_lg_regular]}>
-                  {strings.setupWallet.signaturesRequired ||
-                    'Signatures Required'}
-                  : {quorumStatus.requiredCoSigners} of{' '}
-                  {quorumStatus.totalCoSigners}
+                  {strings.setupWallet.signaturesRequired}:{' '}
+                  {quorumStatus.requiredCoSigners} of {quorumStatus.totalCoSigners}
                 </Text>
                 <Space.Height.xs />
                 <Text style={[ta.body_1_lg_regular]}>
-                  {strings.setupWallet.signaturesReceived ||
-                    'Signatures Received'}
-                  : {quorumStatus.signedCoSigners.length}
+                  {strings.setupWallet.signaturesReceived}:{' '}
+                  {quorumStatus.signedCoSigners.length}
                 </Text>
                 <Space.Height.md />
 
@@ -292,8 +287,7 @@ const MultisigTransactionReviewContent = ({
                     <Text
                       style={[ta.body_2_md_regular, {color: ta.warning.color}]}
                     >
-                      {strings.setupWallet.quorumNotMet ||
-                        'Quorum not met. Export transaction and share with co-signers.'}
+                      {strings.setupWallet.quorumNotMet}
                     </Text>
                   </>
                 )}
@@ -307,17 +301,13 @@ const MultisigTransactionReviewContent = ({
         <View style={[a.gap_md]}>
           {!canSubmit ? (
             <Button
-              title={
-                strings.setupWallet.exportTransaction || 'Export Transaction'
-              }
+              title={strings.setupWallet.exportTransaction}
               onPress={handleExportTransaction}
               testID="export-multisig-transaction-button"
             />
           ) : (
             <Button
-              title={
-                strings.setupWallet.submitTransaction || 'Submit Transaction'
-              }
+              title={strings.setupWallet.submitTransaction}
               onPress={handleOnConfirm}
               disabled={meta.isReadOnly}
               testID="submit-multisig-transaction-button"
