@@ -335,17 +335,7 @@ export const getQuorumStatus = (
 
   // Find missing signers (unused for now, but kept for future use)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const _unusedMissingSigners: Wallet.Bip32PublicKeyHex[] = signPolicy.signers
-    .map((_signer) => {
-      // Find the corresponding Bip32PublicKeyHex for this key hash
-      // This requires matching the key hash to the co-signer key
-      // For now, we'll return all signers as potentially missing
-      // In practice, you'd need to match keyHash to Bip32PublicKeyHex
-      return undefined
-    })
-    .filter((key): key is Wallet.Bip32PublicKeyHex => {
-      return key !== undefined
-    })
+  const _unusedMissingSigners: Wallet.Bip32PublicKeyHex[] = []
 
   return {
     signed,

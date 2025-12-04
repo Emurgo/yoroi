@@ -36,10 +36,12 @@ describe('create-multisig-wallet', () => {
       xpriv: {
         read: jest.fn().mockResolvedValue({value: 'mockRootKey'}),
         write: jest.fn().mockResolvedValue(undefined),
+        remove: jest.fn().mockResolvedValue(undefined),
       },
       xpub: {
         read: jest.fn().mockResolvedValue({value: 'mockXPub'}),
         write: jest.fn().mockResolvedValue(undefined),
+        remove: jest.fn().mockResolvedValue(undefined),
       },
       multisig: {
         read: jest.fn().mockResolvedValue({value: null}),

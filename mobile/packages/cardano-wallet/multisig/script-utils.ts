@@ -153,13 +153,13 @@ export const getSignPolicy = (
 
 /**
  * Check if a co-signer has signed a transaction
- * Derives the key hash from the BIP32 public key and checks if it's in the signatures
+ * Derives the key hash from the BIP32 public key and checks if it's in the vkey witnesses
  */
 export const hasSigned = async (
   csl: WasmModuleProxy,
   sharedWalletKey: Bip32PublicKeyHex,
   type: 'payment' | 'staking',
-  signatures: WasmModuleProxy['Ed25519Signatures'],
+  vkeys: ReturnType<typeof csl.Vkeywitnesses.prototype>,
 ): Promise<boolean> => {
   const derivationPath =
     type === 'payment' ? paymentScriptKeyPath : stakingScriptKeyPath
@@ -184,25 +184,24 @@ export const hasSigned = async (
   const keyHash = rawKey.hash()
   const keyHashHex = keyHash.toHex()
 
-  // Check if this key hash is in the signatures
-  // Note: CSL signatures are stored as a map, we need to check if the key exists
-  // The signatures object has a method to check, but we'll use a different approach
-  // by checking if we can get the signature for this key hash
-  try {
-    // Create Ed25519KeyHash from hex to check signatures
-    const ed25519KeyHash = csl.Ed25519KeyHash.fromBytes(
-      Buffer.from(keyHashHex, 'hex'),
-    )
-
-    if (!ed25519KeyHash) {
-      return false
-    }
-
-    // Check if signature exists (CSL signatures.has() method)
-    return signatures.has(ed25519KeyHash)
-  } catch {
+  // Check if this key hash is in the vkey witnesses by iterating
+  if (!vkeys) {
     return false
   }
+
+  for (let i = 0; i < vkeys.len(); i++) {
+    const vkey = vkeys.get(i)
+    if (!vkey) continue
+
+    const publicKey = vkey.vkey().publicKey()
+    const witnessKeyHash = publicKey.hash()
+
+    if (witnessKeyHash.toHex() === keyHashHex) {
+      return true
+    }
+  }
+
+  return false
 }
 
 /**

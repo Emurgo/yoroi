@@ -23,7 +23,7 @@ export const walletManagerReducer = (
 
       case WalletManagerActionType.WalletSelected:
         draft.selected.wallet = castDraft(action.wallet)
-        draft.selected.meta = action.meta
+        draft.selected.meta = castDraft(action.meta)
         break
 
       case WalletManagerActionType.SelectedMetaUpdated:
@@ -31,7 +31,7 @@ export const walletManagerReducer = (
         if (draft.selected.meta != null) {
           const newMeta = action.metas.get(draft.selected.meta.id)
           if (newMeta != null) {
-            draft.selected.meta = newMeta
+            draft.selected.meta = castDraft(newMeta)
           } else {
             getLogger().error('walletManagerReducer: selected meta is gone')
           }

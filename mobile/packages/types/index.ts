@@ -983,6 +983,7 @@ export namespace Wallet {
   export type Bip32PublicKeyHex = import('./branded/crypto').Bip32PublicKeyHex
   export type ScriptCbor = import('./branded/cbor').ScriptCbor
   export type TransactionCbor = import('./branded/cbor').TransactionCbor
+  export type TransactionCborHex = import('./branded/cbor').TransactionCborHex
 
   // Transaction types - use imported types directly to avoid circular references
   export const TransactionStatus = TRANSACTION_STATUS

@@ -510,7 +510,7 @@ function createWalletObject(
         canIncrease: false,
       },
       addSubscriberToNewAddresses: () => {},
-    } as AccountManager['internalChain']
+    } as unknown as AddressChain
   }
   const externalChain = () => {
     // Multisig account manager doesn't have chains, return a mock chain

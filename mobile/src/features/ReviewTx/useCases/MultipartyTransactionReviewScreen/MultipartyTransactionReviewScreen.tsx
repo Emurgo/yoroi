@@ -9,7 +9,7 @@ import {
   constructMultipartyTransactionJSON,
   getSignedWallets,
 } from '@yoroi/tx'
-import {Bip32PublicKeyHex, TransactionCborHex, Wallet} from '@yoroi/types'
+import {Bip32PublicKeyHex, Wallet} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as Clipboard from 'expo-clipboard'
@@ -102,7 +102,7 @@ const MultipartyTransactionReviewContent = ({
     try {
       // Get chain ID from wallet
       const chainId =
-        `cip34:${wallet.networkManager.chainId}-${wallet.networkManager.network.magic}` as `cip34:${number}-${number}`
+        `cip34:${wallet.networkManager.chainId}-${wallet.networkManager.protocolMagic}` as `cip34:${number}-${number}`
 
       // Get current wallet's key hash if it's one of the signers
       const currentSigner = multipartyInfo.requiredSigners.find(
