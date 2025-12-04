@@ -1,10 +1,7 @@
 /**
  * Utilities for creating multisig wallet restoration links/QR codes
  */
-import {
-  configCardanoWalletV1,
-  linksCardanoModuleMaker,
-} from '@yoroi/links'
+import {configCardanoWalletV1, linksCardanoModuleMaker} from '@yoroi/links'
 import {Wallet} from '@yoroi/types'
 
 /**

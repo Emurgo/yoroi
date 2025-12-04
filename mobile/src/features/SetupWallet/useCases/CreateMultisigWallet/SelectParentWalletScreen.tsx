@@ -99,7 +99,9 @@ export const SelectParentWalletScreen = () => {
                   a.p_md,
                   a.rounded_sm,
                   a.border,
-                  isSelected ? {backgroundColor: p.primary_100} : {backgroundColor: p.white_static},
+                  isSelected
+                    ? {backgroundColor: p.primary_100}
+                    : {backgroundColor: p.white_static},
                   isSelected
                     ? {borderColor: p.primary_600}
                     : {borderColor: p.gray_200},
@@ -108,9 +110,7 @@ export const SelectParentWalletScreen = () => {
               >
                 <Text style={[a.heading_3_medium]}>{walletMeta.name}</Text>
                 <Space.Height.xs />
-                <Text
-                  style={[a.body_2_md_regular, {color: p.gray_600}]}
-                >
+                <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
                   {walletMeta.implementation}
                 </Text>
               </TouchableOpacity>

@@ -52,10 +52,6 @@ export const ShareWalletDetailsScreen = () => {
   const {walletId, walletMeta} = params
 
   const multisigMeta = walletMeta.multisigMeta
-  if (!multisigMeta) {
-    // This screen should only be accessed for multisig wallets
-    return null
-  }
 
   // Always call hooks before early returns
   const walletSetupJSON: MultisigWalletSetupJSON | null = React.useMemo(() => {
@@ -165,6 +161,11 @@ export const ShareWalletDetailsScreen = () => {
       )
     }
   }, [restorationLink, strings])
+
+  if (!multisigMeta) {
+    // This screen should only be accessed for multisig wallets
+    return null
+  }
 
   return (
     <SafeArea>

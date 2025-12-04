@@ -22,6 +22,7 @@ import {useSelectedWallet} from '@yoroi/wallet-manager'
 import {useNavigation} from '@react-navigation/native'
 import type {StackNavigationProp} from '@react-navigation/stack'
 import {Buffer} from 'buffer'
+import * as DocumentPicker from 'expo-document-picker'
 import * as FileSystem from 'expo-file-system'
 import * as React from 'react'
 import {
@@ -96,8 +97,6 @@ export const CoSignTransactionScreen = () => {
     try {
       // Try to use expo-document-picker if available
       try {
-        // eslint-disable-next-line @typescript-eslint/no-require-imports
-        const DocumentPicker = require('expo-document-picker')
         const result = await DocumentPicker.getDocumentAsync({
           type: ['application/json', 'text/json', '*.json'],
           copyToCacheDirectory: true,
@@ -337,11 +336,7 @@ export const CoSignTransactionScreen = () => {
             <>
               <Space.Height.sm />
               <View
-                style={[
-                  a.p_md,
-                  a.rounded_sm,
-                  {backgroundColor: p.primary_100},
-                ]}
+                style={[a.p_md, a.rounded_sm, {backgroundColor: p.primary_100}]}
               >
                 <Text style={[a.body_2_md_medium]}>
                   {transactionType === 'multisig'
@@ -415,23 +410,21 @@ export const CoSignTransactionScreen = () => {
                 <>
                   <Space.Height.md />
                   <View
-                    style={[
-                      a.p_md,
-                      a.rounded_sm,
-                      {backgroundColor: p.gray_50},
-                    ]}
+                    style={[a.p_md, a.rounded_sm, {backgroundColor: p.gray_50}]}
                   >
                     <Text style={[a.heading_3_medium]}>
                       {strings.setupWallet.transactionDetails}
                     </Text>
                     <Space.Height.sm />
                     <Text style={[a.body_2_md_regular]}>
-                      {strings.setupWallet.fee}: {formattedTx.fee?.quantity || '0'}{' '}
+                      {strings.setupWallet.fee}:{' '}
+                      {formattedTx.fee?.quantity || '0'}{' '}
                       {formattedTx.fee?.tokenInfo?.ticker || 'ADA'}
                     </Text>
                     <Space.Height.xs />
                     <Text style={[a.body_2_md_regular]}>
-                      {strings.setupWallet.outputs}: {formattedTx.outputs.length}
+                      {strings.setupWallet.outputs}:{' '}
+                      {formattedTx.outputs.length}
                     </Text>
                   </View>
                 </>

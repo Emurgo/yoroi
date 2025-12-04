@@ -2404,9 +2404,7 @@ export const useStrings = () => {
         fileImported: f(setupWalletMessages.fileImported),
         validateAndImport: f(setupWalletMessages.validateAndImport),
         defineQuorumTitle: f(setupWalletMessages.defineQuorumTitle),
-        defineQuorumDescription: f(
-          setupWalletMessages.defineQuorumDescription,
-        ),
+        defineQuorumDescription: f(setupWalletMessages.defineQuorumDescription),
         quorumTypeLabel: f(setupWalletMessages.quorumTypeLabel),
         quorumAllOf: f(setupWalletMessages.quorumAllOf),
         quorumAllOfDescription: f(setupWalletMessages.quorumAllOfDescription),
@@ -2414,15 +2412,11 @@ export const useStrings = () => {
         quorumAnyOfDescription: f(setupWalletMessages.quorumAnyOfDescription),
         quorumNOf: f(setupWalletMessages.quorumNOf),
         quorumNOfDescription: f(setupWalletMessages.quorumNOfDescription),
-        requiredSignaturesLabel: f(
-          setupWalletMessages.requiredSignaturesLabel,
-        ),
+        requiredSignaturesLabel: f(setupWalletMessages.requiredSignaturesLabel),
         noParentWalletsDescription: f(
           setupWalletMessages.noParentWalletsDescription,
         ),
-        selectParentWalletTitle: f(
-          setupWalletMessages.selectParentWalletTitle,
-        ),
+        selectParentWalletTitle: f(setupWalletMessages.selectParentWalletTitle),
         selectParentWalletDescription: f(
           setupWalletMessages.selectParentWalletDescription,
         ),
@@ -2431,9 +2425,7 @@ export const useStrings = () => {
         generateSharedKeyDescription: f(
           setupWalletMessages.generateSharedKeyDescription,
         ),
-        generateSharedKeyButton: f(
-          setupWalletMessages.generateSharedKeyButton,
-        ),
+        generateSharedKeyButton: f(setupWalletMessages.generateSharedKeyButton),
         sharedKeyGenerated: f(setupWalletMessages.sharedKeyGenerated),
         createMultisigWalletButtonCard: f(
           setupWalletMessages.createMultisigWalletButtonCard,

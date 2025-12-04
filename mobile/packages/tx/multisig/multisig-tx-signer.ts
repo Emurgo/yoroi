@@ -4,9 +4,9 @@
  */
 import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import {
+  type SignPolicy,
   paymentScriptKeyPath,
   stakingScriptKeyPath,
-  type SignPolicy,
 } from '@yoroi/cardano-wallet'
 import {getLogger} from '@yoroi/common'
 import {Wallet} from '@yoroi/types'

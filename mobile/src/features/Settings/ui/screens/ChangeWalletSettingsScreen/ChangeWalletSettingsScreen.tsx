@@ -61,7 +61,13 @@ export const ChangeWalletSettingsScreen = () => {
   const logout = useLogout()
   const settingsNavigation = useNavigation<SettingsRouteNavigation>()
   const {
-    meta: {isEasyConfirmationEnabled, isHW, isReadOnly, implementation, multisigMeta},
+    meta: {
+      isEasyConfirmationEnabled,
+      isHW,
+      isReadOnly,
+      implementation,
+      multisigMeta,
+    },
   } = useSelectedWallet()
   const navigateTo = useNavigateTo()
   const walletType = useWalletType(implementation)

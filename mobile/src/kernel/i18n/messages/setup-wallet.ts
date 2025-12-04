@@ -530,7 +530,8 @@ export const setupWalletMessages = defineMessages({
   },
   coSignTransactionDescription: {
     id: 'setupWallet.coSignTransactionDescription',
-    defaultMessage: '!!!Import a transaction JSON file to sign it with your wallet.',
+    defaultMessage:
+      '!!!Import a transaction JSON file to sign it with your wallet.',
   },
   multisigTransaction: {
     id: 'setupWallet.multisigTransaction',
@@ -682,7 +683,8 @@ export const setupWalletMessages = defineMessages({
   },
   defineQuorumDescription: {
     id: 'setupWallet.defineQuorumDescription',
-    defaultMessage: '!!!Configure how many signatures are required for transactions.',
+    defaultMessage:
+      '!!!Configure how many signatures are required for transactions.',
   },
   quorumTypeLabel: {
     id: 'setupWallet.quorumTypeLabel',
@@ -718,7 +720,8 @@ export const setupWalletMessages = defineMessages({
   },
   noParentWalletsDescription: {
     id: 'setupWallet.noParentWalletsDescription',
-    defaultMessage: '!!!You need at least one regular wallet to create a multisig wallet.',
+    defaultMessage:
+      '!!!You need at least one regular wallet to create a multisig wallet.',
   },
   selectParentWalletTitle: {
     id: 'setupWallet.selectParentWalletTitle',

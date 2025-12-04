@@ -81,9 +81,7 @@ export const signMultipartyTransaction = async ({
 
     const paymentKey = accountPrivateKey.derive(0).derive(0).toRawKey() // external chain, index 0
     const publicKey = paymentKey.toPublic()
-    const keyHash = Buffer.from(
-      publicKey.hash().toBytes(),
-    ).toString('hex')
+    const keyHash = Buffer.from(publicKey.hash().toBytes()).toString('hex')
 
     logger.debug('signMultipartyTransaction: Transaction signed', {
       walletId,

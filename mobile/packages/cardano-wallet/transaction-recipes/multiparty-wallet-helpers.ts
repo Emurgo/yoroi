@@ -4,9 +4,9 @@
  */
 import {getLogger} from '@yoroi/common'
 import {
-  TransactionOutput,
   type MultipartyInputWallet,
   type MultipartyTransactionResult,
+  TransactionOutput,
   buildMultipartyTransaction,
 } from '@yoroi/tx'
 import {Wallet} from '@yoroi/types'

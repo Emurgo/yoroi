@@ -7,6 +7,7 @@ import {Wallet} from '@yoroi/types'
 import {useWalletManager} from '@yoroi/wallet-manager'
 
 import {useNavigation} from '@react-navigation/native'
+import * as DocumentPicker from 'expo-document-picker'
 import * as FileSystem from 'expo-file-system'
 import * as React from 'react'
 import {
@@ -89,8 +90,6 @@ export const ImportMultisigWalletScreen = () => {
       // Try to use expo-document-picker if available
       // Otherwise fall back to manual JSON input
       try {
-        // eslint-disable-next-line @typescript-eslint/no-require-imports
-        const DocumentPicker = require('expo-document-picker')
         const result = await DocumentPicker.getDocumentAsync({
           type: ['application/json', 'text/json', '*.json'],
           copyToCacheDirectory: true,
@@ -251,7 +250,9 @@ export const ImportMultisigWalletScreen = () => {
               {error && (
                 <>
                   <Space.Height.sm />
-                  <Text style={[a.body_1_lg_medium, {color: p.sys_magenta_500}]}>
+                  <Text
+                    style={[a.body_1_lg_medium, {color: p.sys_magenta_500}]}
+                  >
                     {error}
                   </Text>
                 </>
@@ -259,7 +260,13 @@ export const ImportMultisigWalletScreen = () => {
             </>
           ) : (
             <>
-              <View style={[a.p_md, {backgroundColor: p.secondary_100}, a.rounded_sm]}>
+              <View
+                style={[
+                  a.p_md,
+                  {backgroundColor: p.secondary_100},
+                  a.rounded_sm,
+                ]}
+              >
                 <Text style={[a.body_1_lg_medium]}>
                   {strings.setupWallet.fileImported}
                 </Text>

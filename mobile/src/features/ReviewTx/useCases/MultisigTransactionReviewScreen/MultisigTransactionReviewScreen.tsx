@@ -9,9 +9,9 @@ import {
 } from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {
+  type ChainId,
   constructMultisigTransactionJSON,
   getSignedCoSigners,
-  type ChainId,
 } from '@yoroi/tx'
 import {
   Bip32PublicKeyHex,
@@ -25,7 +25,10 @@ import * as Clipboard from 'expo-clipboard'
 import * as React from 'react'
 import {Alert, ScrollView, View} from 'react-native'
 
-import {ReviewTxMemoProvider, useReviewTxMemo} from '~/features/ReviewTx/common/context/ReviewTxMemoContext'
+import {
+  ReviewTxMemoProvider,
+  useReviewTxMemo,
+} from '~/features/ReviewTx/common/context/ReviewTxMemoContext'
 import {useFormattedTx} from '~/features/ReviewTx/common/hooks/useFormattedTx'
 import {useOnConfirm} from '~/features/ReviewTx/common/hooks/useOnConfirm'
 import {useTxBody} from '~/features/ReviewTx/common/hooks/useTxBody'
@@ -33,9 +36,9 @@ import {FormattedTx, TransactionBody} from '~/features/ReviewTx/common/types'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
 import {ReviewContext, ReviewTxRoutes} from '~/kernel/navigation/types'
-import {OperationContext} from '~/ui/ResultScreen/types'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
+import {OperationContext} from '~/ui/ResultScreen/types'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
@@ -100,7 +103,12 @@ const MultisigTransactionReviewContent = ({
         }
 
         const missingCoSigners = multisigMeta.coSigners
-          .filter((c) => !signedCoSigners.includes(c.sharedWalletKey as Wallet.Bip32PublicKeyHex))
+          .filter(
+            (c) =>
+              !signedCoSigners.includes(
+                c.sharedWalletKey as Wallet.Bip32PublicKeyHex,
+              ),
+          )
           .map((c) => c.sharedWalletKey as Wallet.Bip32PublicKeyHex)
 
         setQuorumStatus({
@@ -250,11 +258,7 @@ const MultisigTransactionReviewContent = ({
             <>
               <Space.Height.lg />
               <View
-                style={[
-                  a.p_md,
-                  a.rounded_sm,
-                  {backgroundColor: p.gray_50},
-                ]}
+                style={[a.p_md, a.rounded_sm, {backgroundColor: p.gray_50}]}
               >
                 <Text style={[a.heading_3_medium]}>
                   {strings.setupWallet.multisigSigningStatus}
@@ -262,7 +266,8 @@ const MultisigTransactionReviewContent = ({
                 <Space.Height.sm />
                 <Text style={[a.body_1_lg_regular]}>
                   {strings.setupWallet.signaturesRequired}:{' '}
-                  {quorumStatus.requiredCoSigners} of {quorumStatus.totalCoSigners}
+                  {quorumStatus.requiredCoSigners} of{' '}
+                  {quorumStatus.totalCoSigners}
                 </Text>
                 <Space.Height.xs />
                 <Text style={[a.body_1_lg_regular]}>
@@ -274,10 +279,10 @@ const MultisigTransactionReviewContent = ({
                 {/* Co-signers list */}
                 <View style={[a.gap_sm]}>
                   {multisigMeta.coSigners.map((coSigner, index) => {
-                    const coSignerKey = coSigner.sharedWalletKey as Wallet.Bip32PublicKeyHex
-                    const hasSigned = quorumStatus.signedCoSigners.includes(
-                      coSignerKey,
-                    )
+                    const coSignerKey =
+                      coSigner.sharedWalletKey as Wallet.Bip32PublicKeyHex
+                    const hasSigned =
+                      quorumStatus.signedCoSigners.includes(coSignerKey)
                     const isCurrentWallet = index === 0 // Simplified - should check actual wallet
 
                     return (
@@ -314,10 +319,7 @@ const MultisigTransactionReviewContent = ({
                           </Text>
                         </View>
                         {hasSigned ? (
-                          <Icon.CheckFilled
-                            size={24}
-                            color={p.secondary_500}
-                          />
+                          <Icon.CheckFilled size={24} color={p.secondary_500} />
                         ) : (
                           <Icon.Clock size={24} color={p.sys_yellow_500} />
                         )}

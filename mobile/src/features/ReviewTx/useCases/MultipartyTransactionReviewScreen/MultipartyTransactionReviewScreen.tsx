@@ -5,10 +5,7 @@
  */
 import {getLogger} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {
-  constructMultipartyTransactionJSON,
-  getSignedWallets,
-} from '@yoroi/tx'
+import {constructMultipartyTransactionJSON, getSignedWallets} from '@yoroi/tx'
 import {Bip32PublicKeyHex, Wallet} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
@@ -268,10 +265,7 @@ const MultipartyTransactionReviewContent = ({
                           </Text>
                         </View>
                         {hasSigned ? (
-                          <Icon.CheckFilled
-                            size={24}
-                            color={p.secondary_500}
-                          />
+                          <Icon.CheckFilled size={24} color={p.secondary_500} />
                         ) : (
                           <Icon.Clock size={24} color={p.sys_yellow_500} />
                         )}
