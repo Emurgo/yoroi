@@ -3,21 +3,12 @@
  * Manages addresses for script-based multisig wallets
  */
 import {getLogger} from '@yoroi/common'
-import {Address, App} from '@yoroi/types'
+import {Address} from '@yoroi/types'
 import {ScriptCbor} from '@yoroi/types'
 
 import {freeze} from 'immer'
 
 import {createMultisigAddressGenerator} from './multisig-address-generator'
-
-/**
- * Multisig account manager state
- */
-type MultisigAccountManagerState = {
-  readonly paymentScriptCbor: ScriptCbor
-  readonly stakingScriptCbor: ScriptCbor
-  readonly chainId: number
-  readonly baseAddress: Address
   readonly rewardAddressHex: string
   readonly addressGenerator: ReturnType<typeof createMultisigAddressGenerator>
 }

@@ -240,7 +240,7 @@ export const buildMultipartyTransaction = async ({
 const extractRequiredSigners = async (
   cbor: string,
   inputWallets: ReadonlyArray<MultipartyInputWallet>,
-  utxoToWalletMap?: Map<
+  _utxoToWalletMap?: Map<
     string,
     {
       walletId: string

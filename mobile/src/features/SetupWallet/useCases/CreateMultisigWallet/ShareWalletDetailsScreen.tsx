@@ -17,7 +17,6 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {Button} from '~/ui/Button/Button'
-import {Icon} from '~/ui/Icon'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text'
@@ -54,44 +53,47 @@ export const ShareWalletDetailsScreen = () => {
 
   const multisigMeta = walletMeta.multisigMeta
 
-  if (!multisigMeta) {
-    return (
-      <SafeArea>
-        <Space.Height.lg />
-        <View style={[a.px_lg]}>
-          <Text style={[ta.heading_1]}>
-            {strings.setupWallet.invalidMultisigWallet ||
-              'Invalid Multisig Wallet'}
-          </Text>
-          <Space.Height.md />
-          <Button
-            title={strings.global.back || 'Back'}
-            onPress={() => navigation.goBack()}
-          />
-        </View>
-      </SafeArea>
-    )
-  }
+  // Always call hooks before early returns
+  const walletSetupJSON: MultisigWalletSetupJSON | null = React.useMemo(() => {
+    if (!multisigMeta) return null
+    return {
+      version: '1.0.0',
+      metadata: {
+        walletId,
+        walletName: walletMeta.name,
+        createdAt: new Date().toISOString(),
+        network: 'cardano', // TODO: Get from wallet meta
+      },
+      multisig: {
+        coSigners: multisigMeta.coSigners,
+        quorumRules: multisigMeta.quorumRules,
+        paymentScriptCbor: multisigMeta.paymentScriptCbor,
+        stakingScriptCbor: multisigMeta.stakingScriptCbor,
+      },
+    }
+  }, [multisigMeta, walletId, walletMeta.name])
 
-  const walletSetupJSON: MultisigWalletSetupJSON = {
-    version: '1.0.0',
-    metadata: {
-      walletId,
-      walletName: walletMeta.name,
-      createdAt: new Date().toISOString(),
-      network: 'cardano', // TODO: Get from wallet meta
-    },
-    multisig: {
-      coSigners: multisigMeta.coSigners,
-      quorumRules: multisigMeta.quorumRules,
-      paymentScriptCbor: multisigMeta.paymentScriptCbor,
-      stakingScriptCbor: multisigMeta.stakingScriptCbor,
-    },
-  }
+  const jsonString = React.useMemo(
+    () => (walletSetupJSON ? JSON.stringify(walletSetupJSON, null, 2) : ''),
+    [walletSetupJSON],
+  )
 
-  const jsonString = JSON.stringify(walletSetupJSON, null, 2)
+  // Generate restoration link/QR code
+  const restorationLink = React.useMemo(() => {
+    if (!walletSetupJSON) return null
+    try {
+      return createMultisigWalletLink({
+        multisigSetup: walletSetupJSON,
+        name: walletMeta.name,
+      })
+    } catch (error) {
+      logger.error('Failed to create multisig wallet link', {error})
+      return null
+    }
+  }, [walletSetupJSON, walletMeta.name])
 
   const handleShare = React.useCallback(async () => {
+    if (!jsonString) return
     try {
       const fileName = `multisig-wallet-${walletMeta.name.replace(/\s+/g, '-')}-${walletId.substring(0, 8)}.json`
       const fileUri = `${FileSystem.documentDirectory}${fileName}`
@@ -122,6 +124,7 @@ export const ShareWalletDetailsScreen = () => {
   }, [jsonString, walletMeta.name, walletId, strings])
 
   const handleCopyJSON = React.useCallback(async () => {
+    if (!jsonString) return
     try {
       await Clipboard.setStringAsync(jsonString)
       Alert.alert(
@@ -136,19 +139,6 @@ export const ShareWalletDetailsScreen = () => {
       )
     }
   }, [jsonString, strings])
-
-  // Generate restoration link/QR code
-  const restorationLink = React.useMemo(() => {
-    try {
-      return createMultisigWalletLink({
-        multisigSetup: walletSetupJSON,
-        name: walletMeta.name,
-      })
-    } catch (error) {
-      logger.error('Failed to create multisig wallet link', {error})
-      return null
-    }
-  }, [walletSetupJSON, walletMeta.name])
 
   const handleCopyLink = React.useCallback(async () => {
     if (!restorationLink) {

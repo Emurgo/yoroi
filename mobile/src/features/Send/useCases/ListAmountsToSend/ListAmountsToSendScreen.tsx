@@ -31,7 +31,6 @@ import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {RemoveAmountButton} from '~/ui/RemoveAmountButton/RemoveAmountButton'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
-import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
 

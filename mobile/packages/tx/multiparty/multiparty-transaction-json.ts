@@ -52,14 +52,14 @@ export const constructMultipartyTransactionJSON = ({
   // Convert multiparty signers to transaction signers format
   const signers = requiredSigners.map((signer) => ({
     walletId: signer.walletId,
-    publicKey: signer.keyHash as any, // Using keyHash as publicKey identifier
+    publicKey: signer.keyHash as string, // Using keyHash as publicKey identifier
     signed: signer.signed,
   }))
 
   return constructMultisigTransactionJSON({
     cborHex,
-    chainId: chainId as any,
-    createdBy: createdBy as any,
+    chainId: chainId as string,
+    createdBy: createdBy as string,
     note,
     signers,
   })
@@ -81,7 +81,7 @@ export const addWalletSignatureToTransactionJSON = (
   txJson: MultipartyTransactionJSON,
   walletId: string,
   keyHash: string,
-  walletName: string,
+  _walletName: string,
 ): MultipartyTransactionJSON => {
   const existingSigners = txJson.metadata.signers ?? []
 
@@ -94,14 +94,14 @@ export const addWalletSignatureToTransactionJSON = (
     signerIndex >= 0
       ? existingSigners.map((signer, index) =>
           index === signerIndex
-            ? {...signer, signed: true, walletId, publicKey: keyHash as any}
+            ? {...signer, signed: true, walletId, publicKey: keyHash as string}
             : signer,
         )
       : [
           ...existingSigners,
           {
             walletId,
-            publicKey: keyHash as any,
+            publicKey: keyHash as string,
             signed: true,
           },
         ]

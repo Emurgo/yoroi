@@ -144,16 +144,7 @@ export const ReviewTxScreen = () => {
   const {trackEvent} = useAnalyticsTracking()
   const {wallet} = useSelectedWallet()
 
-  // Check if this is a multisig wallet - if so, use multisig review screen
-  if (isMultisigWallet(wallet)) {
-    return <MultisigTransactionReviewScreen />
-  }
-
-  // Check if this is a multiparty transaction - if so, use multiparty review screen
-  if (params?.multiparty) {
-    return <MultipartyTransactionReviewScreen />
-  }
-
+  // Always call hooks before any early returns
   const txBody = useTxBody({cbor: params?.cbor})
   const {formattedTx, isLoading, areTokenInfosLoaded} = useFormattedTx(
     (txBody ?? {
@@ -179,6 +170,8 @@ export const ReviewTxScreen = () => {
     | undefined
   >(undefined)
 
+  const hasTrackedReviewViewRef = React.useRef(false)
+
   React.useEffect(() => {
     if (!params?.cbor) {
       setValidationResult(undefined)
@@ -199,8 +192,6 @@ export const ReviewTxScreen = () => {
 
     return () => clearTimeout(timeoutId)
   }, [params?.cbor])
-
-  const hasTrackedReviewViewRef = React.useRef(false)
 
   React.useEffect(() => {
     if (hasTrackedReviewViewRef.current || !areTokenInfosLoaded || !formattedTx)
@@ -227,6 +218,16 @@ export const ReviewTxScreen = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // Check if this is a multisig wallet - if so, use multisig review screen
+  if (isMultisigWallet(wallet)) {
+    return <MultisigTransactionReviewScreen />
+  }
+
+  // Check if this is a multiparty transaction - if so, use multiparty review screen
+  if (params?.multiparty) {
+    return <MultipartyTransactionReviewScreen />
+  }
 
   if (isLoading || !formattedTx || !params) {
     return null

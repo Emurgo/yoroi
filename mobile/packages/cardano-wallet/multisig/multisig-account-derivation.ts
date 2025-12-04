@@ -95,7 +95,7 @@ export const deriveMultisigAccount = async ({
  */
 export const deriveSharedWalletKeyFromAccountPubKey = async (
   accountPubKeyHex: string,
-  implementation: Wallet.Implementation,
+  _implementation: Wallet.Implementation,
 ): Promise<Bip32PublicKeyHex> => {
   return CardanoMobileWrapped.cslScope((csl: WasmModuleProxy) => {
     const accountPubKeyPtr = csl.Bip32PublicKey.fromBytes(

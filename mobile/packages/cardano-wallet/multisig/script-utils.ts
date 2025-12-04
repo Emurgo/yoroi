@@ -1,13 +1,11 @@
 /**
  * Utilities for validating and working with multisig native scripts
  */
-import {Wallet} from '@yoroi/types'
 import {Bip32PublicKeyHex, KeyHash, ScriptCbor} from '@yoroi/types'
 
 import type {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {Buffer} from 'buffer'
 
-import {CardanoMobileWrapped} from '../wrappedCsl'
 import {paymentScriptKeyPath, stakingScriptKeyPath} from './script-derivation'
 
 /**

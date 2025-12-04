@@ -55,8 +55,6 @@ export const ImportMultisigWalletScreen = () => {
   const [error, setError] = React.useState<string | null>(null)
   const [jsonInput, setJsonInput] = React.useState('')
   const [useFilePicker, setUseFilePicker] = React.useState(true)
-  const [jsonInput, setJsonInput] = React.useState('')
-  const [useFilePicker, setUseFilePicker] = React.useState(true)
 
   // Get current wallet to check if it matches any co-signer
   const currentWallet = React.useMemo(() => {

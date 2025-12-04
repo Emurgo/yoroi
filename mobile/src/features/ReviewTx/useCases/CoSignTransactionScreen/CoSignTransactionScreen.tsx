@@ -104,7 +104,7 @@ export const CoSignTransactionScreen = () => {
     try {
       // Try to use expo-document-picker if available
       try {
-        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
         const DocumentPicker = require('expo-document-picker')
         const result = await DocumentPicker.getDocumentAsync({
           type: ['application/json', 'text/json', '*.json'],
@@ -205,7 +205,6 @@ export const CoSignTransactionScreen = () => {
           stakingScriptCbor: multisigMeta.stakingScriptCbor,
         })
 
-        setSignedTxCbor(signResult.cborHex)
 
         // Navigate to review screen with signed transaction
         navigation.navigate('review-tx', {
@@ -241,14 +240,13 @@ export const CoSignTransactionScreen = () => {
         )
 
         const signedTxCborHex = Buffer.from(signedTx.toBytes()).toString('hex')
-        setSignedTxCbor(signedTxCborHex)
 
         // Extract key hash from wallet's public key for tracking
         // In a real implementation, we'd extract this from the transaction signatures
         const walletKeyHash = wallet.publicKeyHex.substring(0, 64) // Simplified
 
-        // Update transaction JSON with signature
-        const updatedTxJson = addWalletSignatureToTransactionJSON(
+        // Update transaction JSON with signature (for tracking, not used in navigation)
+        addWalletSignatureToTransactionJSON(
           txJson,
           wallet.id,
           walletKeyHash,

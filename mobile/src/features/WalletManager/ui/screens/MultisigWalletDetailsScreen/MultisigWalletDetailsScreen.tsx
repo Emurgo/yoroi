@@ -30,25 +30,9 @@ export const MultisigWalletDetailsScreen = () => {
 
   const multisigMeta = getMultisigMeta(wallet)
 
-  if (!multisigMeta) {
-    return (
-      <SafeArea>
-        <Space.Height.lg />
-        <View style={[a.px_lg]}>
-          <Text style={[ta.heading_1]}>
-            {strings.setupWallet.notMultisigWallet || 'Not a Multisig Wallet'}
-          </Text>
-          <Space.Height.md />
-          <Text style={[ta.body_1_lg_regular]}>
-            {strings.setupWallet.selectMultisigWallet ||
-              'This wallet is not a multisig wallet.'}
-          </Text>
-        </View>
-      </SafeArea>
-    )
-  }
-
+  // Always call hooks before early returns
   const handleExportWalletSetup = React.useCallback(async () => {
+    if (!multisigMeta) return
     try {
       const walletSetup = {
         version: '1.0.0',
@@ -90,6 +74,7 @@ export const MultisigWalletDetailsScreen = () => {
   }, [multisigMeta, meta])
 
   const handleCopyJSON = React.useCallback(async () => {
+    if (!multisigMeta) return
     try {
       const walletSetup = {
         version: '1.0.0',
@@ -118,6 +103,24 @@ export const MultisigWalletDetailsScreen = () => {
       )
     }
   }, [multisigMeta, meta])
+
+  if (!multisigMeta) {
+    return (
+      <SafeArea>
+        <Space.Height.lg />
+        <View style={[a.px_lg]}>
+          <Text style={[ta.heading_1]}>
+            {strings.setupWallet.notMultisigWallet || 'Not a Multisig Wallet'}
+          </Text>
+          <Space.Height.md />
+          <Text style={[ta.body_1_lg_regular]}>
+            {strings.setupWallet.selectMultisigWallet ||
+              'This wallet is not a multisig wallet.'}
+          </Text>
+        </View>
+      </SafeArea>
+    )
+  }
 
   const getQuorumDescription = () => {
     if (multisigMeta.quorumRules.kind === 'RequireAllOf') {

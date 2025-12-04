@@ -34,9 +34,37 @@ export const TxDetails = () => {
   }
 
   const explorers = wallet.networkManager.explorers
-  const {meta} = useSelectedWallet()
   const isMultisig = meta.implementation === 'cardano-multisig' || meta.multisigMeta !== undefined
   const multisigMeta = getMultisigMeta(wallet)
+
+  // For multisig transactions, we can show co-signer info
+  // Note: To check actual signing status, we'd need transaction CBOR from blockchain
+  const [quorumInfo, setQuorumInfo] = React.useState<{
+    totalCoSigners: number
+    requiredCoSigners: number
+    quorumDescription: string
+  } | null>(null)
+
+  React.useEffect(() => {
+    if (isMultisig && multisigMeta) {
+      let requiredCoSigners: number
+      if (multisigMeta.quorumRules.kind === 'RequireNOf') {
+        requiredCoSigners = multisigMeta.quorumRules.required || multisigMeta.coSigners.length
+      } else if (multisigMeta.quorumRules.kind === 'RequireAllOf') {
+        requiredCoSigners = multisigMeta.coSigners.length
+      } else {
+        requiredCoSigners = 1
+      }
+
+      setQuorumInfo({
+        totalCoSigners: multisigMeta.coSigners.length,
+        requiredCoSigners,
+        quorumDescription: `${requiredCoSigners}-of-${multisigMeta.coSigners.length}`,
+      })
+    } else {
+      setQuorumInfo(null)
+    }
+  }, [isMultisig, multisigMeta])
 
   // Get raw WalletTransaction
   const walletTransaction = React.useMemo(() => {
@@ -118,20 +146,6 @@ export const TxDetails = () => {
   if (error) {
     throw error
   }
-
-  // For multisig transactions, we can show co-signer info
-  // Note: To check actual signing status, we'd need transaction CBOR from blockchain
-  const [quorumInfo, setQuorumInfo] = React.useState<{
-    totalCoSigners: number
-    requiredCoSigners: number
-    quorumDescription: string
-  } | null>(null)
-
-  React.useEffect(() => {
-    if (isMultisig && multisigMeta) {
-      let requiredCoSigners: number
-      if (multisigMeta.quorumRules.kind === 'RequireNOf') {
-        requiredCoSigners = multisigMeta.quorumRules.required || multisigMeta.coSigners.length
       } else if (multisigMeta.quorumRules.kind === 'RequireAllOf') {
         requiredCoSigners = multisigMeta.coSigners.length
       } else {

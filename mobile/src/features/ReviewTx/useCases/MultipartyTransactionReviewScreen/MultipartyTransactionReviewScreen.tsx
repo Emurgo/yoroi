@@ -22,7 +22,7 @@ import {ReviewTxMemoProvider} from '~/features/ReviewTx/common/context/ReviewTxM
 import {useFormattedTx} from '~/features/ReviewTx/common/hooks/useFormattedTx'
 import {useOnConfirm} from '~/features/ReviewTx/common/hooks/useOnConfirm'
 import {useTxBody} from '~/features/ReviewTx/common/hooks/useTxBody'
-import {TransactionBody} from '~/features/ReviewTx/common/types'
+import {TransactionBody, FormattedTx} from '~/features/ReviewTx/common/types'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
 import {ReviewTxRoutes} from '~/kernel/navigation/types'
@@ -40,15 +40,12 @@ const MultipartyTransactionReviewContent = ({
   formattedTx,
 }: {
   params: NonNullable<ReviewTxRoutes['review-tx']>
-  formattedTx: any
+  formattedTx: FormattedTx
 }) => {
   const logger = getLogger()
   const {wallet, meta} = useSelectedWallet()
-  const {walletManager} = useWalletManager()
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
-  const navigation = useNavigation<TxHistoryRouteNavigation>()
-  const memoContext = useReviewTxMemo()
 
   const multipartyInfo = params.multiparty
   if (!multipartyInfo) {
@@ -145,7 +142,7 @@ const MultipartyTransactionReviewContent = ({
         error instanceof Error ? error.message : 'Failed to export transaction',
       )
     }
-  }, [params?.cbor, multipartyInfo, wallet, signerStatus, strings])
+  }, [params?.cbor, multipartyInfo, wallet, signerStatus, strings, logger])
 
   const {onConfirm} = useOnConfirm({
     cbor: params?.cbor,
@@ -187,10 +184,6 @@ const MultipartyTransactionReviewContent = ({
   }, [signerStatus, params, onConfirm, strings])
 
   const canSubmit = signerStatus?.isFullySigned || false
-
-  // Check if current wallet has signed
-  const currentWalletHasSigned =
-    signerStatus?.signedSigners.includes(wallet.id) || false
 
   return (
     <View style={[a.flex_1]}>

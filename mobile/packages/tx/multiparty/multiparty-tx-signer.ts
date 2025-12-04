@@ -5,13 +5,14 @@
  */
 import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import {getLogger} from '@yoroi/common'
-import {Address, Wallet} from '@yoroi/types'
-
-import * as CSL from '@emurgo/cross-csl-core'
 import {Buffer} from 'buffer'
+import * as CSL from '@emurgo/cross-csl-core'
 
 import {getRequiredSignersFromTransaction} from '../transaction-builder/multiparty'
 import type {UnsignedTransaction} from '../transaction-builder/types'
+import {signTransaction} from '../utils/signing'
+import {derivationConfig} from '@yoroi/blockchains'
+import {cardanoConfig} from '@yoroi/blockchains'
 
 /**
  * Parameters for signing a multiparty transaction
@@ -20,11 +21,14 @@ type SignMultipartyTransactionParams = {
   readonly unsignedTx: UnsignedTransaction
   readonly walletId: string
   readonly wallet: {
-    readonly signRawTx: (
-      cbor: string,
-      keys: ReadonlyArray<CSL.PrivateKey>,
-    ) => Promise<Uint8Array | null>
-    readonly getSigningKey: (address: Address) => Promise<CSL.PrivateKey | null>
+    readonly signTx: (
+      unsignedTx: UnsignedTransaction,
+      rootKey: string,
+    ) => Promise<CSL.Transaction>
+    readonly meta: {
+      readonly implementation: string
+      readonly accountVisual: number
+    }
   }
   readonly rootKeyHex: string
 }
@@ -55,60 +59,30 @@ export const signMultipartyTransaction = async ({
   }
 
   return CardanoMobileWrapped.cslScope(async (csl) => {
-    // Parse the unsigned transaction
-    const tx = csl.Transaction.fromHex(unsignedTx.cbor)
-    if (!tx) {
-      throw new Error('Failed to parse transaction CBOR')
-    }
+    // Use the wallet's internal signTx method
+    const signedCslTx = await wallet.signTx(unsignedTx, rootKeyHex)
+    const signedCbor = Buffer.from(signedCslTx.toBytes()).toString('hex')
 
-    // Get required signers from transaction
-    const requiredSigners = await getRequiredSignersFromTransaction(
-      unsignedTx,
-      csl,
+    // Determine the key hash that was used for signing by this wallet
+    // This is a simplification; a more robust solution would involve
+    // inspecting the witness set of the signed transaction and matching
+    // against the wallet's known key hashes.
+    // For now, we'll assume the primary payment key of the wallet.
+    const implementationConfig =
+      cardanoConfig.implementations[
+        wallet.meta.implementation as keyof typeof cardanoConfig.implementations
+      ]
+
+    const masterKey = csl.Bip32PrivateKey.fromBytes(
+      new Uint8Array(Buffer.from(rootKeyHex, 'hex')),
     )
+    const accountPrivateKey = masterKey
+      .derive(implementationConfig.derivations.base.harden.purpose)
+      .derive(implementationConfig.derivations.base.harden.coinType)
+      .derive(wallet.meta.accountVisual + derivationConfig.hardStart)
 
-    // Extract key hashes that need to be signed by this wallet
-    const txBody = tx.body()
-    const inputs = txBody.inputs()
-    if (!inputs) {
-      throw new Error('Transaction has no inputs')
-    }
-
-    // Get addresses from inputs to determine which keys to sign
-    const addressesToSign: string[] = []
-    const inputLen = inputs.len()
-
-    for (let i = 0; i < inputLen; i++) {
-      const input = inputs.get(i)
-      if (!input) continue
-
-      // For multiparty, we need to determine which inputs belong to this wallet
-      // This is simplified - in practice, we'd track which inputs come from which wallet
-      // For now, we'll sign all inputs that match this wallet's addresses
-      // The actual implementation would need to track input-to-wallet mapping
-    }
-
-    // Sign the transaction
-    // Get signing keys for this wallet
-    const signingKeys: CSL.PrivateKey[] = []
-
-    // Derive keys from root key for addresses that need signing
-    // This is a simplified version - actual implementation would derive based on address paths
-    const rootKey = csl.Bip32PrivateKey.fromBytes(
-      Buffer.from(rootKeyHex, 'hex'),
-    )
-
-    // For now, we'll use the wallet's signRawTx method which handles key derivation internally
-    const signedBytes = await wallet.signRawTx(unsignedTx.cbor, signingKeys)
-
-    if (!signedBytes) {
-      throw new Error('Failed to sign transaction')
-    }
-
-    const signedCbor = Buffer.from(signedBytes).toString('hex')
-
-    // Extract key hash that was signed (simplified)
-    const keyHash = requiredSigners[0] || ''
+    const paymentKey = accountPrivateKey.derive(0).derive(0).toRawKey() // external chain, index 0
+    const keyHash = Buffer.from(paymentKey.publicKey().hash().to_bytes()).toString('hex')
 
     logger.debug('signMultipartyTransaction: Transaction signed', {
       walletId,
