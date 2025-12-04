@@ -80,7 +80,7 @@ export const TxList = (props: Props) => {
 
   return (
     <View style={a.flex_1}>
-      {isPending && !props.refreshing && (
+      {isPending && filteredTransactions.length > 0 && !props.refreshing && (
         <View
           style={[
             a.absolute,

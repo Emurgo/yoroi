@@ -1,15 +1,22 @@
 import {isByron, isShelley} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
-import {useSelectedNetwork} from '@yoroi/wallet-manager'
-import {useSyncWalletInfo} from '@yoroi/wallet-manager'
-import {useWalletManagerSelector} from '@yoroi/wallet-manager'
-import {useAutomaticWalletOpener} from '@yoroi/wallet-manager'
+import {
+  useAutomaticWalletOpener,
+  useSelectedNetwork,
+  useSyncWalletInfo,
+  useWalletManagerSelector,
+} from '@yoroi/wallet-manager'
 
 import {useFocusEffect} from '@react-navigation/native'
 import * as React from 'react'
-import {Alert, Animated, Text, TouchableOpacity, View} from 'react-native'
-import {Swipeable} from 'react-native-gesture-handler'
+import {Alert, Text, TouchableOpacity, View} from 'react-native'
+import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable'
+import Animated, {
+  SharedValue,
+  interpolate,
+  useAnimatedStyle,
+} from 'react-native-reanimated'
 
 import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {
@@ -101,42 +108,18 @@ export const WalletListItem = ({
     )
   }
 
-  const renderRightActions = (
-    progress: Animated.AnimatedInterpolation<string | number>,
-  ) => {
-    const translateX = progress.interpolate({
-      inputRange: [0, 1],
-      outputRange: [80, 0],
-    })
-
+  const renderRightActions = (progress: SharedValue<number>) => {
     return (
-      <Animated.View
-        style={[
-          a.justify_center,
-          a.align_center,
-          {transform: [{translateX}], width: 100},
-        ]}
-      >
-        <TouchableOpacity
-          style={[a.justify_center, a.align_center, a.px_md]}
-          onPress={handleOnDeleteWallet}
-        >
-          <Text
-            style={[
-              a.body_2_md_medium,
-              a.p_sm,
-              {backgroundColor: p.sys_magenta_100, color: p.sys_magenta_500},
-            ]}
-          >
-            DELETE
-          </Text>
-        </TouchableOpacity>
-      </Animated.View>
+      <RightActions
+        progress={progress}
+        onDelete={handleOnDeleteWallet}
+        palette={p}
+      />
     )
   }
 
   return (
-    <Swipeable
+    <ReanimatedSwipeable
       renderRightActions={(progress) => renderRightActions(progress)}
       enabled={isAuthDev}
     >
@@ -200,7 +183,48 @@ export const WalletListItem = ({
           <Chevron pressed={isButtonPressed} />
         </TouchableOpacity>
       </View>
-    </Swipeable>
+    </ReanimatedSwipeable>
+  )
+}
+
+const RightActions = ({
+  progress,
+  onDelete,
+  palette,
+}: {
+  progress: SharedValue<number>
+  onDelete: () => void
+  palette: ReturnType<typeof useTheme>['palette']
+}) => {
+  const animatedStyle = useAnimatedStyle(() => {
+    const translateX = interpolate(progress.value, [0, 1], [80, 0])
+    return {
+      transform: [{translateX}],
+    }
+  })
+
+  return (
+    <Animated.View
+      style={[a.justify_center, a.align_center, {width: 100}, animatedStyle]}
+    >
+      <TouchableOpacity
+        style={[a.justify_center, a.align_center, a.px_md]}
+        onPress={onDelete}
+      >
+        <Text
+          style={[
+            a.body_2_md_medium,
+            a.p_sm,
+            {
+              backgroundColor: palette.sys_magenta_100,
+              color: palette.sys_magenta_500,
+            },
+          ]}
+        >
+          DELETE
+        </Text>
+      </TouchableOpacity>
+    </Animated.View>
   )
 }
 
