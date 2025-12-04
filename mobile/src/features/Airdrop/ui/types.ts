@@ -5,4 +5,3 @@ export type AirdropRoutes = {
   'airdrop-main': {allocation: AddressAllocation}
   'airdrop-thaw-schedule': {allocation: AddressAllocation}
 }
-

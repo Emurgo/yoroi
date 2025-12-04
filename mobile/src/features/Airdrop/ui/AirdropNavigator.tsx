@@ -57,4 +57,3 @@ export const AirdropNavigator = () => {
     </Stack.Navigator>
   )
 }
-

@@ -1,21 +1,21 @@
 import {CardanoMobile} from '@yoroi/cardano-wallet'
+import {isNonNullable} from '@yoroi/common'
 import {isAdaHandleDomain, useResolverDRepId} from '@yoroi/resolver'
-import {parseDrepId, useIsValidDRepID, getYoroiDrepIdHex} from '@yoroi/staking'
+import {getYoroiDrepIdHex, parseDrepId, useIsValidDRepID} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
-import {isNonNullable} from '@yoroi/common'
 
 import * as React from 'react'
 import {Alert, Linking, Text, View} from 'react-native'
 
+import {YoroiDrepCard} from '~/features/Staking/Governance/common/YoroiDrepCard/YoroiDrepCard'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 import {TextInput} from '~/ui/TextInput/TextInput'
-import {YoroiDrepCard} from '~/features/Staking/Governance/common/YoroiDrepCard/YoroiDrepCard'
 
 export type Props = {
   onSubmit?: (options: {
@@ -44,7 +44,7 @@ const shortenDRepId = (id: string) => {
 
 export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
   const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const {closeModal, setHeight} = useModal()
   const {wallet} = useSelectedWallet()
   const network = wallet.networkManager.network

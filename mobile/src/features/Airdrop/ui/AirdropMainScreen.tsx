@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useWalletManager} from '@yoroi/wallet-manager'
 
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 import {StackNavigationProp} from '@react-navigation/stack'
@@ -8,7 +9,6 @@ import {Linking, ScrollView, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {usePromptRootKey} from '~/features/ReviewTx/common/hooks/usePromptRootKey'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {Accordion} from '~/ui/Accordion/Accordion'
