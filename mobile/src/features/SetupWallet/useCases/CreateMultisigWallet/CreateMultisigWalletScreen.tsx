@@ -3,9 +3,7 @@
  * Main entry point for creating a multisig wallet
  */
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {Wallet} from '@yoroi/types'
 import {useWalletManager} from '@yoroi/wallet-manager'
-import {useCreateMultisigWallet} from '@yoroi/wallet-manager'
 
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'

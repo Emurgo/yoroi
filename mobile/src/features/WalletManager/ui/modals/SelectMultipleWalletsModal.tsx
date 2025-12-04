@@ -49,7 +49,7 @@ export const SelectMultipleWalletsModal = ({
   filter,
 }: Props) => {
   const walletMetas = useWalletMetas()
-  const {atoms: ta, palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
   const strings = useStrings()
   const [selectedWalletIds, setSelectedWalletIds] = React.useState<Set<string>>(
     new Set(initialSelectedWalletIds),

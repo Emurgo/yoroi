@@ -19,10 +19,10 @@ import {ReviewTxMemoProvider} from '~/features/ReviewTx/common/context/ReviewTxM
 import {useFormattedTx} from '~/features/ReviewTx/common/hooks/useFormattedTx'
 import {useOnConfirm} from '~/features/ReviewTx/common/hooks/useOnConfirm'
 import {useTxBody} from '~/features/ReviewTx/common/hooks/useTxBody'
+import {FormattedTx} from '~/features/ReviewTx/common/types'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
 import {ReviewTxRoutes} from '~/kernel/navigation/types'
-import {FormattedTx} from '~/features/ReviewTx/common/types'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
@@ -157,7 +157,7 @@ const MultisigTransactionReviewContent = ({
         error instanceof Error ? error.message : 'Failed to export transaction',
       )
     }
-  }, [params?.cbor, multisigMeta, wallet, memoContext.memo, strings])
+  }, [params?.cbor, multisigMeta, wallet, strings])
 
   const {onConfirm} = useOnConfirm({
     cbor: params?.cbor,
@@ -336,7 +336,7 @@ export const MultisigTransactionReviewScreen = () => {
       outputs: [],
       fee: {coin: '0'},
       reference_inputs: [],
-    }) as any,
+    }) as TransactionBody,
     params?.cbor ?? null,
   )
 

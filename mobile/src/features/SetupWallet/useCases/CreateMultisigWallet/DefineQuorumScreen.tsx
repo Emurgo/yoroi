@@ -37,7 +37,10 @@ export const DefineQuorumScreen = () => {
   const [requiredCount, setRequiredCount] = React.useState('2')
   const [error, setError] = React.useState<string | null>(null)
 
-  const params = (route.params as RouteParams) || {}
+  const params = React.useMemo(
+    () => (route.params as RouteParams) || {},
+    [route.params],
+  )
   const {coSigners} = params
 
   const coSignerCount = coSigners.length

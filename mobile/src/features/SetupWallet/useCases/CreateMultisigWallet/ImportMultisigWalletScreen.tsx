@@ -2,32 +2,28 @@
  * Import Multisig Wallet Screen
  * Import multisig wallet from JSON setup file
  */
-
-import {useWalletManager} from '@yoroi/wallet-manager'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
+import {useWalletManager} from '@yoroi/wallet-manager'
 
 import {useNavigation} from '@react-navigation/native'
+import * as FileSystem from 'expo-file-system'
 import * as React from 'react'
 import {
-  ScrollView,
-  View,
-  Alert,
   ActivityIndicator,
   TextInput as RNTextInput,
+  ScrollView,
+  View,
 } from 'react-native'
-import * as FileSystem from 'expo-file-system'
 
+import {showErrorDialog} from '~/kernel/dialogs'
+import {errorMessages} from '~/kernel/i18n/messages/global'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text'
-import {showErrorDialog} from '~/kernel/dialogs'
-import {errorMessages} from '~/kernel/i18n/messages/global'
-import {deriveMultisigAccount} from '@yoroi/cardano-wallet'
-import {makeWalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
 
 type MultisigWalletSetupJSON = {
   version: string
@@ -50,7 +46,8 @@ export const ImportMultisigWalletScreen = () => {
   const {atoms: ta} = useTheme()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
   const {walletManager} = useWalletManager()
-  const [importedData, setImportedData] = React.useState<MultisigWalletSetupJSON | null>(null)
+  const [importedData, setImportedData] =
+    React.useState<MultisigWalletSetupJSON | null>(null)
   const [isValidating, setIsValidating] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
   const [jsonInput, setJsonInput] = React.useState('')
@@ -69,7 +66,11 @@ export const ImportMultisigWalletScreen = () => {
       const parsed = JSON.parse(jsonString) as MultisigWalletSetupJSON
 
       // Basic validation
-      if (!parsed.multisig || !parsed.multisig.coSigners || !parsed.multisig.quorumRules) {
+      if (
+        !parsed.multisig ||
+        !parsed.multisig.coSigners ||
+        !parsed.multisig.quorumRules
+      ) {
         setError('Invalid wallet setup JSON format')
         return
       }
@@ -77,7 +78,8 @@ export const ImportMultisigWalletScreen = () => {
       setImportedData(parsed)
       setError(null)
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Invalid JSON format'
+      const errorMessage =
+        err instanceof Error ? err.message : 'Invalid JSON format'
       setError(errorMessage)
     }
   }, [])
@@ -87,8 +89,7 @@ export const ImportMultisigWalletScreen = () => {
       // Try to use expo-document-picker if available
       // Otherwise fall back to manual JSON input
       try {
-        // eslint-disable-next-line @typescript-eslint/no-require-imports
-        const DocumentPicker = require('expo-document-picker')
+        const DocumentPicker = await import('expo-document-picker')
         const result = await DocumentPicker.getDocumentAsync({
           type: ['application/json', 'text/json', '*.json'],
           copyToCacheDirectory: true,
@@ -114,7 +115,8 @@ export const ImportMultisigWalletScreen = () => {
         setError('File picker not available. Please paste JSON manually.')
       }
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to import file'
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to import file'
       setError(errorMessage)
       showErrorDialog(errorMessages.generalError, undefined, {
         message: errorMessage,
@@ -143,7 +145,9 @@ export const ImportMultisigWalletScreen = () => {
     try {
       // Check if current wallet matches any co-signer
       // We need to derive the shared wallet key from the current wallet
-      const currentWalletMeta = walletManager.getWalletMetaById(currentWallet.id)
+      const currentWalletMeta = walletManager.getWalletMetaById(
+        currentWallet.id,
+      )
       if (!currentWalletMeta) {
         throw new Error('Current wallet metadata not found')
       }
@@ -155,7 +159,8 @@ export const ImportMultisigWalletScreen = () => {
         currentWalletId: currentWallet.id,
       })
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to validate wallet setup'
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to validate wallet setup'
       setError(errorMessage)
       showErrorDialog(errorMessages.generalError, undefined, {
         message: errorMessage,
@@ -198,7 +203,8 @@ export const ImportMultisigWalletScreen = () => {
       >
         <View style={[a.gap_md]}>
           <Text style={[ta.heading_1]}>
-            {strings.setupWallet.importMultisigWalletTitle || 'Import Multisig Wallet'}
+            {strings.setupWallet.importMultisigWalletTitle ||
+              'Import Multisig Wallet'}
           </Text>
 
           <Space.Height.md />
@@ -214,7 +220,9 @@ export const ImportMultisigWalletScreen = () => {
             <>
               {useFilePicker ? (
                 <Button
-                  title={strings.setupWallet.selectJSONFile || 'Select JSON File'}
+                  title={
+                    strings.setupWallet.selectJSONFile || 'Select JSON File'
+                  }
                   onPress={handlePickFile}
                   testID="select-json-file-button"
                 />
@@ -258,15 +266,18 @@ export const ImportMultisigWalletScreen = () => {
             <>
               <View style={[a.p_md, a.bg_success_light, a.rounded_sm]}>
                 <Text style={[ta.body_1_lg_medium]}>
-                  {strings.setupWallet.fileImported || 'File imported successfully!'}
+                  {strings.setupWallet.fileImported ||
+                    'File imported successfully!'}
                 </Text>
                 <Space.Height.xs />
                 <Text style={[ta.body_2_md_regular]}>
-                  {strings.setupWallet.walletName || 'Wallet Name'}: {importedData.metadata.walletName}
+                  {strings.setupWallet.walletName || 'Wallet Name'}:{' '}
+                  {importedData.metadata.walletName}
                 </Text>
                 <Space.Height.xs />
                 <Text style={[ta.body_2_md_regular]}>
-                  {strings.setupWallet.coSignersCount || 'Co-Signers'}: {importedData.multisig.coSigners.length}
+                  {strings.setupWallet.coSignersCount || 'Co-Signers'}:{' '}
+                  {importedData.multisig.coSigners.length}
                 </Text>
               </View>
 
@@ -290,7 +301,10 @@ export const ImportMultisigWalletScreen = () => {
               <Space.Height.md />
 
               <Button
-                title={strings.setupWallet.selectDifferentFile || 'Select Different File'}
+                title={
+                  strings.setupWallet.selectDifferentFile ||
+                  'Select Different File'
+                }
                 onPress={() => {
                   setImportedData(null)
                   setError(null)
@@ -305,4 +319,3 @@ export const ImportMultisigWalletScreen = () => {
     </SafeArea>
   )
 }
-

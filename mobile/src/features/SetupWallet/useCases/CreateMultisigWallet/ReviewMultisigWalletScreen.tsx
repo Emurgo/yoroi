@@ -2,7 +2,7 @@
  * Review Multisig Wallet Screen
  * Review multisig wallet configuration before creation
  */
-import {getWalletNameError, validateWalletName} from '@yoroi/cardano-wallet'
+import {getWalletNameError} from '@yoroi/cardano-wallet'
 import {useAsyncStorage} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
@@ -24,7 +24,6 @@ import {errorMessages} from '~/kernel/i18n/messages/global'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
-import {makeWalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
@@ -60,11 +59,8 @@ export const ReviewMultisigWalletScreen = () => {
     parentWalletId,
     parentWalletImplementation,
     accountVisual,
+    parentWalletRootKey,
   } = params
-
-  const walletNames = Array.from(walletManager.walletMetas.values()).map(
-    ({name}) => name,
-  )
 
   const {
     createWallet,
@@ -93,21 +89,6 @@ export const ReviewMultisigWalletScreen = () => {
       })
     },
   })
-
-  // Get parent wallet root key
-  const getParentWalletRootKey =
-    React.useCallback(async (): Promise<string> => {
-      if (params.parentWalletRootKey) {
-        return params.parentWalletRootKey
-      }
-
-      // Need to prompt for password to get root key
-      // For now, we'll need to get it from the previous screen
-      // This is a limitation - we should store it securely or prompt again
-      throw new Error(
-        'Parent wallet root key not available. Please go back and regenerate shared key.',
-      )
-    }, [params.parentWalletRootKey])
 
   const nameErrors = !isCreateWalletSuccess
     ? walletManager.validateWalletName(walletName)

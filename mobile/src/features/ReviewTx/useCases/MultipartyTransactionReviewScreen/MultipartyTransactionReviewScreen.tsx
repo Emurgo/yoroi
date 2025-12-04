@@ -3,30 +3,25 @@
  * Shows transaction details with signer status for multiparty transactions
  * Reuses multisig UI but adapts for multiple different wallets
  */
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import {getLogger} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {constructMultipartyTransactionJSON} from '@yoroi/tx/multiparty/multiparty-transaction-json'
 import {getSignedWallets} from '@yoroi/tx/multiparty/multiparty-tx-signer'
-import {Wallet} from '@yoroi/types'
-import {useSelectedWallet, useWalletManager} from '@yoroi/wallet-manager'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
-import {useNavigation} from '@react-navigation/native'
 import * as Clipboard from 'expo-clipboard'
 import * as React from 'react'
-import {ScrollView, TouchableOpacity, View} from 'react-native'
+import {ScrollView, View} from 'react-native'
 import {Alert} from 'react-native'
 
-import {useReviewTxMemo} from '~/features/ReviewTx/common/context/ReviewTxMemoContext'
 import {ReviewTxMemoProvider} from '~/features/ReviewTx/common/context/ReviewTxMemoContext'
 import {useFormattedTx} from '~/features/ReviewTx/common/hooks/useFormattedTx'
 import {useOnConfirm} from '~/features/ReviewTx/common/hooks/useOnConfirm'
 import {useTxBody} from '~/features/ReviewTx/common/hooks/useTxBody'
-import {TransactionBody, FormattedTx} from '~/features/ReviewTx/common/types'
+import {FormattedTx, TransactionBody} from '~/features/ReviewTx/common/types'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
 import {ReviewTxRoutes} from '~/kernel/navigation/types'
-import {TxHistoryRouteNavigation} from '~/kernel/navigation/types'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
@@ -96,7 +91,7 @@ const MultipartyTransactionReviewContent = ({
     }
 
     loadSignerStatus()
-  }, [params?.cbor, multipartyInfo])
+  }, [params?.cbor, multipartyInfo, logger])
 
   const handleExportTransaction = React.useCallback(async () => {
     if (!params?.cbor || !multipartyInfo) return

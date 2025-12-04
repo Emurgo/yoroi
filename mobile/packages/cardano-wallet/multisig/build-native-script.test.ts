@@ -1,9 +1,7 @@
 /**
  * Unit tests for multisig native script building
  */
-
-import {Wallet} from '@yoroi/types'
-import {Bip32PublicKeyHex} from '@yoroi/types'
+import {Bip32PublicKeyHex, Wallet} from '@yoroi/types'
 
 import {buildPaymentScript, buildStakingScript} from './build-native-script'
 
@@ -14,9 +12,9 @@ jest.mock('../wrappedCsl', () => ({
       // Create a mock CSL scope
       const mockCsl = {
         Bip32PublicKey: {
-          fromBytes: jest.fn((bytes: Uint8Array) => ({
-            derive: jest.fn((index: number) => ({
-              derive: jest.fn((index2: number) => ({
+          fromBytes: jest.fn((_bytes: Uint8Array) => ({
+            derive: jest.fn((_index: number) => ({
+              derive: jest.fn((_index2: number) => ({
                 toRawKey: jest.fn(() => ({
                   hash: jest.fn(() => ({
                     toHex: jest.fn(() => 'mockKeyHash'),
@@ -25,7 +23,7 @@ jest.mock('../wrappedCsl', () => ({
               })),
             })),
           })),
-        }),
+        },
         Ed25519KeyHash: {
           fromBytes: jest.fn(() => ({
             toHex: jest.fn(() => 'mockKeyHash'),
@@ -43,13 +41,13 @@ jest.mock('../wrappedCsl', () => ({
             toHex: jest.fn(() => 'mockScriptCbor'),
             asScriptPubkey: jest.fn(() => scriptPubkey),
           })),
-          newScriptAll: jest.fn((scriptAll) => ({
+          newScriptAll: jest.fn((_scriptAll) => ({
             toHex: jest.fn(() => 'mockScriptCbor'),
           })),
-          newScriptAny: jest.fn((scriptAny) => ({
+          newScriptAny: jest.fn((_scriptAny) => ({
             toHex: jest.fn(() => 'mockScriptCbor'),
           })),
-          newScriptNOfK: jest.fn((scriptNOfK) => ({
+          newScriptNOfK: jest.fn((_scriptNOfK) => ({
             toHex: jest.fn(() => 'mockScriptCbor'),
           })),
         },
@@ -116,9 +114,7 @@ describe('build-native-script', () => {
 
     it('should handle empty signers array', async () => {
       const quorumRules: Wallet.QuorumRules = {kind: 'RequireAllOf'}
-      await expect(
-        buildPaymentScript([], quorumRules),
-      ).rejects.toThrow()
+      await expect(buildPaymentScript([], quorumRules)).rejects.toThrow()
     })
   })
 
@@ -148,4 +144,3 @@ describe('build-native-script', () => {
     })
   })
 })
-

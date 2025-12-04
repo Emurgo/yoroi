@@ -1,14 +1,7 @@
 import {getLogger} from '@yoroi/common'
 import type {DRepValue} from '@yoroi/tx'
 import {TransactionOutput} from '@yoroi/tx'
-import {
-  Address,
-  Branded,
-  KeyHash,
-  Network,
-  PublicKeyHex,
-  Wallet,
-} from '@yoroi/types'
+import {Branded, KeyHash, Network, PublicKeyHex, Wallet} from '@yoroi/types'
 
 import type {Certificate} from '@emurgo/cross-csl-core'
 import {BigNumber} from 'bignumber.js'

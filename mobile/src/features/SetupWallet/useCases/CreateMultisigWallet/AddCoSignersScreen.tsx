@@ -38,8 +38,11 @@ export const AddCoSignersScreen = () => {
   const [newCoSignerKey, setNewCoSignerKey] = React.useState('')
   const [error, setError] = React.useState<string | null>(null)
 
-  const params = (route.params as RouteParams) || {}
-  const {sharedWalletKey, parentWalletId} = params
+  const params = React.useMemo(
+    () => (route.params as RouteParams) || {},
+    [route.params],
+  )
+  const {sharedWalletKey} = params
 
   // Add the current wallet's shared key as the first co-signer
   React.useEffect(() => {

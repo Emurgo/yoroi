@@ -3,12 +3,11 @@
  * Import and sign multisig or multiparty transaction JSON files
  * Supports both multisig wallets (shared wallets) and multiparty transactions (multiple different wallets)
  */
-import {getMultisigMeta, isMultisigWallet} from '@yoroi/cardano-wallet'
-import {deriveMultisigAccount} from '@yoroi/cardano-wallet'
-import {getLogger} from '@yoroi/common'
-import {atoms as a, useTheme} from '@yoroi/theme'
-import {getMultisigMeta, isMultisigWallet} from '@yoroi/cardano-wallet'
-import {deriveMultisigAccount} from '@yoroi/cardano-wallet'
+import {
+  deriveMultisigAccount,
+  getMultisigMeta,
+  isMultisigWallet,
+} from '@yoroi/cardano-wallet'
 import {getLogger} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {
@@ -52,7 +51,6 @@ export const CoSignTransactionScreen = () => {
   const {atoms: ta} = useTheme()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {wallet, meta} = useSelectedWallet()
-  const {walletManager} = useWalletManager()
   const [importedTxJson, setImportedTxJson] = React.useState<string | null>(
     null,
   )
@@ -96,8 +94,7 @@ export const CoSignTransactionScreen = () => {
     try {
       // Try to use expo-document-picker if available
       try {
-        // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
-        const DocumentPicker = require('expo-document-picker')
+        const DocumentPicker = await import('expo-document-picker')
         const result = await DocumentPicker.getDocumentAsync({
           type: ['application/json', 'text/json', '*.json'],
           copyToCacheDirectory: true,
@@ -196,7 +193,6 @@ export const CoSignTransactionScreen = () => {
           paymentScriptCbor: multisigMeta.paymentScriptCbor,
           stakingScriptCbor: multisigMeta.stakingScriptCbor,
         })
-
 
         // Navigate to review screen with signed transaction
         navigation.navigate('review-tx', {
