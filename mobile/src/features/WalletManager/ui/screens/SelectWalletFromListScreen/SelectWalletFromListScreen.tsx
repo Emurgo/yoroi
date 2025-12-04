@@ -1,3 +1,4 @@
+import {getLogger} from '@yoroi/common'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
@@ -50,9 +51,25 @@ export const SelectWalletFromList = () => {
     }, []),
   )
 
+  // Preload wallets in background to reduce hydration time when selecting
+  // This improves perceived performance, especially on iOS
+  React.useEffect(() => {
+    if (walletManager && walletMetas && walletMetas.length > 0) {
+      // Preload wallets asynchronously - don't block UI
+      walletManager.hydrate({isForced: false}).catch((error) => {
+        // Ignore errors - this is just preloading for performance
+        // If preload fails, wallet will be loaded on-demand when selected
+        getLogger().warn('SelectWalletFromList: Wallet preload failed', {
+          error: error instanceof Error ? error.message : String(error),
+        })
+      })
+    }
+  }, [walletManager, walletMetas])
+
   const handleOnSelect = React.useCallback(
     async (walletMeta: Wallet.Meta) => {
       if (!walletManager) {
+        getLogger().error('SelectWalletFromList: WalletManager not available')
         throw new Error('WalletManager not available')
       }
 
@@ -61,6 +78,25 @@ export const SelectWalletFromList = () => {
 
       try {
         walletManager.setSelectedWalletId(walletMeta.id)
+
+        // Navigate immediately - don't wait for notification check
+        // This prevents blocking the UI with async storage operations
+        try {
+          navigation.navigate('manage-wallets', {
+            screen: 'main-wallet-routes',
+            params: {screen: 'history', params: {screen: 'history-list'}},
+          })
+        } catch (navError) {
+          getLogger().error('SelectWalletFromList: Navigation failed', {
+            walletId: walletMeta.id,
+            error:
+              navError instanceof Error ? navError.message : String(navError),
+          })
+          throw navError
+        }
+
+        // Check notifications in parallel (non-blocking)
+        // This allows navigation to happen immediately while notification check runs in background
         const shouldHandle =
           await shouldHandleNotificationInternalNavigationAction()
         if (shouldHandle) {
@@ -68,13 +104,12 @@ export const SelectWalletFromList = () => {
             pushNotificationsManager,
             walletNavigation,
           )
-          return
         }
-        navigation.navigate('manage-wallets', {
-          screen: 'main-wallet-routes',
-          params: {screen: 'history', params: {screen: 'history-list'}},
-        })
       } catch (error) {
+        getLogger().error('SelectWalletFromList: Wallet selection failed', {
+          walletId: walletMeta.id,
+          error: error instanceof Error ? error.message : String(error),
+        })
         // If navigation fails, clear loading state
         setLoadingWalletId(null)
         throw error

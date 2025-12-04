@@ -83,6 +83,7 @@ export const WalletManagerProvider: React.FC<
         actions.walletSelected({wallet: null, meta: null})
         return
       }
+
       const meta = walletManager.getWalletMetaById(walletId)
       if (meta == null) {
         getLogger().error(
@@ -98,17 +99,16 @@ export const WalletManagerProvider: React.FC<
 
       // If wallet is not loaded, trigger loading via hydrate
       if (wallet == null) {
-        getLogger().debug(
-          'WalletManagerProvider: wallet not loaded, triggering hydrate',
-          {walletId},
-        )
         try {
           await walletManager.hydrate({isForced: false})
           wallet = walletManager.getWalletById(walletId)
         } catch (error) {
           getLogger().error(
             'WalletManagerProvider: failed to load wallet during selection',
-            {walletId, error},
+            {
+              walletId,
+              error: error instanceof Error ? error.message : String(error),
+            },
           )
         }
       }

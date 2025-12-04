@@ -58,6 +58,7 @@ export const TxHistory = () => {
   useGetImportantAlertsModal({enabled: features.pushNotifications})
 
   const {wallet, meta} = useSelectedWallet()
+
   const [showWarning, setShowWarning] = React.useState(
     meta.implementation === 'cardano-bip44',
   )
