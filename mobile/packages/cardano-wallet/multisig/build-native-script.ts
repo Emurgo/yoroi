@@ -67,6 +67,10 @@ export const buildNativeScript = async ({
   derivationPath,
   kindInfo,
 }: BuildScriptParams): Promise<string> => {
+  if (expectedSigners.length === 0) {
+    throw new Error('Cannot build script with empty signers array')
+  }
+
   return CardanoMobileWrapped.cslScope((csl: WasmModuleProxy) => {
     // Sort signers for deterministic script building
     const signers = [...expectedSigners].sort((key1, key2) =>

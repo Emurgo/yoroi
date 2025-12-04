@@ -14,36 +14,44 @@ jest.mock('../transaction-builder/builder', () => ({
 jest.mock('@yoroi/cardano-wallet', () => ({
   CardanoMobileWrapped: {
     cslScope: jest.fn((fn) => {
+      // Create a shared mock NativeScripts object that can be reused
+      const createMockNativeScripts = () => ({
+        len: jest.fn(() => 0),
+        get: jest.fn(() => null),
+        add: jest.fn(),
+      })
+
       const mockCsl = {
         Transaction: {
-          fromHex: jest.fn((_hex: string) => ({
-            witnessSet: jest.fn(() => ({
-              nativeScripts: jest.fn(() => ({
-                len: jest.fn(() => 0),
-                get: jest.fn(() => null),
+          fromHex: jest.fn((_hex: string) => {
+            const mockWitnessSet = {
+              nativeScripts: jest.fn(() => createMockNativeScripts()),
+              setNativeScripts: jest.fn(),
+              setVkeys: jest.fn(),
+              setBootstraps: jest.fn(),
+            }
+            return {
+              witnessSet: jest.fn(() => mockWitnessSet),
+              body: jest.fn(() => ({
+                toBytes: jest.fn(() => Buffer.from('body')),
               })),
-            })),
-            body: jest.fn(() => ({
-              toBytes: jest.fn(() => Buffer.from('body')),
-            })),
-            auxiliaryData: jest.fn(() => null),
+              auxiliaryData: jest.fn(() => null),
+            }
+          }),
+          new: jest.fn((_body, _witnessSet, _auxData) => ({
+            toBytes: jest.fn(() => Buffer.from('updatedTx')),
           })),
         },
         TransactionWitnessSet: {
           new: jest.fn(() => ({
-            nativeScripts: jest.fn(() => ({
-              len: jest.fn(() => 0),
-              get: jest.fn(() => null),
-            })),
+            nativeScripts: jest.fn(() => createMockNativeScripts()),
             setNativeScripts: jest.fn(),
+            setVkeys: jest.fn(),
+            setBootstraps: jest.fn(),
           })),
         },
         NativeScripts: {
-          new: jest.fn(() => ({
-            len: jest.fn(() => 0),
-            get: jest.fn(() => null),
-            add: jest.fn(),
-          })),
+          new: jest.fn(() => createMockNativeScripts()),
         },
         NativeScript: {
           fromHex: jest.fn((hex: string) => ({

@@ -3,6 +3,7 @@
  */
 import {ScriptCbor} from '@yoroi/types'
 
+import {CardanoMobileWrapped} from '../wrappedCsl'
 import {
   getSignPolicy,
   isNativeScript,
@@ -46,22 +47,25 @@ describe('script-utils', () => {
 
   describe('isValidSharedWalletScript', () => {
     it('should return true for valid shared wallet script', () => {
-      const result = isValidSharedWalletScript({} as any, mockScriptCbor)
+      const result = CardanoMobileWrapped.cslScope((csl) => {
+        return isValidSharedWalletScript(csl, mockScriptCbor)
+      })
       expect(result).toBe(true)
     })
 
     it('should return false for invalid script', () => {
-      const result = isValidSharedWalletScript(
-        {} as any,
-        'invalid' as ScriptCbor,
-      )
+      const result = CardanoMobileWrapped.cslScope((csl) => {
+        return isValidSharedWalletScript(csl, 'invalid' as ScriptCbor)
+      })
       expect(result).toBe(false)
     })
   })
 
   describe('getSignPolicy', () => {
     it('should extract sign policy from valid script', () => {
-      const result = getSignPolicy({} as any, mockScriptCbor)
+      const result = CardanoMobileWrapped.cslScope((csl) => {
+        return getSignPolicy(csl, mockScriptCbor)
+      })
       expect(result).toBeDefined()
       if (result) {
         expect(result.requiredCosigners).toBeGreaterThan(0)
@@ -71,19 +75,25 @@ describe('script-utils', () => {
     })
 
     it('should return undefined for invalid script', () => {
-      const result = getSignPolicy({} as any, 'invalid' as ScriptCbor)
+      const result = CardanoMobileWrapped.cslScope((csl) => {
+        return getSignPolicy(csl, 'invalid' as ScriptCbor)
+      })
       expect(result).toBeUndefined()
     })
   })
 
   describe('isNativeScript', () => {
     it('should return true for native script', () => {
-      const result = isNativeScript({} as any, mockScriptCbor)
+      const result = CardanoMobileWrapped.cslScope((csl) => {
+        return isNativeScript(csl, mockScriptCbor)
+      })
       expect(result).toBe(true)
     })
 
     it('should return false for invalid script', () => {
-      const result = isNativeScript({} as any, 'invalid' as ScriptCbor)
+      const result = CardanoMobileWrapped.cslScope((csl) => {
+        return isNativeScript(csl, 'invalid' as ScriptCbor)
+      })
       expect(result).toBe(false)
     })
   })
