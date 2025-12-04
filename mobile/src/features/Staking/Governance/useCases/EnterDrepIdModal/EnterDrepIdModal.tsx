@@ -1,12 +1,12 @@
 import {isNonNullable} from '@yoroi/common'
 import {getYoroiDrepIdHex, parseDrepId, useIsValidDRepID} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {Chain} from '@yoroi/types'
 
 import * as React from 'react'
 import {Alert, Linking, Text, View} from 'react-native'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useIsKeyboardOpen} from '~/hooks/useIsKeyboardOpen'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'
@@ -25,79 +25,78 @@ export type Props = {
   }) => void
 }
 
-const FIND_DREPS_LINK = 'https://beta.cexplorer.io/drep'
-
 export const HEIGHT_WITH_CARD = 660
 export const HEIGHT_WITHOUT_CARD = 350
-export const HEIGHT_KEYBOARD_OPEN = 350
+
+const FIND_DREPS_LINKS: Record<Chain.SupportedNetworks, string> = {
+  [Chain.Network.Preprod]: 'https://preprod.cexplorer.io/drep',
+  [Chain.Network.Mainnet]: 'https://beta.cexplorer.io/drep',
+  [Chain.Network.Preview]: 'https://preview.cexplorer.io/drep',
+}
 
 export const EnterDrepIdModal = ({onSubmit}: Props) => {
   const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
-  const [drepId, setDrepId] = React.useState('')
   const {closeModal, setHeight} = useModal()
-  const {
-    wallet: {
-      networkManager: {network},
-    },
-  } = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
+  const network = wallet.networkManager.network
 
-  const {error, isFetched, isFetching} = useIsValidDRepID(drepId, {
-    retry: false,
-    enabled: drepId.length > 0,
-  })
+  const [showCard, setShowCard] = React.useState(true)
+  const [drepIdSelected, setDrepIdSelected] = React.useState('')
+  const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined)
 
-  const showYoroiDrepOption = drepId.length === 0
-  const showYoroiDrepOptionRef = React.useRef(showYoroiDrepOption)
-  showYoroiDrepOptionRef.current = showYoroiDrepOption
+  React.useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    }
+  }, [])
 
-  const handleKeyboardChange = React.useCallback(
-    (isOpen: boolean) => {
-      if (isOpen) {
-        setHeight(HEIGHT_KEYBOARD_OPEN)
-      } else {
-        setHeight(
-          showYoroiDrepOptionRef.current
-            ? HEIGHT_WITH_CARD
-            : HEIGHT_WITHOUT_CARD,
-        )
-      }
-    },
-    [setHeight],
-  )
+  const scheduleHeightChange = (height: number) => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    timeoutRef.current = setTimeout(() => setHeight(height), 150)
+  }
 
-  const isKeyboardOpen = useIsKeyboardOpen({
-    onKeyboardChange: handleKeyboardChange,
-  })
+  const handleFocus = () => {
+    setShowCard(false)
+    scheduleHeightChange(HEIGHT_WITHOUT_CARD)
+  }
 
-  const handleDrepIdChange = (text: string) => {
-    setDrepId(text)
-    if (!isKeyboardOpen) {
-      const shouldShowCard = text.length === 0
-      setHeight(shouldShowCard ? HEIGHT_WITH_CARD : HEIGHT_WITHOUT_CARD)
+  const handleBlur = () => {
+    if (drepIdSelected.length === 0) {
+      setShowCard(true)
+      scheduleHeightChange(HEIGHT_WITH_CARD)
     }
   }
 
-  const handleOnPress = () => {
+  const handleDrepIdChange = (text: string) => {
+    setDrepIdSelected(text)
+  }
+
+  const {error, isFetched, isFetching} = useIsValidDRepID(drepIdSelected, {
+    retry: false,
+    enabled: drepIdSelected.length > 0,
+  })
+
+  const isSubmitDisabled =
+    isNonNullable(error) ||
+    drepIdSelected.length === 0 ||
+    !isFetched ||
+    isFetching
+
+  const handleSubmit = () => {
     try {
-      const {hash, type} = parseDrepId(drepId, CardanoMobile)
-      onSubmit?.({hash, type, CIP105: !error && drepId.length === 56})
+      const {hash, type} = parseDrepId(drepIdSelected, CardanoMobile)
+      const isCIP105 = !error && drepIdSelected.length === 56
+      onSubmit?.({hash, type, CIP105: isCIP105})
       closeModal()
-    } catch (e) {
+    } catch {
       Alert.alert(strings.global.error, strings.staking.invalidDRepId)
     }
   }
 
-  const handleOnLinkPress = () => {
-    Linking.openURL(FIND_DREPS_LINK)
-  }
+  const handleFindDRepLink = () => Linking.openURL(FIND_DREPS_LINKS[network])
 
   const handleDelegateToYoroi = () => {
-    onSubmit?.({
-      hash: getYoroiDrepIdHex(network),
-      type: 'key',
-      CIP105: false,
-    })
+    onSubmit?.({hash: getYoroiDrepIdHex(network), type: 'key', CIP105: false})
     closeModal()
   }
 
@@ -105,15 +104,15 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
     <Modal.Content>
       <Space.Height.sm />
 
-      <Text style={[a.text_center, a.body_1_lg_regular, ta.text_gray_medium]}>
-        {strings.staking.enterDrepIDInfo}
-      </Text>
+      <Description />
 
       <Space.Height.lg />
 
       <TextInput
-        value={drepId}
+        value={drepIdSelected}
         onChangeText={handleDrepIdChange}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
         multiline
         errorDelay={1000}
         errorText={error?.message}
@@ -131,58 +130,80 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
         }}
       />
 
-      {showYoroiDrepOption && (
-        <>
-          <Space.Height.lg />
-
-          <View style={[a.flex_row, a.justify_center, a.flex_wrap]}>
-            <Text
-              style={[a.body_1_lg_regular, ta.text_gray_medium, a.text_center]}
-            >
-              {strings.staking.dontHaveAnID}{' '}
-            </Text>
-
-            <Text
-              style={[
-                a.body_1_lg_regular,
-                {color: p.primary_500, textDecorationLine: 'underline'},
-              ]}
-              onPress={handleOnLinkPress}
-            >
-              {strings.staking.findDRepHere}
-            </Text>
-          </View>
-
-          <Space.Height.xs />
-
-          <Text
-            style={[a.body_1_lg_regular, ta.text_gray_medium, a.text_center]}
-          >
-            {strings.staking.orDelegateToYoroiDrepBelow}
-          </Text>
-
-          <Space.Height.lg />
-
-          <YoroiDrepCard
-            onDelegate={handleDelegateToYoroi}
-            truncateId
-            variant="plain"
-          />
-        </>
+      {showCard && (
+        <FindDRepSection
+          onLinkPress={handleFindDRepLink}
+          onDelegateToYoroi={handleDelegateToYoroi}
+        />
       )}
 
       <Space.Height.lg />
 
       <Button
         title={strings.staking.confirm}
-        disabled={
-          isNonNullable(error) ||
-          drepId.length === 0 ||
-          !isFetched ||
-          isFetching
-        }
-        onPress={handleOnPress}
+        disabled={isSubmitDisabled}
+        onPress={handleSubmit}
       />
     </Modal.Content>
+  )
+}
+
+const Description = () => {
+  const strings = useStrings()
+  const {atoms: ta} = useTheme()
+
+  return (
+    <Text style={[a.text_center, a.body_1_lg_regular, ta.text_gray_medium]}>
+      {strings.staking.enterDrepIDInfo}
+    </Text>
+  )
+}
+
+type FindDRepSectionProps = {
+  onLinkPress: () => void
+  onDelegateToYoroi: () => void
+}
+
+const FindDRepSection = ({
+  onLinkPress,
+  onDelegateToYoroi,
+}: FindDRepSectionProps) => {
+  const strings = useStrings()
+  const {atoms: ta, palette} = useTheme()
+
+  return (
+    <>
+      <Space.Height.lg />
+
+      <View style={[a.flex_row, a.justify_center, a.flex_wrap]}>
+        <Text style={[a.body_1_lg_regular, ta.text_gray_medium, a.text_center]}>
+          {strings.staking.dontHaveAnID}{' '}
+        </Text>
+
+        <Text
+          style={[
+            a.body_1_lg_regular,
+            {color: palette.primary_500, textDecorationLine: 'underline'},
+          ]}
+          onPress={onLinkPress}
+        >
+          {strings.staking.findDRepHere}
+        </Text>
+      </View>
+
+      <Space.Height.xs />
+
+      <Text style={[a.body_1_lg_regular, ta.text_gray_medium, a.text_center]}>
+        {strings.staking.orDelegateToYoroiDrepBelow}
+      </Text>
+
+      <Space.Height.lg />
+
+      <YoroiDrepCard
+        onDelegate={onDelegateToYoroi}
+        truncateId
+        variant="plain"
+      />
+    </>
   )
 }
