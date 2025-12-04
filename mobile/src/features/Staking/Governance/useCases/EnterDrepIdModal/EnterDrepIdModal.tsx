@@ -1,12 +1,12 @@
 import {isNonNullable} from '@yoroi/common'
 import {getYoroiDrepIdHex, parseDrepId, useIsValidDRepID} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {Chain} from '@yoroi/types'
 
 import * as React from 'react'
 import {Alert, Linking, Text, View} from 'react-native'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useIsKeyboardOpen} from '~/hooks/useIsKeyboardOpen'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'
@@ -25,16 +25,20 @@ export type Props = {
   }) => void
 }
 
-const FIND_DREPS_LINK = 'https://beta.cexplorer.io/drep'
+const FIND_DREPS_LINKS: Record<Chain.SupportedNetworks, string> = {
+  [Chain.Network.Preprod]: 'https://preprod.cexplorer.io/drep',
+  [Chain.Network.Mainnet]: 'https://beta.cexplorer.io/drep',
+  [Chain.Network.Preview]: 'https://preview.cexplorer.io/drep',
+}
 
 export const HEIGHT_WITH_CARD = 660
 export const HEIGHT_WITHOUT_CARD = 350
-export const HEIGHT_KEYBOARD_OPEN = 350
 
 export const EnterDrepIdModal = ({onSubmit}: Props) => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
   const [drepId, setDrepId] = React.useState('')
+  const [showCard, setShowCard] = React.useState(true)
   const {closeModal, setHeight} = useModal()
   const {
     wallet: {
@@ -47,35 +51,20 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
     enabled: drepId.length > 0,
   })
 
-  const showYoroiDrepOption = drepId.length === 0
-  const showYoroiDrepOptionRef = React.useRef(showYoroiDrepOption)
-  showYoroiDrepOptionRef.current = showYoroiDrepOption
+  const handleFocus = React.useCallback(() => {
+    setShowCard(false)
+    setTimeout(() => setHeight(HEIGHT_WITHOUT_CARD), 150)
+  }, [setHeight])
 
-  const handleKeyboardChange = React.useCallback(
-    (isOpen: boolean) => {
-      if (isOpen) {
-        setHeight(HEIGHT_KEYBOARD_OPEN)
-      } else {
-        setHeight(
-          showYoroiDrepOptionRef.current
-            ? HEIGHT_WITH_CARD
-            : HEIGHT_WITHOUT_CARD,
-        )
-      }
-    },
-    [setHeight],
-  )
-
-  const isKeyboardOpen = useIsKeyboardOpen({
-    onKeyboardChange: handleKeyboardChange,
-  })
+  const handleBlur = React.useCallback(() => {
+    if (drepId.length === 0) {
+      setShowCard(true)
+      setTimeout(() => setHeight(HEIGHT_WITH_CARD), 150)
+    }
+  }, [drepId.length, setHeight])
 
   const handleDrepIdChange = (text: string) => {
     setDrepId(text)
-    if (!isKeyboardOpen) {
-      const shouldShowCard = text.length === 0
-      setHeight(shouldShowCard ? HEIGHT_WITH_CARD : HEIGHT_WITHOUT_CARD)
-    }
   }
 
   const handleOnPress = () => {
@@ -89,7 +78,7 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
   }
 
   const handleOnLinkPress = () => {
-    Linking.openURL(FIND_DREPS_LINK)
+    Linking.openURL(FIND_DREPS_LINKS[network])
   }
 
   const handleDelegateToYoroi = () => {
@@ -114,6 +103,8 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
       <TextInput
         value={drepId}
         onChangeText={handleDrepIdChange}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
         multiline
         errorDelay={1000}
         errorText={error?.message}
@@ -131,7 +122,7 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
         }}
       />
 
-      {showYoroiDrepOption && (
+      {showCard && (
         <>
           <Space.Height.lg />
 
