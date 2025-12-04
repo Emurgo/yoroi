@@ -51,7 +51,7 @@ const MultisigTransactionReviewContent = ({
 }) => {
   const {wallet, meta} = useSelectedWallet()
   const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
+  const {palette: p} = useTheme()
   const memoContext = useReviewTxMemo()
 
   const multisigMeta = getMultisigMeta(wallet)
