@@ -8,7 +8,7 @@ import {
 import * as React from 'react'
 
 import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
-import {AirdropScreen} from '~/features/Airdrop/ui/AirdropScreen'
+import {AirdropNavigator} from '~/features/Airdrop/ui/AirdropNavigator'
 import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {ClaimScreen} from '~/features/Claim/useCases/ClaimScreen'
 import {ShowSuccessScreen} from '~/features/Claim/useCases/ShowSuccessScreen'
@@ -319,7 +319,7 @@ export const TxHistoryNavigator = () => {
             options={{
               headerShown: false,
             }}
-            getComponent={() => AirdropScreen}
+            getComponent={() => AirdropNavigator}
           />
         )}
 

@@ -1,6 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
+import {createStackNavigator} from '@react-navigation/stack'
 import * as Linking from 'expo-linking'
 import * as React from 'react'
 import {
@@ -16,8 +17,11 @@ import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
 import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {usePrefetchStakingInfo} from '~/features/Dashboard/ui/shared/StakePoolInfos'
 import {useCanVote} from '~/features/RegisterCatalyst/common/hooks'
+import {NetworkTag} from '~/features/Settings/ui/shared/NetworkTag'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
+import {MenuRoutes} from '~/kernel/navigation/types'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
@@ -25,6 +29,29 @@ import {Text} from '~/ui/Text/Text'
 
 import {InsufficientFundsModal} from '../RegisterCatalyst/common/InsufficientFundsModal'
 import {usePoolTransition} from '../Staking/Staking/PoolTransition/usePoolTransition'
+
+const MenuStack = createStackNavigator<MenuRoutes>()
+
+export const MenuNavigator = () => {
+  const strings = useStrings()
+  const {palette: p} = useTheme()
+  return (
+    <MenuStack.Navigator
+      initialRouteName="_menu"
+      screenOptions={{
+        ...defaultStackNavigationOptions(p),
+        headerLeft: () => null,
+        headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
+      }}
+    >
+      <MenuStack.Screen
+        name="_menu"
+        component={Menu}
+        options={{title: strings.menu.menu}}
+      />
+    </MenuStack.Navigator>
+  )
+}
 
 export const Menu = () => {
   const strings = useStrings()

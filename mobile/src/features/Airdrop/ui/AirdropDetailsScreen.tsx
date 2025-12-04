@@ -8,6 +8,7 @@ import * as React from 'react'
 import {Linking, ScrollView, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {Address} from '~/common/Address/Address'
 import {usePromptRootKey} from '~/features/ReviewTx/common/hooks/usePromptRootKey'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
@@ -60,7 +61,7 @@ const getCurrentThawIndex = (thaws: ReadonlyArray<Thaw>): number => {
   return thaws.length - 1
 }
 
-export const AirdropMainScreen = () => {
+export const AirdropDetailsScreen = () => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
   const route = useRoute<RouteProp<AirdropRoutes, 'airdrop-main'>>()
@@ -182,15 +183,11 @@ export const AirdropMainScreen = () => {
             <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
               {strings.airdrop.destinationAddress}
             </Text>
-            <Text numberOfLines={1} ellipsizeMode="middle">
-              <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
-                {allocation.address.slice(0, -6)}
-              </Text>
-              <Text style={[a.body_2_md_medium, ta.text_gray_max]}>
-                {' '}
-                {allocation.address.slice(-6)}
-              </Text>
-            </Text>
+            <Address
+              address={allocation.address}
+              style={a.flex_1}
+              textStyle={[a.body_2_md_regular, ta.text_gray_medium]}
+            />
           </View>
         </TouchableOpacity>
 

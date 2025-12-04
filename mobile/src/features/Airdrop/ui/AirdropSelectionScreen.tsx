@@ -6,9 +6,9 @@ import {BigNumber} from 'bignumber.js'
 import * as React from 'react'
 import {
   ActivityIndicator,
+  Pressable,
   ScrollView,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -30,7 +30,7 @@ const formatAmount = (amount: number): string => {
   return normalized.toFormat(2)
 }
 
-export const DestinationAddressScreen = () => {
+export const AirdropSelectionScreen = () => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
   const navigation = useNavigation<StackNavigationProp<AirdropRoutes>>()
@@ -128,68 +128,76 @@ const AddressCard = ({allocation, index, onPress}: AddressCardProps) => {
   const totalToRedeem = formatAmount(allocation.totalLeftToRedeem)
 
   return (
-    <TouchableOpacity
+    <Pressable
       onPress={onPress}
-      activeOpacity={0.7}
       style={[
         a.rounded_sm,
-        {
-          backgroundColor: p.gray_min,
-          overflow: 'hidden',
-        },
+        a.overflow_hidden,
+        ta.bg_color_max,
+        a.border,
+        {borderColor: p.gray_200},
       ]}
     >
-      <View style={[a.flex_row, {backgroundColor: p.bg_gradient_1[0]}]}>
-        <View style={[a.flex_1, a.p_lg]}>
-          {/* Header row */}
-          <View style={[a.flex_row, a.justify_between, a.align_center]}>
-            <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-              <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>
-                {strings.airdrop.destinationAddressNumber.replace(
-                  '{number}',
-                  String(index),
-                )}
-              </Text>
-              <Icon.InfoCircle size={16} color={p.gray_600} />
+      {({pressed}) => (
+        <View
+          style={[
+            a.flex_row,
+            {
+              backgroundColor: pressed ? p.bg_gradient_1[0] : 'transparent',
+            },
+          ]}
+        >
+          <View style={[a.flex_1, a.p_lg]}>
+            {/* Header row */}
+            <View style={[a.flex_row, a.justify_between, a.align_center]}>
+              <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+                <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>
+                  {strings.airdrop.destinationAddressNumber.replace(
+                    '{number}',
+                    String(index),
+                  )}
+                </Text>
+                <Icon.InfoCircle size={16} color={p.gray_600} />
+              </View>
+              <Icon.Chevron direction="right" size={24} color={p.gray_600} />
             </View>
-            <Icon.Chevron direction="right" size={24} color={p.gray_600} />
-          </View>
 
-          <Space.Height.md />
+            <Space.Height.md />
 
-          {/* Address */}
-          <Text
-            style={[a.body_2_md_regular, ta.text_gray_max, {lineHeight: 22}]}
-            numberOfLines={3}
-          >
-            {allocation.address}
-          </Text>
-
-          <Space.Height.lg />
-
-          {/* Redeemable row */}
-          <View style={[a.flex_row, a.justify_between, a.align_center]}>
-            <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
-              {strings.airdrop.status.redeemable}
+            {/* Address */}
+            <Text
+              style={[a.body_2_md_regular, ta.text_gray_max, {lineHeight: 22}]}
+              numberOfLines={3}
+            >
+              {allocation.address}
             </Text>
-            <Text style={[a.body_2_md_medium, ta.text_gray_max]}>
-              {redeemableAmount} NIGHT
-            </Text>
-          </View>
 
-          <Space.Height.sm />
+            <Space.Height.lg />
 
-          {/* Total to redeem row */}
-          <View style={[a.flex_row, a.justify_between, a.align_center]}>
-            <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
-              {strings.airdrop.totalLeftToRedeem}
-            </Text>
-            <Text style={[a.body_2_md_medium, ta.text_gray_max]}>
-              {totalToRedeem} NIGHT
-            </Text>
+            {/* Redeemable row */}
+            <View style={[a.flex_row, a.justify_between, a.align_center]}>
+              <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
+                {strings.airdrop.status.redeemable}
+              </Text>
+              <Text style={[a.body_2_md_medium, ta.text_gray_max]}>
+                {redeemableAmount} NIGHT
+              </Text>
+            </View>
+
+            <Space.Height.sm />
+
+            {/* Total to redeem row */}
+            <View style={[a.flex_row, a.justify_between, a.align_center]}>
+              <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
+                {strings.airdrop.totalLeftToRedeem}
+              </Text>
+              <Text style={[a.body_2_md_medium, ta.text_gray_max]}>
+                {totalToRedeem} NIGHT
+              </Text>
+            </View>
           </View>
         </View>
-      </View>
-    </TouchableOpacity>
+      )}
+    </Pressable>
   )
 }

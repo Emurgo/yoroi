@@ -10,8 +10,8 @@ import {NetworkTag} from '~/features/Settings/ui/shared/NetworkTag'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 
-import {AirdropMainScreen} from './AirdropMainScreen'
-import {DestinationAddressScreen} from './DestinationAddressScreen'
+import {AirdropDetailsScreen} from './AirdropDetailsScreen'
+import {AirdropSelectionScreen} from './AirdropSelectionScreen'
 import {ThawScheduleScreen} from './ThawScheduleScreen'
 import type {AirdropRoutes} from './types'
 
@@ -36,7 +36,7 @@ export const AirdropNavigator = () => {
         options={{
           title: strings.menu.airdrop,
         }}
-        getComponent={() => DestinationAddressScreen}
+        getComponent={() => AirdropSelectionScreen}
       />
 
       <Stack.Screen
@@ -44,7 +44,7 @@ export const AirdropNavigator = () => {
         options={{
           title: strings.menu.airdrop,
         }}
-        getComponent={() => AirdropMainScreen}
+        getComponent={() => AirdropDetailsScreen}
       />
 
       <Stack.Screen
