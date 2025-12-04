@@ -64,4 +64,12 @@ export const darkPalette: BasePalette = {
   ],
   bg_gradient_2: [`#0B997D${opacity._48}`, `#08C29D${opacity._8}`],
   bg_gradient_3: ['#2E4BB0', '#2B3E7D'],
+  bg_gradient_4: [
+    '#17D1AA',
+    '#1ACBAF',
+    '#21B8BC',
+    '#2E9BD3',
+    '#3F71F1',
+    '#475FFF',
+  ],
 }
