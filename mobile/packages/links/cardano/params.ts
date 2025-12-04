@@ -139,6 +139,13 @@ export const preapareParams = ({
           `For type=readonly, accountPubKey must be provided on ${config.scheme} ${config.authority} ${config.version}`,
         )
       }
+    } else if (type === 'multisig') {
+      const hasMultisigSetup = paramEntries.has('multisigSetup')
+      if (!hasMultisigSetup) {
+        throw new Links.Errors.RequiredParamsMissing(
+          `For type=multisig, multisigSetup must be provided on ${config.scheme} ${config.authority} ${config.version}`,
+        )
+      }
     }
   }
 
@@ -341,9 +348,20 @@ export const getParamValidator =
       }
       // Wallet authority parameters
       case 'type': {
-        if (isString(value) && (value === 'full' || value === 'readonly')) break
+        if (
+          isString(value) &&
+          (value === 'full' || value === 'readonly' || value === 'multisig')
+        )
+          break
         throw new Links.Errors.ParamsValidationFailed(
-          `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be either 'full' or 'readonly'`,
+          `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be either 'full', 'readonly', or 'multisig'`,
+        )
+      }
+      case 'multisigSetup': {
+        // Base64-encoded JSON string
+        if (isString(value) && value.length > 0) break
+        throw new Links.Errors.ParamsValidationFailed(
+          `The param ${key} on ${config.scheme} ${config.authority} ${config.version} must be a non-empty base64-encoded string`,
         )
       }
       case 'mnemonic': {

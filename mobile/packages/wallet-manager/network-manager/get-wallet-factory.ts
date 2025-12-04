@@ -6,6 +6,10 @@ import {Chain, Network, Wallet} from '@yoroi/types'
 import {freeze} from 'immer'
 
 import {WalletFactory} from '../common/types'
+import {
+  createMultisigWalletFactories,
+  makeMultisigWalletFactory,
+} from './multisig-wallet-factory'
 
 /**
  * Creates wallet factories with the given dependencies
@@ -49,18 +53,27 @@ export function createWalletFactories(
     dependencies,
   )
 
+  // Create multisig wallet factories
+  const multisigFactories = createMultisigWalletFactories(
+    dependencies,
+    networkManagers,
+  )
+
   return freeze({
     [Chain.Network.Mainnet]: {
       'cardano-cip1852': ShelleyWalletMainnet,
       'cardano-bip44': ByronWalletMainnet,
+      'cardano-multisig': multisigFactories[Chain.Network.Mainnet],
     },
     [Chain.Network.Preprod]: {
       'cardano-cip1852': ShelleyWalletTestnet,
       'cardano-bip44': ByronWalletTestnet,
+      'cardano-multisig': multisigFactories[Chain.Network.Preprod],
     },
     [Chain.Network.Preview]: {
       'cardano-cip1852': ShelleyWalletPreview,
       'cardano-bip44': ByronWalletPreview,
+      'cardano-multisig': multisigFactories[Chain.Network.Preview],
     },
   } as const)
 }

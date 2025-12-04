@@ -1,0 +1,283 @@
+/**
+ * Share Wallet Details Screen
+ * Export wallet setup JSON for sharing with co-signers
+ */
+import {createMultisigWalletLink} from '@yoroi/cardano-wallet'
+import {atoms as a, useTheme} from '@yoroi/theme'
+import {Wallet} from '@yoroi/types'
+
+import {useNavigation, useRoute} from '@react-navigation/native'
+import * as Clipboard from 'expo-clipboard'
+import * as FileSystem from 'expo-file-system'
+import * as React from 'react'
+import {Alert, ScrollView, View} from 'react-native'
+import Share from 'react-native-share'
+
+import {useStrings} from '~/kernel/i18n/useStrings'
+import {logger} from '~/kernel/logger/logger'
+import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
+import {Button} from '~/ui/Button/Button'
+import {Icon} from '~/ui/Icon'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
+import {Space} from '~/ui/Space/Space'
+import {Text} from '~/ui/Text'
+
+type RouteParams = {
+  walletId: string
+  walletMeta: Wallet.Meta
+}
+
+type MultisigWalletSetupJSON = {
+  version: string
+  metadata: {
+    walletId: string
+    walletName: string
+    createdAt: string
+    network: string
+  }
+  multisig: {
+    coSigners: ReadonlyArray<Wallet.CoSigner>
+    quorumRules: Wallet.QuorumRules
+    paymentScriptCbor: Wallet.ScriptCbor
+    stakingScriptCbor: Wallet.ScriptCbor
+  }
+}
+
+export const ShareWalletDetailsScreen = () => {
+  const strings = useStrings()
+  const {atoms: ta} = useTheme()
+  const navigation = useNavigation<SetupWalletRouteNavigation>()
+  const route = useRoute()
+
+  const params = (route.params as RouteParams) || {}
+  const {walletId, walletMeta} = params
+
+  const multisigMeta = walletMeta.multisigMeta
+
+  if (!multisigMeta) {
+    return (
+      <SafeArea>
+        <Space.Height.lg />
+        <View style={[a.px_lg]}>
+          <Text style={[ta.heading_1]}>
+            {strings.setupWallet.invalidMultisigWallet ||
+              'Invalid Multisig Wallet'}
+          </Text>
+          <Space.Height.md />
+          <Button
+            title={strings.global.back || 'Back'}
+            onPress={() => navigation.goBack()}
+          />
+        </View>
+      </SafeArea>
+    )
+  }
+
+  const walletSetupJSON: MultisigWalletSetupJSON = {
+    version: '1.0.0',
+    metadata: {
+      walletId,
+      walletName: walletMeta.name,
+      createdAt: new Date().toISOString(),
+      network: 'cardano', // TODO: Get from wallet meta
+    },
+    multisig: {
+      coSigners: multisigMeta.coSigners,
+      quorumRules: multisigMeta.quorumRules,
+      paymentScriptCbor: multisigMeta.paymentScriptCbor,
+      stakingScriptCbor: multisigMeta.stakingScriptCbor,
+    },
+  }
+
+  const jsonString = JSON.stringify(walletSetupJSON, null, 2)
+
+  const handleShare = React.useCallback(async () => {
+    try {
+      const fileName = `multisig-wallet-${walletMeta.name.replace(/\s+/g, '-')}-${walletId.substring(0, 8)}.json`
+      const fileUri = `${FileSystem.documentDirectory}${fileName}`
+
+      // Write JSON to file
+      await FileSystem.writeAsStringAsync(fileUri, jsonString, {
+        encoding: FileSystem.EncodingType.UTF8,
+      })
+
+      // Share file using react-native-share
+      await Share.open({
+        url: `file://${fileUri}`,
+        type: 'application/json',
+        title: strings.setupWallet.shareWalletSetup || 'Share Wallet Setup',
+      })
+    } catch (error) {
+      // User cancelled or error occurred - ignore cancellation
+      if (error && typeof error === 'object' && 'message' in error) {
+        const errorMessage = String(error.message)
+        if (!errorMessage.includes('User did not share')) {
+          Alert.alert(
+            strings.setupWallet.shareError || 'Share Error',
+            errorMessage,
+          )
+        }
+      }
+    }
+  }, [jsonString, walletMeta.name, walletId, strings])
+
+  const handleCopyJSON = React.useCallback(async () => {
+    try {
+      await Clipboard.setStringAsync(jsonString)
+      Alert.alert(
+        strings.setupWallet.copied || 'Copied',
+        strings.setupWallet.walletSetupCopied ||
+          'Wallet setup JSON copied to clipboard',
+      )
+    } catch (error) {
+      Alert.alert(
+        strings.setupWallet.copyError || 'Copy Error',
+        error instanceof Error ? error.message : 'Failed to copy wallet setup',
+      )
+    }
+  }, [jsonString, strings])
+
+  // Generate restoration link/QR code
+  const restorationLink = React.useMemo(() => {
+    try {
+      return createMultisigWalletLink({
+        multisigSetup: walletSetupJSON,
+        name: walletMeta.name,
+      })
+    } catch (error) {
+      logger.error('Failed to create multisig wallet link', {error})
+      return null
+    }
+  }, [walletSetupJSON, walletMeta.name])
+
+  const handleCopyLink = React.useCallback(async () => {
+    if (!restorationLink) {
+      Alert.alert(
+        strings.setupWallet.copyError || 'Copy Error',
+        'Failed to generate restoration link',
+      )
+      return
+    }
+
+    try {
+      await Clipboard.setStringAsync(restorationLink)
+      Alert.alert(
+        strings.setupWallet.copied || 'Copied',
+        'Restoration link copied to clipboard',
+      )
+    } catch (error) {
+      Alert.alert(
+        strings.setupWallet.copyError || 'Copy Error',
+        error instanceof Error ? error.message : 'Failed to copy link',
+      )
+    }
+  }, [restorationLink, strings])
+
+  return (
+    <SafeArea>
+      <Space.Height.lg />
+
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={[a.px_lg, a.pb_lg]}
+      >
+        <View style={[a.gap_md]}>
+          <Text style={[ta.heading_1]}>
+            {strings.setupWallet.shareWalletDetailsTitle ||
+              'Share Wallet Details'}
+          </Text>
+
+          <Space.Height.md />
+
+          <Text style={[ta.body_1_lg_regular]}>
+            {strings.setupWallet.shareWalletDetailsDescription ||
+              'Share the wallet setup JSON with other co-signers so they can import this multisig wallet.'}
+          </Text>
+
+          <Space.Height.lg />
+
+          {/* Wallet info summary */}
+          <View style={[a.p_md, a.bg_gray_c50, a.rounded_sm]}>
+            <Text style={[ta.body_1_lg_medium]}>
+              {strings.setupWallet.walletName || 'Wallet Name'}:{' '}
+              {walletMeta.name}
+            </Text>
+            <Space.Height.xs />
+            <Text style={[ta.body_1_lg_medium]}>
+              {strings.setupWallet.coSignersCount || 'Co-Signers'}:{' '}
+              {multisigMeta.coSigners.length}
+            </Text>
+            <Space.Height.xs />
+            <Text style={[ta.body_1_lg_medium]}>
+              {strings.setupWallet.quorumRules || 'Quorum'}:{' '}
+              {multisigMeta.quorumRules.kind}
+              {multisigMeta.quorumRules.kind === 'RequireNOf' &&
+                ` (${multisigMeta.quorumRules.required} of ${multisigMeta.coSigners.length})`}
+            </Text>
+          </View>
+
+          <Space.Height.lg />
+
+          {/* Action buttons */}
+          <Button
+            title={strings.setupWallet.shareWalletSetup || 'Share Wallet Setup'}
+            onPress={handleShare}
+            testID="share-wallet-setup-button"
+          />
+
+          <Button
+            title={strings.setupWallet.copyJSON || 'Copy JSON'}
+            onPress={handleCopyJSON}
+            outline
+            testID="copy-json-button"
+          />
+
+          {restorationLink && (
+            <>
+              <Space.Height.md />
+              <Button
+                title="Copy Restoration Link"
+                onPress={handleCopyLink}
+                outline
+                testID="copy-link-button"
+              />
+              <Space.Height.xs />
+              <Text style={[ta.body_2_md_regular, ta.text_gray_max]}>
+                Share this link or QR code with co-signers. They can open it in
+                Yoroi to restore the multisig wallet.
+              </Text>
+            </>
+          )}
+
+          <Space.Height.lg />
+
+          {/* JSON preview */}
+          <View style={[a.gap_sm]}>
+            <Text style={[ta.heading_3]}>
+              {strings.setupWallet.walletSetupJSON || 'Wallet Setup JSON'}
+            </Text>
+            <View style={[a.p_md, a.bg_gray_c100, a.rounded_sm]}>
+              <Text
+                style={[
+                  ta.body_2_md_regular,
+                  {fontFamily: 'monospace', fontSize: 10},
+                ]}
+                numberOfLines={10}
+              >
+                {jsonString}
+              </Text>
+            </View>
+          </View>
+
+          <Space.Height.lg />
+
+          <Button
+            title={strings.global.done || 'Done'}
+            onPress={() => navigation.navigate('setup-wallet-preparing-wallet')}
+            testID="done-after-share-button"
+          />
+        </View>
+      </ScrollView>
+    </SafeArea>
+  )
+}

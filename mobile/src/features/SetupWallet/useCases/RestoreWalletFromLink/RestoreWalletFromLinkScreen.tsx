@@ -1,17 +1,23 @@
-import {isEmptyString} from '@yoroi/cardano-wallet'
-import {getWalletNameError, validatePassword} from '@yoroi/cardano-wallet'
+import {
+  getWalletNameError,
+  isEmptyString,
+  validatePassword,
+} from '@yoroi/cardano-wallet'
 import {useAsyncStorage} from '@yoroi/common'
 import {decryptWalletData, useLinks} from '@yoroi/links'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Api, Links, Wallet} from '@yoroi/types'
-import {useCreateWalletFromRootKey} from '@yoroi/wallet-manager'
-import {useCreateWalletMnemonic} from '@yoroi/wallet-manager'
-import {useCreateWalletXPub} from '@yoroi/wallet-manager'
-import {useWalletManager} from '@yoroi/wallet-manager'
-import {parseWalletMeta} from '@yoroi/wallet-manager'
+import {
+  parseWalletMeta,
+  useCreateWalletFromRootKey,
+  useCreateWalletMnemonic,
+  useCreateWalletXPub,
+  useWalletManager,
+} from '@yoroi/wallet-manager'
 
 import {useNavigation} from '@react-navigation/native'
+import {Buffer} from 'buffer'
 import * as React from 'react'
 import {
   InteractionManager,
@@ -284,6 +290,69 @@ export const RestoreWalletFromLinkScreen = () => {
       },
     })
 
+  // Multisig wallet restoration - navigates to import flow
+  const handleMultisigRestore = React.useCallback(() => {
+    try {
+      if (!action.multisigSetup) {
+        showErrorDialog(errorMessages.generalError, undefined, {
+          message: 'Invalid multisig wallet link: missing setup data',
+        })
+        return
+      }
+
+      // Decode base64-encoded multisig setup JSON
+      try {
+        const jsonString = Buffer.from(action.multisigSetup, 'base64').toString(
+          'utf8',
+        )
+        const multisigSetup = JSON.parse(jsonString) as {
+          version: string
+          metadata: {
+            walletId: string
+            walletName: string
+            createdAt: string
+            network: string
+          }
+          multisig: {
+            coSigners: ReadonlyArray<Wallet.CoSigner>
+            quorumRules: Wallet.QuorumRules
+            paymentScriptCbor: Wallet.ScriptCbor
+            stakingScriptCbor: Wallet.ScriptCbor
+          }
+        }
+
+        // Validate structure
+        if (
+          !multisigSetup.version ||
+          !multisigSetup.metadata ||
+          !multisigSetup.multisig ||
+          !Array.isArray(multisigSetup.multisig.coSigners) ||
+          !multisigSetup.multisig.quorumRules ||
+          !multisigSetup.multisig.paymentScriptCbor ||
+          !multisigSetup.multisig.stakingScriptCbor
+        ) {
+          throw new Error('Invalid multisig wallet setup structure')
+        }
+
+        // Navigate to import multisig wallet screen with parsed data
+        // The import screen will handle wallet selection and validation
+        navigation.navigate('setup-wallet-import-multisig', {
+          importedWalletSetup: multisigSetup,
+        })
+      } catch (parseError) {
+        logger.error('Failed to parse multisig setup', {parseError})
+        showErrorDialog(errorMessages.generalError, undefined, {
+          message: 'Invalid multisig wallet link: failed to parse setup data',
+        })
+      }
+    } catch (error) {
+      logger.error('Multisig restore failed', {error})
+      showErrorDialog(errorMessages.generalError, undefined, {
+        message: error instanceof Error ? error.message : 'Unknown error',
+      })
+    }
+  }, [action.multisigSetup, navigation])
+
   const isPending = isPendingMnemonic || isPendingRootKey || isPendingReadOnly
 
   // Skip validation while pending to avoid race condition where validation runs
@@ -380,15 +449,18 @@ export const RestoreWalletFromLinkScreen = () => {
           addressMode,
           accountVisual,
         })
+      } else if (action.type === 'multisig') {
+        // Multisig restoration navigates to import flow
+        handleMultisigRestore()
       } else {
         // This should not happen due to validation, but add safety check
         logger.error(
           new Error(
-            'RestoreWalletFromLinkScreen: readonly wallet type requires accountPubKey',
+            `RestoreWalletFromLinkScreen: unknown wallet type: ${action.type}`,
           ),
         )
         showErrorDialog(errorMessages.generalError, undefined, {
-          message: 'Invalid wallet data: missing account public key',
+          message: `Invalid wallet type: ${action.type}`,
         })
       }
     } catch (error) {
@@ -400,15 +472,17 @@ export const RestoreWalletFromLinkScreen = () => {
   }
 
   const canRestore =
-    !isEmptyString(name) &&
-    !walletNameErrorText &&
-    (action.type === 'readonly' ||
-      (!isEmptyString(password) &&
-        !passwordErrors.passwordIsWeak &&
-        !passwordErrors.matchesConfirmation)) &&
-    (!needsDecryption || !isEmptyString(decryptionPassword)) &&
-    !decryptionError &&
-    !showSecurityWarning
+    action.type === 'multisig'
+      ? true // Multisig restoration doesn't need password/name validation here
+      : !isEmptyString(name) &&
+        !walletNameErrorText &&
+        (action.type === 'readonly' ||
+          (!isEmptyString(password) &&
+            !passwordErrors.passwordIsWeak &&
+            !passwordErrors.matchesConfirmation)) &&
+        (!needsDecryption || !isEmptyString(decryptionPassword)) &&
+        !decryptionError &&
+        !showSecurityWarning
 
   // Don't show modal if we've already processed this action
   if (showSecurityWarning && !hasProcessedRef.current) {
@@ -424,11 +498,24 @@ export const RestoreWalletFromLinkScreen = () => {
       >
         <View>
           <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
-            Wallet Type: {action.type === 'full' ? 'Full Wallet' : 'Read-Only'}
+            Wallet Type:{' '}
+            {action.type === 'full'
+              ? 'Full Wallet'
+              : action.type === 'readonly'
+                ? 'Read-Only'
+                : action.type === 'multisig'
+                  ? 'Multisig Wallet'
+                  : 'Unknown'}
           </Text>
           {action.encryption && (
             <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
               Encryption: {action.encryption}
+            </Text>
+          )}
+          {action.type === 'multisig' && (
+            <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
+              You will be redirected to import the multisig wallet. Make sure
+              you have one of the co-signer wallets.
             </Text>
           )}
         </View>

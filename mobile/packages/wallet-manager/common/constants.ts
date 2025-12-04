@@ -9,6 +9,7 @@ export const addressModes: ReadonlyArray<Wallet.AddressMode> = freeze([
 export const implementations: ReadonlyArray<Wallet.Implementation> = freeze([
   'cardano-cip1852',
   'cardano-bip44',
+  'cardano-multisig',
 ] as const)
 
 export const availableNetworks: ReadonlyArray<Chain.SupportedNetworks> = freeze(

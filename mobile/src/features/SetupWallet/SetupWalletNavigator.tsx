@@ -12,6 +12,14 @@ import {NetworkTag} from '../Settings/ui/shared/NetworkTag'
 import {PreparingWalletScreen} from './common/PreparingWalletScreen/PreparingWalletScreen'
 import {ChooseMnemonicTypeScreen} from './useCases/ChooseMnemonicType/ChooseMnemonicTypeScreen'
 import {ChooseSetupTypeScreen} from './useCases/ChooseSetupType/ChooseSetupTypeScreen'
+import {AddCoSignersScreen} from './useCases/CreateMultisigWallet/AddCoSignersScreen'
+import {CreateMultisigWalletScreen} from './useCases/CreateMultisigWallet/CreateMultisigWalletScreen'
+import {DefineQuorumScreen} from './useCases/CreateMultisigWallet/DefineQuorumScreen'
+import {GenerateSharedKeyScreen} from './useCases/CreateMultisigWallet/GenerateSharedKeyScreen'
+import {ImportMultisigWalletScreen} from './useCases/CreateMultisigWallet/ImportMultisigWalletScreen'
+import {ReviewMultisigWalletScreen} from './useCases/CreateMultisigWallet/ReviewMultisigWalletScreen'
+import {SelectParentWalletScreen} from './useCases/CreateMultisigWallet/SelectParentWalletScreen'
+import {ShareWalletDetailsScreen} from './useCases/CreateMultisigWallet/ShareWalletDetailsScreen'
 import {AboutRecoveryPhraseScreen} from './useCases/CreateWallet/AboutRecoveryPhraseScreen'
 import {RecoveryPhraseScreen} from './useCases/CreateWallet/RecoveryPhraseScreen'
 import {VerifyRecoveryPhraseScreen} from './useCases/CreateWallet/VerifyRecoveryPhraseScreen'
@@ -150,6 +158,81 @@ export const SetupWalletNavigator = () => {
         name="setup-wallet-restore-read-only-from-addresses"
         getComponent={() => RestoreReadOnlyWalletFromAddressesScreen}
         options={{title: 'Restore Read-Only Wallet'}}
+      />
+
+      <Stack.Screen
+        name="setup-wallet-multisig-create"
+        getComponent={() => CreateMultisigWalletScreen}
+        options={{
+          title:
+            strings.setupWallet.createMultisigWalletTitle ||
+            'Create Multisig Wallet',
+        }}
+      />
+
+      <Stack.Screen
+        name="setup-wallet-multisig-select-parent"
+        getComponent={() => SelectParentWalletScreen}
+        options={{
+          title:
+            strings.setupWallet.selectParentWalletTitle ||
+            'Select Parent Wallet',
+        }}
+      />
+
+      <Stack.Screen
+        name="setup-wallet-multisig-generate-shared-key"
+        getComponent={() => GenerateSharedKeyScreen}
+        options={{
+          title:
+            strings.setupWallet.generateSharedKeyTitle || 'Generate Shared Key',
+        }}
+      />
+
+      <Stack.Screen
+        name="setup-wallet-multisig-add-cosigners"
+        getComponent={() => AddCoSignersScreen}
+        options={{
+          title: strings.setupWallet.addCoSignersTitle || 'Add Co-Signers',
+        }}
+      />
+
+      <Stack.Screen
+        name="setup-wallet-multisig-define-quorum"
+        getComponent={() => DefineQuorumScreen}
+        options={{
+          title: strings.setupWallet.defineQuorumTitle || 'Define Quorum Rules',
+        }}
+      />
+
+      <Stack.Screen
+        name="setup-wallet-multisig-review"
+        getComponent={() => ReviewMultisigWalletScreen}
+        options={{
+          title:
+            strings.setupWallet.reviewMultisigWalletTitle ||
+            'Review Multisig Wallet',
+        }}
+      />
+
+      <Stack.Screen
+        name="setup-wallet-multisig-share"
+        getComponent={() => ShareWalletDetailsScreen}
+        options={{
+          title:
+            strings.setupWallet.shareWalletDetailsTitle ||
+            'Share Wallet Details',
+        }}
+      />
+
+      <Stack.Screen
+        name="setup-wallet-multisig-import"
+        getComponent={() => ImportMultisigWalletScreen}
+        options={{
+          title:
+            strings.setupWallet.importMultisigWalletTitle ||
+            'Import Multisig Wallet',
+        }}
       />
 
       <Stack.Screen

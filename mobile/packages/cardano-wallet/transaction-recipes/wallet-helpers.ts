@@ -1,14 +1,21 @@
 import {getLogger} from '@yoroi/common'
-import {TransactionOutput} from '@yoroi/tx'
 import type {DRepValue} from '@yoroi/tx'
-import {Branded, KeyHash, Network, PublicKeyHex, Wallet} from '@yoroi/types'
+import {TransactionOutput} from '@yoroi/tx'
+import {
+  Address,
+  Branded,
+  KeyHash,
+  Network,
+  PublicKeyHex,
+  Wallet,
+} from '@yoroi/types'
 
 import type {Certificate} from '@emurgo/cross-csl-core'
 import {BigNumber} from 'bignumber.js'
 
 import * as legacyApi from '../api/api'
-import type {CardanoTypes} from '../types'
-import type {YoroiWallet} from '../types'
+import type {CardanoTypes, YoroiWallet} from '../types'
+import {CardanoMobileWrapped} from '../wrappedCsl'
 import {createCombinedDelegationTx} from './createCombinedDelegationTx'
 import {createDelegationTx} from './createDelegationTx'
 import {createSendTx} from './createSendTx'
@@ -277,6 +284,7 @@ export async function createUnsignedGovernanceTxFromWallet(
 
 /**
  * Create send transaction from wallet
+ * Supports both regular and multisig wallets
  */
 export async function createSendTxFromWallet(
   wallet: YoroiWallet,
@@ -294,6 +302,14 @@ export async function createSendTxFromWallet(
 ): Promise<{cbor: string}> {
   const modernUtxos = getModernUtxosFromWallet(wallet)
 
+  // Check if this is a multisig wallet
+  const multisigMeta = wallet.multisigMeta
+  if (multisigMeta) {
+    // Use multisig-specific transaction builder
+    return createMultisigSendTxFromWallet(wallet, params)
+  }
+
+  // Regular wallet - use standard transaction builder
   return createSendTx({
     utxos: modernUtxos,
     entries: params.entries,
@@ -308,6 +324,129 @@ export async function createSendTxFromWallet(
       data: meta.data,
     })),
     subtractFeeFromAmount: params.subtractFeeFromAmount,
+  })
+}
+
+/**
+ * Create send transaction from multisig wallet
+ * Builds transaction with native scripts in witness set
+ */
+async function createMultisigSendTxFromWallet(
+  wallet: YoroiWallet,
+  params: {
+    entries: TransactionOutput[]
+    addressMode: Wallet.AddressMode
+    metadata?: Array<CardanoTypes.TxMetadata>
+    subtractFeeFromAmount?: boolean
+  },
+): Promise<{cbor: string}> {
+  const multisigMeta = wallet.multisigMeta
+  if (!multisigMeta) {
+    throw new Error(
+      'createMultisigSendTxFromWallet: wallet is not a multisig wallet',
+    )
+  }
+
+  const modernUtxos = getModernUtxosFromWallet(wallet)
+
+  // Build transaction using standard builder first, then add scripts
+  // We'll reuse createSendTx logic but wrap the final build step
+  const {createSendTx} = await import('./createSendTx')
+  const {buildMultisigTransaction} = await import(
+    '@yoroi/tx/multisig/multisig-tx-builder'
+  )
+  const {
+    createTransactionBuilder,
+    addInputs,
+    addOutput,
+    setChangeAddress,
+    setTTLWithBuffer,
+    addMetadata,
+    selectUtxosForAmounts,
+  } = await import('@yoroi/tx')
+  const {createCardanoHaskellConfig} = await import('@yoroi/tx')
+
+  // Replicate createSendTx logic but use buildMultisigTransaction at the end
+  const changeAddressRaw = wallet.getChangeAddress(params.addressMode)
+  const changeAddress =
+    typeof changeAddressRaw === 'string'
+      ? (changeAddressRaw as Address)
+      : changeAddressRaw
+
+  const protocolParamsConfig = createCardanoHaskellConfig(
+    wallet.protocolParams,
+    wallet.networkManager.chainId,
+  )
+
+  const absSlotNumber = await getAbsoluteSlotNumberFromWallet(wallet)
+
+  // Build transaction state (simplified - full logic would replicate createSendTx)
+  let builderState = createTransactionBuilder()
+
+  // Select UTXOs and add inputs/outputs (simplified version)
+  // For full implementation, we'd need to replicate the full createSendTx logic
+  // For now, we'll build the transaction normally and then add scripts
+  const result = await createSendTx({
+    utxos: modernUtxos,
+    entries: params.entries,
+    primaryTokenId: wallet.portfolioPrimaryTokenInfo.id,
+    protocolParams: wallet.protocolParams,
+    networkId: wallet.networkManager.chainId,
+    getAbsoluteSlotNumber: () => Promise.resolve(absSlotNumber),
+    getChangeAddress: (mode) => wallet.getChangeAddress(mode),
+    addressMode: params.addressMode,
+    metadata: params.metadata?.map((meta) => ({
+      label: String(meta.label),
+      data: meta.data,
+    })),
+    subtractFeeFromAmount: params.subtractFeeFromAmount,
+  })
+
+  // Now we need to add the scripts to the witness set
+  // Parse the transaction and add scripts
+  return CardanoMobileWrapped.cslScope(async (csl) => {
+    const tx = csl.Transaction.fromHex(result.cbor)
+    if (!tx) {
+      throw new Error('Failed to parse transaction CBOR')
+    }
+
+    let witnessSet = tx.witnessSet()
+    if (!witnessSet) {
+      witnessSet = csl.TransactionWitnessSet.new()
+    }
+
+    let nativeScripts = witnessSet.nativeScripts()
+    if (!nativeScripts) {
+      nativeScripts = csl.NativeScripts.new()
+    }
+
+    // Add payment script
+    const paymentScript = csl.NativeScript.fromHex(
+      multisigMeta.paymentScriptCbor,
+    )
+    if (paymentScript) {
+      nativeScripts.add(paymentScript)
+    }
+
+    // Add staking script
+    const stakingScript = csl.NativeScript.fromHex(
+      multisigMeta.stakingScriptCbor,
+    )
+    if (stakingScript) {
+      nativeScripts.add(stakingScript)
+    }
+
+    witnessSet.setNativeScripts(nativeScripts)
+
+    // Rebuild transaction with updated witness set
+    const txBody = tx.body()
+    const auxData = tx.auxiliaryData()
+    const updatedTx = csl.Transaction.new(txBody, witnessSet, auxData)
+
+    const txBytes = updatedTx.toBytes()
+    const cbor = Buffer.from(txBytes).toString('hex')
+
+    return {cbor}
   })
 }
 

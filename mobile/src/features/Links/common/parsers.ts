@@ -176,11 +176,12 @@ export const parseCardanoLink = (codeContent: string): Links.CardanoAction => {
       implementation,
       addressMode,
       accountVisual,
+      multisigSetup,
     } = parsedCardanoLink.params
 
     return freeze({
       action: 'restore-wallet',
-      type: type as 'full' | 'readonly',
+      type: type as 'full' | 'readonly' | 'multisig',
       mnemonic: mnemonic as string | undefined,
       rootKey: rootKey as string | undefined,
       accountPubKey: accountPubKey as string | undefined,
@@ -189,6 +190,7 @@ export const parseCardanoLink = (codeContent: string): Links.CardanoAction => {
       implementation: implementation as string | undefined,
       addressMode: addressMode as string | undefined,
       accountVisual: accountVisual as string | undefined,
+      multisigSetup: multisigSetup as string | undefined,
     } as const)
   }
 

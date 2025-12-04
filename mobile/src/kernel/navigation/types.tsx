@@ -59,6 +59,45 @@ export type WalletInitRoutes = {
   'setup-wallet-restore-read-only-from-key': undefined
   'setup-wallet-restore-read-only-from-addresses': undefined
   'setup-wallet-scan-qr-code': undefined
+  'setup-wallet-multisig-create': undefined
+  'setup-wallet-multisig-select-parent': undefined
+  'setup-wallet-multisig-generate-shared-key': {
+    parentWalletId?: string
+  }
+  'setup-wallet-multisig-add-cosigners': {
+    parentWalletId: string
+    parentWalletRootKey?: string
+    sharedWalletKey: Wallet.Bip32PublicKeyHex
+    parentWalletImplementation: Wallet.Implementation
+    accountVisual: number
+  }
+  'setup-wallet-multisig-define-quorum': {
+    parentWalletId: string
+    parentWalletRootKey?: string
+    sharedWalletKey: Wallet.Bip32PublicKeyHex
+    parentWalletImplementation: Wallet.Implementation
+    accountVisual: number
+    coSigners: ReadonlyArray<Wallet.CoSigner>
+  }
+  'setup-wallet-multisig-review': {
+    parentWalletId: string
+    parentWalletRootKey?: string
+    sharedWalletKey: Wallet.Bip32PublicKeyHex
+    parentWalletImplementation: Wallet.Implementation
+    accountVisual: number
+    coSigners: ReadonlyArray<Wallet.CoSigner>
+    quorumRules: Wallet.QuorumRules
+    walletName: string
+  }
+  'setup-wallet-multisig-share': {
+    walletId: string
+    walletMeta: Wallet.Meta
+  }
+  'setup-wallet-multisig-import': undefined
+  'setup-wallet-multisig-validate-cosigner': {
+    importedWalletSetup: unknown
+    currentWalletId: string
+  }
 }
 
 export type SetupWalletRouteNavigation = StackNavigationProp<WalletInitRoutes>
@@ -194,6 +233,7 @@ export type SettingsStackRoutes = {
   }
   'settings-preparing-wallet': undefined
   'share-wallet': undefined
+  'multisig-wallet-details': undefined
 }
 
 export type ManageNotificationsRoutes = {
@@ -248,6 +288,14 @@ export type ReviewTxRoutes = {
     context?: ReviewContext
     aggregator?: string
     memo?: string
+    multiparty?: {
+      requiredSigners: ReadonlyArray<{
+        readonly walletId: string
+        readonly keyHash: string
+        readonly walletName: string
+      }>
+      inputWalletIds: ReadonlyArray<string>
+    }
     onConfirm?: () => void
     onCancel?: OnConfirm['onCancel']
     onSuccess?: OnConfirm['onSuccess']
@@ -258,6 +306,7 @@ export type ReviewTxRoutes = {
     onNotSupportedCIP1694?: () => void
     onCIP36SupportChange?: (supportsCIP36: boolean) => void
   }
+  'cosign-transaction'?: undefined
   'result-screen': import('~/ui/ResultScreen/types').ResultScreenParams
 }
 

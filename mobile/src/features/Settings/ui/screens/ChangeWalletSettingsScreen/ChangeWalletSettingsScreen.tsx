@@ -109,6 +109,16 @@ export const ChangeWalletSettingsScreen = () => {
             label={strings.settings.walletSettings.walletName}
             onNavigate={() => settingsNavigation.navigate('change-wallet-name')}
           />
+
+          {meta.multisigMeta && (
+            <NavigatedSettingsItem
+              icon={<Icon.WalletStack {...iconProps} />}
+              label="Multisig Wallet Details"
+              onNavigate={() =>
+                settingsNavigation.navigate('multisig-wallet-details')
+              }
+            />
+          )}
         </SettingsSection>
 
         <SettingsSection title={strings.settings.walletSettings.security}>

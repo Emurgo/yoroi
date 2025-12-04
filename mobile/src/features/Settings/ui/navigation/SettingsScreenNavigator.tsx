@@ -12,6 +12,7 @@ import {EnableLoginWithPinScreen} from '~/features/Auth/ui/screens/EnableLoginWi
 import {ReadPrivacyPolicyScreen} from '~/features/Legal/ui/screens/ReadPrivacyPolicyScreen'
 import {ReadTermsOfServiceScreen} from '~/features/Legal/ui/screens/ReadTermsOfServiceScreen'
 import {PreparingWalletScreen} from '~/features/SetupWallet/common/PreparingWalletScreen/PreparingWalletScreen'
+import {MultisigWalletDetailsScreen} from '~/features/WalletManager/ui/screens/MultisigWalletDetailsScreen/MultisigWalletDetailsScreen'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {
   defaultMaterialTopTabNavigationOptions,
@@ -205,6 +206,12 @@ export const SettingsScreenNavigator = () => {
         name="share-wallet"
         getComponent={() => ShareWalletScreen}
         options={{title: strings.settings.shareWallet.title}}
+      />
+
+      <Stack.Screen //
+        name="multisig-wallet-details"
+        getComponent={() => MultisigWalletDetailsScreen}
+        options={{title: 'Multisig Wallet Details'}}
       />
 
       <Stack.Screen

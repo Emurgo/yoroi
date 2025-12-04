@@ -1,5 +1,9 @@
 import {HWDeviceInfo} from '../hw/hw'
-import {WalletAddressMode, WalletImplementation} from './wallet'
+import {
+  MultisigWalletMeta,
+  WalletAddressMode,
+  WalletImplementation,
+} from './wallet'
 
 export type WalletMeta = {
   // identification
@@ -18,4 +22,7 @@ export type WalletMeta = {
   // authorization
   readonly isHW: boolean
   isEasyConfirmationEnabled: boolean
+
+  // multisig wallet support (optional)
+  readonly multisigMeta?: MultisigWalletMeta
 }

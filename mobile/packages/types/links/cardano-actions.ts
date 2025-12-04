@@ -100,7 +100,7 @@ export type CardanoActionP2PConnect = Readonly<{
 
 export type CardanoActionRestoreWallet = Readonly<{
   action: 'restore-wallet'
-  type: 'full' | 'readonly'
+  type: 'full' | 'readonly' | 'multisig'
   mnemonic?: string
   rootKey?: string
   accountPubKey?: string
@@ -109,6 +109,7 @@ export type CardanoActionRestoreWallet = Readonly<{
   implementation?: string
   addressMode?: string
   accountVisual?: string
+  multisigSetup?: string // Base64-encoded multisig wallet setup JSON
 }>
 
 export type CardanoAction =

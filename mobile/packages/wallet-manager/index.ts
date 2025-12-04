@@ -17,6 +17,7 @@ export {useCreateWalletMnemonic} from './hooks/useCreateWalletMnemonic'
 export {useCreateWalletXPub} from './hooks/useCreateWalletXPub'
 export {useCreateReadOnlyWalletFromAddresses} from './hooks/useCreateReadOnlyWalletFromAddresses'
 export {useCreateWalletFromRootKey} from './hooks/useCreateWalletFromRootKey'
+export {useCreateMultisigWallet} from './hooks/useCreateMultisigWallet'
 // useDisableEasyConfirmation removed - it imports from app and should be moved to app
 export {useGenerateWalletLink} from './hooks/useGenerateWalletLink'
 export {useLaunchWalletAfterSyncing} from './hooks/useLaunchWalletAfterSyncing'

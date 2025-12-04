@@ -33,6 +33,7 @@ import {
   TransactionCborBase64,
   Wallet,
   WalletTransaction,
+  Wallet as WalletTypes,
 } from '@yoroi/types'
 
 import {WalletChecksum as WalletChecksumType} from '@emurgo/cip4-js'
@@ -222,6 +223,9 @@ export interface YoroiWallet {
     createCollateralEntry: CardanoWalletDependencies['createCollateralEntry']
     toBalanceManagerSyncArgs: CardanoWalletDependencies['toBalanceManagerSyncArgs']
   }
+
+  // Multisig wallet support (optional)
+  readonly multisigMeta?: WalletTypes.MultisigWalletMeta
 }
 
 export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {
@@ -322,3 +326,26 @@ export {
   NotEnoughMoneyToSendError,
   RegistrationStatus,
 } from '@yoroi/tx'
+
+/**
+ * Check if a wallet is a multisig (script) wallet
+ */
+export const isMultisigWallet = (wallet: YoroiWallet): boolean => {
+  return wallet.multisigMeta !== undefined
+}
+
+/**
+ * Check if a wallet is a script wallet (multisig)
+ */
+export const isScriptWallet = (wallet: YoroiWallet): boolean => {
+  return isMultisigWallet(wallet)
+}
+
+/**
+ * Get multisig metadata from wallet (returns undefined if not multisig)
+ */
+export const getMultisigMeta = (
+  wallet: YoroiWallet,
+): WalletTypes.MultisigWalletMeta | undefined => {
+  return wallet.multisigMeta
+}

@@ -23,6 +23,7 @@ export const createWalletMeta = async (
   isReadOnly: boolean,
   hwDeviceInfo: Wallet.Meta['hwDeviceInfo'],
   version: number,
+  multisigMeta?: Wallet.MultisigWalletMeta,
 ): Promise<Wallet.Meta> => {
   const meta: Wallet.Meta = {
     version,
@@ -36,6 +37,7 @@ export const createWalletMeta = async (
     hwDeviceInfo,
     isHW,
     isEasyConfirmationEnabled,
+    ...(multisigMeta !== undefined && {multisigMeta}),
   }
 
   return meta

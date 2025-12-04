@@ -153,7 +153,7 @@ export interface LinksCardanoWalletV1 extends Links.WebCardanoUriConfig {
   readonly authority: 'wallet'
   readonly version: 'v1'
   readonly rules: {
-    readonly requiredParams: Readonly<['type']> // 'full' | 'readonly'
+    readonly requiredParams: Readonly<['type']> // 'full' | 'readonly' | 'multisig'
     readonly optionalParams: Readonly<
       [
         'mnemonic', // For full wallets: mnemonic phrase (space-separated)
@@ -164,6 +164,7 @@ export interface LinksCardanoWalletV1 extends Links.WebCardanoUriConfig {
         'implementation', // Wallet implementation hint
         'addressMode', // Address mode hint
         'accountVisual', // Account visual index
+        'multisigSetup', // For multisig wallets: base64-encoded multisig wallet setup JSON
       ]
     >
     readonly forbiddenParams: Readonly<[]>

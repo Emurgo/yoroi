@@ -204,6 +204,7 @@ export const configCardanoWalletV1: Readonly<LinksCardanoWalletV1> = freeze(
         'implementation',
         'addressMode',
         'accountVisual',
+        'multisigSetup', // Base64-encoded multisig wallet setup JSON
       ],
       forbiddenParams: [],
       extraParams: 'drop',

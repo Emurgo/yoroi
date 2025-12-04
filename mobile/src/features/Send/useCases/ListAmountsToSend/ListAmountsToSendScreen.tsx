@@ -1,10 +1,11 @@
 import {createSendTxFromWallet} from '@yoroi/cardano-wallet'
+import {createMultipartySendTxFromWallets} from '@yoroi/cardano-wallet/transaction-recipes/multiparty-wallet-helpers'
 import {isNft, isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import {NotEnoughMoneyToSendError, TransactionOutput} from '@yoroi/tx'
 import {Branded, Portfolio} from '@yoroi/types'
-import {useSelectedWallet} from '@yoroi/wallet-manager'
+import {useSelectedWallet, useWalletManager} from '@yoroi/wallet-manager'
 
 import * as CSL from '@emurgo/cross-csl-core'
 import {useNavigation} from '@react-navigation/native'
@@ -19,6 +20,7 @@ import {useSearch} from '~/features/Search/SearchContext'
 import {useNavigateTo} from '~/features/Send/common/navigation'
 import {toTransactionOutput} from '~/features/Send/common/toTransactionOutput'
 import {isInsufficientBalanceError} from '~/features/Staking/Governance/common/transactionErrorHandling'
+import {useSelectMultipleWalletsModal} from '~/features/WalletManager/ui/modals/SelectMultipleWalletsModal'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useResultNavigation} from '~/kernel/navigation/hooks/useResultNavigation'
@@ -29,6 +31,8 @@ import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {RemoveAmountButton} from '~/ui/RemoveAmountButton/RemoveAmountButton'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
+import {Space} from '~/ui/Space/Space'
+import {Text} from '~/ui/Text'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
 
 export const ListAmountsToSendScreen = () => {
@@ -38,7 +42,9 @@ export const ListAmountsToSendScreen = () => {
   const strings = useStrings()
   const {clearSearch} = useSearch()
   const navigation = useNavigation()
-  const {wallet} = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
+  const {walletManager} = useWalletManager()
+  const {openSelectMultipleWalletsModal} = useSelectMultipleWalletsModal()
   const {
     targets,
     selectedTargetIndex,
@@ -47,6 +53,11 @@ export const ListAmountsToSendScreen = () => {
     reset,
     allocated,
   } = useTransfer()
+
+  // Track selected input wallets for multiparty transactions
+  const [selectedInputWalletIds, setSelectedInputWalletIds] = React.useState<
+    ReadonlyArray<string>
+  >([wallet.id]) // Default to current wallet
 
   const selectedTarget = targets[selectedTargetIndex]
   const amounts = React.useMemo(() => {
@@ -127,10 +138,29 @@ export const ListAmountsToSendScreen = () => {
     navigateTo.addToken()
   }
 
+  const handleSelectInputWallets = React.useCallback(() => {
+    openSelectMultipleWalletsModal({
+      onSelect: (selectedIds) => {
+        setSelectedInputWalletIds(selectedIds)
+      },
+      selectedWalletIds: Array.from(selectedInputWalletIds),
+      excludeWalletIds: [],
+      minSelection: 1,
+      filter: (walletMeta) => {
+        // Only show wallets on the same network
+        return walletMeta.networkId === meta.networkId
+      },
+    })
+  }, [openSelectMultipleWalletsModal, selectedInputWalletIds, meta.networkId])
+
   const createUnsignedTxPromise = React.useCallback(
     async (entries: TransactionOutput[]) => {
       try {
+        const isMultiparty = selectedInputWalletIds.length > 1
+
         logger.info('ListAmountsToSendScreen: Creating transaction', {
+          isMultiparty,
+          inputWalletCount: selectedInputWalletIds.length,
           subtractFeeFromAmount: isSendingMaxAda,
           entriesCount: entries.length,
           addressMode,
@@ -138,30 +168,77 @@ export const ListAmountsToSendScreen = () => {
             entries[0]?.amounts[wallet.portfolioPrimaryTokenInfo.id] ??
             Branded.ZERO_QUANTITY,
         })
-        const result = await createSendTxFromWallet(wallet, {
-          entries,
-          addressMode,
-          // Subtract fee from amount when sending MAX ADA
-          subtractFeeFromAmount: isSendingMaxAda,
-        })
-        return result
+
+        if (isMultiparty) {
+          // Build multiparty transaction
+          if (!walletManager) {
+            throw new Error('WalletManager not available')
+          }
+
+          const result = await createMultipartySendTxFromWallets({
+            walletManager,
+            inputWalletIds: selectedInputWalletIds,
+            entries,
+            addressMode,
+            subtractFeeFromAmount: isSendingMaxAda,
+          })
+
+          // Return with multiparty metadata
+          return {
+            cbor: result.cbor,
+            multiparty: {
+              requiredSigners: result.requiredSigners,
+            },
+          }
+        } else {
+          // Single wallet - use standard transaction builder
+          const result = await createSendTxFromWallet(wallet, {
+            entries,
+            addressMode,
+            // Subtract fee from amount when sending MAX ADA
+            subtractFeeFromAmount: isSendingMaxAda,
+          })
+          return result
+        }
       } catch (error) {
-        logger.error('Send: createSendTxFromWallet failed', {
+        logger.error('Send: createTransaction failed', {
           error: error instanceof Error ? error.message : String(error),
           entriesCount: entries.length,
           addressMode,
           subtractFeeFromAmount: isSendingMaxAda,
+          isMultiparty: selectedInputWalletIds.length > 1,
         })
         throw error
       }
     },
-    [wallet, addressMode, isSendingMaxAda],
+    [
+      wallet,
+      walletManager,
+      addressMode,
+      isSendingMaxAda,
+      selectedInputWalletIds,
+    ],
   )
 
   const handleCreateUnsignedTxSuccess = React.useCallback(
-    (result: {cbor: string}) => {
+    (result: {
+      cbor: string
+      multiparty?: {
+        requiredSigners: ReadonlyArray<{
+          readonly walletId: string
+          readonly keyHash: string
+          readonly walletName: string
+        }>
+      }
+    }) => {
       navigateToTxReview({
         cbor: result.cbor,
+        multiparty: result.multiparty
+          ? {
+              requiredSigners: result.multiparty.requiredSigners,
+              inputWalletIds: selectedInputWalletIds,
+            }
+          : undefined,
         onSuccess: () => {
           // signedTx can be Transaction or a function, but handleOnSuccess expects Transaction | undefined
           // Since handleOnSuccess doesn't use the parameter, pass undefined
@@ -170,7 +247,7 @@ export const ListAmountsToSendScreen = () => {
         context: 'send',
       })
     },
-    [navigateToTxReview, handleOnSuccess],
+    [navigateToTxReview, handleOnSuccess, selectedInputWalletIds],
   )
 
   const handleCreateUnsignedTxError = React.useCallback(
@@ -236,6 +313,12 @@ export const ListAmountsToSendScreen = () => {
 
       <SafeArea.Footer style={[a.bg_transparent, a.gap_lg]}>
         <AddTokenButton onPress={handleOnAdd} />
+
+        {/* Multiparty wallet selection */}
+        <SelectInputWalletsButton
+          selectedCount={selectedInputWalletIds.length}
+          onPress={handleSelectInputWallets}
+        />
 
         <NextButton
           onPress={handleOnNext}
@@ -306,6 +389,50 @@ const ListAmountsNavigateBackButton = () => {
       }}
     >
       <Icon.Chevron direction="left" color={ta.el_gray_max.color} />
+    </TouchableOpacity>
+  )
+}
+
+const SelectInputWalletsButton = ({
+  selectedCount,
+  onPress,
+}: {
+  selectedCount: number
+  onPress: () => void
+}) => {
+  const strings = useStrings()
+  const {atoms: ta, palette: p} = useTheme()
+
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      style={[
+        a.flex_row,
+        a.align_center,
+        a.justify_between,
+        a.p_md,
+        a.rounded_sm,
+        a.border,
+        {borderColor: ta.gray_c200.color, backgroundColor: p.gray_c50},
+      ]}
+    >
+      <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+        <Icon.MultiParty size={20} color={p.primary_600} />
+        <Text style={[ta.body_1_lg_medium]}>
+          {strings.send.selectInputWallets || 'Select Input Wallets'}
+        </Text>
+      </View>
+      <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+        <Text style={[ta.body_2_md_regular, ta.text_gray_low]}>
+          {selectedCount === 1
+            ? strings.send.singleWallet || '1 wallet'
+            : strings.send.multipleWallets?.replace(
+                '{count}',
+                String(selectedCount),
+              ) || `${selectedCount} wallets`}
+        </Text>
+        <Icon.Chevron direction="right" color={ta.el_gray_max.color} />
+      </View>
     </TouchableOpacity>
   )
 }

@@ -1,11 +1,13 @@
-import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {
+  Amounts,
+  Quantities,
+  YoroiWallet,
+  asQuantity,
   formatDateRelative,
   formatTime,
   formatTokenFractional,
   formatTokenInteger,
 } from '@yoroi/cardano-wallet'
-import {Amounts, Quantities, asQuantity} from '@yoroi/cardano-wallet'
 import {isNonNullable} from '@yoroi/common'
 import {infoExtractName, isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
@@ -40,8 +42,11 @@ const TxListItemComponent = ({transaction}: Props) => {
   const strings = useStrings()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {palette: p} = useTheme()
-  const {wallet} = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
   const {tokenId} = useTxFilter()
+  const isMultisig =
+    meta.implementation === 'cardano-multisig' ||
+    meta.multisigMeta !== undefined
   const tokenInfo =
     wallet
       .balances()
@@ -222,6 +227,14 @@ const TxListItemComponent = ({transaction}: Props) => {
         >
           {submittedAt}
         </Text>
+        {isMultisig && (
+          <View style={[a.flex_row, a.align_center, a.gap_xs, {marginTop: 4}]}>
+            <Icon.MultiParty size={12} color={p.primary_600} />
+            <Text style={[a.body_3_sm_regular, {color: p.primary_600}]}>
+              Multisig
+            </Text>
+          </View>
+        )}
       </Middle>
 
       <Right>

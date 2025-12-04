@@ -30,6 +30,7 @@ import {
   Network,
   Portfolio,
   PublicKeyHex,
+  ScriptCbor,
   TransactionCborBase64,
   Wallet,
   WalletTransaction,
@@ -46,6 +47,10 @@ import {
   AccountManager,
   accountManagerMaker,
 } from './account-manager/account-manager'
+import {
+  MultisigAccountManager,
+  createMultisigAccountManager,
+} from './account-manager/multisig-account-manager'
 import {
   ReadOnlyAccountManager,
   readOnlyAccountManagerMaker,
@@ -186,6 +191,7 @@ export const makeCardanoWallet = (
     accountVisual,
     readOnlyAddresses,
     rewardAddressHex,
+    multisigMeta,
   }: {
     id: YoroiWallet['id']
     accountPubKeyHex?: string
@@ -198,6 +204,7 @@ export const makeCardanoWallet = (
       enableDiscovery?: boolean
     }
     rewardAddressHex?: string
+    multisigMeta?: Wallet.MultisigWalletMeta
   }) => {
     const {
       rootStorage: networkRootStorage,
@@ -213,10 +220,26 @@ export const makeCardanoWallet = (
     const accountStorage = walletRootStorage.join(`accounts/${accountVisual}/`)
 
     // Determine which manager to use
-    let accountManager: AccountManager | ReadOnlyAccountManager
+    let accountManager:
+      | AccountManager
+      | ReadOnlyAccountManager
+      | MultisigAccountManager
     let finalRewardAddressHex: string
 
-    if (readOnlyAddresses) {
+    // Handle multisig wallets (script-based)
+    if (multisigMeta) {
+      if (!multisigMeta.paymentScriptCbor || !multisigMeta.stakingScriptCbor) {
+        throw new Error('Multisig wallet missing script CBORs')
+      }
+
+      accountManager = createMultisigAccountManager({
+        paymentScriptCbor: multisigMeta.paymentScriptCbor as ScriptCbor,
+        stakingScriptCbor: multisigMeta.stakingScriptCbor as ScriptCbor,
+        chainId,
+      })
+
+      finalRewardAddressHex = accountManager.rewardAddressHex
+    } else if (readOnlyAddresses) {
       // Read-only mode
       if (
         !readOnlyAddresses.knownAddress &&
@@ -385,7 +408,7 @@ export const makeCardanoWallet = (
 
     const state: WalletState = {
       id,
-      publicKeyHex: accountPubKeyHex || '', // Empty for read-only wallets
+      publicKeyHex: accountPubKeyHex || '', // Empty for read-only and multisig wallets
       rewardAddressHex: finalRewardAddressHex,
       accountManager,
       utxoManager,
@@ -406,6 +429,7 @@ export const makeCardanoWallet = (
         toBalanceManagerSyncArgs,
         createCollateralEntry,
       },
+      ...(multisigMeta !== undefined && {multisigMeta}),
     }
 
     const wallet = createWalletObject(
@@ -453,21 +477,65 @@ function createWalletObject(
     state.transactionManager.subscribe(() =>
       notifyOnTxHistoryUpdate(walletInstance),
     )
-    state.accountManager.internalChain.addSubscriberToNewAddresses(() =>
-      notify({type: 'addresses', addresses: internalAddresses()}),
-    )
-    state.accountManager.externalChain.addSubscriberToNewAddresses(() =>
-      notify({type: 'addresses', addresses: externalAddresses()}),
-    )
+    // Only set up chain subscriptions for regular account managers
+    if ('internalChain' in state.accountManager) {
+      state.accountManager.internalChain.addSubscriberToNewAddresses(() =>
+        notify({type: 'addresses', addresses: internalAddresses()}),
+      )
+      state.accountManager.externalChain.addSubscriberToNewAddresses(() =>
+        notify({type: 'addresses', addresses: externalAddresses()}),
+      )
+    }
+    // Multisig wallets use fixed script addresses, so no need for address subscriptions
   }
 
   // account
-  const internalChain = () => state.accountManager.internalChain
-  const externalChain = () => state.accountManager.externalChain
-  const addressesInBlocks = () =>
-    state.accountManager.getAddressesInBlocks(state.rewardAddressHex)
+  const internalChain = () => {
+    // Multisig account manager doesn't have chains, return a mock chain
+    if ('internalChain' in state.accountManager) {
+      return state.accountManager.internalChain
+    }
+    // For multisig wallets, return a mock chain that provides addresses
+    return {
+      addresses: state.accountManager.internalAddresses(),
+      info: {
+        lastUsedIndex: 0,
+        lastUsedIndexVisual: 0,
+        canIncrease: false,
+      },
+      addSubscriberToNewAddresses: () => {},
+    } as AccountManager['internalChain']
+  }
+  const externalChain = () => {
+    // Multisig account manager doesn't have chains, return a mock chain
+    if ('externalChain' in state.accountManager) {
+      return state.accountManager.externalChain
+    }
+    // For multisig wallets, return a mock chain that provides addresses
+    return {
+      addresses: state.accountManager.externalAddresses(),
+      info: {
+        lastUsedIndex: 0,
+        lastUsedIndexVisual: 0,
+        canIncrease: false,
+      },
+      addSubscriberToNewAddresses: () => {},
+    } as AccountManager['externalChain']
+  }
+  const addressesInBlocks = () => {
+    if ('getAddressesInBlocks' in state.accountManager) {
+      return state.accountManager.getAddressesInBlocks(state.rewardAddressHex)
+    }
+    // For multisig wallets, return empty array (addresses don't change)
+    return []
+  }
 
   const getChangeAddress = (addressMode: Wallet.AddressMode): string => {
+    // Multisig wallets use script addresses - return the base address
+    if ('getChangeAddress' in state.accountManager) {
+      return state.accountManager.getChangeAddress()
+    }
+    // For regular wallets, use the existing logic
     return getChangeAddressOp(
       {
         externalChain: externalChain(),
@@ -480,11 +548,16 @@ function createWalletObject(
 
   // -- account -- legacy
   const generateNewReceiveAddress = () => {
+    // Multisig wallets use fixed script addresses
+    if ('generateNewReceiveAddress' in state.accountManager) {
+      return state.accountManager.generateNewReceiveAddress()
+    }
+    // For regular wallets, use the existing logic
     return generateNewReceiveAddressOp({
       publicKeyHex: state.publicKeyHex,
       externalChain: externalChain(),
       receiveAddressInfo: receiveAddressInfo,
-      accountManager: state.accountManager,
+      accountManager: state.accountManager as AccountManager,
       notify: (event) => notify(event),
       receiveAddresses: receiveAddresses,
     })
@@ -508,6 +581,10 @@ function createWalletObject(
   }
 
   const receiveAddresses = (): Address[] => {
+    // Multisig wallets have their own receiveAddresses method
+    if ('receiveAddresses' in state.accountManager) {
+      return state.accountManager.receiveAddresses()
+    }
     return externalAddresses()
   }
 
@@ -652,7 +729,10 @@ function createWalletObject(
     }
 
     const walletContext = getWalletContext()
-    await state.accountManager.discoverAddresses(walletContext)
+    // Multisig account managers don't need address discovery (fixed script addresses)
+    if ('discoverAddresses' in state.accountManager) {
+      await state.accountManager.discoverAddresses(walletContext)
+    }
 
     await Promise.all([
       syncUtxos({isForced}),
@@ -686,7 +766,10 @@ function createWalletObject(
     }
 
     const walletContext = getWalletContext()
-    await state.accountManager.discoverAddresses(walletContext)
+    // Multisig account managers don't need address discovery (fixed script addresses)
+    if ('discoverAddresses' in state.accountManager) {
+      await state.accountManager.discoverAddresses(walletContext)
+    }
 
     await Promise.all([
       syncUtxos({isForced}),
@@ -714,6 +797,27 @@ function createWalletObject(
   }
 
   const getAddressedUtxos = (): ModernUtxo[] => {
+    // For multisig wallets, we need to use script addresses for addressing
+    // Multisig wallets don't have traditional addressing paths
+    if (state.multisigMeta) {
+      // Multisig wallets use script addresses - all UTXOs belong to the base address
+      const baseAddress =
+        'baseAddress' in state.accountManager
+          ? state.accountManager.baseAddress
+          : (externalAddresses()[0] ?? internalAddresses()[0])
+      if (!baseAddress) {
+        return []
+      }
+      return utxos().map((utxo) => ({
+        ...utxo,
+        receiver: baseAddress,
+        addressing: {
+          path: [],
+          startLevel: 0,
+        },
+      }))
+    }
+    // Regular wallets use the existing logic
     return getAddressedUtxosOp(
       utxos(),
       {
@@ -872,6 +976,7 @@ function createWalletObject(
               senderUtxos: ledgerUnsignedTx.senderUtxos,
               txBuilder: ledgerUnsignedTx.txBuilder,
               auxiliaryData: ledgerUnsignedTx.auxiliaryData,
+              originalTxCbor: unsignedTx.cbor, // Preserve native scripts for multisig
             },
             signedLedgerTx,
             implementationConfig.derivations.base.harden.purpose,
@@ -952,6 +1057,7 @@ function createWalletObject(
           senderUtxos: ledgerUnsignedTx.senderUtxos,
           txBuilder: ledgerUnsignedTx.txBuilder,
           auxiliaryData: ledgerUnsignedTx.auxiliaryData,
+          originalTxCbor: unsignedTx.cbor, // Preserve native scripts for multisig
         },
         signedLedgerTx,
         implementationConfig.derivations.base.harden.purpose,
@@ -1161,10 +1267,18 @@ function createWalletObject(
 
   // =================== getters =================== //
   const internalAddresses = (): Address[] => {
+    // Multisig account manager has its own internalAddresses method
+    if ('internalAddresses' in state.accountManager) {
+      return state.accountManager.internalAddresses()
+    }
     return internalChain().addresses
   }
 
   const externalAddresses = (): Address[] => {
+    // Multisig account manager has its own externalAddresses method
+    if ('externalAddresses' in state.accountManager) {
+      return state.accountManager.externalAddresses()
+    }
     return externalChain().addresses
   }
 

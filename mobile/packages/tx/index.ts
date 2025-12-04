@@ -63,6 +63,9 @@ export {
   setRequiredSigners,
 } from './transaction-builder/multiparty'
 
+// Export multiparty transaction building and signing
+export * from './multiparty'
+
 export {createUtxoService, init as initUtxo} from './utxo'
 
 // Export types

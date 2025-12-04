@@ -1,10 +1,12 @@
 import {isByron, isShelley} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
-import {useSelectedNetwork} from '@yoroi/wallet-manager'
-import {useSyncWalletInfo} from '@yoroi/wallet-manager'
-import {useWalletManagerSelector} from '@yoroi/wallet-manager'
-import {useAutomaticWalletOpener} from '@yoroi/wallet-manager'
+import {
+  useAutomaticWalletOpener,
+  useSelectedNetwork,
+  useSyncWalletInfo,
+  useWalletManagerSelector,
+} from '@yoroi/wallet-manager'
 
 import {useFocusEffect} from '@react-navigation/native'
 import * as React from 'react'
@@ -176,6 +178,31 @@ export const WalletListItem = ({
             </Text>
           </View>
 
+          {walletMeta.multisigMeta && (
+            <>
+              <View
+                style={[
+                  a.px_xs,
+                  a.py_xs,
+                  {backgroundColor: p.primary_100},
+                  a.rounded_xs,
+                ]}
+              >
+                <Text style={[a.body_2_md_medium, {color: p.primary_600}]}>
+                  {walletMeta.multisigMeta.coSigners.length}-of-
+                  {walletMeta.multisigMeta.quorumRules.kind === 'RequireNOf'
+                    ? walletMeta.multisigMeta.quorumRules.required ||
+                      walletMeta.multisigMeta.coSigners.length
+                    : walletMeta.multisigMeta.quorumRules.kind ===
+                        'RequireAllOf'
+                      ? walletMeta.multisigMeta.coSigners.length
+                      : 1}
+                </Text>
+              </View>
+              <Space.Width.md />
+            </>
+          )}
+
           {walletMeta.isReadOnly && (
             <>
               <Icon.EyeOn size={24} color={p.el_gray_min} />
@@ -221,6 +248,7 @@ const Chevron = ({pressed}: {pressed: boolean}) => {
 }
 
 const getImplementationName = (walletMeta: Wallet.Meta) => {
+  if (walletMeta.implementation === 'cardano-multisig') return 'Multisig'
   if (isByron(walletMeta.implementation)) return 'Byron'
   if (isShelley(walletMeta.implementation)) return 'Shelley'
   return 'Unknown'

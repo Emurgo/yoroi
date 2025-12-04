@@ -1,22 +1,23 @@
-import {formatDateRelative, formatTime} from '@yoroi/cardano-wallet'
-import {isArray, isString} from '@yoroi/common'
-import {atoms as a, useTheme} from '@yoroi/theme'
-import {App} from '@yoroi/types'
-import {useSelectedWallet} from '@yoroi/wallet-manager'
+import { formatDateRelative, formatTime, getMultisigMeta } from '@yoroi/cardano-wallet'
+import { isArray, isString } from '@yoroi/common'
+import { atoms as a, useTheme } from '@yoroi/theme'
+import { App } from '@yoroi/types'
+import { useSelectedWallet } from '@yoroi/wallet-manager'
 
-import {useRoute} from '@react-navigation/native'
+import { useRoute } from '@react-navigation/native'
 import * as React from 'react'
-import {useIntl} from 'react-intl'
-import {Linking, Text, View} from 'react-native'
+import { useIntl } from 'react-intl'
+import { Linking, Text, View } from 'react-native'
 
-import {useFormattedTxFromWalletTransaction} from '~/features/ReviewTx/common/hooks/useFormattedTxFromWalletTransaction'
-import {FormattedMetadata} from '~/features/ReviewTx/common/types'
-import {ReviewTx} from '~/features/ReviewTx/useCases/ReviewTxScreen/ReviewTx/ReviewTx'
-import {useStrings} from '~/kernel/i18n/useStrings'
-import {Button} from '~/ui/Button/Button'
-import {Copiable} from '~/ui/Copiable/Copiable'
-import {SafeArea} from '~/ui/SafeArea/SafeArea'
-import {Space} from '~/ui/Space/Space'
+import { useFormattedTxFromWalletTransaction } from '~/features/ReviewTx/common/hooks/useFormattedTxFromWalletTransaction'
+import { FormattedMetadata } from '~/features/ReviewTx/common/types'
+import { ReviewTx } from '~/features/ReviewTx/useCases/ReviewTxScreen/ReviewTx/ReviewTx'
+import { useStrings } from '~/kernel/i18n/useStrings'
+import { Button } from '~/ui/Button/Button'
+import { Copiable } from '~/ui/Copiable/Copiable'
+import { Icon } from '~/ui/Icon'
+import { SafeArea } from '~/ui/SafeArea/SafeArea'
+import { Space } from '~/ui/Space/Space'
 
 export const TxDetails = () => {
   const strings = useStrings()
@@ -26,13 +27,16 @@ export const TxDetails = () => {
   const params = route.params as Params | undefined
   const id = params?.id
 
-  const {wallet} = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
 
   if (!id) {
     throw new App.Errors.InvalidState('Transaction ID is required')
   }
 
   const explorers = wallet.networkManager.explorers
+  const {meta} = useSelectedWallet()
+  const isMultisig = meta.implementation === 'cardano-multisig' || meta.multisigMeta !== undefined
+  const multisigMeta = getMultisigMeta(wallet)
 
   // Get raw WalletTransaction
   const walletTransaction = React.useMemo(() => {
@@ -115,6 +119,42 @@ export const TxDetails = () => {
     throw error
   }
 
+  // For multisig transactions, we can show co-signer info
+  // Note: To check actual signing status, we'd need transaction CBOR from blockchain
+  const [quorumInfo, setQuorumInfo] = React.useState<{
+    totalCoSigners: number
+    requiredCoSigners: number
+    quorumDescription: string
+  } | null>(null)
+
+  React.useEffect(() => {
+    if (isMultisig && multisigMeta) {
+      let requiredCoSigners: number
+      if (multisigMeta.quorumRules.kind === 'RequireNOf') {
+        requiredCoSigners = multisigMeta.quorumRules.required || multisigMeta.coSigners.length
+      } else if (multisigMeta.quorumRules.kind === 'RequireAllOf') {
+        requiredCoSigners = multisigMeta.coSigners.length
+      } else {
+        requiredCoSigners = 1
+      }
+
+      let quorumDescription: string
+      if (multisigMeta.quorumRules.kind === 'RequireAllOf') {
+        quorumDescription = `All ${multisigMeta.coSigners.length} co-signers must sign`
+      } else if (multisigMeta.quorumRules.kind === 'RequireAnyOf') {
+        quorumDescription = 'Any co-signer can sign'
+      } else {
+        quorumDescription = `${requiredCoSigners} of ${multisigMeta.coSigners.length} co-signers must sign`
+      }
+
+      setQuorumInfo({
+        totalCoSigners: multisigMeta.coSigners.length,
+        requiredCoSigners,
+        quorumDescription,
+      })
+    }
+  }, [isMultisig, multisigMeta])
+
   return (
     <SafeArea>
       <ReviewTx
@@ -124,6 +164,23 @@ export const TxDetails = () => {
       />
       <SafeArea.Footer>
         <View style={[a.flex_col, a.gap_sm]}>
+          {isMultisig && multisigMeta && quorumInfo && (
+            <View style={[a.p_md, {backgroundColor: p.primary_50}, a.rounded_sm]}>
+              <View style={[a.flex_row, a.align_center, a.gap_sm, a.mb_sm]}>
+                <Icon.MultiParty size={20} color={p.primary_600} />
+                <Text style={[a.body_1_lg_medium, {color: p.primary_900}]}>
+                  Multisig Transaction
+                </Text>
+              </View>
+              <Text style={[a.body_2_md_regular, {color: p.text_gray_medium}]}>
+                {quorumInfo.quorumDescription}
+              </Text>
+              <Space.Height.xs />
+              <Text style={[a.body_2_md_regular, {color: p.text_gray_medium}]}>
+                Co-signers: {multisigMeta.coSigners.map(c => c.name).join(', ')}
+              </Text>
+            </View>
+          )}
           {memo && (
             <View style={[a.flex_col, a.gap_xs]}>
               <Text style={[a.body_2_md_regular, {color: p.text_gray_low}]}>

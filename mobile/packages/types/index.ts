@@ -318,7 +318,14 @@ import {
   TxMetadataInfo,
   WalletTransaction,
 } from './wallet/transactions'
-import {WalletAddressMode, WalletImplementation} from './wallet/wallet'
+import {
+  WalletAddressMode,
+  WalletImplementation,
+  QuorumRuleKind,
+  QuorumRules,
+  CoSigner,
+  MultisigWalletMeta,
+} from './wallet/wallet'
 
 // Type aliases to reference imported transaction types (avoid circular references in namespace)
 type ImportedTransactionAssurance = TransactionAssurance
@@ -554,6 +561,7 @@ export type {
   PrivateKeyBech32,
   PrivateKeyHex,
   PublicKeyHex,
+  Bip32PublicKeyHex,
   ScriptCbor,
   ScriptHash,
   Sha256Hash,
@@ -958,6 +966,10 @@ export namespace Wallet {
   export type Implementation = WalletImplementation
   export type AddressMode = WalletAddressMode
   export type Meta = WalletMeta
+  export type QuorumRuleKind = QuorumRuleKind
+  export type QuorumRules = QuorumRules
+  export type CoSigner = CoSigner
+  export type MultisigWalletMeta = MultisigWalletMeta
 
   // Transaction types - use imported types directly to avoid circular references
   export const TransactionStatus = TRANSACTION_STATUS

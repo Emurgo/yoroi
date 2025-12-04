@@ -59,6 +59,11 @@ export const ChooseSetupTypeScreen = () => {
     navigation.navigate('setup-wallet-restore-read-only-choose-type')
   }
 
+  const handleMultisig = () => {
+    walletImplementationChanged('cardano-multisig')
+    navigation.navigate('setup-wallet-multisig-create')
+  }
+
   return (
     <SafeArea>
       <Space.Height.lg />
@@ -95,6 +100,18 @@ export const ChooseSetupTypeScreen = () => {
             icon={<HardwareWallet style={[a.absolute, {right: 0}]} />}
             onPress={handleHw}
             testID="setup-connect-HW-wallet-button"
+          />
+
+          <Space.Height.lg />
+
+          <ButtonCard
+            title={
+              strings.setupWallet.createMultisigWalletButtonCard ||
+              'Create Multisig Wallet'
+            }
+            icon={<RestoreWallet style={[a.absolute, {right: 0}]} />}
+            onPress={handleMultisig}
+            testID="setup-create-multisig-wallet-button"
           />
 
           {isAuthDev && (

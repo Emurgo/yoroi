@@ -9,6 +9,7 @@ import {ReviewTxRoutes} from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {ResultScreen} from '~/ui/ResultScreen/ResultScreen'
 
+import {CoSignTransactionScreen} from './useCases/CoSignTransactionScreen/CoSignTransactionScreen'
 import {ReviewTxScreen} from './useCases/ReviewTxScreen/ReviewTxScreen'
 import {InfraestructureIssueScreen} from './useCases/ShowInfraestructureIssueScreen/InfraestructureIssueScreen'
 
@@ -30,6 +31,14 @@ export const ReviewTxNavigator = () => {
           title: strings.txReview.title,
         }}
         getComponent={() => ReviewTxScreenWrapper}
+      />
+
+      <Stack.Screen
+        name="cosign-transaction"
+        options={{
+          title: 'Co-Sign Transaction',
+        }}
+        getComponent={() => CoSignTransactionScreen}
       />
 
       <Stack.Screen

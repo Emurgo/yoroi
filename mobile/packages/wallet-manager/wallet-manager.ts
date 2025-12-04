@@ -33,6 +33,7 @@ import {
   WalletManagerSubscription,
 } from './common/types'
 import {isWalletMeta, parseWalletMeta} from './common/validators/wallet-meta'
+import {createMultisigWallet} from './creation/create-multisig-wallet'
 import {
   createWalletFromMnemonic,
   createWalletFromRootKey,
@@ -134,6 +135,18 @@ export type WalletManager = {
     implementation: Wallet.Implementation
     addressMode: Wallet.AddressMode
     accountVisual: number
+  }): Promise<Wallet.Meta>
+  createMultisigWallet(params: {
+    name: string
+    coSigners: ReadonlyArray<Wallet.CoSigner>
+    quorumRules: Wallet.QuorumRules
+    parentWalletIds: ReadonlyArray<string>
+    parentWalletRootKeys: ReadonlyArray<{
+      walletId: string
+      rootKeyHex: string
+      accountVisual: number
+      implementation: Wallet.Implementation
+    }>
   }): Promise<Wallet.Meta>
   getNetworkManager(network: Chain.SupportedNetworks): Network.Manager
   getTokenManager(network: Chain.SupportedNetworks): Portfolio.Manager.Token
@@ -337,6 +350,31 @@ export const makeWalletManager = (
     const walletFactory = getWalletFactory({network, implementation})
     const meta = stateSubjects.walletMetas.value.get(id)
     const isReadOnly = meta?.isReadOnly ?? false
+    const isMultisig =
+      implementation === 'cardano-multisig' || meta?.multisigMeta !== undefined
+
+    // Handle multisig wallets (script-based)
+    if (isMultisig) {
+      if (!meta?.multisigMeta) {
+        throw new Error(`Multisig wallet ${id} missing multisigMeta`)
+      }
+
+      getLogger().debug('WalletManager: loadWallet loading multisig wallet', {
+        id,
+        accountVisual,
+        implementation,
+        isForced,
+      })
+
+      // Build multisig wallet using the factory
+      const wallet = await walletFactory.build({
+        id,
+        accountVisual,
+        multisigMeta: meta.multisigMeta,
+      })
+
+      return wallet
+    }
 
     getLogger().debug('WalletManager: loadWallet loading wallet', {
       id,
@@ -1395,6 +1433,75 @@ export const makeWalletManager = (
           syncManager.updateWallets(Array.from(wallets.values()))
         }
       }
+      return meta
+    },
+
+    async createMultisigWallet({
+      name,
+      coSigners,
+      quorumRules,
+      parentWalletIds,
+      parentWalletRootKeys,
+    }: {
+      name: string
+      coSigners: ReadonlyArray<Wallet.CoSigner>
+      quorumRules: Wallet.QuorumRules
+      parentWalletIds: ReadonlyArray<string>
+      parentWalletRootKeys: ReadonlyArray<{
+        walletId: string
+        rootKeyHex: string
+        accountVisual: number
+        implementation: Wallet.Implementation
+      }>
+    }) {
+      const {meta} = await createMultisigWallet(
+        {
+          name,
+          coSigners,
+          quorumRules,
+          parentWalletIds,
+          parentWalletRootKeys,
+          network: stateSubjects.selectedNetwork.value,
+          version: WALLET_MANAGER_VERSION,
+        },
+        cardanoWalletDependencies.makeWalletEncryptedStorage,
+      )
+
+      await walletsRootStorage.setItem(meta.id, meta)
+
+      // Hydrate to load the new wallet (same pattern as createWalletMnemonic)
+      const deletedWalletIds = await parseDeletedWalletIds(
+        await rootStorage.getItem('deletedWalletIds'),
+      )
+      const walletIds = await walletsRootStorage
+        .getAllKeys()
+        .then((ids) => ids.filter((id) => !deletedWalletIds.includes(id)))
+      const walletMetas = await walletsRootStorage
+        .multiGet(walletIds, parseWalletMeta)
+        .then((tuples) => tuples.map(([_, walletMeta]) => walletMeta))
+        .then((walletMetas) => walletMetas.filter(isWalletMeta))
+
+      const allMetas = new Map(stateSubjects.walletMetas.value)
+      for (const m of walletMetas) {
+        if (!allMetas.has(m.id)) {
+          allMetas.set(m.id, m)
+        }
+      }
+      if (allMetas.size !== stateSubjects.walletMetas.value.size) {
+        updateWalletMetas(stateSubjects, freeze(allMetas))
+      }
+
+      const metasToLoad = walletMetas.filter((m) => !wallets.has(m.id))
+      if (metasToLoad.length > 0) {
+        const loadedWallets = await loadWalletsSafely(metasToLoad, {
+          network: stateSubjects.selectedNetwork.value,
+        })
+        for (const wallet of loadedWallets) wallets.set(wallet.id, wallet)
+        if (syncManager) {
+          syncManager.updateWallets(Array.from(wallets.values()))
+        }
+      }
+
       return meta
     },
 

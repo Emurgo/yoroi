@@ -85,6 +85,7 @@ export async function buildLedgerSignedTx(
       paymentAddress: Address | string
       nonce: number
     }
+    originalTxCbor?: string // Optional: original transaction CBOR to preserve native scripts
   },
   signedLedgerTx: SignTransactionResponse,
   purpose: number,
@@ -272,11 +273,26 @@ export async function buildLedgerSignedTx(
 
   if (plutusDataWits.len() > 0) witSet.setPlutusData(plutusDataWits)
 
-  // Note: Script witnesses (native scripts or Plutus script witnesses) are not provided by Ledger
-  // and would need to be constructed separately if required. For most transactions, script witnesses
-  // are not needed as native scripts can be validated without witnesses, and Plutus script execution
-  // is handled separately. If script witnesses are needed in the future, they should be added to
-  // witSet using witSet.setNativeScripts() or witSet.setPlutusScripts().
+  // Preserve native scripts from original transaction (needed for multisig transactions)
+  // Native scripts are not provided by Ledger but must be preserved in the witness set
+  // Try to extract from original transaction if available
+  if ('originalTxCbor' in unsignedTx && unsignedTx.originalTxCbor) {
+    try {
+      const originalTx = csl.Transaction.fromHex(unsignedTx.originalTxCbor)
+      if (originalTx) {
+        const originalWitnessSet = originalTx.witnessSet()
+        if (originalWitnessSet) {
+          const originalNativeScripts = originalWitnessSet.nativeScripts()
+          if (originalNativeScripts && originalNativeScripts.len() > 0) {
+            witSet.setNativeScripts(originalNativeScripts)
+          }
+        }
+      }
+    } catch {
+      // Ignore if extraction fails - native scripts may not be present
+    }
+  }
+
   const txBody = unsignedTx.txBuilder.build()
   const signedTx = csl.Transaction.new(txBody, witSet, auxData)
   const encodedTx = signedTx.toBytes()
@@ -311,6 +327,16 @@ export async function createSignedLedgerTxFromCbor(
     const fixedTx = csl.FixedTransaction.fromHex(cbor)
     if (!fixedTx) throw new Error('invalid tx hex')
 
+    // Extract native scripts from original transaction (needed for multisig)
+    const originalTx = csl.Transaction.fromHex(cbor)
+    let nativeScripts: CSL.NativeScripts | null = null
+    if (originalTx) {
+      const originalWitnessSet = originalTx.witnessSet()
+      if (originalWitnessSet) {
+        nativeScripts = originalWitnessSet.nativeScripts()
+      }
+    }
+
     const addressing: Addressing = {
       path: [
         purpose,
@@ -342,7 +368,57 @@ export async function createSignedLedgerTxFromCbor(
       fixedTx.addVkeyWitness(witness)
     }
 
-    const txHashHex = fixedTx.transactionHash().toHex()
+    // Preserve native scripts in the signed transaction (for multisig)
+    // FixedTransaction doesn't expose witnessSet() directly, so we need to reconstruct
+    // the transaction with native scripts preserved
+    let finalTxBytes: Uint8Array
+    if (nativeScripts && nativeScripts.len() > 0) {
+      // Reconstruct transaction with native scripts
+      const tx = csl.Transaction.fromHex(cbor)
+      if (tx) {
+        const txBody = tx.body()
+        const auxData = tx.auxiliaryData()
+
+        // Get witness set from FixedTransaction (after adding vkey witnesses)
+        const tempBytes = fixedTx.toBytes()
+        const tempTx = csl.Transaction.fromBytes(tempBytes)
+        const tempWitnessSet = tempTx?.witnessSet()
+
+        // Create new witness set with native scripts
+        const finalWitnessSet = csl.TransactionWitnessSet.new()
+        if (tempWitnessSet) {
+          // Copy vkey witnesses
+          const vkeys = tempWitnessSet.vkeys()
+          if (vkeys) {
+            finalWitnessSet.setVkeys(vkeys)
+          }
+          // Copy bootstrap witnesses
+          const bootstraps = tempWitnessSet.bootstraps()
+          if (bootstraps) {
+            finalWitnessSet.setBootstraps(bootstraps)
+          }
+          // Copy plutus data if any
+          const plutusData = tempWitnessSet.plutusData()
+          if (plutusData) {
+            finalWitnessSet.setPlutusData(plutusData)
+          }
+        }
+        // Add native scripts
+        finalWitnessSet.setNativeScripts(nativeScripts)
+
+        // Create final transaction
+        const finalTx = csl.Transaction.new(txBody, finalWitnessSet, auxData)
+        finalTxBytes = finalTx.toBytes()
+      } else {
+        finalTxBytes = fixedTx.toBytes()
+      }
+    } else {
+      finalTxBytes = fixedTx.toBytes()
+    }
+
+    // Verify transaction hash matches Ledger's hash
+    const finalTx = csl.Transaction.fromBytes(finalTxBytes)
+    const txHashHex = finalTx.transactionHash().toHex()
 
     if (txHashHex !== signedData.txHashHex) {
       throw new Error(
@@ -350,7 +426,7 @@ export async function createSignedLedgerTxFromCbor(
       )
     }
 
-    return fixedTx.toBytes()
+    return finalTxBytes
   })
 }
 

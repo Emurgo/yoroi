@@ -1,4 +1,4 @@
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
+import {CardanoMobileWrapped, isMultisigWallet} from '@yoroi/cardano-wallet'
 import {validateTransactionCbor} from '@yoroi/tx'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
@@ -18,10 +18,11 @@ import {
   TransactionBody,
 } from '~/features/ReviewTx/common/types'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
-import {ReviewTxRoutes} from '~/kernel/navigation/types'
-import {ReviewContext} from '~/kernel/navigation/types'
+import {ReviewContext, ReviewTxRoutes} from '~/kernel/navigation/types'
 import {OperationContext} from '~/ui/ResultScreen/types'
 
+import {MultipartyTransactionReviewScreen} from '../MultipartyTransactionReviewScreen/MultipartyTransactionReviewScreen'
+import {MultisigTransactionReviewScreen} from '../MultisigTransactionReviewScreen/MultisigTransactionReviewScreen'
 import {ReviewTx} from './ReviewTx/ReviewTx'
 
 const mapReviewContextToOperationContext = (
@@ -141,6 +142,17 @@ const ReviewTxContent = ({
 export const ReviewTxScreen = () => {
   const params = useUnsafeParams<NonNullable<ReviewTxRoutes['review-tx']>>()
   const {trackEvent} = useAnalyticsTracking()
+  const {wallet} = useSelectedWallet()
+
+  // Check if this is a multisig wallet - if so, use multisig review screen
+  if (isMultisigWallet(wallet)) {
+    return <MultisigTransactionReviewScreen />
+  }
+
+  // Check if this is a multiparty transaction - if so, use multiparty review screen
+  if (params?.multiparty) {
+    return <MultipartyTransactionReviewScreen />
+  }
 
   const txBody = useTxBody({cbor: params?.cbor})
   const {formattedTx, isLoading, areTokenInfosLoaded} = useFormattedTx(
