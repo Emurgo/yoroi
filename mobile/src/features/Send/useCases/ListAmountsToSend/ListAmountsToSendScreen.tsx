@@ -43,8 +43,7 @@ export const ListAmountsToSendScreen = () => {
   const strings = useStrings()
   const {clearSearch} = useSearch()
   const navigation = useNavigation()
-  const {wallet, meta} = useSelectedWallet()
-  const {palette: p} = useTheme()
+  const {wallet} = useSelectedWallet()
   const {walletManager} = useWalletManager()
   const {openSelectMultipleWalletsModal} = useSelectMultipleWalletsModal()
   const {

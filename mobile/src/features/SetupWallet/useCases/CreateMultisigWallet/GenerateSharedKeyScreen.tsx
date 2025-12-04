@@ -203,7 +203,7 @@ export const GenerateSharedKeyScreen = () => {
           )}
 
           {isGenerating && (
-            <View style={[a.items_center, a.justify_center, a.py_lg]}>
+            <View style={[a.align_center, a.justify_center, a.py_lg]}>
               <ActivityIndicator size="large" />
             </View>
           )}

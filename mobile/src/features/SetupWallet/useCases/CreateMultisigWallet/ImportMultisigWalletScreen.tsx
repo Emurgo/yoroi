@@ -55,7 +55,7 @@ export const ImportMultisigWalletScreen = () => {
 
   // Get current wallet to check if it matches any co-signer
   const currentWallet = React.useMemo(() => {
-    const selectedWalletId = walletManager.selectedWalletId
+    const selectedWalletId = walletManager.selectedWalledId
     if (!selectedWalletId) return null
     return walletManager.getWalletById(selectedWalletId) || null
   }, [walletManager])
@@ -89,7 +89,8 @@ export const ImportMultisigWalletScreen = () => {
       // Try to use expo-document-picker if available
       // Otherwise fall back to manual JSON input
       try {
-        const DocumentPicker = await import('expo-document-picker')
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        const DocumentPicker = require('expo-document-picker')
         const result = await DocumentPicker.getDocumentAsync({
           type: ['application/json', 'text/json', '*.json'],
           copyToCacheDirectory: true,
