@@ -20,7 +20,6 @@ import {TextInput} from '~/ui/TextInput/TextInput'
 
 type RouteParams = {
   parentWalletId: string
-  parentWalletRootKey?: string
   sharedWalletKey: Wallet.Bip32PublicKeyHex
   parentWalletImplementation: Wallet.Implementation
   accountVisual: number
@@ -120,18 +119,12 @@ export const AddCoSignersScreen = () => {
 
   return (
     <SafeArea>
-      <Space.Height.lg />
-
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={[a.px_lg, a.pb_lg]}
       >
         <View style={[a.gap_md]}>
-          <Text style={[a.heading_1_medium]}>
-            {strings.setupWallet.addCoSignersTitle}
-          </Text>
-
-          <Space.Height.md />
+          <Space.Height.lg />
 
           <Text style={[a.body_1_lg_regular]}>
             {strings.setupWallet.addCoSignersDescription}
@@ -224,17 +217,17 @@ export const AddCoSignersScreen = () => {
               </Text>
             </>
           )}
-
-          <Space.Height.lg />
-
-          <Button
-            title={strings.global.proceed}
-            onPress={handleContinue}
-            disabled={coSigners.length < 2}
-            testID="continue-after-add-cosigners-button"
-          />
         </View>
       </ScrollView>
+
+      <SafeArea.Footer>
+        <Button
+          title={strings.global.proceed}
+          onPress={handleContinue}
+          disabled={coSigners.length < 2}
+          testID="continue-after-add-cosigners-button"
+        />
+      </SafeArea.Footer>
     </SafeArea>
   )
 }

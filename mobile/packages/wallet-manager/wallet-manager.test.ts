@@ -134,6 +134,27 @@ describe('walletManager', () => {
                 walletStorage.delete(`xpub-${accountVisual}`)
               }),
           },
+          multisigSharedKey: {
+            read: jest
+              .fn()
+              .mockImplementation(async (accountVisual: number) => {
+                const key = `multisig-${accountVisual}`
+                const value = walletStorage.get(key)
+                return value ?? null
+              }),
+            write: jest
+              .fn()
+              .mockImplementation(
+                async (accountVisual: number, value: string) => {
+                  walletStorage.set(`multisig-${accountVisual}`, value)
+                },
+              ),
+            remove: jest
+              .fn()
+              .mockImplementation(async (accountVisual: number) => {
+                walletStorage.delete(`multisig-${accountVisual}`)
+              }),
+          },
           clear: jest.fn().mockImplementation(async () => {
             walletStorage.clear()
           }),

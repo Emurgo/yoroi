@@ -61,6 +61,20 @@ export const makeWalletEncryptedStorage = (id: string) => {
       remove: (accountVisual: number) =>
         xPubStorage.removeItem(accountVisual.toString()),
     },
+    multisigSharedKey: {
+      read: (accountVisual: number) =>
+        xPubStorage.getItem(
+          `multisig-${accountVisual.toString()}`,
+          parseString,
+        ),
+      write: (accountVisual: number, sharedKeyHex: string) =>
+        xPubStorage.setItem(
+          `multisig-${accountVisual.toString()}`,
+          sharedKeyHex,
+        ),
+      remove: (accountVisual: number) =>
+        xPubStorage.removeItem(`multisig-${accountVisual.toString()}`),
+    },
     clear: async () => {
       await Promise.all([
         keyStorage.removeFolder(`${id}/`),

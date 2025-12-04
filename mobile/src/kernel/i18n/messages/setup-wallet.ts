@@ -775,4 +775,71 @@ export const setupWalletMessages = defineMessages({
     id: 'setupWallet.selectMultisigWallet',
     defaultMessage: '!!!Please select a multisig wallet.',
   },
+  sharedKeyCopied: {
+    id: 'setupWallet.sharedKeyCopied',
+    defaultMessage: '!!!Shared key copied',
+  },
+  failedToGenerateSharedKey: {
+    id: 'setupWallet.failedToGenerateSharedKey',
+    defaultMessage: '!!!Failed to generate shared key',
+  },
+  parentWalletNotSelected: {
+    id: 'setupWallet.parentWalletNotSelected',
+    defaultMessage: '!!!Parent wallet not selected',
+  },
+  passwordRequiredForOlderWallets: {
+    id: 'setupWallet.passwordRequiredForOlderWallets',
+    defaultMessage: '!!!Password is required for older wallets',
+  },
+  passwordRequired: {
+    id: 'setupWallet.passwordRequired',
+    defaultMessage: '!!!Password is required',
+  },
+  olderWalletPasswordPrompt: {
+    id: 'setupWallet.olderWalletPasswordPrompt',
+    defaultMessage:
+      '!!!This wallet was created before multisig support. Please enter your password to derive the shared key (this only needs to be done once).',
+  },
+  derivingSharedKey: {
+    id: 'setupWallet.derivingSharedKey',
+    defaultMessage: '!!!Deriving shared key...',
+  },
+  generatingSharedKey: {
+    id: 'setupWallet.generatingSharedKey',
+    defaultMessage: '!!!Generating shared key...',
+  },
+  shareKeyDescription: {
+    id: 'setupWallet.shareKeyDescription',
+    defaultMessage:
+      '!!!Share this key with your co-signers. They need to add this key when creating the multisig wallet. You can share it via QR code, copy/paste, or file.',
+  },
+  mySharedWalletKey: {
+    id: 'setupWallet.mySharedWalletKey',
+    defaultMessage: '!!!My Shared Wallet Key',
+  },
+  shareQRCode: {
+    id: 'setupWallet.shareQRCode',
+    defaultMessage: '!!!Share QR Code',
+  },
+  showQRCode: {
+    id: 'setupWallet.showQRCode',
+    defaultMessage: '!!!Show QR Code',
+  },
+  shareKey: {
+    id: 'setupWallet.shareKey',
+    defaultMessage: '!!!Share Key',
+  },
+  shareSharedWalletKeyTitle: {
+    id: 'setupWallet.shareSharedWalletKeyTitle',
+    defaultMessage: '!!!Share Shared Wallet Key',
+  },
+  shareSharedWalletKeyMessage: {
+    id: 'setupWallet.shareSharedWalletKeyMessage',
+    defaultMessage:
+      '!!!My multisig shared wallet key:\n\n{sharedKey}\n\nShare this key with your co-signers so they can add you to the multisig wallet.',
+  },
+  sharedKeyCopiedToClipboard: {
+    id: 'setupWallet.sharedKeyCopiedToClipboard',
+    defaultMessage: '!!!Shared wallet key copied to clipboard',
+  },
 })

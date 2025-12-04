@@ -221,6 +221,31 @@ export const deriveAndStoreAccount = async (
 
   await encryptedStorage.xpub.write(accountVisual, accountPubKeyHex)
 
+  // Also derive and store the multisig shared key (for consistency with hardware wallets)
+  // This allows retrieving it later without needing the root key
+  try {
+    const {deriveMultisigAccount} = await import('@yoroi/cardano-wallet')
+    const derivation = await deriveMultisigAccount({
+      rootKeyHex,
+      accountVisual,
+      implementation,
+    })
+    await encryptedStorage.multisigSharedKey.write(
+      accountVisual,
+      derivation.sharedWalletKey,
+    )
+  } catch (error) {
+    // If multisig derivation fails, log but don't fail account creation
+    getLogger().warn(
+      'deriveAndStoreAccount: Failed to derive multisig shared key',
+      {
+        walletId: id,
+        accountVisual,
+        error,
+      },
+    )
+  }
+
   getLogger().debug('deriveAndStoreAccount: Account derived and stored', {
     walletId: id,
     accountVisual,

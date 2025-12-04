@@ -16,5 +16,10 @@ export const mockEncryptedStorage: WalletEncryptedStorage = {
     write: () => Promise.resolve(),
     remove: () => Promise.resolve(),
   },
+  multisigSharedKey: {
+    read: () => Promise.resolve(null),
+    write: () => Promise.resolve(),
+    remove: () => Promise.resolve(),
+  },
   clear: () => Promise.resolve(),
 }

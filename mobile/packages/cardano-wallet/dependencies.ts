@@ -103,6 +103,14 @@ export type WalletEncryptedStorage = {
     ) => Promise<void>
     readonly remove: (accountVisual: number) => Promise<void>
   }
+  readonly multisigSharedKey: {
+    readonly read: (accountVisual: number) => Promise<string | null>
+    readonly write: (
+      accountVisual: number,
+      sharedKeyHex: string,
+    ) => Promise<void>
+    readonly remove: (accountVisual: number) => Promise<void>
+  }
   readonly clear: () => Promise<void>
 }
 

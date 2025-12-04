@@ -19,7 +19,6 @@ import {TextInput} from '~/ui/TextInput/TextInput'
 
 type RouteParams = {
   parentWalletId: string
-  parentWalletRootKey?: string
   sharedWalletKey: Wallet.Bip32PublicKeyHex
   parentWalletImplementation: Wallet.Implementation
   accountVisual: number
@@ -85,18 +84,12 @@ export const DefineQuorumScreen = () => {
 
   return (
     <SafeArea>
-      <Space.Height.lg />
-
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={[a.px_lg, a.pb_lg]}
       >
         <View style={[a.gap_md]}>
-          <Text style={[a.heading_1_medium]}>
-            {strings.setupWallet.defineQuorumTitle}
-          </Text>
-
-          <Space.Height.md />
+          <Space.Height.lg />
 
           <Text style={[a.body_1_lg_regular]}>
             {strings.setupWallet.defineQuorumDescription}
@@ -206,16 +199,16 @@ export const DefineQuorumScreen = () => {
               </Text>
             </>
           )}
-
-          <Space.Height.lg />
-
-          <Button
-            title={strings.global.proceed}
-            onPress={handleContinue}
-            testID="continue-after-define-quorum-button"
-          />
         </View>
       </ScrollView>
+
+      <SafeArea.Footer>
+        <Button
+          title={strings.global.proceed}
+          onPress={handleContinue}
+          testID="continue-after-define-quorum-button"
+        />
+      </SafeArea.Footer>
     </SafeArea>
   )
 }

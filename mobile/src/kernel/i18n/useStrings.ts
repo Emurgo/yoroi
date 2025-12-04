@@ -2437,6 +2437,34 @@ export const useStrings = () => {
         ),
         notMultisigWallet: f(setupWalletMessages.notMultisigWallet),
         selectMultisigWallet: f(setupWalletMessages.selectMultisigWallet),
+        sharedKeyCopied: f(setupWalletMessages.sharedKeyCopied),
+        failedToGenerateSharedKey: f(
+          setupWalletMessages.failedToGenerateSharedKey,
+        ),
+        parentWalletNotSelected: f(setupWalletMessages.parentWalletNotSelected),
+        passwordRequiredForOlderWallets: f(
+          setupWalletMessages.passwordRequiredForOlderWallets,
+        ),
+        passwordRequired: f(setupWalletMessages.passwordRequired),
+        olderWalletPasswordPrompt: f(
+          setupWalletMessages.olderWalletPasswordPrompt,
+        ),
+        derivingSharedKey: f(setupWalletMessages.derivingSharedKey),
+        generatingSharedKey: f(setupWalletMessages.generatingSharedKey),
+        shareKeyDescription: f(setupWalletMessages.shareKeyDescription),
+        mySharedWalletKey: f(setupWalletMessages.mySharedWalletKey),
+        shareQRCode: f(setupWalletMessages.shareQRCode),
+        showQRCode: f(setupWalletMessages.showQRCode),
+        shareKey: f(setupWalletMessages.shareKey),
+        shareSharedWalletKeyTitle: f(
+          setupWalletMessages.shareSharedWalletKeyTitle,
+        ),
+        shareSharedWalletKeyMessage: f(
+          setupWalletMessages.shareSharedWalletKeyMessage,
+        ),
+        sharedKeyCopiedToClipboard: f(
+          setupWalletMessages.sharedKeyCopiedToClipboard,
+        ),
       },
 
       // Mapped strings for dynamic category mapping

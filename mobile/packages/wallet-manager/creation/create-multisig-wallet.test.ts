@@ -43,6 +43,11 @@ describe('create-multisig-wallet', () => {
         write: jest.fn().mockResolvedValue(undefined),
         remove: jest.fn().mockResolvedValue(undefined),
       },
+      multisigSharedKey: {
+        read: jest.fn().mockResolvedValue(null),
+        write: jest.fn().mockResolvedValue(undefined),
+        remove: jest.fn().mockResolvedValue(undefined),
+      },
       clear: jest.fn().mockResolvedValue(undefined),
     }),
   )

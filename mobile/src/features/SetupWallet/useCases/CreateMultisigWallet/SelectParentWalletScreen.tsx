@@ -69,18 +69,12 @@ export const SelectParentWalletScreen = () => {
 
   return (
     <SafeArea>
-      <Space.Height.lg />
-
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={[a.px_lg, a.pb_lg]}
       >
         <View style={[a.gap_md]}>
-          <Text style={[a.heading_1_medium]}>
-            {strings.setupWallet.selectParentWalletTitle}
-          </Text>
-
-          <Space.Height.md />
+          <Space.Height.lg />
 
           <Text style={[a.body_1_lg_regular]}>
             {strings.setupWallet.selectParentWalletDescription}
@@ -101,7 +95,7 @@ export const SelectParentWalletScreen = () => {
                   a.border,
                   isSelected
                     ? {backgroundColor: p.primary_100}
-                    : {backgroundColor: p.white_static},
+                    : {backgroundColor: 'transparent'},
                   isSelected
                     ? {borderColor: p.primary_600}
                     : {borderColor: p.gray_200},
@@ -116,17 +110,17 @@ export const SelectParentWalletScreen = () => {
               </TouchableOpacity>
             )
           })}
-
-          <Space.Height.lg />
-
-          <Button
-            title={strings.global.proceed}
-            onPress={handleContinue}
-            disabled={!selectedWalletId}
-            testID="continue-after-select-parent-button"
-          />
         </View>
       </ScrollView>
+
+      <SafeArea.Footer>
+        <Button
+          title={strings.global.proceed}
+          onPress={handleContinue}
+          disabled={!selectedWalletId}
+          testID="continue-after-select-parent-button"
+        />
+      </SafeArea.Footer>
     </SafeArea>
   )
 }

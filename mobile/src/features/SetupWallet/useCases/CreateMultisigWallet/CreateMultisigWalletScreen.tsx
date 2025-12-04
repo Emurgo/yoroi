@@ -52,12 +52,6 @@ export const CreateMultisigWalletScreen = () => {
         contentContainerStyle={[a.px_lg, a.pb_lg]}
       >
         <View style={[a.gap_md]}>
-          <Text style={[a.heading_1_medium, a.text_center]}>
-            {strings.setupWallet.createMultisigWalletTitle}
-          </Text>
-
-          <Space.Height.md />
-
           <Text style={[a.body_1_lg_regular, a.text_center]}>
             {strings.setupWallet.createMultisigWalletDescription}
           </Text>

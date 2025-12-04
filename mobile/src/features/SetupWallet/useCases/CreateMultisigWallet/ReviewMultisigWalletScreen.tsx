@@ -34,7 +34,6 @@ import {TextInput} from '~/ui/TextInput/TextInput'
 
 type RouteParams = {
   parentWalletId: string
-  parentWalletRootKey?: string
   sharedWalletKey: Wallet.Bip32PublicKeyHex
   parentWalletImplementation: Wallet.Implementation
   accountVisual: number
@@ -56,9 +55,6 @@ export const ReviewMultisigWalletScreen = () => {
     coSigners,
     quorumRules,
     parentWalletId,
-    parentWalletImplementation,
-    accountVisual,
-    parentWalletRootKey,
     walletName: initialWalletName,
   } = params
 
@@ -131,37 +127,14 @@ export const ReviewMultisigWalletScreen = () => {
     !passwordConfirmation
 
   const handleCreateWallet = React.useCallback(() => {
-    if (!parentWalletRootKey) {
-      showErrorDialog(errorMessages.generalError, undefined, {
-        message: 'Parent wallet root key is required',
-      })
-      return
-    }
-
     createWallet({
       name: walletName.trim() || 'Multisig Wallet',
       coSigners,
       quorumRules,
       parentWalletIds: [parentWalletId],
-      parentWalletRootKeys: [
-        {
-          walletId: parentWalletId,
-          rootKeyHex: parentWalletRootKey,
-          accountVisual,
-          implementation: parentWalletImplementation,
-        },
-      ],
+      parentWalletRootKeys: [], // Root keys not needed for wallet creation, only for signing transactions later
     })
-  }, [
-    createWallet,
-    walletName,
-    coSigners,
-    quorumRules,
-    parentWalletId,
-    accountVisual,
-    parentWalletImplementation,
-    parentWalletRootKey,
-  ])
+  }, [createWallet, walletName, coSigners, quorumRules, parentWalletId])
 
   const quorumDescription = React.useMemo(() => {
     if (quorumRules.kind === 'RequireAllOf') {
@@ -175,18 +148,12 @@ export const ReviewMultisigWalletScreen = () => {
 
   return (
     <SafeArea>
-      <Space.Height.lg />
-
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={[a.px_lg, a.pb_lg]}
       >
         <View style={[a.gap_md]}>
-          <Text style={[a.heading_1_medium]}>
-            {strings.setupWallet.reviewMultisigWalletTitle}
-          </Text>
-
-          <Space.Height.md />
+          <Space.Height.lg />
 
           {/* Wallet name */}
           <TextInput
@@ -252,15 +219,6 @@ export const ReviewMultisigWalletScreen = () => {
             </View>
           </View>
 
-          <Space.Height.lg />
-
-          <Button
-            title={strings.setupWallet.createWalletButton}
-            onPress={handleCreateWallet}
-            disabled={disabled}
-            testID="create-multisig-wallet-final-button"
-          />
-
           {isPending && (
             <View style={[a.align_center, a.justify_center, a.py_lg]}>
               <ActivityIndicator size="large" />
@@ -268,6 +226,15 @@ export const ReviewMultisigWalletScreen = () => {
           )}
         </View>
       </ScrollView>
+
+      <SafeArea.Footer>
+        <Button
+          title={strings.setupWallet.createWalletButton}
+          onPress={handleCreateWallet}
+          disabled={disabled}
+          testID="create-multisig-wallet-final-button"
+        />
+      </SafeArea.Footer>
     </SafeArea>
   )
 }
