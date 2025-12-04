@@ -72,12 +72,12 @@ export const ShareWalletDetailsScreen = () => {
         coSigners: multisigMeta.coSigners.map((cs) => ({
           name: cs.name,
           sharedWalletKey: cs.sharedWalletKey,
-        })) as ReadonlyArray<Wallet.CoSigner>,
+        })) as unknown as ReadonlyArray<Wallet.CoSigner>,
         quorumRules: multisigMeta.quorumRules,
-        paymentScriptCbor: multisigMeta.paymentScriptCbor,
-        stakingScriptCbor: multisigMeta.stakingScriptCbor,
+        paymentScriptCbor: multisigMeta.paymentScriptCbor as Wallet.ScriptCbor,
+        stakingScriptCbor: multisigMeta.stakingScriptCbor as Wallet.ScriptCbor,
       },
-    }
+    } as MultisigWalletSetupJSON
   }, [multisigMeta, walletId, walletMeta.name])
 
   const jsonString = React.useMemo(

@@ -336,7 +336,7 @@ export const RestoreWalletFromLinkScreen = () => {
 
         // Navigate to import multisig wallet screen with parsed data
         // The import screen will handle wallet selection and validation
-        navigation.navigate('setup-wallet-import-multisig', {
+        ;(navigation as any).navigate('setup-wallet-multisig-import', {
           importedWalletSetup: multisigSetup as unknown,
         })
       } catch (parseError) {
