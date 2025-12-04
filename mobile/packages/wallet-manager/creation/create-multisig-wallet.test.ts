@@ -2,8 +2,7 @@
  * Integration tests for multisig wallet creation
  */
 import type {WalletEncryptedStorage} from '@yoroi/cardano-wallet'
-import {Chain, Wallet} from '@yoroi/types'
-import {Bip32PublicKeyHex} from '@yoroi/types'
+import {Bip32PublicKeyHex, Chain, Wallet} from '@yoroi/types'
 
 import {createMultisigWallet} from './create-multisig-wallet'
 

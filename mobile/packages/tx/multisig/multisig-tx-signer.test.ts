@@ -94,7 +94,7 @@ jest.mock('@yoroi/cardano-wallet', () => ({
           })),
         },
         NativeScript: {
-          fromHex: jest.fn((_hex: string) => ({
+          fromHex: jest.fn((hex: string) => ({
             toHex: jest.fn(() => hex),
           })),
         },

@@ -3,7 +3,7 @@
  * Manages addresses for script-based multisig wallets
  */
 import {getLogger} from '@yoroi/common'
-import {ScriptCbor} from '@yoroi/types'
+import {Address, ScriptCbor} from '@yoroi/types'
 
 import {freeze} from 'immer'
 

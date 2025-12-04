@@ -7,6 +7,7 @@ import {getLogger} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {constructMultipartyTransactionJSON} from '@yoroi/tx/multiparty/multiparty-transaction-json'
 import {getSignedWallets} from '@yoroi/tx/multiparty/multiparty-tx-signer'
+import {Bip32PublicKeyHex} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as Clipboard from 'expo-clipboard'
@@ -99,16 +100,15 @@ const MultipartyTransactionReviewContent = ({
     try {
       // Get chain ID from wallet
       const chainId =
-        `cip34:${wallet.networkManager.networkId}-${wallet.networkManager.networkMagic}` as const
+        `cip34:${wallet.networkManager.networkId}-${wallet.networkManager.networkMagic}` as `cip34:${number}-${number}`
 
       // Get current wallet's key hash if it's one of the signers
       const currentSigner = multipartyInfo.requiredSigners.find(
         (s) => s.walletId === wallet.id,
       )
-      const createdBy =
-        currentSigner?.keyHash ||
+      const createdBy = (currentSigner?.keyHash ||
         multipartyInfo.requiredSigners[0]?.keyHash ||
-        ''
+        '') as Bip32PublicKeyHex
 
       const txJson = constructMultipartyTransactionJSON({
         cborHex: params.cbor,

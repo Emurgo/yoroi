@@ -5,13 +5,13 @@
  */
 import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import type {YoroiWallet} from '@yoroi/cardano-wallet'
+import {createSendTx} from '@yoroi/cardano-wallet/transaction-recipes/createSendTx'
 import {convertRawUtxosToModernUtxos} from '@yoroi/cardano-wallet/transaction-recipes/helpers'
 import {getLogger} from '@yoroi/common'
 import {TransactionOutput} from '@yoroi/tx'
 import {Wallet} from '@yoroi/types'
 import type {Address} from '@yoroi/types'
 
-import {createSendTx} from '../transaction-builder/createSendTx'
 import type {UnsignedTransaction} from '../transaction-builder/types'
 
 /**
@@ -71,10 +71,14 @@ export const buildMultipartyTransaction = async ({
 
   if (inputWallets.length === 1) {
     // Single wallet - use standard transaction builder
-    const {wallet} = inputWallets[0]
+    const inputWallet = inputWallets[0]
+    if (!inputWallet) {
+      throw new Error('Input wallet is required')
+    }
+    const {wallet} = inputWallet
     const modernUtxos = convertRawUtxosToModernUtxos(
       wallet.utxos(),
-      (address) => wallet.getAddressing(address),
+      (address: Address) => wallet.getAddressing(address),
       wallet.portfolioPrimaryTokenInfo.id,
     )
 
@@ -87,13 +91,16 @@ export const buildMultipartyTransaction = async ({
       getAbsoluteSlotNumber: async () => {
         const time = await wallet
           .checkServerStatus()
-          .then(({serverTime}) => serverTime || Date.now())
+          .then(
+            ({serverTime}: {serverTime?: number}) => serverTime || Date.now(),
+          )
           .catch(() => Date.now())
         return BigInt(
           wallet.networkManager.epoch.progress(new Date(time)).absoluteSlot,
         )
       },
-      getChangeAddress: (mode) => wallet.getChangeAddress(mode),
+      getChangeAddress: (mode: Wallet.AddressMode) =>
+        wallet.getChangeAddress(mode),
       addressMode,
       metadata: metadata?.map((meta) => ({
         label: String(meta.label),
@@ -117,6 +124,9 @@ export const buildMultipartyTransaction = async ({
         outputs: [],
         certificates: [],
         withdrawals: [],
+        referenceInputs: [],
+        collateralInputs: [],
+        options: {},
       },
       requiredSigners,
     }
@@ -161,7 +171,7 @@ export const buildMultipartyTransaction = async ({
   for (const {wallet, meta, walletId} of inputWallets) {
     const modernUtxos = convertRawUtxosToModernUtxos(
       wallet.utxos(),
-      (address) => wallet.getAddressing(address),
+      (address: Address) => wallet.getAddressing(address),
       primaryTokenId,
     )
 
@@ -190,14 +200,14 @@ export const buildMultipartyTransaction = async ({
     getAbsoluteSlotNumber: async () => {
       const time = await primaryWallet
         .checkServerStatus()
-        .then(({serverTime}) => serverTime || Date.now())
+        .then(({serverTime}: {serverTime?: number}) => serverTime || Date.now())
         .catch(() => Date.now())
       return BigInt(
         primaryWallet.networkManager.epoch.progress(new Date(time))
           .absoluteSlot,
       )
     },
-    getChangeAddress: (mode) => {
+    getChangeAddress: (mode: Wallet.AddressMode) => {
       // Use primary wallet's change address
       return primaryWallet.getChangeAddress(mode)
     },
@@ -229,6 +239,9 @@ export const buildMultipartyTransaction = async ({
       outputs: [],
       certificates: [],
       withdrawals: [],
+      referenceInputs: [],
+      collateralInputs: [],
+      options: {},
     },
     requiredSigners,
   }

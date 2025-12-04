@@ -319,6 +319,10 @@ import {
   WalletTransaction,
 } from './wallet/transactions'
 import {
+  CoSigner,
+  MultisigWalletMeta,
+  QuorumRuleKind,
+  QuorumRules,
   WalletAddressMode,
   WalletImplementation,
 } from './wallet/wallet'
@@ -330,6 +334,11 @@ type ImportedTransactions = Transactions
 type ImportedTxMetadata = TxMetadata
 type ImportedTxMetadataInfo = TxMetadataInfo
 type ImportedBaseAsset = BaseAsset
+// Type aliases for wallet types (avoid circular references in namespace)
+type ImportedQuorumRuleKind = QuorumRuleKind
+type ImportedQuorumRules = QuorumRules
+type ImportedCoSigner = CoSigner
+type ImportedMultisigWalletMeta = MultisigWalletMeta
 
 export namespace App {
   export namespace Errors {
@@ -573,6 +582,9 @@ export type {
   TransactionId,
   UtxoId,
 } from './branded'
+
+// Type aliases for Wallet namespace exports (avoid circular references)
+// Imported types from './branded' are used directly
 
 export namespace Branded {
   // Re-export validation functions
@@ -962,10 +974,12 @@ export namespace Wallet {
   export type Implementation = WalletImplementation
   export type AddressMode = WalletAddressMode
   export type Meta = WalletMeta
-  export type QuorumRuleKind = QuorumRuleKind
-  export type QuorumRules = QuorumRules
-  export type CoSigner = CoSigner
-  export type MultisigWalletMeta = MultisigWalletMeta
+  export type QuorumRuleKind = ImportedQuorumRuleKind
+  export type QuorumRules = ImportedQuorumRules
+  export type CoSigner = ImportedCoSigner
+  export type MultisigWalletMeta = ImportedMultisigWalletMeta
+  // Branded types from './branded' - re-export directly
+  export type {Bip32PublicKeyHex, ScriptCbor, TransactionCbor} from './branded'
 
   // Transaction types - use imported types directly to avoid circular references
   export const TransactionStatus = TRANSACTION_STATUS

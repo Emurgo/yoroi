@@ -265,6 +265,36 @@ export const cardanoConfig = freeze(
           },
         },
       },
+      // multisig (script-based wallets)
+      // https://cips.cardano.org/cip/CIP-1854
+      'cardano-multisig': {
+        features: {
+          staking: {
+            derivation: {
+              role: 2,
+              index: 0,
+            },
+            addressing: [2_147_485_500, 2_147_485_463, 2_147_483_648, 2, 0],
+          },
+        },
+        derivations: {
+          base: {
+            roles: {
+              external: 0,
+              internal: 1,
+              staking: 2,
+            },
+            harden: {
+              purpose: 2_147_485_500,
+              coinType: 2_147_485_463,
+            },
+            visual: {
+              purpose: 1854,
+              coinType: 1815,
+            },
+          },
+        },
+      },
     },
   } as const,
   true,

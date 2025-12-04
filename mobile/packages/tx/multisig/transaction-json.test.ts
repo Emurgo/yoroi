@@ -1,7 +1,7 @@
 /**
  * Unit tests for multisig transaction JSON utilities
  */
-import {Bip32PublicKeyHex, Chain} from '@yoroi/types'
+import {Bip32PublicKeyHex, TransactionCborHex} from '@yoroi/types'
 
 import {
   type MultisigTransactionJSON,
@@ -10,16 +10,16 @@ import {
 } from './transaction-json'
 
 describe('transaction-json', () => {
-  const mockCborHex = 'mockTransactionCborHex' as TransactionCbor
-  const mockChainId = Chain.Network.Preprod
+  const mockCborHex = 'mockTransactionCborHex' as TransactionCborHex
+  const mockChainId = 'cip34:0-1' as const
   const mockCreatedBy = 'acct_shared_xvk1z8kc04y...' as Bip32PublicKeyHex
   const mockSigners = [
     {
-      keyHash: 'keyHash1' as Wallet.KeyHash,
+      publicKey: 'acct_shared_xvk1z8kc04y...' as Bip32PublicKeyHex,
       signed: false,
     },
     {
-      keyHash: 'keyHash2' as Wallet.KeyHash,
+      publicKey: 'acct_shared_xvk1z8kc04y...' as Bip32PublicKeyHex,
       signed: true,
     },
   ]

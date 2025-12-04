@@ -3,9 +3,10 @@
  * Extends multisig transaction JSON to support multiple different wallets
  * Reuses the same format but with different semantics
  */
-import {TransactionCborHex} from '@yoroi/types'
+import {Bip32PublicKeyHex, TransactionCborHex} from '@yoroi/types'
 
 import {
+  type ChainId,
   type MultisigTransactionJSON,
   constructMultisigTransactionJSON,
   parseMultisigTransactionJSON,
@@ -32,8 +33,8 @@ export type MultipartySigner = {
  */
 type ConstructMultipartyTransactionParams = {
   readonly cborHex: TransactionCborHex
-  readonly chainId: string
-  readonly createdBy: string // walletId or keyHash
+  readonly chainId: ChainId
+  readonly createdBy: Bip32PublicKeyHex
   readonly requiredSigners: ReadonlyArray<MultipartySigner>
   readonly note?: string
 }
@@ -52,14 +53,14 @@ export const constructMultipartyTransactionJSON = ({
   // Convert multiparty signers to transaction signers format
   const signers = requiredSigners.map((signer) => ({
     walletId: signer.walletId,
-    publicKey: signer.keyHash as string, // Using keyHash as publicKey identifier
+    publicKey: signer.keyHash as Bip32PublicKeyHex, // Using keyHash as publicKey identifier
     signed: signer.signed,
   }))
 
   return constructMultisigTransactionJSON({
     cborHex,
-    chainId: chainId as string,
-    createdBy: createdBy as string,
+    chainId,
+    createdBy,
     note,
     signers,
   })
@@ -94,14 +95,19 @@ export const addWalletSignatureToTransactionJSON = (
     signerIndex >= 0
       ? existingSigners.map((signer, index) =>
           index === signerIndex
-            ? {...signer, signed: true, walletId, publicKey: keyHash as string}
+            ? {
+                ...signer,
+                signed: true,
+                walletId,
+                publicKey: keyHash as Bip32PublicKeyHex,
+              }
             : signer,
         )
       : [
           ...existingSigners,
           {
             walletId,
-            publicKey: keyHash as string,
+            publicKey: keyHash as Bip32PublicKeyHex,
             signed: true,
           },
         ]

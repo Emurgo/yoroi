@@ -329,7 +329,9 @@ export async function createSignedLedgerTxFromCbor(
 
     // Extract native scripts from original transaction (needed for multisig)
     const originalTx = csl.Transaction.fromHex(cbor)
-    let nativeScripts: CSL.NativeScripts | null = null
+    let nativeScripts: ReturnType<
+      typeof csl.WitnessSet.prototype.nativeScripts
+    > | null = null
     if (originalTx) {
       const originalWitnessSet = originalTx.witnessSet()
       if (originalWitnessSet) {

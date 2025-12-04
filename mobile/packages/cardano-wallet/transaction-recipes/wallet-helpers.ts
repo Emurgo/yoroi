@@ -352,7 +352,7 @@ async function createMultisigSendTxFromWallet(
     primaryTokenId: wallet.portfolioPrimaryTokenInfo.id,
     protocolParams: wallet.protocolParams,
     networkId: wallet.networkManager.chainId,
-    getAbsoluteSlotNumber: () => Promise.resolve(absSlotNumber),
+    getAbsoluteSlotNumber: () => getAbsoluteSlotNumberFromWallet(wallet),
     getChangeAddress: (mode) => wallet.getChangeAddress(mode),
     addressMode: params.addressMode,
     metadata: params.metadata?.map((meta) => ({

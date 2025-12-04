@@ -54,7 +54,7 @@ export const createMultisigAddressGenerator = ({
         // Get script hash for payment credential
         const paymentScriptHash = paymentScript.hash()
         const paymentCredential =
-          csl.Credential.fromScriptHash(paymentScriptHash)
+          csl.Credential.fromScripthash(paymentScriptHash)
 
         if (!paymentCredential) {
           throw new Error(
@@ -71,7 +71,7 @@ export const createMultisigAddressGenerator = ({
         // Get script hash for staking credential
         const stakingScriptHash = stakingScript.hash()
         const stakingCredential =
-          csl.Credential.fromScriptHash(stakingScriptHash)
+          csl.Credential.fromScripthash(stakingScriptHash)
 
         if (!stakingCredential) {
           throw new Error(
@@ -93,7 +93,7 @@ export const createMultisigAddressGenerator = ({
         }
 
         const address = baseAddress.toAddress()
-        const bech32Address = address.toBech32()
+        const bech32Address = address.toBech32(undefined)
 
         return bech32Address as Address
       })
@@ -110,7 +110,7 @@ export const createMultisigAddressGenerator = ({
         // Get script hash for staking credential
         const stakingScriptHash = stakingScript.hash()
         const stakingCredential =
-          csl.Credential.fromScriptHash(stakingScriptHash)
+          csl.Credential.fromScripthash(stakingScriptHash)
 
         if (!stakingCredential) {
           throw new Error(

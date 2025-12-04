@@ -9,6 +9,7 @@ import {
   type MultipartyTransactionResult,
   buildMultipartyTransaction,
 } from '@yoroi/tx/multiparty'
+import {Wallet} from '@yoroi/types'
 import type {WalletManager} from '@yoroi/wallet-manager'
 
 /**
