@@ -569,16 +569,16 @@ export const stakingMessages = defineMessages({
   },
   earnRewardsBannerTitle: {
     id: 'components.governance.earnRewardsBanner.title',
-    defaultMessage: '!!!Delegate with Yoroi DRep',
+    defaultMessage: '!!!Earn Rewards with Yoroi',
   },
   earnRewardsBannerDescription: {
     id: 'components.governance.earnRewardsBanner.description',
     defaultMessage:
-      '!!!Delegate to our DRep and help Cardano evolve in a way that benefits your wallet experience.',
+      '!!!Delegate your ADA to our stake pool and DRep in one step. Support Cardano governance, strengthen the network, and earn rewards along the way.',
   },
   earnRewardsBannerCta: {
     id: 'components.governance.earnRewardsBanner.cta',
-    defaultMessage: '!!!DELEGATE NOW',
+    defaultMessage: '!!!EARN ADA',
   },
   governanceRequiredTitle: {
     id: 'components.stakingcenter.governanceRequired.title',
