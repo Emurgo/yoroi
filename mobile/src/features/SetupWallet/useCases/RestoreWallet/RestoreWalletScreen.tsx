@@ -1,6 +1,7 @@
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
+import {useHeaderHeight} from '@react-navigation/elements'
 import {useNavigation} from '@react-navigation/native'
 import {validateMnemonic} from 'bip39'
 import * as React from 'react'
@@ -28,6 +29,7 @@ export type MnemonicWordInputRef = {
 }
 
 export const RestoreWalletScreen = () => {
+  const headerHeight = useHeaderHeight()
   const navigation = useNavigation<any>()
   const strings = useStrings()
   const {palette: p, atoms: ta} = useTheme()
@@ -164,7 +166,7 @@ export const RestoreWalletScreen = () => {
   ])
 
   return (
-    <SafeArea>
+    <SafeArea keyboardVerticalOffset={headerHeight}>
       <StepperProgress
         style={[a.px_lg]}
         currentStep={1}
