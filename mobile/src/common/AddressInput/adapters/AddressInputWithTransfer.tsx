@@ -17,6 +17,7 @@ export type AddressInputWithTransferProps = Omit<
   'value' | 'onChangeText' | 'onResolved' | 'onResolvedWithDetails'
 > & {
   testID?: string
+  targetIndex?: number // Optional: if provided, use this specific target index instead of selectedTargetIndex
 }
 
 /**
@@ -30,21 +31,29 @@ export type AddressInputWithTransferProps = Omit<
  * - Updates useTransfer's addressRecords when resolution completes
  * - Handles multiple nameServers by building addressRecords from all cryptoAddresses
  */
-export const AddressInputWithTransfer = React.forwardRef<
+const AddressInputWithTransferInner = React.forwardRef<
   RNTextInput,
   AddressInputWithTransferProps
->((props, ref) => {
+>(({targetIndex: propTargetIndex, ...props}, ref) => {
   const isFocused = useIsFocused()
   const {
     targets,
     selectedTargetIndex,
     receiverResolveChanged,
     addressRecordsFetched,
+    targetIndexSelected,
   } = useTransfer()
 
-  const target = targets[selectedTargetIndex]
-  const receiver = target?.receiver ?? {resolve: '', as: 'address'}
-  const value = receiver.resolve ?? ''
+  // DO NOT sync selectedTargetIndex on mount - this causes infinite loops when multiple inputs mount simultaneously
+  // Instead, sync only when the input receives focus (see handleFocus below)
+
+  // Use propTargetIndex if provided, otherwise use selectedTargetIndex
+  // When propTargetIndex is provided, value should be stable and not change when selectedTargetIndex changes
+  const targetIndexToUse = propTargetIndex ?? selectedTargetIndex
+  const target = targets[targetIndexToUse]
+  // Extract value directly - when propTargetIndex is provided, this will always read from the same target
+  // and won't change when selectedTargetIndex changes
+  const value = target?.receiver?.resolve ?? ''
 
   // Call useResolverCryptoAddresses to get all cryptoAddresses (like useSendReceiver does)
   // This allows us to build addressRecords with all nameServers
@@ -58,7 +67,16 @@ export const AddressInputWithTransfer = React.forwardRef<
   )
 
   // Build addressRecords from cryptoAddresses (matching useSendReceiver logic)
+  // When using propTargetIndex, pass it directly to addressRecordsFetched
+  // Use a ref to track the last processed value to prevent duplicate calls
+  const lastProcessedValueRef = React.useRef<string>('')
+
   React.useEffect(() => {
+    // Skip if we've already processed this value
+    if (lastProcessedValueRef.current === value) {
+      return
+    }
+
     if (isSuccess && cryptoAddresses !== undefined && isDomainInput) {
       const records = cryptoAddresses.reduce(
         (
@@ -80,23 +98,59 @@ export const AddressInputWithTransfer = React.forwardRef<
         },
         undefined,
       )
-      addressRecordsFetched(records)
+      // Pass propTargetIndex if provided, otherwise it will use selectedTargetIndex
+      addressRecordsFetched(records, propTargetIndex)
+      lastProcessedValueRef.current = value
     } else if (!isDomainInput && value.trim().length > 0) {
       // For direct addresses, clear addressRecords (useTransfer will set entry.address directly)
-      addressRecordsFetched(undefined)
+      addressRecordsFetched(undefined, propTargetIndex)
+      lastProcessedValueRef.current = value
     } else if (value.trim().length === 0) {
       // Clear when input is empty
-      addressRecordsFetched(undefined)
+      addressRecordsFetched(undefined, propTargetIndex)
+      lastProcessedValueRef.current = value
     }
-  }, [addressRecordsFetched, cryptoAddresses, isSuccess, isDomainInput, value])
+  }, [
+    addressRecordsFetched,
+    cryptoAddresses,
+    isSuccess,
+    isDomainInput,
+    value,
+    propTargetIndex,
+  ])
 
   const handleChangeText = React.useCallback(
     (text: string) => {
       // Prevent automatic calls when the screen is not focused (RN TextInput bug)
       if (!isFocused) return
-      receiverResolveChanged(text)
+      // Pass propTargetIndex if provided, otherwise it will use selectedTargetIndex
+      receiverResolveChanged(text, propTargetIndex)
     },
-    [isFocused, receiverResolveChanged],
+    [isFocused, receiverResolveChanged, propTargetIndex],
+  )
+
+  // Sync selectedTargetIndex when input receives focus (for backward compatibility)
+  // Using a ref to avoid including props in dependencies (props.onFocus might change)
+  const onFocusRef = React.useRef(props.onFocus)
+  React.useEffect(() => {
+    onFocusRef.current = props.onFocus
+  }, [props.onFocus])
+
+  const handleFocus = React.useCallback(
+    (e: any) => {
+      // Sync selectedTargetIndex on focus for backward compatibility
+      // This ensures components that don't use propTargetIndex still work
+      if (
+        propTargetIndex !== undefined &&
+        propTargetIndex !== selectedTargetIndex
+      ) {
+        targetIndexSelected(propTargetIndex)
+        // Reset the processed ref so addressRecords can be updated
+        lastProcessedValueRef.current = ''
+      }
+      onFocusRef.current?.(e)
+    },
+    [propTargetIndex, selectedTargetIndex, targetIndexSelected],
   )
 
   // onResolvedWithDetails is called by AddressInput when resolution completes
@@ -116,9 +170,13 @@ export const AddressInputWithTransfer = React.forwardRef<
       value={value}
       onChangeText={handleChangeText}
       onResolvedWithDetails={handleResolvedWithDetails}
+      onFocus={handleFocus}
       {...props}
     />
   )
 })
 
+AddressInputWithTransferInner.displayName = 'AddressInputWithTransferInner'
+
+export const AddressInputWithTransfer = AddressInputWithTransferInner
 AddressInputWithTransfer.displayName = 'AddressInputWithTransfer'

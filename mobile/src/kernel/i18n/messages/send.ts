@@ -347,4 +347,44 @@ export const sendMessages = defineMessages({
     id: 'send.selectAtLeastWallets',
     defaultMessage: '!!!Select at least {min} wallets',
   },
+  addAdditionalAddress: {
+    id: 'send.addAdditionalAddress',
+    defaultMessage: '!!!Add additional address',
+  },
+  allocateAssetsTitle: {
+    id: 'send.allocateAssetsTitle',
+    defaultMessage: '!!!Allocate Assets',
+  },
+  allocateAssetsDescription: {
+    id: 'send.allocateAssetsDescription',
+    defaultMessage: '!!!Distribute assets to {count} destination addresses',
+  },
+  totalAssetsAvailable: {
+    id: 'send.totalAssetsAvailable',
+    defaultMessage: '!!!Total Assets Available',
+  },
+  destinations: {
+    id: 'send.destinations',
+    defaultMessage: '!!!Destinations',
+  },
+  noAssetsAdded: {
+    id: 'send.noAssetsAdded',
+    defaultMessage: '!!!No assets added',
+  },
+  noAssetsAllocated: {
+    id: 'send.noAssetsAllocated',
+    defaultMessage: '!!!No assets allocated yet',
+  },
+  availableToAllocate: {
+    id: 'send.availableToAllocate',
+    defaultMessage: '!!!Available to allocate',
+  },
+  remaining: {
+    id: 'send.remaining',
+    defaultMessage: '!!!Remaining',
+  },
+  assets: {
+    id: 'send.assets',
+    defaultMessage: '!!!assets',
+  },
 })

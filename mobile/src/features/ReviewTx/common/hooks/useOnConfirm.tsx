@@ -12,6 +12,7 @@ import {ErrorBoundary} from 'react-error-boundary'
 import {InteractionManager} from 'react-native'
 
 import {useReviewTxMemo} from '~/features/ReviewTx/common/context/ReviewTxMemoContext'
+import {useCheckAllSignatures} from '~/features/ReviewTx/common/hooks/useCheckAllSignatures'
 import {FormattedTx} from '~/features/ReviewTx/common/types'
 import {useSaveMemo} from '~/features/Transactions/hooks/useSaveMemo'
 import {createOptimisticTransactionFromFormattedTx} from '~/features/Transactions/utils/createOptimisticTransaction'
@@ -33,6 +34,20 @@ export type OnConfirm = {
   partial?: boolean
   context?: OperationContext
   formattedTx?: FormattedTx | null
+  multiparty?: {
+    requiredSigners: ReadonlyArray<{
+      readonly walletId: string
+      readonly keyHash: string
+      readonly walletName: string
+    }>
+    inputWalletIds?: ReadonlyArray<string>
+  }
+  multisig?: {
+    requiredCoSigners: number
+    totalCoSigners: number
+    signedCoSigners?: ReadonlyArray<string>
+    missingCoSigners?: ReadonlyArray<string>
+  }
   onSuccess?: (args?: {
     tx?: Transaction
     rootKey?: string
@@ -51,6 +66,7 @@ export type OnConfirm = {
   onClose?: () => void
   onNotSupportedCIP1694?: (() => void) | null
   onCIP36SupportChange?: ((isCIP36Supported: boolean) => void) | null
+  onExportTransaction?: ((signedCbor: string) => Promise<void>) | null
 }
 
 export const useOnConfirm = ({
@@ -59,12 +75,15 @@ export const useOnConfirm = ({
   preventSubmit = false,
   context,
   formattedTx,
+  multiparty,
+  multisig,
   onSuccess,
   onSuccessWithoutFeedback,
   onError,
   onErrorWithoutFeedback,
   onCancel,
   onClose,
+  onExportTransaction,
 }: OnConfirm) => {
   const {wallet, meta} = useSelectedWallet()
   const navigateTo = useNavigateTo()
@@ -74,6 +93,7 @@ export const useOnConfirm = ({
   const strings = useStrings()
   const memoContext = useReviewTxMemo()
   const {saveMemo} = useSaveMemo({wallet})
+  const {checkAllSignatures} = useCheckAllSignatures()
 
   const handleOnSuccess = async (args?: {
     tx?: Transaction
@@ -318,6 +338,40 @@ export const useOnConfirm = ({
       onSuccess: async (rootKey: string) => {
         if (!preventSubmit) {
           try {
+            // Check if all signatures are collected before submitting
+            if (multiparty || multisig) {
+              const signatureStatus = await checkAllSignatures(
+                cbor,
+                multiparty,
+                multisig,
+              )
+
+              if (!signatureStatus.isFullySigned) {
+                // Sign the transaction but don't submit yet
+                const result = await signTxOnly(cbor, rootKey, wallet, meta)
+                if (!result) {
+                  throw new Error('useOnConfirm:: not possible to sign tx')
+                }
+
+                // Export/share transaction for next signer
+                if (onExportTransaction) {
+                  await onExportTransaction(result.signedTxCbor)
+                } else {
+                  logger.warn(
+                    'useOnConfirm: Transaction not fully signed but no export handler provided',
+                    {
+                      requiredSignatures: signatureStatus.requiredSignatures,
+                      collectedSignatures: signatureStatus.collectedSignatures,
+                    },
+                  )
+                }
+
+                // Don't submit - transaction needs more signatures
+                return
+              }
+            }
+
+            // All signatures collected (or not multiparty/multisig) - proceed with submission
             const result = await submitTx(cbor, rootKey, wallet, meta)
             if (!result)
               throw new Error('useOnConfirm:: not possible to sign tx')
@@ -445,4 +499,39 @@ const submitTx = async (
   }
 
   return {signedTx, txId: result.txId}
+}
+
+/**
+ * Sign a transaction without submitting it
+ * Used for multiparty/multisig transactions that need more signatures
+ */
+const signTxOnly = async (
+  cbor: string,
+  rootKey: string,
+  wallet: YoroiWallet,
+  meta: Wallet.Meta,
+): Promise<{
+  signedTxCbor: string
+} | null> => {
+  const result = await CardanoMobileWrapped.cslScope(async (csl) => {
+    const signers = await getTransactionSigners(cbor, wallet, meta)
+    const keys = signers.map((signer) =>
+      createRawTxSigningKey(rootKey, signer, csl),
+    )
+    const signedTxBytes = await wallet.signRawTx(cbor, keys)
+    if (!signedTxBytes) {
+      logger.error('signTxOnly: Failed to sign transaction')
+      return null
+    }
+
+    return {signedTxBytes}
+  })
+
+  if (!result) {
+    return null
+  }
+
+  return {
+    signedTxCbor: Buffer.from(result.signedTxBytes).toString('hex'),
+  }
 }

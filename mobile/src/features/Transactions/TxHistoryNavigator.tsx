@@ -22,6 +22,7 @@ import {ListMultipleAddressesScreen} from '~/features/Receive/useCases/ListMulti
 import {RequestSpecificAmountScreen} from '~/features/Receive/useCases/RequestSpecificAmountScreen'
 import {ScanCodeScreen} from '~/features/Scan/useCases/ScanCodeScreen'
 import {ShowCameraPermissionDeniedScreen} from '~/features/Scan/useCases/ShowCameraPermissionDeniedScreen/ShowCameraPermissionDeniedScreen'
+import {AllocateAssetsToDestinationsScreen} from '~/features/Send/useCases/AllocateAssetsToDestinations/AllocateAssetsToDestinationsScreen'
 import {SelectTokenFromListScreen} from '~/features/Send/useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreen'
 import {EditAmountScreen} from '~/features/Send/useCases/ListAmountsToSend/EditAmount/EditAmountScreen'
 import {ListAmountsToSendScreen} from '~/features/Send/useCases/ListAmountsToSend/ListAmountsToSendScreen'
@@ -210,6 +211,14 @@ export const TxHistoryNavigator = () => {
             title: strings.send.selectTokenTitle,
           }}
           getComponent={() => SelectTokenFromListScreen}
+        />
+
+        <Stack.Screen
+          name="send-allocate-assets"
+          options={{
+            title: 'Allocate Assets',
+          }}
+          getComponent={() => AllocateAssetsToDestinationsScreen}
         />
 
         {/* Receive Screens */}

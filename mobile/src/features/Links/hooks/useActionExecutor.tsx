@@ -73,7 +73,6 @@ export const useActionExecutor = () => {
     amountChanged,
     tokenSelectedChanged,
     reset: resetTransferState,
-    memoChanged,
     linkActionChanged,
   } = useTransfer()
 
@@ -115,9 +114,7 @@ export const useActionExecutor = () => {
                   })
                 }
 
-                if (params.memo) {
-                  memoChanged(params.memo)
-                }
+                // Memo is now handled in ReviewTx, not in transfer state
               }
 
               closeModal()
@@ -150,7 +147,7 @@ export const useActionExecutor = () => {
                   const {
                     address: receiver,
                     amount,
-                    memo,
+                    memo: _memo,
                   } = parsedCardanoLink.params
                   const ptAmount = toBigInt(
                     typeof amount === 'string' || typeof amount === 'number'
@@ -158,7 +155,7 @@ export const useActionExecutor = () => {
                       : String(amount ?? '0'),
                     wallet.portfolioPrimaryTokenInfo.decimals,
                   )
-                  memoChanged(typeof memo === 'string' ? memo : '')
+                  // Memo is now handled in ReviewTx, not in transfer state
                   receiverResolveChanged(
                     typeof receiver === 'string' ? receiver : '',
                   )
@@ -281,8 +278,7 @@ export const useActionExecutor = () => {
                   ),
                 })
               }
-              if ('memo' in cardanoAction.params)
-                memoChanged(cardanoAction.params?.memo ?? '')
+              // Memo is now handled in ReviewTx, not in transfer state
             }
 
             navigateTo.startTransfer()
@@ -335,9 +331,7 @@ export const useActionExecutor = () => {
                 ),
               })
             }
-            if (cardanoAction.memo) {
-              memoChanged(cardanoAction.memo)
-            }
+            // Memo is now handled in ReviewTx, not in transfer state
 
             navigateTo.startTransfer()
             break
@@ -588,7 +582,6 @@ export const useActionExecutor = () => {
       receiverResolveChanged,
       amountChanged,
       tokenSelectedChanged,
-      memoChanged,
       linkActionChanged,
       rootNavigation,
     ],

@@ -987,6 +987,17 @@ export const useStrings = () => {
           f(sendMessages.selectUpToWallets, {max}),
         selectAtLeastWallets: (min: number) =>
           f(sendMessages.selectAtLeastWallets, {min}),
+        addAdditionalAddress: f(sendMessages.addAdditionalAddress),
+        allocateAssetsTitle: f(sendMessages.allocateAssetsTitle),
+        allocateAssetsDescription: (count: number) =>
+          f(sendMessages.allocateAssetsDescription, {count}),
+        totalAssetsAvailable: f(sendMessages.totalAssetsAvailable),
+        destinations: f(sendMessages.destinations),
+        noAssetsAdded: f(sendMessages.noAssetsAdded),
+        noAssetsAllocated: f(sendMessages.noAssetsAllocated),
+        availableToAllocate: f(sendMessages.availableToAllocate),
+        remaining: f(sendMessages.remaining),
+        assets: (count: number) => f(sendMessages.assets, {count}),
       },
 
       // Global strings

@@ -120,6 +120,8 @@ export const ReviewTx = ({
   onConfirm,
   readOnly = false,
   isReviewFlow = false,
+  multiparty,
+  multisig,
 }: {
   formattedTx: FormattedTx
   formattedMetadata?: FormattedMetadata
@@ -134,6 +136,20 @@ export const ReviewTx = ({
   onConfirm?: () => void
   readOnly?: boolean
   isReviewFlow?: boolean
+  multiparty?: {
+    requiredSigners: ReadonlyArray<{
+      readonly walletId: string
+      readonly keyHash: string
+      readonly walletName: string
+    }>
+    inputWalletIds?: ReadonlyArray<string>
+  }
+  multisig?: {
+    requiredCoSigners: number
+    totalCoSigners: number
+    signedCoSigners?: ReadonlyArray<string>
+    missingCoSigners?: ReadonlyArray<string>
+  }
 }) => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
@@ -186,6 +202,9 @@ export const ReviewTx = ({
           receiverCustomTitle={receiverCustomTitle}
           validationResult={validationResult}
           readOnly={readOnly}
+          multiparty={multiparty}
+          multisig={multisig}
+          txCbor={cbor}
         />
       </TabWrapper>
     ),
@@ -201,6 +220,9 @@ export const ReviewTx = ({
       createdBy,
       receiverCustomTitle,
       validationResult,
+      multiparty,
+      multisig,
+      cbor,
     ],
   )
 

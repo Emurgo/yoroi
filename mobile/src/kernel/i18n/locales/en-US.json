@@ -1817,5 +1817,15 @@
   "send.singleWallet": "1 wallet",
   "send.multipleWallets": "{count} wallets",
   "send.selectUpToWallets": "Select up to {max} wallets",
-  "send.selectAtLeastWallets": "Select at least {min} wallets"
+  "send.selectAtLeastWallets": "Select at least {min} wallets",
+  "send.addAdditionalAddress": "Add additional address",
+  "send.allocateAssetsTitle": "Allocate Assets",
+  "send.allocateAssetsDescription": "Distribute assets to {count} destination addresses",
+  "send.totalAssetsAvailable": "Total Assets Available",
+  "send.destinations": "Destinations",
+  "send.noAssetsAdded": "No assets added",
+  "send.noAssetsAllocated": "No assets allocated yet",
+  "send.availableToAllocate": "Available to allocate",
+  "send.remaining": "Remaining",
+  "send.assets": "assets"
 }

@@ -2,7 +2,7 @@ import {infoFilterByName, isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import {Portfolio} from '@yoroi/types'
-import {useSelectedWallet} from '@yoroi/wallet-manager'
+import {useSelectedWallet, useWalletManager} from '@yoroi/wallet-manager'
 
 import {useNavigation} from '@react-navigation/native'
 import {FlashList} from '@shopify/flash-list'
@@ -13,6 +13,7 @@ import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfol
 import {MediaGallery} from '~/features/Portfolio/ui/MediaGallery/MediaGallery'
 import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
 import {limitOfSecondaryAmountsPerTx} from '~/features/Send/common/constants'
+import {useMultipartySend} from '~/features/Send/common/context/MultipartySendContext'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {TxHistoryRouteNavigation} from '~/kernel/navigation/types'
 import {NoAssetFoundImage} from '~/ui/NoAssetFoundImage/NoAssetFoundImage'
@@ -26,9 +27,25 @@ import {MaxAmountsPerTx} from './Show/MaxAmountsPerTx'
 export const SelectTokenFromListScreen = () => {
   const strings = useStrings()
   const {targets, selectedTargetIndex, allocated} = useTransfer()
-
   const {wallet} = useSelectedWallet()
-  const balances = usePortfolioBalances({wallet})
+  const {walletManager} = useWalletManager()
+  const {
+    selectedInputWalletIds,
+    selectedWalletForAssets,
+    getWalletAssets,
+    addWalletAsset,
+  } = useMultipartySend()
+
+  // Determine which wallet to use for balances and asset selection
+  const isMultipleWallets = selectedInputWalletIds.length > 1
+  const walletForAssets = React.useMemo(() => {
+    if (isMultipleWallets && selectedWalletForAssets) {
+      return walletManager?.getWalletById(selectedWalletForAssets) ?? wallet
+    }
+    return wallet
+  }, [isMultipleWallets, selectedWalletForAssets, walletManager, wallet])
+
+  const balances = usePortfolioBalances({wallet: walletForAssets})
   const [fungibilityFilter, setFungibilityFilter] =
     React.useState<Portfolio.FungibilityFilter>('all')
   const [isPending, startTransition] = React.useTransition()
@@ -40,11 +57,30 @@ export const SelectTokenFromListScreen = () => {
   const {visible: isSearchOpened, isSearching, search} = useSearch()
   const shouldShowNfts = fungibilityFilter === 'nfts' && !isSearchOpened
 
+  // Get already selected amounts for filtering
+  const selectedAmounts = React.useMemo(() => {
+    if (isMultipleWallets && selectedWalletForAssets) {
+      // Multiple wallets: use assets from the selected wallet
+      return getWalletAssets(selectedWalletForAssets)
+    } else {
+      // Single wallet: use transfer state
+      return (
+        targets[selectedTargetIndex]?.entry.amounts ??
+        ({} as Record<Portfolio.Token.Id, Portfolio.Token.Amount>)
+      )
+    }
+  }, [
+    isMultipleWallets,
+    selectedWalletForAssets,
+    getWalletAssets,
+    targets,
+    selectedTargetIndex,
+  ])
+
   const spendableAmounts = React.useMemo(() => {
     const target = targets[selectedTargetIndex]
     if (!target) return []
 
-    const {amounts} = target.entry
     const allocatedToOtherTargets =
       allocated.get(selectedTargetIndex) ?? new Map()
     const toSpendableAmount = toSpendableAmountMapper(allocatedToOtherTargets)
@@ -52,8 +88,8 @@ export const SelectTokenFromListScreen = () => {
     return balances.all
       .map(toSpendableAmount)
       .filter(hasSpendableAmount)
-      .filter(filterOutSelected(amounts))
-  }, [allocated, balances, selectedTargetIndex, targets])
+      .filter(filterOutSelected(selectedAmounts))
+  }, [allocated, balances, selectedTargetIndex, targets, selectedAmounts])
 
   const filteredAmounts = React.useMemo(() => {
     if (isSearchOpened === false) {
@@ -71,9 +107,7 @@ export const SelectTokenFromListScreen = () => {
     return spendableAmounts.filter(({info}) => infoFilterByName(search)(info))
   }, [fungibilityFilter, isSearchOpened, search, spendableAmounts])
 
-  const currentAmounts =
-    targets[selectedTargetIndex]?.entry.amounts ??
-    ({} as Record<Portfolio.Token.Id, Portfolio.Token.Amount>)
+  const currentAmounts = selectedAmounts
 
   const hasPrimary = currentAmounts[wallet.portfolioPrimaryTokenInfo.id] != null
   const currentAmountsSize = Object.keys(currentAmounts).length
@@ -163,7 +197,11 @@ const ListSpendableNfts = ({
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const {closeSearch} = useSearch()
   const {tokenSelectedChanged, amountChanged} = useTransfer()
+  const {selectedInputWalletIds, selectedWalletForAssets, addWalletAsset} =
+    useMultipartySend()
   const isEmpty = spendableAmounts.length === 0
+
+  const isMultipleWallets = selectedInputWalletIds.length > 1
 
   const handleOnSelect = (amount: Portfolio.Token.Amount) => {
     tokenSelectedChanged(amount.info.id)
@@ -171,7 +209,13 @@ const ListSpendableNfts = ({
 
     // avoid token detected as nft to send all
     if (amount.quantity === 1n && amount.info.decimals === 0) {
-      amountChanged(amount)
+      if (isMultipleWallets && selectedWalletForAssets) {
+        // Add to specific wallet
+        addWalletAsset(selectedWalletForAssets, amount.info.id, amount)
+      } else {
+        // Single wallet: use transfer state
+        amountChanged(amount)
+      }
       navigation.navigate('send-list-amounts-to-send')
     } else {
       // should not happen

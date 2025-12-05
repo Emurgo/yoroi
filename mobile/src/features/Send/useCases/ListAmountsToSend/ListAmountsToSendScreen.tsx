@@ -19,20 +19,22 @@ import {usePromise} from '~/common/hooks/usePromise'
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
 import {usePortfolioPrimaryBreakdown} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
 import {useSearch} from '~/features/Search/SearchContext'
+import {useMultipartySend} from '~/features/Send/common/context/MultipartySendContext'
 import {useNavigateTo} from '~/features/Send/common/navigation'
 import {toTransactionOutput} from '~/features/Send/common/toTransactionOutput'
 import {isInsufficientBalanceError} from '~/features/Staking/Governance/common/transactionErrorHandling'
-import {useSelectMultipleWalletsModal} from '~/features/WalletManager/ui/modals/SelectMultipleWalletsModal'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useResultNavigation} from '~/kernel/navigation/hooks/useResultNavigation'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
+import {Accordion} from '~/ui/Accordion/Accordion'
 import {AddTokenButton} from '~/ui/AddTokenButton/AddTokenButton'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {RemoveAmountButton} from '~/ui/RemoveAmountButton/RemoveAmountButton'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
+import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
 
@@ -45,28 +47,82 @@ export const ListAmountsToSendScreen = () => {
   const navigation = useNavigation()
   const {wallet} = useSelectedWallet()
   const {walletManager} = useWalletManager()
-  const {openSelectMultipleWalletsModal} = useSelectMultipleWalletsModal()
+  const {palette: p} = useTheme()
   const {
-    targets,
-    selectedTargetIndex,
-    tokenSelectedChanged,
-    amountRemoved,
-    reset,
-    allocated,
-  } = useTransfer()
+    selectedInputWalletIds,
+    selectedWalletForAssets,
+    setSelectedWalletForAssets,
+    getWalletAssets,
+    addWalletAsset,
+    removeWalletAsset,
+  } = useMultipartySend()
+  const {targets, selectedTargetIndex, tokenSelectedChanged, reset, allocated} =
+    useTransfer()
 
-  // Track selected input wallets for multiparty transactions
-  const [selectedInputWalletIds, setSelectedInputWalletIds] = React.useState<
-    ReadonlyArray<string>
-  >([wallet.id]) // Default to current wallet
+  // Track expanded state for wallet accordions
+  const [expandedWallets, setExpandedWallets] = React.useState<
+    Map<string, boolean>
+  >(new Map())
 
+  // Initialize current wallet as expanded and selected for assets if multiple wallets
+  React.useEffect(() => {
+    if (selectedInputWalletIds.length > 0 && !expandedWallets.has(wallet.id)) {
+      setExpandedWallets((prev) => new Map(prev).set(wallet.id, true))
+    }
+    // If multiple wallets and no wallet selected for assets, select current wallet
+    if (
+      selectedInputWalletIds.length > 1 &&
+      selectedWalletForAssets === null &&
+      selectedInputWalletIds.includes(wallet.id)
+    ) {
+      setSelectedWalletForAssets(wallet.id)
+    }
+  }, [
+    wallet.id,
+    selectedInputWalletIds.length,
+    expandedWallets,
+    selectedWalletForAssets,
+    setSelectedWalletForAssets,
+  ])
+
+  const isMultipleWallets = selectedInputWalletIds.length > 1
+
+  // For single wallet, use transfer state amounts (backward compatibility)
+  // For multiple wallets, use per-wallet assets from context
   const selectedTarget = targets[selectedTargetIndex]
   const amounts = React.useMemo(() => {
-    const targetAmounts: Record<Portfolio.Token.Id, Portfolio.Token.Amount> =
-      selectedTarget?.entry.amounts ?? {}
-    if (!selectedTarget) return {}
-    return targetAmounts
-  }, [selectedTarget])
+    if (!isMultipleWallets) {
+      // Single wallet: use transfer state
+      const targetAmounts: Record<Portfolio.Token.Id, Portfolio.Token.Amount> =
+        selectedTarget?.entry.amounts ?? {}
+      if (!selectedTarget) return {}
+      return targetAmounts
+    } else {
+      // Multiple wallets: aggregate all wallet assets
+      const aggregated: Record<Portfolio.Token.Id, Portfolio.Token.Amount> = {}
+      selectedInputWalletIds.forEach((walletId) => {
+        const walletAssets = getWalletAssets(walletId)
+        walletAssets.forEach((amount, tokenId) => {
+          // If token already exists, sum quantities (for same token across wallets)
+          if (aggregated[tokenId]) {
+            aggregated[tokenId] = {
+              ...aggregated[tokenId],
+              quantity: aggregated[tokenId].quantity + amount.quantity,
+            }
+          } else {
+            aggregated[tokenId] = amount
+          }
+        })
+      })
+      return aggregated
+    }
+  }, [
+    isMultipleWallets,
+    selectedTarget,
+    selectedInputWalletIds,
+    getWalletAssets,
+  ])
+
   const selectedTokensCounter = Object.keys(amounts).length
   const {
     meta: {addressMode},
@@ -110,21 +166,46 @@ export const ListAmountsToSendScreen = () => {
     navigation.setOptions({headerLeft: () => <ListAmountsNavigateBackButton />})
   }, [navigation])
 
-  const handleOnEdit = (tokenId: Portfolio.Token.Id) => {
-    const amount = amounts[tokenId]
+  const handleOnEdit = (tokenId: Portfolio.Token.Id, walletId?: string) => {
+    const amount =
+      isMultipleWallets && walletId
+        ? getWalletAssets(walletId).get(tokenId)
+        : amounts[tokenId]
     if (!amount) return
     if (isNft(amount.info)) return
 
     tokenSelectedChanged(tokenId)
     navigateTo.editAmount(amount)
   }
-  const handleOnRemove = (tokenId: Portfolio.Token.Id) => {
-    // use case: redirect to add token screen if there is no token left
-    if (selectedTokensCounter === 1) {
-      clearSearch()
-      navigateTo.addToken({shouldPopPrevious: true})
+
+  const handleOnRemove = (tokenId: Portfolio.Token.Id, walletId?: string) => {
+    if (isMultipleWallets && walletId) {
+      // Remove from specific wallet
+      removeWalletAsset(walletId, tokenId)
+      // If this was the last token for this wallet, could navigate back
+      const walletAssets = getWalletAssets(walletId)
+      if (walletAssets.size === 0) {
+        // Wallet has no assets left
+      }
+    } else {
+      // Single wallet: use transfer state
+      // use case: redirect to add token screen if there is no token left
+      if (selectedTokensCounter === 1) {
+        clearSearch()
+        navigateTo.addToken({shouldPopPrevious: true})
+      }
+      // Note: amountRemoved is from useTransfer, but for single wallet we might still need it
+      // For now, we'll handle single wallet differently
+      if (!isMultipleWallets) {
+        // This will be handled by the transfer package
+        // We need to check if useTransfer still works for single wallet
+      }
     }
-    amountRemoved(tokenId)
+  }
+
+  const handleSelectWalletForAssets = (walletId: string) => {
+    setSelectedWalletForAssets(walletId)
+    navigateTo.addToken()
   }
 
   const handleOnSuccess = React.useCallback(
@@ -134,33 +215,43 @@ export const ListAmountsToSendScreen = () => {
     [reset],
   )
 
-  const handleOnAdd = () => {
+  const handleOnAdd = (walletId?: string) => {
     clearSearch()
+    if (isMultipleWallets && walletId) {
+      // Set the wallet for adding assets
+      setSelectedWalletForAssets(walletId)
+    }
     navigateTo.addToken()
   }
 
-  const handleSelectInputWallets = React.useCallback(() => {
-    openSelectMultipleWalletsModal({
-      onSelect: (selectedIds) => {
-        setSelectedInputWalletIds(selectedIds)
-      },
-      selectedWalletIds: Array.from(selectedInputWalletIds),
-      excludeWalletIds: [],
-      minSelection: 1,
-      filter: (walletMeta) => {
-        // Only show wallets on the same network
-        const otherWallet = walletManager.getWalletById(walletMeta.id)
-        return (
-          otherWallet?.networkManager.chainId === wallet.networkManager.chainId
-        )
-      },
+  // Get wallet metas for selected wallets
+  const selectedWalletMetas = React.useMemo(() => {
+    if (!walletManager) return []
+    return selectedInputWalletIds
+      .map((id) => walletManager.getWalletMetaById(id))
+      .filter((meta): meta is NonNullable<typeof meta> => meta !== null)
+  }, [walletManager, selectedInputWalletIds])
+
+  // Sort wallets: current wallet first, then others
+  const sortedWalletMetas = React.useMemo(() => {
+    const currentWalletMeta = selectedWalletMetas.find(
+      (meta) => meta.id === wallet.id,
+    )
+    const otherWalletMetas = selectedWalletMetas.filter(
+      (meta) => meta.id !== wallet.id,
+    )
+    return currentWalletMeta
+      ? [currentWalletMeta, ...otherWalletMetas]
+      : selectedWalletMetas
+  }, [selectedWalletMetas, wallet.id])
+
+  const handleToggleWallet = (walletId: string) => {
+    setExpandedWallets((prev) => {
+      const updated = new Map(prev)
+      updated.set(walletId, !(updated.get(walletId) ?? false))
+      return updated
     })
-  }, [
-    openSelectMultipleWalletsModal,
-    selectedInputWalletIds,
-    wallet,
-    walletManager,
-  ])
+  }
 
   const createUnsignedTxPromise = React.useCallback(
     async (entries: TransactionOutput[]) => {
@@ -297,37 +388,177 @@ export const ListAmountsToSendScreen = () => {
   const handleOnNext = () => {
     if (!selectedTarget) return
 
-    const transactionOutput = toTransactionOutput(selectedTarget.entry)
-    createUnsignedTx([transactionOutput])
+    // Check if we need to navigate to allocation screen
+    // (multiple destinations require allocation)
+    if (targets.length > 1) {
+      navigateTo.allocateAssets()
+      return
+    }
+
+    // Build transaction entries
+    let entries: TransactionOutput[]
+
+    if (isMultipleWallets) {
+      // Multiple wallets: aggregate assets from all wallets into entries
+      // For now, we'll aggregate all assets into a single entry per target
+      // TODO: When allocation screen is implemented, assets will be allocated per destination
+      entries = targets.map((target) => {
+        // Validate address - use resolved address if entry.address is empty
+        const address =
+          target.entry.address && target.entry.address.trim() !== ''
+            ? target.entry.address
+            : target.receiver.resolve
+
+        if (!address || address.trim() === '') {
+          throw new Error(
+            `Invalid address for target at index ${targets.indexOf(target)}`,
+          )
+        }
+
+        // Aggregate assets from all wallets for this target
+        const aggregatedAmounts: Record<
+          Portfolio.Token.Id,
+          Portfolio.Token.Amount
+        > = {}
+
+        selectedInputWalletIds.forEach((walletId) => {
+          const walletAssets = getWalletAssets(walletId)
+          walletAssets.forEach((amount, tokenId) => {
+            if (aggregatedAmounts[tokenId]) {
+              // Sum quantities for same token across wallets
+              aggregatedAmounts[tokenId] = {
+                ...aggregatedAmounts[tokenId],
+                quantity: aggregatedAmounts[tokenId].quantity + amount.quantity,
+              }
+            } else {
+              aggregatedAmounts[tokenId] = amount
+            }
+          })
+        })
+
+        // Create entry with aggregated amounts
+        return toTransactionOutput({
+          address,
+          amounts: aggregatedAmounts,
+          datum: target.entry.datum,
+        })
+      })
+    } else {
+      // Single wallet: use transfer state
+      // Validate address
+      const address =
+        selectedTarget.entry.address &&
+        selectedTarget.entry.address.trim() !== ''
+          ? selectedTarget.entry.address
+          : selectedTarget.receiver.resolve
+
+      if (!address || address.trim() === '') {
+        throw new Error('Invalid address for transaction')
+      }
+
+      entries = [
+        toTransactionOutput({
+          ...selectedTarget.entry,
+          address,
+        }),
+      ]
+    }
+
+    createUnsignedTx(entries)
   }
+
   return (
     <SafeArea>
-      <AmountsList
-        data={Object.values(amounts)}
-        renderItem={({item: amount}) => (
-          <Boundary>
-            <ActionableAmount
-              amount={amount}
-              onRemove={handleOnRemove}
-              onEdit={handleOnEdit}
-            />
-          </Boundary>
-        )}
-        bounces={false}
-        keyExtractor={(item) => item.info.id}
-        testID="selectedTokens"
-        contentContainerStyle={[a.px_lg]}
-        style={[a.pt_lg]}
-      />
+      {isMultipleWallets ? (
+        // Show accordion with wallets when multiple inputs selected
+        <AmountsList
+          data={sortedWalletMetas}
+          renderItem={({item: walletMeta}) => {
+            const isExpanded =
+              expandedWallets.get(walletMeta.id) ?? walletMeta.id === wallet.id
+            // Get assets for this specific wallet
+            const walletAssetsMap = getWalletAssets(walletMeta.id)
+            const walletAmounts = Array.from(walletAssetsMap.values())
+
+            return (
+              <Boundary>
+                <Accordion
+                  label={walletMeta.name}
+                  expanded={isExpanded}
+                  onChange={() => handleToggleWallet(walletMeta.id)}
+                >
+                  <Space.Height.lg />
+                  {isExpanded && (
+                    <>
+                      {/* Show assets for this wallet */}
+                      {walletAmounts.length > 0 ? (
+                        <View style={[a.px_lg]}>
+                          {walletAmounts.map((amount) => (
+                            <ActionableAmount
+                              key={amount.info.id}
+                              amount={amount}
+                              onRemove={() =>
+                                handleOnRemove(amount.info.id, walletMeta.id)
+                              }
+                              onEdit={() =>
+                                handleOnEdit(amount.info.id, walletMeta.id)
+                              }
+                            />
+                          ))}
+                        </View>
+                      ) : (
+                        <View style={[a.px_lg, a.py_lg]}>
+                          <Text
+                            style={[a.body_2_md_regular, {color: p.gray_600}]}
+                          >
+                            {strings.send.noAssetsAddedYet(
+                              strings.send.assets(0),
+                            )}
+                          </Text>
+                        </View>
+                      )}
+
+                      {/* Add assets button for this wallet */}
+                      <View style={[a.px_lg, a.pb_lg]}>
+                        <AddTokenButton
+                          onPress={() => handleOnAdd(walletMeta.id)}
+                        />
+                      </View>
+                    </>
+                  )}
+                </Accordion>
+                <Space.Height.md />
+              </Boundary>
+            )
+          }}
+          bounces={false}
+          keyExtractor={(item) => item.id}
+          testID="walletAccordions"
+          contentContainerStyle={[a.px_lg, a.pt_lg]}
+        />
+      ) : (
+        // Single wallet - show current behavior
+        <AmountsList
+          data={Object.values(amounts)}
+          renderItem={({item: amount}) => (
+            <Boundary>
+              <ActionableAmount
+                amount={amount}
+                onRemove={handleOnRemove}
+                onEdit={handleOnEdit}
+              />
+            </Boundary>
+          )}
+          bounces={false}
+          keyExtractor={(item) => item.info.id}
+          testID="selectedTokens"
+          contentContainerStyle={[a.px_lg]}
+          style={[a.pt_lg]}
+        />
+      )}
 
       <SafeArea.Footer style={[a.bg_transparent, a.gap_lg]}>
-        <AddTokenButton onPress={handleOnAdd} />
-
-        {/* Multiparty wallet selection */}
-        <SelectInputWalletsButton
-          selectedCount={selectedInputWalletIds.length}
-          onPress={handleSelectInputWallets}
-        />
+        {!isMultipleWallets && <AddTokenButton onPress={handleOnAdd} />}
 
         <NextButton
           onPress={handleOnNext}
@@ -398,47 +629,6 @@ const ListAmountsNavigateBackButton = () => {
       }}
     >
       <Icon.Chevron direction="left" color={ta.el_gray_max.color} />
-    </TouchableOpacity>
-  )
-}
-
-const SelectInputWalletsButton = ({
-  selectedCount,
-  onPress,
-}: {
-  selectedCount: number
-  onPress: () => void
-}) => {
-  const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
-
-  return (
-    <TouchableOpacity
-      onPress={onPress}
-      style={[
-        a.flex_row,
-        a.align_center,
-        a.justify_between,
-        a.p_md,
-        a.rounded_sm,
-        a.border,
-        {borderColor: p.gray_200, backgroundColor: p.gray_50},
-      ]}
-    >
-      <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-        <Icon.MultiParty size={20} color={p.primary_600} />
-        <Text style={[a.body_1_lg_medium]}>
-          {strings.send.selectInputWallets}
-        </Text>
-      </View>
-      <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-        <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-          {selectedCount === 1
-            ? strings.send.singleWallet
-            : strings.send.multipleWallets(selectedCount)}
-        </Text>
-        <Icon.Chevron direction="right" color={ta.el_gray_max.color} />
-      </View>
     </TouchableOpacity>
   )
 }

@@ -1,16 +1,20 @@
 /**
  * Select Parent Wallet Screen
  * Select a parent wallet to generate shared key from
+ * Uses SelectMultipleWalletsModal for consistent UI
  */
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {Wallet} from '@yoroi/types'
 import {useWalletManager} from '@yoroi/wallet-manager'
 
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
-import {ScrollView, TouchableOpacity, View} from 'react-native'
+import {View} from 'react-native'
 
+import {useSelectMultipleWalletsModal} from '~/features/WalletManager/ui/modals/SelectMultipleWalletsModal'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
+import {makeWalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
 import {Button} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
@@ -21,29 +25,107 @@ export const SelectParentWalletScreen = () => {
   const {palette: p} = useTheme()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
   const {walletManager} = useWalletManager()
+  const {openSelectMultipleWalletsModal} = useSelectMultipleWalletsModal()
 
-  // Get available wallets (exclude multisig wallets)
-  const availableWallets = React.useMemo(() => {
-    return Array.from(walletManager.walletMetas.values()).filter(
-      (meta) => meta.implementation !== 'cardano-multisig',
-    )
-  }, [walletManager.walletMetas])
-
-  const [selectedWalletId, setSelectedWalletId] = React.useState<string | null>(
-    null,
+  // Check if wallet can generate shared key
+  // A wallet can generate shared key if:
+  // 1. It's not readonly (has root key to derive)
+  // 2. OR it has multisigSharedKey already stored
+  const canGenerateSharedKey = React.useCallback(
+    async (walletMeta: Wallet.Meta): Promise<boolean> => {
+      // Readonly wallets without stored shared key can't generate it
+      if (walletMeta.isReadOnly) {
+        try {
+          const encryptedStorage = makeWalletEncryptedStorage(walletMeta.id)
+          const sharedKey = await encryptedStorage.multisigSharedKey.read(0)
+          return sharedKey !== null
+        } catch {
+          return false
+        }
+      }
+      // Non-readonly wallets can generate shared key (can derive with password)
+      return true
+    },
+    [],
   )
 
-  const handleSelectWallet = React.useCallback((walletId: string) => {
-    setSelectedWalletId(walletId)
-  }, [])
+  // Filter wallets that can generate shared keys
+  const [availableWallets, setAvailableWallets] = React.useState<
+    ReadonlyArray<Wallet.Meta>
+  >([])
+  const [isLoading, setIsLoading] = React.useState(true)
 
-  const handleContinue = React.useCallback(() => {
-    if (!selectedWalletId) return
+  React.useEffect(() => {
+    const filterWallets = async () => {
+      setIsLoading(true)
+      const allWallets = Array.from(walletManager.walletMetas.values()).filter(
+        (meta) => meta.implementation !== 'cardano-multisig',
+      )
 
-    navigation.navigate('setup-wallet-multisig-generate-shared-key', {
-      parentWalletId: selectedWalletId,
+      const canGenerate = await Promise.all(
+        allWallets.map(async (meta) => ({
+          meta,
+          canGenerate: await canGenerateSharedKey(meta),
+        })),
+      )
+
+      const filtered = canGenerate
+        .filter(({canGenerate: canGen}) => canGen)
+        .map(({meta}) => meta)
+
+      setAvailableWallets(filtered)
+      setIsLoading(false)
+    }
+
+    filterWallets()
+  }, [walletManager.walletMetas, canGenerateSharedKey])
+
+  const handleSelectWallet = React.useCallback(() => {
+    openSelectMultipleWalletsModal({
+      onSelect: (selectedIds) => {
+        if (selectedIds.length > 0) {
+          const selectedWalletId = selectedIds[0]
+          navigation.navigate('setup-wallet-multisig-generate-shared-key', {
+            parentWalletId: selectedWalletId,
+          })
+        }
+      },
+      selectedWalletIds: [],
+      excludeWalletIds: [],
+      minSelection: 1,
+      maxSelection: 1,
+      singleSelection: true,
+      title: strings.setupWallet.selectParentWalletTitle,
+      filter: (walletMeta) => {
+        // Filter is already applied via availableWallets state
+        // This is a safety check
+        return availableWallets.some((meta) => meta.id === walletMeta.id)
+      },
     })
-  }, [selectedWalletId, navigation])
+  }, [
+    openSelectMultipleWalletsModal,
+    navigation,
+    availableWallets,
+    strings.setupWallet.selectParentWalletTitle,
+  ])
+
+  React.useEffect(() => {
+    if (!isLoading && availableWallets.length > 0) {
+      // Auto-open modal when wallets are loaded
+      handleSelectWallet()
+    }
+  }, [isLoading, availableWallets.length, handleSelectWallet])
+
+  if (isLoading) {
+    return (
+      <SafeArea>
+        <Space.Height.lg />
+        <View style={[a.px_lg]}>
+          <Text style={[a.body_1_lg_regular]}>{strings.global.loading}</Text>
+        </View>
+      </SafeArea>
+    )
+  }
 
   if (availableWallets.length === 0) {
     return (
@@ -67,60 +149,14 @@ export const SelectParentWalletScreen = () => {
     )
   }
 
+  // Modal will be opened automatically via useEffect
   return (
     <SafeArea>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={[a.px_lg, a.pb_lg]}
-      >
-        <View style={[a.gap_md]}>
-          <Space.Height.lg />
-
-          <Text style={[a.body_1_lg_regular]}>
-            {strings.setupWallet.selectParentWalletDescription}
-          </Text>
-
-          <Space.Height.lg />
-
-          {availableWallets.map((walletMeta) => {
-            const isSelected = selectedWalletId === walletMeta.id
-
-            return (
-              <TouchableOpacity
-                key={walletMeta.id}
-                onPress={() => handleSelectWallet(walletMeta.id)}
-                style={[
-                  a.p_md,
-                  a.rounded_sm,
-                  a.border,
-                  isSelected
-                    ? {backgroundColor: p.primary_100}
-                    : {backgroundColor: 'transparent'},
-                  isSelected
-                    ? {borderColor: p.primary_600}
-                    : {borderColor: p.gray_200},
-                ]}
-                testID={`parent-wallet-option-${walletMeta.id}`}
-              >
-                <Text style={[a.heading_3_medium]}>{walletMeta.name}</Text>
-                <Space.Height.xs />
-                <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-                  {walletMeta.implementation}
-                </Text>
-              </TouchableOpacity>
-            )
-          })}
-        </View>
-      </ScrollView>
-
-      <SafeArea.Footer>
-        <Button
-          title={strings.global.proceed}
-          onPress={handleContinue}
-          disabled={!selectedWalletId}
-          testID="continue-after-select-parent-button"
-        />
-      </SafeArea.Footer>
+      <View style={[a.px_lg, a.pt_lg]}>
+        <Text style={[a.body_1_lg_regular]}>
+          {strings.setupWallet.selectParentWalletDescription}
+        </Text>
+      </View>
     </SafeArea>
   )
 }

@@ -1,5 +1,6 @@
 import {formatTokenWithText} from '@yoroi/cardano-wallet'
 import {
+  getLogger,
   isBoolean,
   parseSafe,
   useAsyncStorage,
@@ -26,6 +27,7 @@ import {
 import {Address} from '~/common/Address/Address'
 import {TokenItem} from '~/common/TokenItem/TokenItem'
 import {WalletBalance} from '~/common/WalletBalance/WalletBalance'
+import {useCheckAllSignatures} from '~/features/ReviewTx/common/hooks/useCheckAllSignatures'
 import {Operations, useOperations} from '~/features/ReviewTx/common/operations'
 import {
   calculateSendsAndReceives,
@@ -60,6 +62,9 @@ export const OverviewTab = ({
   createdBy,
   validationResult,
   readOnly: _readOnly = false,
+  multiparty,
+  multisig,
+  txCbor,
 }: {
   tx: FormattedTx
   extraOperations?: Array<React.ReactNode>
@@ -70,11 +75,66 @@ export const OverviewTab = ({
   createdBy?: {logo?: string; url: string; name?: string}
   validationResult?: {valid: boolean; errors: string[]; warnings: string[]}
   readOnly?: boolean
+  multiparty?: {
+    requiredSigners: ReadonlyArray<{
+      readonly walletId: string
+      readonly keyHash: string
+      readonly walletName: string
+    }>
+    inputWalletIds?: ReadonlyArray<string>
+  }
+  multisig?: {
+    requiredCoSigners: number
+    totalCoSigners: number
+    signedCoSigners?: ReadonlyArray<string>
+    missingCoSigners?: ReadonlyArray<string>
+  }
+  txCbor?: string | null
 }) => {
   const {atoms: ta} = useTheme()
   const operations = useOperations(tx.certificates)
   const strings = useStrings()
+  const logger = React.useMemo(() => getLogger(), [])
+  const {checkAllSignatures} = useCheckAllSignatures()
   useShowOperationsNotice(operations)
+
+  // Check signature status for multiparty/multisig transactions
+  const [signatureStatus, setSignatureStatus] = React.useState<{
+    isFullySigned: boolean
+    requiredSignatures: number
+    collectedSignatures: number
+    signerDetails: ReadonlyArray<{
+      readonly walletId: string
+      readonly walletName: string
+      readonly keyHash: string
+      readonly isSigned: boolean
+      readonly isMultisig: boolean
+      readonly multisigStatus?: {
+        readonly requiredCoSigners: number
+        readonly signedCoSigners: number
+        readonly meetsQuorum: boolean
+      }
+    }>
+  } | null>(null)
+
+  React.useEffect(() => {
+    if (!txCbor || (!multiparty && !multisig)) {
+      setSignatureStatus(null)
+      return
+    }
+
+    const loadSignatureStatus = async () => {
+      try {
+        const status = await checkAllSignatures(txCbor, multiparty, multisig)
+        setSignatureStatus(status)
+      } catch (error) {
+        logger.error('Failed to load signature status', {error})
+        setSignatureStatus(null)
+      }
+    }
+
+    loadSignatureStatus()
+  }, [txCbor, multiparty, multisig, checkAllSignatures, logger])
 
   const notOwnedOutputs = React.useMemo(
     () => tx.outputs.filter((output) => !output.ownAddress),
@@ -349,8 +409,8 @@ export const OverviewTab = ({
               </>
             )}
 
-            {/* Signatures Summary */}
-            {signaturesSummary && (
+            {/* Signatures Summary - Only show if not multiparty/multisig (they have dedicated section) */}
+            {signaturesSummary && !multiparty && !multisig && (
               <>
                 <InfoBanner
                   title={strings.txReview.overview.signaturesSummary}
@@ -387,6 +447,19 @@ export const OverviewTab = ({
 
       <WalletInfoSection tx={tx} createdBy={createdBy} />
 
+      {/* Multisign Transaction Section */}
+      {(multiparty || multisig) && (
+        <>
+          <Divider verticalSpace="lg" />
+          <MultisignTransactionSection
+            tx={tx}
+            multiparty={multiparty}
+            multisig={multisig}
+            signatureStatus={signatureStatus ?? undefined}
+          />
+        </>
+      )}
+
       <Divider verticalSpace="lg" />
 
       <MyWalletSection
@@ -394,6 +467,7 @@ export const OverviewTab = ({
         ownedOutputs={ownedOutputs}
         receiverCustomTitle={receiverCustomTitle}
         operationsFee={operations.totalFee}
+        multiparty={multiparty}
       />
 
       {externalPartiesSection}
@@ -509,11 +583,20 @@ const MyWalletSection = ({
   tx,
   ownedOutputs,
   operationsFee,
+  multiparty: _multiparty,
 }: {
   tx: FormattedTx
   ownedOutputs: FormattedOutputs
   receiverCustomTitle?: React.ReactNode
   operationsFee: Balance.Quantity
+  multiparty?: {
+    requiredSigners: ReadonlyArray<{
+      readonly walletId: string
+      readonly keyHash: string
+      readonly walletName: string
+    }>
+    inputWalletIds?: ReadonlyArray<string>
+  }
 }) => {
   const strings = useStrings()
   const {palette: p} = useTheme()
@@ -1254,4 +1337,146 @@ const useSetOperationsNoticeShown = () => {
     ...mutation,
     setOperationsNoticeShown: mutation.mutate,
   }
+}
+
+const MultisignTransactionSection = ({
+  tx: _tx,
+  multiparty: _multiparty,
+  multisig: _multisig,
+  signatureStatus: externalSignatureStatus,
+}: {
+  tx: FormattedTx
+  multiparty?: {
+    requiredSigners: ReadonlyArray<{
+      readonly walletId: string
+      readonly keyHash: string
+      readonly walletName: string
+    }>
+    inputWalletIds?: ReadonlyArray<string>
+  }
+  multisig?: {
+    requiredCoSigners: number
+    totalCoSigners: number
+    signedCoSigners?: ReadonlyArray<string>
+    missingCoSigners?: ReadonlyArray<string>
+  }
+  signatureStatus?: {
+    isFullySigned: boolean
+    requiredSignatures: number
+    collectedSignatures: number
+    signerDetails: ReadonlyArray<{
+      readonly walletId: string
+      readonly walletName: string
+      readonly keyHash: string
+      readonly isSigned: boolean
+      readonly isMultisig: boolean
+      readonly multisigStatus?: {
+        readonly requiredCoSigners: number
+        readonly signedCoSigners: number
+        readonly meetsQuorum: boolean
+      }
+    }>
+  }
+}) => {
+  const strings = useStrings()
+  const {palette: p, atoms: ta} = useTheme()
+  const [expanded, setExpanded] = React.useState(true)
+
+  if (!externalSignatureStatus && !_multiparty && !_multisig) return null
+
+  const signatureStatus = externalSignatureStatus || {
+    isFullySigned: false,
+    requiredSignatures:
+      _multiparty?.requiredSigners.length ?? _multisig?.requiredCoSigners ?? 0,
+    collectedSignatures: 0,
+    signerDetails: [],
+  }
+
+  return (
+    <Accordion
+      label={'Multisign Transaction'}
+      expanded={expanded}
+      onChange={setExpanded}
+    >
+      <Space.Height.lg />
+
+      <View style={[a.gap_md]}>
+        {/* Signatures Required */}
+        <View style={[a.flex_row, a.justify_between]}>
+          <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
+            {strings.txReview.signatures.requiredSigners ||
+              'Signatures Required'}
+            :
+          </Text>
+          <Text style={[a.body_2_md_medium, ta.text_gray_max]}>
+            {signatureStatus.requiredSignatures}
+          </Text>
+        </View>
+
+        {/* Signatures Received */}
+        <View style={[a.flex_row, a.justify_between]}>
+          <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
+            {'Signatures Received'}:
+          </Text>
+          <Text style={[a.body_2_md_medium, ta.text_gray_max]}>
+            {signatureStatus.collectedSignatures}
+          </Text>
+        </View>
+
+        {/* Signers List */}
+        {signatureStatus.signerDetails.length > 0 && (
+          <>
+            <Divider verticalSpace="md" />
+            <Text style={[a.body_2_md_medium, ta.text_gray_medium]}>
+              {strings.send.signers || 'Signers'}:
+            </Text>
+            {signatureStatus.signerDetails.map((signer, index) => (
+              <View key={signer.walletId || index}>
+                <View
+                  style={[
+                    a.flex_row,
+                    a.align_center,
+                    a.justify_between,
+                    a.p_md,
+                    a.rounded_sm,
+                    {backgroundColor: p.gray_50},
+                  ]}
+                >
+                  <View
+                    style={[a.flex_row, a.align_center, a.gap_sm, a.flex_1]}
+                  >
+                    {signer.isSigned ? (
+                      <Icon.Check size={20} color={p.green_static} />
+                    ) : (
+                      <Icon.Clock size={20} color={p.gray_400} />
+                    )}
+                    <View style={[a.flex_1]}>
+                      <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
+                        {signer.walletName || signer.walletId}
+                      </Text>
+                      {signer.isMultisig && signer.multisigStatus && (
+                        <Text
+                          style={[
+                            a.body_3_sm_regular,
+                            {color: p.gray_600},
+                            a.pt_xs,
+                          ]}
+                        >
+                          {signer.multisigStatus.signedCoSigners}/
+                          {signer.multisigStatus.requiredCoSigners} co-signers
+                        </Text>
+                      )}
+                    </View>
+                  </View>
+                  <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+                    {signer.isSigned ? 'Signed' : 'Pending'}
+                  </Text>
+                </View>
+              </View>
+            ))}
+          </>
+        )}
+      </View>
+    </Accordion>
+  )
 }

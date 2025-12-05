@@ -38,32 +38,69 @@ export const TransferProvider = ({
   const actions = React.useRef<TransferActions & TargetActions>({
     reset: () => dispatch({type: TransferActionType.Reset}),
 
-    receiverResolveChanged: (resolve) =>
-      dispatch({type: TransferActionType.ReceiverResolveChanged, resolve}),
-    nameServerSelectedChanged: (nameServer) =>
+    receiverResolveChanged: (resolve, targetIndex) =>
+      dispatch({
+        type: TransferActionType.ReceiverResolveChanged,
+        resolve,
+        targetIndex,
+      }),
+    nameServerSelectedChanged: (nameServer, targetIndex) =>
       dispatch({
         type: TransferActionType.NameServerSelectedChanged,
         nameServer,
+        targetIndex,
       }),
-    addressRecordsFetched: (addressRecords) =>
+    addressRecordsFetched: (addressRecords, targetIndex) =>
       dispatch({
         type: TransferActionType.AddressRecordsFetched,
         addressRecords,
+        targetIndex,
       }),
 
-    memoChanged: (memo) =>
-      dispatch({type: TransferActionType.MemoChanged, memo}),
+    // memoChanged removed - now handled in ReviewTx
 
     unsignedTxChanged: (unsignedTx) =>
       dispatch({type: TransferActionType.UnsignedTxChanged, unsignedTx}),
     tokenSelectedChanged: (tokenId) =>
       dispatch({type: TransferActionType.TokenSelectedChanged, tokenId}),
-    amountChanged: (amount) =>
-      dispatch({type: TransferActionType.AmountChanged, amount}),
-    amountRemoved: (tokenId) =>
-      dispatch({type: TransferActionType.AmountRemoved, tokenId}),
+    amountChanged: (amount, targetIndex) =>
+      dispatch({
+        type: TransferActionType.AmountChanged,
+        amount,
+        targetIndex,
+      }),
+    amountRemoved: (tokenId, targetIndex) =>
+      dispatch({
+        type: TransferActionType.AmountRemoved,
+        tokenId,
+        targetIndex,
+      }),
     linkActionChanged: (linkAction) =>
       dispatch({type: TransferActionType.LinkActionChanged, linkAction}),
+    targetAdded: () => dispatch({type: TransferActionType.TargetAdded}),
+    targetRemoved: (index) =>
+      dispatch({type: TransferActionType.TargetRemoved, index}),
+    targetIndexSelected: (index) =>
+      dispatch({type: TransferActionType.TargetIndexSelected, index}),
+    addTokenToTarget: (targetIndex, token) =>
+      dispatch({
+        type: TransferActionType.AddTokenToTarget,
+        targetIndex,
+        token,
+      }),
+    removeTokenFromTarget: (targetIndex, tokenId) =>
+      dispatch({
+        type: TransferActionType.RemoveTokenFromTarget,
+        targetIndex,
+        tokenId,
+      }),
+    updateTokenAmountForTarget: (targetIndex, tokenId, quantity) =>
+      dispatch({
+        type: TransferActionType.UpdateTokenAmountForTarget,
+        targetIndex,
+        tokenId,
+        quantity,
+      }),
   }).current
 
   const context = React.useMemo(

@@ -141,6 +141,7 @@ export type TxHistoryRoutes = {
     amount: Portfolio.Token.Amount
   }
   'send-select-token-from-list': undefined
+  'send-allocate-assets': undefined
   'swap': NavigatorScreenParams<SwapTokenRoutes>
 } & ScanRoutes &
   ClaimRoutes &
@@ -297,6 +298,12 @@ export type ReviewTxRoutes = {
         readonly walletName: string
       }>
       inputWalletIds: ReadonlyArray<string>
+    }
+    multisig?: {
+      requiredCoSigners: number
+      totalCoSigners: number
+      signedCoSigners?: ReadonlyArray<string>
+      missingCoSigners?: ReadonlyArray<string>
     }
     onConfirm?: () => void
     onCancel?: OnConfirm['onCancel']

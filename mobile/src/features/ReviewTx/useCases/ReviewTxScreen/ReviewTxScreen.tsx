@@ -98,6 +98,8 @@ const ReviewTxContent = ({
     preventSubmit: params?.preventSubmit,
     context: mapReviewContextToOperationContext(params?.context),
     formattedTx: formattedTx ?? null,
+    multiparty: params?.multiparty,
+    multisig: params?.multisig,
     onSuccess: params?.onSuccess,
     onSuccessWithoutFeedback: params?.onSuccessWithoutFeedback,
     onError: params?.onError,
@@ -132,6 +134,8 @@ const ReviewTxContent = ({
       createdBy={params?.createdBy}
       validationResult={validationResult}
       cbor={params?.cbor != null && isAuthDev ? params.cbor : null}
+      multiparty={params?.multiparty}
+      multisig={params?.multisig}
       onConfirm={meta.isReadOnly ? undefined : handleOnConfirm}
       readOnly={meta.isReadOnly}
       isReviewFlow={true}

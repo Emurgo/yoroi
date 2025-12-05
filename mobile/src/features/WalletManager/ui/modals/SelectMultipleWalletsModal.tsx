@@ -27,7 +27,7 @@ import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 
-import {WalletListItem} from '../screens/SelectWalletFromListScreen/WalletListItem'
+// Removed WalletListItem import - using simplified display for multi-select
 
 type Props = {
   onSelect: (selectedWalletIds: ReadonlyArray<string>) => void
@@ -37,6 +37,8 @@ type Props = {
   minSelection?: number
   maxSelection?: number
   filter?: (walletMeta: Wallet.Meta) => boolean
+  // For single selection mode (e.g., multisig parent wallet selection)
+  singleSelection?: boolean
 }
 
 export const SelectMultipleWalletsModal = ({
@@ -47,6 +49,7 @@ export const SelectMultipleWalletsModal = ({
   minSelection = 1,
   maxSelection,
   filter,
+  singleSelection = false,
 }: Props) => {
   const walletMetas = useWalletMetas()
   const {palette: p} = useTheme()
@@ -76,6 +79,15 @@ export const SelectMultipleWalletsModal = ({
   const handleToggleWallet = React.useCallback(
     (walletMeta: Wallet.Meta) => {
       setSelectedWalletIds((prev) => {
+        if (singleSelection) {
+          // Single selection: replace current selection
+          if (prev.has(walletMeta.id)) {
+            return new Set() // Deselect if already selected
+          }
+          return new Set([walletMeta.id]) // Select only this one
+        }
+
+        // Multiple selection: toggle
         const next = new Set(prev)
         if (next.has(walletMeta.id)) {
           next.delete(walletMeta.id)
@@ -89,7 +101,7 @@ export const SelectMultipleWalletsModal = ({
         return next
       })
     },
-    [maxSelection],
+    [maxSelection, singleSelection],
   )
 
   const handleConfirm = React.useCallback(() => {
@@ -101,6 +113,11 @@ export const SelectMultipleWalletsModal = ({
 
   const canConfirm = selectedWalletIds.size >= minSelection
   const selectedCount = selectedWalletIds.size
+
+  // For single selection, minSelection should be 0 or 1
+  const effectiveMinSelection = singleSelection
+    ? Math.min(minSelection, 1)
+    : minSelection
 
   const walletList = React.useMemo(
     () =>
@@ -149,7 +166,8 @@ export const SelectMultipleWalletsModal = ({
         onConfirm={handleConfirm}
         onCancel={_onCancel}
         selectedCount={selectedCount}
-        minSelection={minSelection}
+        minSelection={effectiveMinSelection}
+        singleSelection={singleSelection}
       />
     </>
   )
@@ -166,7 +184,12 @@ const MultiSelectWalletItem = ({
   isSelected,
   onToggle,
 }: MultiSelectWalletItemProps) => {
-  const {palette: p} = useTheme()
+  const {palette: p, atoms: ta} = useTheme()
+
+  const implementationName = React.useMemo(() => {
+    if (walletMeta.implementation === 'cardano-multisig') return 'Multisig'
+    return walletMeta.implementation
+  }, [walletMeta.implementation])
 
   return (
     <TouchableOpacity
@@ -182,12 +205,55 @@ const MultiSelectWalletItem = ({
           : {borderColor: p.gray_200, backgroundColor: 'transparent'},
       ]}
     >
-      <View style={[a.flex_1]}>
-        <WalletListItem
-          walletMeta={walletMeta}
-          onPress={() => onToggle(walletMeta)}
-        />
+      <Icon.WalletAvatar image={walletMeta.avatar} />
+
+      <Space.Width.md />
+
+      <View style={[a.justify_between, a.flex_1]}>
+        <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+          <Text
+            style={[a.flex_1, a.body_1_lg_medium, ta.text_gray_max]}
+            numberOfLines={1}
+          >
+            {walletMeta.name}
+          </Text>
+        </View>
+
+        <Text style={[ta.text_gray_low]}>
+          {`${walletMeta.plate} | ${implementationName}`}
+        </Text>
       </View>
+
+      {walletMeta.multisigMeta && (
+        <>
+          <View
+            style={[
+              a.px_xs,
+              a.py_xs,
+              {backgroundColor: p.primary_100},
+              a.rounded_xs,
+            ]}
+          >
+            <Text style={[a.body_2_md_medium, {color: p.primary_600}]}>
+              {walletMeta.multisigMeta.coSigners.length}-of-
+              {walletMeta.multisigMeta.quorumRules.kind === 'RequireNOf'
+                ? walletMeta.multisigMeta.quorumRules.required ||
+                  walletMeta.multisigMeta.coSigners.length
+                : walletMeta.multisigMeta.quorumRules.kind === 'RequireAllOf'
+                  ? walletMeta.multisigMeta.coSigners.length
+                  : 1}
+            </Text>
+          </View>
+          <Space.Width.md />
+        </>
+      )}
+
+      {walletMeta.isReadOnly && (
+        <>
+          <Icon.EyeOn size={24} color={p.el_gray_min} />
+          <Space.Width.md />
+        </>
+      )}
 
       <Space.Width.md />
 
@@ -212,6 +278,7 @@ type SelectMultipleWalletsModalFooterProps = {
   onCancel?: () => void
   selectedCount: number
   minSelection: number
+  singleSelection?: boolean
 }
 
 const SelectMultipleWalletsModalFooter = ({
@@ -219,6 +286,7 @@ const SelectMultipleWalletsModalFooter = ({
   onCancel,
   selectedCount,
   minSelection,
+  singleSelection = false,
 }: SelectMultipleWalletsModalFooterProps) => {
   const strings = useStrings()
   const {markActionProcessed} = useLinks()
@@ -231,28 +299,33 @@ const SelectMultipleWalletsModalFooter = ({
     markActionProcessed()
     closeModal()
     onCancel?.()
-    walletNavigation.resetToWalletSelection()
+    if (!singleSelection) {
+      walletNavigation.resetToWalletSelection()
+    }
   }
 
   return (
     <Modal.Footer>
-      <Button
-        size="S"
-        type={ButtonType.Secondary}
-        onPress={handleCancel}
-        title={strings.global.cancel}
-      />
-      <Space.Width.md />
-      <Button
-        size="S"
-        onPress={onConfirm}
-        disabled={!canConfirm}
-        title={
-          canConfirm
-            ? strings.global.ok
-            : strings.send.selectAtLeastWallets(minSelection)
-        }
-      />
+      <View style={[a.p_lg, a.flex_row, a.justify_between, a.gap_md]}>
+        <Button
+          size="S"
+          type={ButtonType.Secondary}
+          onPress={handleCancel}
+          title={strings.global.cancel}
+        />
+        <Button
+          size="S"
+          onPress={onConfirm}
+          disabled={!canConfirm}
+          title={
+            canConfirm
+              ? singleSelection
+                ? strings.global.proceed
+                : strings.global.ok
+              : strings.send.selectAtLeastWallets(minSelection)
+          }
+        />
+      </View>
     </Modal.Footer>
   )
 }
@@ -272,6 +345,8 @@ export const useSelectMultipleWalletsModal = () => {
       minSelection = 1,
       maxSelection,
       filter,
+      singleSelection = false,
+      title,
     }: {
       onSelect: (selectedWalletIds: ReadonlyArray<string>) => void
       onCancel?: () => void
@@ -280,13 +355,15 @@ export const useSelectMultipleWalletsModal = () => {
       minSelection?: number
       maxSelection?: number
       filter?: (walletMeta: Wallet.Meta) => boolean
+      singleSelection?: boolean
+      title?: string
     }) => {
       if (!walletManager) {
         throw new Error('WalletManager not available')
       }
 
       openModal({
-        title: strings.send.selectInputWallets,
+        title: title ?? strings.send.selectInputWallets,
         content: (
           <SelectMultipleWalletsModal
             onSelect={(selected) => {
@@ -301,6 +378,7 @@ export const useSelectMultipleWalletsModal = () => {
             minSelection={minSelection}
             maxSelection={maxSelection}
             filter={filter}
+            singleSelection={singleSelection}
           />
         ),
         height: Math.min(windowHeight * 0.85, 700),

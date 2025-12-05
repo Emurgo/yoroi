@@ -4,7 +4,7 @@ import {isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import {Portfolio} from '@yoroi/types'
-import {useSelectedWallet} from '@yoroi/wallet-manager'
+import {useSelectedWallet, useWalletManager} from '@yoroi/wallet-manager'
 
 import {useIsFocused} from '@react-navigation/native'
 import * as React from 'react'
@@ -18,6 +18,7 @@ import {
 
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
 import {usePortfolioPrimaryBreakdown} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
+import {useMultipartySend} from '~/features/Send/common/context/MultipartySendContext'
 import {useNavigateTo} from '~/features/Send/common/navigation'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -45,8 +46,27 @@ export const EditAmountScreen = () => {
   const {numberLocale} = useLanguage()
 
   const {wallet} = useSelectedWallet()
-  const balances = usePortfolioBalances({wallet})
-  const primaryBreakdown = usePortfolioPrimaryBreakdown({wallet})
+  const {walletManager} = useWalletManager()
+  const {
+    selectedInputWalletIds,
+    selectedWalletForAssets,
+    removeWalletAsset,
+    addWalletAsset,
+  } = useMultipartySend()
+
+  const isMultipleWallets = selectedInputWalletIds.length > 1
+  // Determine which wallet to use for balances
+  const walletForBalances = React.useMemo(() => {
+    if (isMultipleWallets && selectedWalletForAssets) {
+      return walletManager?.getWalletById(selectedWalletForAssets) ?? wallet
+    }
+    return wallet
+  }, [isMultipleWallets, selectedWalletForAssets, walletManager, wallet])
+
+  const balances = usePortfolioBalances({wallet: walletForBalances})
+  const primaryBreakdown = usePortfolioPrimaryBreakdown({
+    wallet: walletForBalances,
+  })
 
   const {amountRemoved, amountChanged, allocated, selectedTargetIndex} =
     useTransfer()
@@ -88,11 +108,23 @@ export const EditAmountScreen = () => {
     return () => {
       if (quantity === BigInt(0) && !isFocused) {
         InteractionManager.runAfterInteractions(() => {
-          amountRemoved(selectedTokenId)
+          if (isMultipleWallets && selectedWalletForAssets) {
+            removeWalletAsset(selectedWalletForAssets, selectedTokenId)
+          } else {
+            amountRemoved(selectedTokenId)
+          }
         })
       }
     }
-  }, [quantity, amountRemoved, isFocused, selectedTokenId])
+  }, [
+    quantity,
+    amountRemoved,
+    isFocused,
+    selectedTokenId,
+    isMultipleWallets,
+    selectedWalletForAssets,
+    removeWalletAsset,
+  ])
 
   const hasBalance = available >= quantity
   // primary can have locked amount
@@ -132,12 +164,28 @@ export const EditAmountScreen = () => {
   }, [amount.info.decimals, spendable])
 
   const handleOnApply = React.useCallback(() => {
-    amountChanged({
+    const updatedAmount: Portfolio.Token.Amount = {
       info: amount.info,
       quantity,
-    })
+    }
+
+    if (isMultipleWallets && selectedWalletForAssets) {
+      // Save to specific wallet
+      addWalletAsset(selectedWalletForAssets, amount.info.id, updatedAmount)
+    } else {
+      // Single wallet: use transfer state
+      amountChanged(updatedAmount)
+    }
     navigateTo.selectedTokens()
-  }, [amount.info, amountChanged, navigateTo, quantity])
+  }, [
+    amount.info,
+    amountChanged,
+    navigateTo,
+    quantity,
+    isMultipleWallets,
+    selectedWalletForAssets,
+    addWalletAsset,
+  ])
 
   return (
     <SafeArea>

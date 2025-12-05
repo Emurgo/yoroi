@@ -34,6 +34,7 @@ import {createCardanoWalletDependencies} from '~/common/wallet-dependencies'
 import {BrowserProvider} from '~/features/Discover/common/BrowserProvider'
 import {PortfolioTokenActivityProvider} from '~/features/Portfolio/context/PortfolioTokenActivityProvider'
 import {ReceiveProvider} from '~/features/Receive/common/ReceiveProvider'
+import {MultipartySendProvider} from '~/features/Send/common/context/MultipartySendContext'
 import {isDev} from '~/kernel/constants'
 import {logger} from '~/kernel/logger/logger'
 import {AppNavigator} from '~/kernel/navigation/AppNavigator'
@@ -120,19 +121,23 @@ function BusinessShell({children}: React.PropsWithChildren) {
                 <PortfolioTokenActivityProvider>
                   <AutomaticWalletOpenerProvider>
                     <TransferProvider>
-                      <SetupWalletProvider>
-                        <BrowserProvider>
-                          <LinksProvider>
-                            <YoroiNotificationManager>
-                              <CurrencyProvider>
-                                <CatalystProvider manager={catalystManager}>
-                                  <ReceiveProvider>{children}</ReceiveProvider>
-                                </CatalystProvider>
-                              </CurrencyProvider>
-                            </YoroiNotificationManager>
-                          </LinksProvider>
-                        </BrowserProvider>
-                      </SetupWalletProvider>
+                      <MultipartySendProvider>
+                        <SetupWalletProvider>
+                          <BrowserProvider>
+                            <LinksProvider>
+                              <YoroiNotificationManager>
+                                <CurrencyProvider>
+                                  <CatalystProvider manager={catalystManager}>
+                                    <ReceiveProvider>
+                                      {children}
+                                    </ReceiveProvider>
+                                  </CatalystProvider>
+                                </CurrencyProvider>
+                              </YoroiNotificationManager>
+                            </LinksProvider>
+                          </BrowserProvider>
+                        </SetupWalletProvider>
+                      </MultipartySendProvider>
                     </TransferProvider>
                   </AutomaticWalletOpenerProvider>
                 </PortfolioTokenActivityProvider>
