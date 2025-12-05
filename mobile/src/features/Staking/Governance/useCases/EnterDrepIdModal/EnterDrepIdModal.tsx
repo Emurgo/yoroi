@@ -25,23 +25,34 @@ export type Props = {
   }) => void
 }
 
-export const HEIGHT_WITH_CARD = 660
-export const HEIGHT_WITHOUT_CARD = 350
-
 const FIND_DREPS_LINKS: Record<Chain.SupportedNetworks, string> = {
   [Chain.Network.Preprod]: 'https://preprod.cexplorer.io/drep',
   [Chain.Network.Mainnet]: 'https://beta.cexplorer.io/drep',
   [Chain.Network.Preview]: 'https://preview.cexplorer.io/drep',
 }
 
+export const HEIGHT_WITH_CARD = 660
+export const HEIGHT_INPUT_FOCUSED = 450
+export const HEIGHT_WITHOUT_CARD = 350
+
 export const EnterDrepIdModal = ({onSubmit}: Props) => {
   const strings = useStrings()
-  const {closeModal, setHeight} = useModal()
-  const {wallet} = useSelectedWallet()
-  const network = wallet.networkManager.network
-
+  const {atoms: ta, palette: p} = useTheme()
+  const [drepId, setDrepId] = React.useState('')
   const [showCard, setShowCard] = React.useState(true)
-  const [drepIdSelected, setDrepIdSelected] = React.useState('')
+  const [isInputFocused, setIsInputFocused] = React.useState(false)
+  const {closeModal, setHeight} = useModal()
+  const {
+    wallet: {
+      networkManager: {network},
+    },
+  } = useSelectedWallet()
+
+  const {error, isFetched, isFetching} = useIsValidDRepID(drepId, {
+    retry: false,
+    enabled: drepId.length > 0,
+  })
+
   const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined)
 
   React.useEffect(() => {
@@ -50,53 +61,68 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
     }
   }, [])
 
-  const scheduleHeightChange = (height: number) => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current)
-    timeoutRef.current = setTimeout(() => setHeight(height), 150)
-  }
+  const handleDrepIdChange = React.useCallback(
+    (text: string) => {
+      setDrepId(text)
+      if (text.length > 0 && showCard) {
+        setShowCard(false)
+        if (timeoutRef.current) clearTimeout(timeoutRef.current)
+        timeoutRef.current = setTimeout(
+          () => setHeight(HEIGHT_WITHOUT_CARD),
+          150,
+        )
+      } else if (text.length === 0 && !showCard) {
+        setShowCard(true)
+        if (timeoutRef.current) clearTimeout(timeoutRef.current)
+        timeoutRef.current = setTimeout(
+          () =>
+            setHeight(isInputFocused ? HEIGHT_INPUT_FOCUSED : HEIGHT_WITH_CARD),
+          150,
+        )
+      }
+    },
+    [showCard, isInputFocused, setHeight],
+  )
 
-  const handleFocus = () => {
-    setShowCard(false)
-    scheduleHeightChange(HEIGHT_WITHOUT_CARD)
-  }
-
-  const handleBlur = () => {
-    if (drepIdSelected.length === 0) {
-      setShowCard(true)
-      scheduleHeightChange(HEIGHT_WITH_CARD)
+  const handleInputFocus = React.useCallback(() => {
+    setIsInputFocused(true)
+    if (drepId.length === 0) {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+      timeoutRef.current = setTimeout(
+        () => setHeight(HEIGHT_INPUT_FOCUSED),
+        150,
+      )
     }
-  }
+  }, [drepId.length, setHeight])
 
-  const handleDrepIdChange = (text: string) => {
-    setDrepIdSelected(text)
-  }
+  const handleInputBlur = React.useCallback(() => {
+    setIsInputFocused(false)
+    if (drepId.length === 0) {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+      timeoutRef.current = setTimeout(() => setHeight(HEIGHT_WITH_CARD), 150)
+    }
+  }, [drepId.length, setHeight])
 
-  const {error, isFetched, isFetching} = useIsValidDRepID(drepIdSelected, {
-    retry: false,
-    enabled: drepIdSelected.length > 0,
-  })
-
-  const isSubmitDisabled =
-    isNonNullable(error) ||
-    drepIdSelected.length === 0 ||
-    !isFetched ||
-    isFetching
-
-  const handleSubmit = () => {
+  const handleOnPress = () => {
     try {
-      const {hash, type} = parseDrepId(drepIdSelected, CardanoMobile)
-      const isCIP105 = !error && drepIdSelected.length === 56
-      onSubmit?.({hash, type, CIP105: isCIP105})
+      const {hash, type} = parseDrepId(drepId, CardanoMobile)
+      onSubmit?.({hash, type, CIP105: !error && drepId.length === 56})
       closeModal()
-    } catch {
+    } catch (e) {
       Alert.alert(strings.global.error, strings.staking.invalidDRepId)
     }
   }
 
-  const handleFindDRepLink = () => Linking.openURL(FIND_DREPS_LINKS[network])
+  const handleOnLinkPress = () => {
+    Linking.openURL(FIND_DREPS_LINKS[network])
+  }
 
   const handleDelegateToYoroi = () => {
-    onSubmit?.({hash: getYoroiDrepIdHex(network), type: 'key', CIP105: false})
+    onSubmit?.({
+      hash: getYoroiDrepIdHex(network),
+      type: 'key',
+      CIP105: false,
+    })
     closeModal()
   }
 
@@ -104,15 +130,17 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
     <Modal.Content>
       <Space.Height.sm />
 
-      <Description />
+      <Text style={[a.text_center, a.body_1_lg_regular, ta.text_gray_medium]}>
+        {strings.staking.enterDrepIDInfo}
+      </Text>
 
       <Space.Height.lg />
 
       <TextInput
-        value={drepIdSelected}
+        value={drepId}
         onChangeText={handleDrepIdChange}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
+        onFocus={handleInputFocus}
+        onBlur={handleInputBlur}
         multiline
         errorDelay={1000}
         errorText={error?.message}
@@ -131,79 +159,57 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
       />
 
       {showCard && (
-        <FindDRepSection
-          onLinkPress={handleFindDRepLink}
-          onDelegateToYoroi={handleDelegateToYoroi}
-        />
+        <>
+          <Space.Height.lg />
+
+          <View style={[a.flex_row, a.justify_center, a.flex_wrap]}>
+            <Text
+              style={[a.body_1_lg_regular, ta.text_gray_medium, a.text_center]}
+            >
+              {strings.staking.dontHaveAnID}{' '}
+            </Text>
+
+            <Text
+              style={[
+                a.body_1_lg_regular,
+                {color: p.primary_500, textDecorationLine: 'underline'},
+              ]}
+              onPress={handleOnLinkPress}
+            >
+              {strings.staking.findDRepHere}
+            </Text>
+          </View>
+
+          <Space.Height.xs />
+
+          <Text
+            style={[a.body_1_lg_regular, ta.text_gray_medium, a.text_center]}
+          >
+            {strings.staking.orDelegateToYoroiDrepBelow}
+          </Text>
+
+          <Space.Height.lg />
+
+          <YoroiDrepCard
+            onDelegate={handleDelegateToYoroi}
+            truncateId
+            variant="plain"
+          />
+        </>
       )}
 
       <Space.Height.lg />
 
       <Button
         title={strings.staking.confirm}
-        disabled={isSubmitDisabled}
-        onPress={handleSubmit}
+        disabled={
+          isNonNullable(error) ||
+          drepId.length === 0 ||
+          !isFetched ||
+          isFetching
+        }
+        onPress={handleOnPress}
       />
     </Modal.Content>
-  )
-}
-
-const Description = () => {
-  const strings = useStrings()
-  const {atoms: ta} = useTheme()
-
-  return (
-    <Text style={[a.text_center, a.body_1_lg_regular, ta.text_gray_medium]}>
-      {strings.staking.enterDrepIDInfo}
-    </Text>
-  )
-}
-
-type FindDRepSectionProps = {
-  onLinkPress: () => void
-  onDelegateToYoroi: () => void
-}
-
-const FindDRepSection = ({
-  onLinkPress,
-  onDelegateToYoroi,
-}: FindDRepSectionProps) => {
-  const strings = useStrings()
-  const {atoms: ta, palette} = useTheme()
-
-  return (
-    <>
-      <Space.Height.lg />
-
-      <View style={[a.flex_row, a.justify_center, a.flex_wrap]}>
-        <Text style={[a.body_1_lg_regular, ta.text_gray_medium, a.text_center]}>
-          {strings.staking.dontHaveAnID}{' '}
-        </Text>
-
-        <Text
-          style={[
-            a.body_1_lg_regular,
-            {color: palette.primary_500, textDecorationLine: 'underline'},
-          ]}
-          onPress={onLinkPress}
-        >
-          {strings.staking.findDRepHere}
-        </Text>
-      </View>
-
-      <Space.Height.xs />
-
-      <Text style={[a.body_1_lg_regular, ta.text_gray_medium, a.text_center]}>
-        {strings.staking.orDelegateToYoroiDrepBelow}
-      </Text>
-
-      <Space.Height.lg />
-
-      <YoroiDrepCard
-        onDelegate={onDelegateToYoroi}
-        truncateId
-        variant="plain"
-      />
-    </>
   )
 }
