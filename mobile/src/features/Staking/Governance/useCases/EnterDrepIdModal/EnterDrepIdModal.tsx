@@ -51,21 +51,19 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
     enabled: drepId.length > 0,
   })
 
-  const handleFocus = React.useCallback(() => {
-    setShowCard(false)
-    setTimeout(() => setHeight(HEIGHT_WITHOUT_CARD), 150)
-  }, [setHeight])
-
-  const handleBlur = React.useCallback(() => {
-    if (drepId.length === 0) {
-      setShowCard(true)
-      setTimeout(() => setHeight(HEIGHT_WITH_CARD), 150)
-    }
-  }, [drepId.length, setHeight])
-
-  const handleDrepIdChange = (text: string) => {
-    setDrepId(text)
-  }
+  const handleDrepIdChange = React.useCallback(
+    (text: string) => {
+      setDrepId(text)
+      if (text.length > 0 && showCard) {
+        setShowCard(false)
+        setTimeout(() => setHeight(HEIGHT_WITHOUT_CARD), 150)
+      } else if (text.length === 0 && !showCard) {
+        setShowCard(true)
+        setTimeout(() => setHeight(HEIGHT_WITH_CARD), 150)
+      }
+    },
+    [showCard, setHeight],
+  )
 
   const handleOnPress = () => {
     try {
@@ -103,8 +101,6 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
       <TextInput
         value={drepId}
         onChangeText={handleDrepIdChange}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
         multiline
         errorDelay={1000}
         errorText={error?.message}
