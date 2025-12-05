@@ -10,7 +10,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import infoIcon from '~/assets/img/icon/info-light-green.png'
 import {useAirdropBanner} from '~/features/Airdrop/common/useAirdropBanner'
 import {useBuyCryptoBanner} from '~/features/Exchange/common/useBuyCryptoBanner'
-import {useGetImportantAlertsModal} from '~/features/Notifications/common/GetImportantAlertsModal'
+import {useRequestSystemNotifications} from '~/features/Notifications/common/tools'
 import {useEarnRewardsBanner} from '~/features/Staking/Governance/useCases/EarnRewardsBanner/useEarnRewardsBanner'
 import {useGovernanceBanner} from '~/features/Staking/Governance/useCases/useGovernanceBanner'
 import {usePoolTransitionModal} from '~/features/Staking/Staking/PoolTransition/usePoolTransitionModal'
@@ -52,7 +52,7 @@ export const TxHistory = () => {
     return insets.top + headerHeight + 8 // 8px extra padding
   }, [insets.top])
 
-  useGetImportantAlertsModal({enabled: features.pushNotifications})
+  useRequestSystemNotifications({enabled: features.pushNotifications})
 
   const {wallet, meta} = useSelectedWallet()
 
