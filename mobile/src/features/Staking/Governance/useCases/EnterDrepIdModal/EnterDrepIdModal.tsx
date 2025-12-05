@@ -32,6 +32,7 @@ const FIND_DREPS_LINKS: Record<Chain.SupportedNetworks, string> = {
 }
 
 export const HEIGHT_WITH_CARD = 660
+export const HEIGHT_INPUT_FOCUSED = 450
 export const HEIGHT_WITHOUT_CARD = 350
 
 export const EnterDrepIdModal = ({onSubmit}: Props) => {
@@ -39,6 +40,7 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
   const {atoms: ta, palette: p} = useTheme()
   const [drepId, setDrepId] = React.useState('')
   const [showCard, setShowCard] = React.useState(true)
+  const [isInputFocused, setIsInputFocused] = React.useState(false)
   const {closeModal, setHeight} = useModal()
   const {
     wallet: {
@@ -72,11 +74,34 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
       } else if (text.length === 0 && !showCard) {
         setShowCard(true)
         if (timeoutRef.current) clearTimeout(timeoutRef.current)
-        timeoutRef.current = setTimeout(() => setHeight(HEIGHT_WITH_CARD), 150)
+        timeoutRef.current = setTimeout(
+          () =>
+            setHeight(isInputFocused ? HEIGHT_INPUT_FOCUSED : HEIGHT_WITH_CARD),
+          150,
+        )
       }
     },
-    [showCard, setHeight],
+    [showCard, isInputFocused, setHeight],
   )
+
+  const handleInputFocus = React.useCallback(() => {
+    setIsInputFocused(true)
+    if (drepId.length === 0) {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+      timeoutRef.current = setTimeout(
+        () => setHeight(HEIGHT_INPUT_FOCUSED),
+        150,
+      )
+    }
+  }, [drepId.length, setHeight])
+
+  const handleInputBlur = React.useCallback(() => {
+    setIsInputFocused(false)
+    if (drepId.length === 0) {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+      timeoutRef.current = setTimeout(() => setHeight(HEIGHT_WITH_CARD), 150)
+    }
+  }, [drepId.length, setHeight])
 
   const handleOnPress = () => {
     try {
@@ -114,6 +139,8 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
       <TextInput
         value={drepId}
         onChangeText={handleDrepIdChange}
+        onFocus={handleInputFocus}
+        onBlur={handleInputBlur}
         multiline
         errorDelay={1000}
         errorText={error?.message}
