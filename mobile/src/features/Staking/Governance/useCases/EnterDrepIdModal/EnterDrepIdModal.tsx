@@ -51,15 +51,28 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
     enabled: drepId.length > 0,
   })
 
+  const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined)
+
+  React.useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    }
+  }, [])
+
   const handleDrepIdChange = React.useCallback(
     (text: string) => {
       setDrepId(text)
       if (text.length > 0 && showCard) {
         setShowCard(false)
-        setTimeout(() => setHeight(HEIGHT_WITHOUT_CARD), 150)
+        if (timeoutRef.current) clearTimeout(timeoutRef.current)
+        timeoutRef.current = setTimeout(
+          () => setHeight(HEIGHT_WITHOUT_CARD),
+          150,
+        )
       } else if (text.length === 0 && !showCard) {
         setShowCard(true)
-        setTimeout(() => setHeight(HEIGHT_WITH_CARD), 150)
+        if (timeoutRef.current) clearTimeout(timeoutRef.current)
+        timeoutRef.current = setTimeout(() => setHeight(HEIGHT_WITH_CARD), 150)
       }
     },
     [showCard, setHeight],
