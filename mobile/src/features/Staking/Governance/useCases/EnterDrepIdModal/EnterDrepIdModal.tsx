@@ -32,7 +32,7 @@ const FIND_DREPS_LINKS: Record<Chain.SupportedNetworks, string> = {
 }
 
 export const HEIGHT_WITH_CARD = 660
-export const HEIGHT_INPUT_FOCUSED = 450
+export const HEIGHT_INPUT_FOCUSED = 400
 export const HEIGHT_WITHOUT_CARD = 350
 
 export const EnterDrepIdModal = ({onSubmit}: Props) => {
@@ -40,7 +40,6 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
   const {atoms: ta, palette: p} = useTheme()
   const [drepId, setDrepId] = React.useState('')
   const [showCard, setShowCard] = React.useState(true)
-  const [isInputFocused, setIsInputFocused] = React.useState(false)
   const {closeModal, setHeight} = useModal()
   const {
     wallet: {
@@ -54,6 +53,8 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
   })
 
   const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined)
+  const showCardRef = React.useRef(showCard)
+  const isInputFocusedRef = React.useRef(false)
 
   React.useEffect(() => {
     return () => {
@@ -64,44 +65,50 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
   const handleDrepIdChange = React.useCallback(
     (text: string) => {
       setDrepId(text)
-      if (text.length > 0 && showCard) {
+      if (text.length > 0 && showCardRef.current) {
+        showCardRef.current = false
         setShowCard(false)
         if (timeoutRef.current) clearTimeout(timeoutRef.current)
         timeoutRef.current = setTimeout(
           () => setHeight(HEIGHT_WITHOUT_CARD),
           150,
         )
-      } else if (text.length === 0 && !showCard) {
+      } else if (text.length === 0 && !showCardRef.current) {
+        showCardRef.current = true
         setShowCard(true)
         if (timeoutRef.current) clearTimeout(timeoutRef.current)
         timeoutRef.current = setTimeout(
           () =>
-            setHeight(isInputFocused ? HEIGHT_INPUT_FOCUSED : HEIGHT_WITH_CARD),
+            setHeight(
+              isInputFocusedRef.current
+                ? HEIGHT_INPUT_FOCUSED
+                : HEIGHT_WITH_CARD,
+            ),
           150,
         )
       }
     },
-    [showCard, isInputFocused, setHeight],
+    [setHeight],
   )
 
   const handleInputFocus = React.useCallback(() => {
-    setIsInputFocused(true)
-    if (drepId.length === 0) {
+    isInputFocusedRef.current = true
+    if (showCardRef.current) {
       if (timeoutRef.current) clearTimeout(timeoutRef.current)
       timeoutRef.current = setTimeout(
         () => setHeight(HEIGHT_INPUT_FOCUSED),
         150,
       )
     }
-  }, [drepId.length, setHeight])
+  }, [setHeight])
 
   const handleInputBlur = React.useCallback(() => {
-    setIsInputFocused(false)
-    if (drepId.length === 0) {
+    isInputFocusedRef.current = false
+    if (showCardRef.current) {
       if (timeoutRef.current) clearTimeout(timeoutRef.current)
       timeoutRef.current = setTimeout(() => setHeight(HEIGHT_WITH_CARD), 150)
     }
-  }, [drepId.length, setHeight])
+  }, [setHeight])
 
   const handleOnPress = () => {
     try {
