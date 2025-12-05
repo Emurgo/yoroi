@@ -1,6 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {useSelectedWallet} from '@yoroi/wallet-manager'
-import {useSync} from '@yoroi/wallet-manager'
+import {useSelectedWallet, useSync} from '@yoroi/wallet-manager'
 
 import {useNavigation} from '@react-navigation/native'
 import {LinearGradient} from 'expo-linear-gradient'
@@ -12,8 +11,7 @@ import infoIcon from '~/assets/img/icon/info-light-green.png'
 import {useAirdropBanner} from '~/features/Airdrop/common/useAirdropBanner'
 import {useBuyCryptoBanner} from '~/features/Exchange/common/useBuyCryptoBanner'
 import {useGetImportantAlertsModal} from '~/features/Notifications/common/GetImportantAlertsModal'
-// DISABLED: EarnRewardsBanner - "Delegate with Yoroi DRep" banner temporarily deactivated
-// import {useEarnRewardsBanner} from '~/features/Staking/Governance/useCases/EarnRewardsBanner/useEarnRewardsBanner'
+import {useEarnRewardsBanner} from '~/features/Staking/Governance/useCases/EarnRewardsBanner/useEarnRewardsBanner'
 import {useGovernanceBanner} from '~/features/Staking/Governance/useCases/useGovernanceBanner'
 import {usePoolTransitionModal} from '~/features/Staking/Staking/PoolTransition/usePoolTransitionModal'
 import {features} from '~/kernel/features'
@@ -38,8 +36,7 @@ export const TxHistory = () => {
   useGovernanceBanner()
   useBuyCryptoBanner()
   useUtxoConsolidationBanner()
-  // DISABLED: EarnRewardsBanner - "Delegate with Yoroi DRep" banner temporarily deactivated
-  // const {renderBanner: renderEarnRewardsBanner} = useEarnRewardsBanner()
+  const {banner: earnRewardsBanner} = useEarnRewardsBanner()
   useAirdropBanner()
 
   const strings = useStrings()
@@ -190,9 +187,7 @@ export const TxHistory = () => {
 
         <Space.Height.md />
 
-        {/* DISABLED: EarnRewardsBanner - "Delegate with Yoroi DRep" banner temporarily deactivated */}
-        {/* {earnRewardsBanner} */}
-        {/* {earnRewardsBanner != null && <Space.Height.md />} */}
+        {earnRewardsBanner}
 
         {meta.implementation === 'cardano-bip44' && showWarning && (
           <WarningBanner

@@ -114,7 +114,7 @@ export const useEarnRewardsBanner = () => {
     setShowBanner(false)
   }, [])
 
-  const renderBanner = React.useCallback(() => {
+  const banner = React.useMemo(() => {
     if (!showBanner) return null
     return (
       <>
@@ -126,6 +126,6 @@ export const useEarnRewardsBanner = () => {
 
   return {
     showBanner,
-    renderBanner,
+    banner,
   }
 }
