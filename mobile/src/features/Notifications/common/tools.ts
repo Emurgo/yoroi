@@ -249,7 +249,6 @@ export const useRequestSystemNotifications = ({
 
     const timeout = setTimeout(async () => {
       const hasBeenPrompted = await uiStorage.getItem(permissionModalStorageKey)
-      logger.info('useRequestSystemNotifications', {enabled, hasBeenPrompted})
 
       if (hasBeenPrompted !== true) {
         await triggerNotificationsPermissionModal()
