@@ -245,6 +245,7 @@ export const cip30ExtensionMaker = (
           Buffer.from(normalisedAddress.toHex(), 'hex'),
           signingKey,
           payloadInBytes,
+          publicKeyBytes,
         )
         const key = await cip8.makeCip8Key(publicKeyBytes)
 

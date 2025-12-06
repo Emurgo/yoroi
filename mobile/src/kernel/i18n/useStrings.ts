@@ -1997,6 +1997,46 @@ export const useStrings = () => {
           messageSigningKeyDescription: f(
             transactionsMessages.messageSigningKeyDescription,
           ),
+          messageSigningPublicKeyLabel: f(
+            transactionsMessages.messageSigningPublicKeyLabel,
+          ),
+          messageSigningPublicKeyDescription: f(
+            transactionsMessages.messageSigningPublicKeyDescription,
+          ),
+          messageSigningTabSign: f(transactionsMessages.messageSigningTabSign),
+          messageSigningTabVerify: f(
+            transactionsMessages.messageSigningTabVerify,
+          ),
+          messageSigningPayloadFormatText: f(
+            transactionsMessages.messageSigningPayloadFormatText,
+          ),
+          messageSigningPayloadFormatJson: f(
+            transactionsMessages.messageSigningPayloadFormatJson,
+          ),
+          messageSigningPayloadFormatHex: f(
+            transactionsMessages.messageSigningPayloadFormatHex,
+          ),
+          messageSigningVerifyButton: f(
+            transactionsMessages.messageSigningVerifyButton,
+          ),
+          messageSigningVerifySuccess: f(
+            transactionsMessages.messageSigningVerifySuccess,
+          ),
+          messageSigningVerifyError: f(
+            transactionsMessages.messageSigningVerifyError,
+          ),
+          messageSigningVerifySignatureLabel: f(
+            transactionsMessages.messageSigningVerifySignatureLabel,
+          ),
+          messageSigningVerifyKeyLabel: f(
+            transactionsMessages.messageSigningVerifyKeyLabel,
+          ),
+          messageSigningVerifyAddressLabel: f(
+            transactionsMessages.messageSigningVerifyAddressLabel,
+          ),
+          messageSigningVerifyAddressPlaceholder: f(
+            transactionsMessages.messageSigningVerifyAddressPlaceholder,
+          ),
           error: f(transactionsMessages.messageSigningError),
         },
         submitted: {

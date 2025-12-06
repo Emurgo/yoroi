@@ -173,6 +173,7 @@ export async function encodeHardwareWalletSignResult(options: {
     Buffer.from(options.addressHex, 'hex'),
     Buffer.from(options.signatureHex, 'hex'),
     Buffer.from(options.payloadHex, 'hex'),
+    Buffer.from(options.signingPublicKeyHex, 'hex'),
   )
 
   const key = await makeCip8Key(Buffer.from(options.signingPublicKeyHex, 'hex'))
