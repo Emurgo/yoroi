@@ -319,11 +319,24 @@ export const AllocateAssetsToDestinationsScreen = () => {
         }
       })
 
-      // Validate address
-      const address =
+      // Validate address - only use resolved address, never unresolved domains
+      const isDomain = target.receiver.as === 'domain'
+      const resolvedAddress =
         target.entry.address && target.entry.address.trim() !== ''
           ? target.entry.address
-          : target.receiver.resolve
+          : null
+
+      // For domains, we MUST have a resolved address
+      if (isDomain && !resolvedAddress) {
+        throw new Error(
+          `Domain "${target.receiver.resolve}" failed to resolve for target at index ${targetIndex}`,
+        )
+      }
+
+      // For direct addresses, use entry.address if available, otherwise use receiver.resolve
+      const address =
+        resolvedAddress ??
+        (target.receiver.resolve && !isDomain ? target.receiver.resolve : null)
 
       if (!address || address.trim() === '') {
         throw new Error(`Invalid address for target at index ${targetIndex}`)
@@ -435,7 +448,6 @@ export const AllocateAssetsToDestinationsScreen = () => {
                   {allocatedAssets.length > 0 ? (
                     <>
                       {allocatedAssets.map((asset) => {
-                        const remaining = getRemaining(asset.info.id)
                         const allocated = getAllocatedForTarget(
                           targetIndex,
                           asset.info.id,
@@ -446,7 +458,6 @@ export const AllocateAssetsToDestinationsScreen = () => {
                             key={asset.info.id}
                             asset={asset}
                             allocated={allocated}
-                            remaining={remaining + allocated}
                             onEdit={() =>
                               handleEditAllocation(targetIndex, asset.info.id)
                             }
@@ -470,20 +481,23 @@ export const AllocateAssetsToDestinationsScreen = () => {
                   <Space.Height.md />
 
                   {/* Show remaining assets that can be allocated */}
-                  {allAssets.length > 0 && (
-                    <View
-                      style={[a.pt_md, a.border_t, {borderColor: p.gray_200}]}
-                    >
-                      <Text style={[a.body_2_md_medium, {color: p.gray_600}]}>
-                        {strings.send.availableToAllocate}
-                      </Text>
-                      <Space.Height.sm />
-                      {allAssets
-                        .filter((asset) => {
-                          const remaining = getRemaining(asset.info.id)
-                          return remaining > BigInt(0)
-                        })
-                        .map((asset) => {
+                  {(() => {
+                    const availableAssets = allAssets.filter((asset) => {
+                      const remaining = getRemaining(asset.info.id)
+                      return remaining > BigInt(0)
+                    })
+
+                    if (availableAssets.length === 0) return null
+
+                    return (
+                      <View
+                        style={[a.pt_md, a.border_t, {borderColor: p.gray_200}]}
+                      >
+                        <Text style={[a.body_2_md_medium, {color: p.gray_600}]}>
+                          {strings.send.availableToAllocate}
+                        </Text>
+                        <Space.Height.sm />
+                        {availableAssets.map((asset) => {
                           const remaining = getRemaining(asset.info.id)
                           return (
                             <TouchableOpacity
@@ -508,8 +522,9 @@ export const AllocateAssetsToDestinationsScreen = () => {
                             </TouchableOpacity>
                           )
                         })}
-                    </View>
-                  )}
+                      </View>
+                    )
+                  })()}
                 </View>
                 <Space.Height.md />
               </Accordion>
@@ -682,7 +697,6 @@ const EditAllocationContent = ({
 type AllocationItemProps = {
   asset: Portfolio.Token.Amount
   allocated: bigint
-  remaining: bigint
   onEdit: () => void
   onRemove: () => void
 }
@@ -690,12 +704,10 @@ type AllocationItemProps = {
 const AllocationItem = ({
   asset,
   allocated,
-  remaining,
   onEdit,
   onRemove,
 }: AllocationItemProps) => {
   const {palette: p} = useTheme()
-  const strings = useStrings()
 
   return (
     <View
@@ -712,21 +724,23 @@ const AllocationItem = ({
     >
       <TouchableOpacity
         onPress={onEdit}
-        style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}
+        style={[
+          a.flex_1,
+          a.flex_row,
+          a.align_center,
+          a.gap_sm,
+          {minWidth: 0, flexShrink: 1},
+        ]}
       >
-        <TokenAmountItem
-          amount={{
-            ...asset,
-            quantity: allocated,
-          }}
-          ignorePrivacy
-        />
-        {remaining > BigInt(0) && (
-          <Text style={[a.body_2_md_regular, {color: p.gray_500}]}>
-            ({strings.send.remaining}:{' '}
-            {atomicBreakdown(remaining, asset.info.decimals ?? 0).str})
-          </Text>
-        )}
+        <View style={[a.flex_shrink, {minWidth: 0, flex: 1}]}>
+          <TokenAmountItem
+            amount={{
+              ...asset,
+              quantity: allocated,
+            }}
+            ignorePrivacy
+          />
+        </View>
       </TouchableOpacity>
       <TouchableOpacity onPress={onRemove} style={[a.pl_md]}>
         <Icon.Delete size={20} color={p.sys_magenta_500} />

@@ -313,6 +313,7 @@ export const ReviewTx = ({
         tabBarBounces: true,
         tabBarScrollEnabled: true,
         tabBarStyle: {backgroundColor: p.bg_color_max},
+        lazy: true,
       }}
     >
       <MaterialTab.Screen
