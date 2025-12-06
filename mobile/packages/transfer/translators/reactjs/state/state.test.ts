@@ -41,17 +41,6 @@ describe('State Actions', () => {
       })
     })
 
-    describe('MemoChanged', () => {
-      it('set', () => {
-        const action: TransferAction = {
-          type: TransferActionType.MemoChanged,
-          memo: 'akakakak',
-        }
-        const state = combinedReducers(defaultTransferState, action)
-        expect(state).toEqual({...defaultTransferState, memo: 'akakakak'})
-      })
-    })
-
     describe('LinkActionChanged', () => {
       it('set', () => {
         const linkAction: Links.YoroiAction = {
@@ -107,7 +96,6 @@ describe('State Actions', () => {
           },
           isTrusted: false,
         },
-        memo: 'memo',
         selectedTargetIndex: 1,
         selectedTokenId: primaryTokenId,
         unsignedTx,
@@ -166,7 +154,6 @@ describe('State Actions', () => {
         selectedTokenId: primaryTokenId,
         allocated: new Map(),
         unsignedTx: undefined,
-        memo: '',
         linkAction: undefined,
         targets: [
           {
@@ -207,7 +194,6 @@ describe('State Actions', () => {
           selectedTargetIndex: 0,
           selectedTokenId: primaryTokenId,
           allocated: new Map(),
-          memo: '',
           unsignedTx: undefined,
           linkAction: undefined,
           targets: [
@@ -250,7 +236,6 @@ describe('State Actions', () => {
           selectedTargetIndex: 0,
           selectedTokenId: primaryTokenId,
           allocated: new Map(),
-          memo: '',
           unsignedTx: undefined,
           targets: [
             {
@@ -289,7 +274,6 @@ describe('State Actions', () => {
         allocated: new Map(),
         unsignedTx: undefined,
         linkAction: undefined,
-        memo: '',
         targets: [
           {
             receiver: {
@@ -333,7 +317,6 @@ describe('State Actions', () => {
           selectedTargetIndex: 0,
           selectedTokenId: primaryTokenId,
           allocated: new Map(),
-          memo: '',
           unsignedTx: undefined,
           linkAction: undefined,
           targets: [
@@ -385,7 +368,6 @@ describe('State Actions', () => {
           selectedTargetIndex: 0,
           selectedTokenId: primaryTokenId,
           allocated: new Map(),
-          memo: '',
           unsignedTx: undefined,
           linkAction: undefined,
           targets: [
@@ -433,7 +415,6 @@ describe('State Actions', () => {
           selectedTargetIndex: 0,
           selectedTokenId: primaryTokenId,
           allocated: new Map(),
-          memo: '',
           unsignedTx: undefined,
           linkAction: undefined,
           targets: [
@@ -479,7 +460,6 @@ describe('State Actions', () => {
           selectedTargetIndex: 0,
           selectedTokenId: primaryTokenId,
           allocated: new Map(),
-          memo: '',
           unsignedTx: undefined,
           linkAction: undefined,
           targets: [
@@ -521,7 +501,6 @@ describe('State Actions', () => {
         allocated: new Map(),
         unsignedTx: undefined,
         linkAction: undefined,
-        memo: '',
         targets: [
           {
             receiver: {
@@ -561,7 +540,6 @@ describe('State Actions', () => {
           selectedTargetIndex: 0,
           selectedTokenId: primaryTokenId,
           allocated: new Map(),
-          memo: '',
           targets: [
             {
               receiver: {
@@ -603,7 +581,6 @@ describe('State Actions', () => {
           selectedTargetIndex: 0,
           selectedTokenId: primaryTokenId,
           allocated: new Map(),
-          memo: '',
           unsignedTx: undefined,
           targets: [
             {
@@ -645,7 +622,6 @@ describe('State Actions', () => {
           allocated: new Map(),
           unsignedTx: undefined,
           linkAction: undefined,
-          memo: '',
           targets: [
             {
               receiver: {
@@ -668,7 +644,6 @@ describe('State Actions', () => {
           selectedTargetIndex: 0,
           selectedTokenId: primaryTokenId,
           allocated: new Map(),
-          memo: '',
           unsignedTx: undefined,
           linkAction: undefined,
           targets: [
@@ -703,7 +678,6 @@ describe('State Actions', () => {
           selectedTargetIndex: 0,
           selectedTokenId: tokenBalanceMocks.primaryETH.info.id,
           allocated: new Map(),
-          memo: '',
           unsignedTx: undefined,
           linkAction: undefined,
           targets: [
@@ -748,7 +722,6 @@ describe('State Actions', () => {
           ]),
           unsignedTx: undefined,
           linkAction: undefined,
-          memo: '',
           targets: [
             {
               receiver: {
@@ -795,7 +768,6 @@ describe('State Actions', () => {
           selectedTargetIndex: 0,
           selectedTokenId: tokenBalanceMocks.primaryETH.info.id,
           allocated: new Map(),
-          memo: '',
           unsignedTx: undefined,
           linkAction: undefined,
           targets: [
@@ -838,7 +810,6 @@ describe('State Actions', () => {
             [0, new Map()],
             [1, new Map()],
           ]),
-          memo: '',
           unsignedTx: undefined,
           linkAction: undefined,
           targets: [

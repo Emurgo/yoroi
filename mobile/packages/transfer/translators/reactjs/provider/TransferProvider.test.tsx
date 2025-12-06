@@ -17,17 +17,10 @@ describe('TransferContext :: hooks', () => {
     const {result} = renderHook(() => useTransfer(), {wrapper})
 
     act(() => {
-      result.current.memoChanged('Test memo')
-    })
-
-    expect(result.current.memo).toBe('Test memo')
-
-    act(() => {
       result.current.reset()
     })
 
     expect(result.current.targets).toEqual(defaultTransferState.targets)
-    expect(result.current.memo).toEqual(defaultTransferState.memo)
     expect(result.current.unsignedTx).toEqual(defaultTransferState.unsignedTx)
     expect(result.current.selectedTargetIndex).toEqual(
       defaultTransferState.selectedTargetIndex,
@@ -35,16 +28,6 @@ describe('TransferContext :: hooks', () => {
     expect(result.current.selectedTokenId).toEqual(
       defaultTransferState.selectedTokenId,
     )
-  })
-
-  test('memoChanged', () => {
-    const {result} = renderHook(() => useTransfer(), {wrapper})
-
-    act(() => {
-      result.current.memoChanged('Test memo')
-    })
-
-    expect(result.current.memo).toBe('Test memo')
   })
 
   test('redirectToChanged', () => {
