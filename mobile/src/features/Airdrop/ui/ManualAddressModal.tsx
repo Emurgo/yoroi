@@ -79,18 +79,18 @@ export const ManualAddressModal = () => {
       setTimeout(() => {
         closeModal()
       }, 200)
-    } catch (error: unknown) {
+    } catch (err: unknown) {
       if (
-        error &&
-        typeof error === 'object' &&
-        'message' in error &&
-        typeof error.message === 'string'
+        err &&
+        typeof err === 'object' &&
+        'message' in err &&
+        typeof err.message === 'string'
       ) {
-        if (error.message.includes('ADDRESS_NOT_FOUND')) {
+        if (err.message.includes('ADDRESS_NOT_FOUND')) {
           // Expected error - address has no allocations
           logger.info('External address has no allocations', {address})
           setError(strings.airdrop.noAllocations)
-        } else if (error.message.includes('API_ACCESS_FORBIDDEN')) {
+        } else if (err.message.includes('API_ACCESS_FORBIDDEN')) {
           // Expected error - API access forbidden
           logger.info('API access forbidden for external address', {address})
           setError('Access forbidden. Please try again later.')
@@ -98,15 +98,15 @@ export const ManualAddressModal = () => {
           // Unexpected error - log as error
           logger.error('Failed to check eligibility for external address', {
             address,
-            error,
+            error: err,
           })
-          setError(error.message)
+          setError(err.message)
         }
       } else {
         // Unexpected error - log as error
         logger.error('Failed to check eligibility for external address', {
           address,
-          error,
+          error: err,
         })
         setError('Failed to check eligibility. Please try again.')
       }
