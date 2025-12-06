@@ -137,7 +137,7 @@ const AddressInputWithTransferInner = React.forwardRef<
   }, [props.onFocus])
 
   const handleFocus = React.useCallback(
-    (e: any) => {
+    (_e: unknown) => {
       // Sync selectedTargetIndex on focus for backward compatibility
       // This ensures components that don't use propTargetIndex still work
       if (

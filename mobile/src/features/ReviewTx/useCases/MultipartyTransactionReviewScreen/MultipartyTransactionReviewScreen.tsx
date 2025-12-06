@@ -7,7 +7,7 @@ import {type ChainId, constructMultipartyTransactionJSON} from '@yoroi/tx'
 import {Bip32PublicKeyHex, TransactionCborHex} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
-import * as Clipboard from 'expo-clipboard'
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {Alert} from 'react-native'
 
@@ -20,7 +20,6 @@ import {useFormattedTx} from '~/features/ReviewTx/common/hooks/useFormattedTx'
 import {useOnConfirm} from '~/features/ReviewTx/common/hooks/useOnConfirm'
 import {useTxBody} from '~/features/ReviewTx/common/hooks/useTxBody'
 import {FormattedTx, TransactionBody} from '~/features/ReviewTx/common/types'
-import {useStrings} from '~/kernel/i18n/useStrings'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
 import {ReviewTxRoutes} from '~/kernel/navigation/types'
 
@@ -35,8 +34,8 @@ const MultipartyTransactionReviewContent = ({
 }) => {
   const {wallet, meta} = useSelectedWallet()
   const {isAuthDev} = useAuth()
-  const strings = useStrings()
   const memoContext = useReviewTxMemo()
+  const navigation = useNavigation()
 
   if (!params.multiparty) {
     throw new Error(
@@ -89,11 +88,11 @@ const MultipartyTransactionReviewContent = ({
         })
 
         const jsonString = JSON.stringify(txJson, null, 2)
-        await Clipboard.setStringAsync(jsonString)
-        Alert.alert(
-          strings.setupWallet.transactionExported,
-          strings.setupWallet.transactionCopiedToClipboard,
-        )
+        // Navigate to transaction signed screen
+        // @ts-ignore - transaction-signed is a review-tx route
+        navigation.navigate('transaction-signed', {
+          jsonString,
+        })
       } catch (error) {
         Alert.alert(
           'Error',
@@ -110,8 +109,8 @@ const MultipartyTransactionReviewContent = ({
       wallet.networkManager.chainId,
       wallet.networkManager.protocolMagic,
       wallet.id,
-      strings,
       memoContext.memo,
+      navigation,
     ],
   )
 

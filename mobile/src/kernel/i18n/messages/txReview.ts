@@ -692,4 +692,8 @@ export const txReviewMessages = defineMessages({
     id: 'txReview.overview.notices',
     defaultMessage: '!!!Notices',
   },
+  transactionSigned: {
+    id: 'txReview.transactionSigned',
+    defaultMessage: '!!!Transaction Signed',
+  },
 })

@@ -76,6 +76,15 @@ export const useCheckAllSignatures = () => {
           []
 
         for (const signer of multiparty.requiredSigners) {
+          // Try to look up wallet name if walletId is available and wallet exists locally
+          let resolvedWalletName = signer.walletName
+          if (!resolvedWalletName && signer.walletId) {
+            const walletMeta = walletManager?.getWalletMetaById(signer.walletId)
+            if (walletMeta) {
+              resolvedWalletName = walletMeta.name
+            }
+          }
+
           // Check if this signer wallet is a multisig wallet
           const wallet = walletManager?.getWalletById(signer.walletId)
           const isMultisig = wallet ? isMultisigWallet(wallet) : false
@@ -116,7 +125,7 @@ export const useCheckAllSignatures = () => {
 
                 signerDetails.push({
                   walletId: signer.walletId,
-                  walletName: signer.walletName,
+                  walletName: resolvedWalletName,
                   keyHash: signer.keyHash,
                   isSigned: meetsQuorum,
                   isMultisig: true,
@@ -138,7 +147,7 @@ export const useCheckAllSignatures = () => {
                 // Fallback: treat as not signed
                 signerDetails.push({
                   walletId: signer.walletId,
-                  walletName: signer.walletName,
+                  walletName: resolvedWalletName,
                   keyHash: signer.keyHash,
                   isSigned: false,
                   isMultisig: true,
@@ -148,7 +157,7 @@ export const useCheckAllSignatures = () => {
               // Multisig wallet but no metadata - treat as not signed
               signerDetails.push({
                 walletId: signer.walletId,
-                walletName: signer.walletName,
+                walletName: resolvedWalletName,
                 keyHash: signer.keyHash,
                 isSigned: false,
                 isMultisig: true,
@@ -163,7 +172,7 @@ export const useCheckAllSignatures = () => {
             )
             signerDetails.push({
               walletId: signer.walletId,
-              walletName: signer.walletName,
+              walletName: resolvedWalletName,
               keyHash: signer.keyHash,
               isSigned,
               isMultisig: false,

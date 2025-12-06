@@ -144,11 +144,7 @@ export const useActionExecutor = () => {
                   const redirectTo = params.redirectTo
                   if (redirectTo != null) linkActionChanged(yoroiAction)
 
-                  const {
-                    address: receiver,
-                    amount,
-                    memo: _memo,
-                  } = parsedCardanoLink.params
+                  const {address: receiver, amount} = parsedCardanoLink.params
                   const ptAmount = toBigInt(
                     typeof amount === 'string' || typeof amount === 'number'
                       ? amount

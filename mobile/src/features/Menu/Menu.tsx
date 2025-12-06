@@ -1,6 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
+import {useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import * as Linking from 'expo-linking'
 import * as React from 'react'
@@ -18,6 +19,7 @@ import {useHasRedeemableThaws} from '~/features/Airdrop/common/useHasRedeemableT
 import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {usePrefetchStakingInfo} from '~/features/Dashboard/ui/shared/StakePoolInfos'
 import {useCanVote} from '~/features/RegisterCatalyst/common/hooks'
+import {SignTransactionScreen} from '~/features/ReviewTx/useCases/SignTransactionScreen/SignTransactionScreen'
 import {NetworkTag} from '~/features/Settings/ui/shared/NetworkTag'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
@@ -50,6 +52,13 @@ export const MenuNavigator = () => {
         name="_menu"
         component={Menu}
         options={{title: strings.menu.menu}}
+      />
+      <MenuStack.Screen
+        name="sign-transaction"
+        options={{
+          title: strings.menu.signTransaction,
+        }}
+        getComponent={() => SignTransactionScreen}
       />
     </MenuStack.Navigator>
   )
@@ -108,6 +117,12 @@ export const Menu = () => {
         <MessageSigning
           label={strings.menu.messageSigning}
           onPress={navigateTo.messageSigning}
+          left={<Icon.Message size={24} color={p.gray_600} />}
+        />
+
+        <SignTransaction
+          label={strings.menu.signTransaction}
+          onPress={navigateTo.signTransaction}
           left={<Icon.Message size={24} color={p.gray_600} />}
         />
 
@@ -225,6 +240,7 @@ const Item = ({
 const Staking = Item
 const UtxoList = Item
 const MessageSigning = Item
+const SignTransaction = Item
 const Governance = Item
 const AppSettings = Item
 const KnowledgeBase = Item
@@ -291,6 +307,7 @@ const useNavigateTo = () => {
     navigateToMintBurn,
   } = useWalletNavigation()
   const {wallet} = useSelectedWallet()
+  const navigation = useNavigation()
 
   const prefetchStakingInfo = usePrefetchStakingInfo(wallet)
 
@@ -304,6 +321,10 @@ const useNavigateTo = () => {
     },
     utxoList: () => navigateToUtxoList(),
     messageSigning: () => navigateToMessageSigning(),
+    signTransaction: () => {
+      // @ts-ignore - sign-transaction is a menu route
+      navigation.navigate('sign-transaction')
+    },
     settings: () => navigateToSettings(),
     support: () => Linking.openURL(SUPPORT_TICKET_LINK),
     knowledgeBase: () => Linking.openURL(KNOWLEDGE_BASE_LINK),

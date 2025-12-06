@@ -316,6 +316,9 @@ export type ReviewTxRoutes = {
     onCIP36SupportChange?: (supportsCIP36: boolean) => void
   }
   'cosign-transaction'?: undefined
+  'transaction-signed'?: {
+    jsonString: string
+  }
   'result-screen': import('~/ui/ResultScreen/types').ResultScreenParams
 }
 
@@ -370,6 +373,7 @@ export type NftRouteNavigation = StackNavigationProp<NftRoutes>
 export type MenuRoutes = {
   '_menu': undefined
   'voting-registration': undefined
+  'sign-transaction': undefined
 }
 
 export type AppRoutes = {

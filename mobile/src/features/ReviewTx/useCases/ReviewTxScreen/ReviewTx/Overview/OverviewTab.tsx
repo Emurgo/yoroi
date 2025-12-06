@@ -1535,7 +1535,10 @@ const MultisignTransactionSection = ({
                     )}
                     <View style={[a.flex_1]}>
                       <Text style={[a.body_2_md_regular, ta.text_gray_max]}>
-                        {signer.walletName || signer.walletId}
+                        {signer.walletName ||
+                          (signer.keyHash
+                            ? `${signer.keyHash.substring(0, 8)}...${signer.keyHash.substring(signer.keyHash.length - 8)}`
+                            : signer.walletId)}
                       </Text>
                       {signer.isMultisig && signer.multisigStatus && (
                         <Text

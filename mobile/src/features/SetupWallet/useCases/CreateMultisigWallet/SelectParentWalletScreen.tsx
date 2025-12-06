@@ -22,7 +22,6 @@ import {Text} from '~/ui/Text/Text'
 
 export const SelectParentWalletScreen = () => {
   const strings = useStrings()
-  const {palette: p} = useTheme()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
   const {walletManager} = useWalletManager()
   const {openSelectMultipleWalletsModal} = useSelectMultipleWalletsModal()

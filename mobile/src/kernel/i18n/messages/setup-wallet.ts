@@ -573,6 +573,23 @@ export const setupWalletMessages = defineMessages({
     id: 'setupWallet.passwordInputLabel',
     defaultMessage: '!!!Password',
   },
+  signTransactionDescription: {
+    id: 'setupWallet.signTransactionDescription',
+    defaultMessage:
+      '!!!Paste a transaction JSON or CBOR to sign it with your wallet.',
+  },
+  orPasteManually: {
+    id: 'setupWallet.orPasteManually',
+    defaultMessage: '!!!Or paste manually:',
+  },
+  export: {
+    id: 'setupWallet.export',
+    defaultMessage: '!!!Export',
+  },
+  review: {
+    id: 'setupWallet.review',
+    defaultMessage: '!!!Review',
+  },
   signTransaction: {
     id: 'setupWallet.signTransaction',
     defaultMessage: '!!!Sign Transaction',

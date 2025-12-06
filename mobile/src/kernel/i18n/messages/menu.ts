@@ -49,4 +49,8 @@ export const menuMessages = defineMessages({
     id: 'menu.mintBurn',
     defaultMessage: '!!!Mint & Burn',
   },
+  signTransaction: {
+    id: 'menu.signTransaction',
+    defaultMessage: '!!!Sign Transaction',
+  },
 })

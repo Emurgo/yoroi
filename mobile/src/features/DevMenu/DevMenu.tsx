@@ -16,6 +16,7 @@ import {decryptData} from '~/kernel/crypto/decrypt-data'
 import {encryptData} from '~/kernel/crypto/encrypt-data'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {LocalizableError} from '~/kernel/i18n/LocalizableError'
+import {apiErrors} from '~/kernel/i18n/messages/global'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {MenuRoutes} from '~/kernel/navigation/types'
 import {debugStorage} from '~/kernel/storage/debug-storage'
@@ -351,7 +352,7 @@ export function DevMenu() {
 
 const BuggyComponent = ({showCrash}: {showCrash: boolean}) => {
   if (showCrash) {
-    throw new LocalizableError({id: 'api.error.badRequest'})
+    throw new LocalizableError(apiErrors.badRequest)
   }
 
   return <></>

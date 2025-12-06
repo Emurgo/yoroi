@@ -29,12 +29,8 @@ export const SelectTokenFromListScreen = () => {
   const {targets, selectedTargetIndex, allocated} = useTransfer()
   const {wallet} = useSelectedWallet()
   const {walletManager} = useWalletManager()
-  const {
-    selectedInputWalletIds,
-    selectedWalletForAssets,
-    getWalletAssets,
-    addWalletAsset,
-  } = useMultipartySend()
+  const {selectedInputWalletIds, selectedWalletForAssets, getWalletAssets} =
+    useMultipartySend()
 
   // Determine which wallet to use for balances and asset selection
   const isMultipleWallets = selectedInputWalletIds.length > 1
@@ -60,8 +56,16 @@ export const SelectTokenFromListScreen = () => {
   // Get already selected amounts for filtering
   const selectedAmounts = React.useMemo(() => {
     if (isMultipleWallets && selectedWalletForAssets) {
-      // Multiple wallets: use assets from the selected wallet
-      return getWalletAssets(selectedWalletForAssets)
+      // Multiple wallets: use assets from the selected wallet (convert Map to Record)
+      const walletAssetsMap = getWalletAssets(selectedWalletForAssets)
+      const walletAssetsRecord: Record<
+        Portfolio.Token.Id,
+        Portfolio.Token.Amount
+      > = {}
+      walletAssetsMap.forEach((amount, tokenId) => {
+        walletAssetsRecord[tokenId] = amount
+      })
+      return walletAssetsRecord
     } else {
       // Single wallet: use transfer state
       return (
@@ -452,7 +456,7 @@ const Counter = <T,>({
 
         <Text
           style={[ta.text_primary_medium, a.body_2_md_medium]}
-        >{` ${counter} ${strings.send.assets(counter)}`}</Text>
+        >{` ${counter} ${strings.global.assets(counter)}`}</Text>
       </View>
     )
   }

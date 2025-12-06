@@ -585,6 +585,7 @@ export const useStrings = () => {
         governanceCentre: f(menuMessages.governanceCentre),
         utxoList: f(transactionsMessages.utxoListTitle),
         messageSigning: f(menuMessages.messageSigning),
+        signTransaction: f(menuMessages.signTransaction),
         airdrop: f(menuMessages.airdrop),
         mintBurn: f(menuMessages.mintBurn),
       },
@@ -997,7 +998,6 @@ export const useStrings = () => {
         noAssetsAllocated: f(sendMessages.noAssetsAllocated),
         availableToAllocate: f(sendMessages.availableToAllocate),
         remaining: f(sendMessages.remaining),
-        assets: (count: number) => f(sendMessages.assets, {count}),
       },
 
       // Global strings
@@ -1807,6 +1807,7 @@ export const useStrings = () => {
         failedTxTitle: f(txReviewMessages.failedTxTitle),
         failedTxText: f(txReviewMessages.failedTxText),
         failedTxButton: f(txReviewMessages.failedTxButton),
+        transactionSigned: f(txReviewMessages.transactionSigned),
         infraestructureIssueTitle: f(
           txReviewMessages.infraestructureIssueTitle,
         ),
@@ -2384,6 +2385,12 @@ export const useStrings = () => {
         outputs: f(setupWalletMessages.outputs),
         passwordInputLabel: f(setupWalletMessages.passwordInputLabel),
         signTransaction: f(setupWalletMessages.signTransaction),
+        signTransactionDescription: f(
+          setupWalletMessages.signTransactionDescription,
+        ),
+        orPasteManually: f(setupWalletMessages.orPasteManually),
+        export: f(setupWalletMessages.export),
+        review: f(setupWalletMessages.review),
         selectDifferentFile: f(setupWalletMessages.selectDifferentFile),
         multisigSigningStatus: f(setupWalletMessages.multisigSigningStatus),
         quorumNotMet: f(setupWalletMessages.quorumNotMet),

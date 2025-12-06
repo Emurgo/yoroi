@@ -12,6 +12,7 @@ import {ResultScreen} from '~/ui/ResultScreen/ResultScreen'
 import {CoSignTransactionScreen} from './useCases/CoSignTransactionScreen/CoSignTransactionScreen'
 import {ReviewTxScreen} from './useCases/ReviewTxScreen/ReviewTxScreen'
 import {InfraestructureIssueScreen} from './useCases/ShowInfraestructureIssueScreen/InfraestructureIssueScreen'
+import {TransactionSignedScreen} from './useCases/TransactionSignedScreen/TransactionSignedScreen'
 
 export const Stack = createStackNavigator<ReviewTxRoutes>()
 
@@ -39,6 +40,14 @@ export const ReviewTxNavigator = () => {
           title: 'Co-Sign Transaction',
         }}
         getComponent={() => CoSignTransactionScreen}
+      />
+
+      <Stack.Screen
+        name="transaction-signed"
+        options={{
+          title: strings.txReview.transactionSigned,
+        }}
+        getComponent={() => TransactionSignedScreen}
       />
 
       <Stack.Screen
