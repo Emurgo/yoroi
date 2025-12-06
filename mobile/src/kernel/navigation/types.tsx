@@ -19,6 +19,7 @@ export type ReviewContext =
   | 'withdraw rewards'
   | 'delegate vote'
   | 'utxo-consolidation'
+  | 'airdrop'
 
 export type WalletTabRoutes = {
   history: NavigatorScreenParams<TxHistoryRoutes>
