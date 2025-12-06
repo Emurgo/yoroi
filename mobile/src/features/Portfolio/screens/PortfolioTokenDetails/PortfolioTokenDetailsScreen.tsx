@@ -1,4 +1,4 @@
-import {usePortfolioTokenInfo} from '@yoroi/portfolio'
+import {isPrimaryToken, usePortfolioTokenInfo} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {App} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
@@ -38,7 +38,9 @@ export const PortfolioTokenDetailsScreen = () => {
     primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
   })
 
-  const HEADER_HEIGHT = 304
+  const shouldShowChart = tokenInfo && isPrimaryToken(tokenInfo)
+  // Approximate header height: base (~140) + chart section (~164) if shown
+  const HEADER_HEIGHT = shouldShowChart ? 304 : 140
 
   if (!tokenInfo)
     throwLoggedError(
@@ -91,18 +93,16 @@ export const PortfolioTokenDetailsScreen = () => {
           onScroll={onScroll}
           ListHeaderComponent={
             <>
-              <Animated.View
-                style={[a.overflow_hidden, {height: HEADER_HEIGHT}]}
-              >
-                <Space.Height.md />
-
+              <Animated.View style={[a.overflow_hidden]}>
                 <PortfolioTokenBalance />
 
-                <Space.Height.md />
-
-                <PortfolioTokenChart />
-
-                <Space.Height.md />
+                {shouldShowChart && (
+                  <>
+                    <Space.Height.md />
+                    <PortfolioTokenChart />
+                    <Space.Height.md />
+                  </>
+                )}
               </Animated.View>
 
               <Animated.View>{renderTabs}</Animated.View>
