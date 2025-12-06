@@ -120,7 +120,7 @@ export const SelectParentWalletScreen = () => {
       <SafeArea>
         <Space.Height.lg />
         <View style={[a.px_lg]}>
-          <Text style={[a.body_1_lg_regular]}>{strings.global.pleaseWait}</Text>
+          <Text style={[a.body_1_lg_regular]}>{strings.send.pleaseWait}</Text>
         </View>
       </SafeArea>
     )

@@ -9,7 +9,11 @@ export const getTranslatedError = (intl: IntlShape) => {
       if (error.descriptor?.id) {
         const formatted = intl.formatMessage(error.descriptor)
         // Ensure we return a string (formatMessage can return MessageFormatElement[] for rich text)
-        return typeof formatted === 'string' ? formatted : String(formatted)
+        if (typeof formatted === 'string') {
+          return formatted
+        }
+        // Convert MessageFormatElement[] to string by joining text nodes
+        return String(formatted)
       }
       // Fallback if descriptor is missing id
       return (
