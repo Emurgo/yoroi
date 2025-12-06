@@ -322,6 +322,11 @@ export const useStrings = () => {
         redeemableThaws: f(airdropMessages.redeemableThaws),
         readOnlyWallet: f(airdropMessages.readOnlyWallet),
         noRedeemableThaws: f(airdropMessages.noRedeemableThaws),
+        manualAddress: f(airdropMessages.manualAddress),
+        manualAddressTitle: f(airdropMessages.manualAddressTitle),
+        manualAddressDescription: f(airdropMessages.manualAddressDescription),
+        checkEligibility: f(airdropMessages.checkEligibility),
+        externalAddress: f(airdropMessages.externalAddress),
         status: {
           upcoming: f(airdropMessages.statusUpcoming),
           redeemable: f(airdropMessages.statusRedeemable),

@@ -51,9 +51,6 @@ export const redemptionApi = {
    */
   getPhaseConfig: async (): Promise<PhaseConfigResponse> => {
     const url = getApiUrl('/thaws/phase-config')
-    logger.debug('redemptionApi.getPhaseConfig: Requesting phase config', {
-      url,
-    })
 
     const response = await fetchData<PhaseConfigResponse>({
       url,
@@ -81,9 +78,6 @@ export const redemptionApi = {
       )
     }
 
-    logger.debug('redemptionApi.getPhaseConfig: Success', {
-      data: response.value.data,
-    })
     return response.value.data
   },
 
@@ -94,10 +88,6 @@ export const redemptionApi = {
     destAddress: string,
   ): Promise<ThawScheduleResponse> => {
     const url = getApiUrl(`/thaws/${encodeURIComponent(destAddress)}/schedule`)
-    logger.debug('redemptionApi.getThawSchedule: Requesting thaw schedule', {
-      url,
-      destAddress,
-    })
 
     const response = await fetchData<ThawScheduleResponse>({
       url,
@@ -108,19 +98,6 @@ export const redemptionApi = {
     if (response.tag === 'left') {
       const errorResponse = parseErrorResponse(response.error.responseData)
       const errorType = errorResponse?.type
-
-      // Log full error details for debugging, especially for 403
-      logger.debug('redemptionApi.getThawSchedule: Error response', {
-        status: response.error.status,
-        message: response.error.message,
-        errorType,
-        errorInfo: errorResponse?.info,
-        errorMessage: errorResponse?.message,
-        responseData:
-          typeof response.error.responseData === 'string'
-            ? response.error.responseData.substring(0, 200)
-            : response.error.responseData,
-      })
 
       // Handle 403 Forbidden - might be rate limiting or missing headers
       if (response.error.status === 403) {
@@ -141,13 +118,6 @@ export const redemptionApi = {
         response.error.status === 404 ||
         (response.error.status === 400 && errorType === 'no_redeemable_thaws')
       ) {
-        logger.debug(
-          'redemptionApi.getThawSchedule: Address has no redeemable thaws',
-          {
-            destAddress,
-            errorInfo: errorResponse?.info,
-          },
-        )
         // Address not found - no allocations
         throw new Error('ADDRESS_NOT_FOUND')
       }
@@ -168,13 +138,6 @@ export const redemptionApi = {
         response.error.status === -1 ||
         response.error.message?.includes('Network')
       if (isNetworkError) {
-        logger.debug(
-          'redemptionApi.getThawSchedule: Network error, treating as no allocations',
-          {
-            destAddress,
-            status: response.error.status,
-          },
-        )
         throw new Error('ADDRESS_NOT_FOUND') // Treat as no allocations to avoid error spam
       }
 
@@ -201,12 +164,6 @@ export const redemptionApi = {
       )
     }
 
-    logger.debug('redemptionApi.getThawSchedule: Success', {
-      destAddress,
-      numberOfClaimedAllocations:
-        response.value.data.numberOfClaimedAllocations,
-      thawsCount: response.value.data.thaws.length,
-    })
     return response.value.data
   },
 
@@ -220,16 +177,6 @@ export const redemptionApi = {
     const url = getApiUrl(
       `/thaws/${encodeURIComponent(destAddress)}/transactions/build`,
     )
-    logger.debug('redemptionApi.buildTransaction: Building transaction', {
-      url,
-      destAddress,
-      changeAddress: request.change_address,
-      fundingUtxosCount: request.funding_utxos.length,
-      collateralUtxosCount: request.collateral_utxos.length,
-      fundingUtxos: request.funding_utxos.map(
-        (utxo) => `${utxo.substring(0, 16)}...`,
-      ),
-    })
 
     const response = await fetchData<
       BuildTransactionResponse,
@@ -270,14 +217,6 @@ export const redemptionApi = {
       )
     }
 
-    logger.debug('redemptionApi.buildTransaction: Success', {
-      destAddress,
-      transactionId: response.value.data.transaction_id,
-      redeemedAmount: response.value.data.redeemed_amount,
-      requireThawingExtraSignature:
-        response.value.data.require_thawing_extra_signature,
-      transactionLength: response.value.data.transaction.length,
-    })
     return response.value.data
   },
 
@@ -291,13 +230,6 @@ export const redemptionApi = {
     const url = getApiUrl(
       `/thaws/${encodeURIComponent(destAddress)}/transactions`,
     )
-    logger.debug('redemptionApi.submitTransaction: Submitting transaction', {
-      url,
-      destAddress,
-      transactionLength: request.transaction.length,
-      witnessSetLength: request.transaction_witness_set.length,
-      transactionPreview: `${request.transaction.substring(0, 32)}...`,
-    })
 
     const response = await fetchData<
       ThawTransactionResponse,
@@ -334,11 +266,6 @@ export const redemptionApi = {
       )
     }
 
-    logger.debug('redemptionApi.submitTransaction: Success', {
-      destAddress,
-      transactionId: response.value.data.transaction_id,
-      estimatedSubmissionTime: response.value.data.estimated_submission_time,
-    })
     return response.value.data
   },
 
@@ -351,14 +278,6 @@ export const redemptionApi = {
   ): Promise<GetTransactionResponse> => {
     const url = getApiUrl(
       `/thaws/${encodeURIComponent(destAddress)}/transactions/${encodeURIComponent(transactionId)}`,
-    )
-    logger.debug(
-      'redemptionApi.getTransactionStatus: Getting transaction status',
-      {
-        url,
-        destAddress,
-        transactionId,
-      },
     )
 
     const response = await fetchData<GetTransactionResponse>({
@@ -392,12 +311,6 @@ export const redemptionApi = {
       )
     }
 
-    logger.debug('redemptionApi.getTransactionStatus: Success', {
-      destAddress,
-      transactionId: response.value.data.transaction_id,
-      status: response.value.data.status,
-      redeemedAmount: response.value.data.redeemed_amount,
-    })
     return response.value.data
   },
 }

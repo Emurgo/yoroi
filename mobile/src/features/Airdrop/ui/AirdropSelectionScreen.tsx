@@ -2,24 +2,32 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {useNavigation} from '@react-navigation/native'
 import {StackNavigationProp} from '@react-navigation/stack'
+import {useQueryClient} from '@tanstack/react-query'
 import {BigNumber} from 'bignumber.js'
 import * as React from 'react'
 import {
   ActivityIndicator,
+  GestureResponderEvent,
   Pressable,
   RefreshControl,
   ScrollView,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {persistPrefixKeyword} from '~/kernel/connection/ConnectionProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {logger} from '~/kernel/logger/logger'
 import {Icon} from '~/ui/Icon'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
 
+import {useAirdropAddressCache} from '../common/airdropAddressCache'
 import {useAirdropEligibility} from '../common/useAirdropEligibility'
 import type {AddressAllocation} from '../types'
+import {ManualAddressModal} from './ManualAddressModal'
 import type {AirdropRoutes} from './types'
 
 // NIGHT token has 6 decimals
@@ -35,8 +43,11 @@ export const AirdropSelectionScreen = () => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
   const navigation = useNavigation<StackNavigationProp<AirdropRoutes>>()
+  const {openModal} = useModal()
+  const queryClient = useQueryClient()
 
   const {allocations, isLoading, isError, hardRefresh} = useAirdropEligibility()
+  const addressCache = useAirdropAddressCache()
   const [isRefreshing, setIsRefreshing] = React.useState(false)
 
   const handleRefresh = React.useCallback(async () => {
@@ -51,6 +62,44 @@ export const AirdropSelectionScreen = () => {
   const handleSelectAddress = (allocation: AddressAllocation) => {
     navigation.navigate('airdrop-main', {allocation})
   }
+
+  const handleOpenManualAddress = React.useCallback(() => {
+    openModal({
+      content: <ManualAddressModal />,
+      title: strings.airdrop.manualAddressTitle,
+      height: 500,
+      canDiscard: true,
+      onClose: () => {
+        // Invalidate queries to refresh allocations after adding external address
+        queryClient.invalidateQueries({
+          queryKey: ['persist', 'airdropEligibility'],
+        })
+      },
+    })
+  }, [openModal, strings, queryClient])
+
+  const handleRemoveExternalAddress = React.useCallback(
+    async (address: string) => {
+      try {
+        // Remove from external addresses cache
+        await addressCache.removeExternalAddress(address)
+
+        // Also remove from eligible cache if it exists there
+        await addressCache.removeEligibleAddress(address)
+
+        // Invalidate and refetch queries to update the list
+        await queryClient.invalidateQueries({
+          queryKey: [persistPrefixKeyword, 'airdropEligibility'],
+        })
+        await queryClient.refetchQueries({
+          queryKey: [persistPrefixKeyword, 'airdropEligibility'],
+        })
+      } catch (error) {
+        logger.error('Failed to remove external address', {address, error})
+      }
+    },
+    [addressCache, queryClient],
+  )
 
   if (isLoading) {
     return (
@@ -72,7 +121,7 @@ export const AirdropSelectionScreen = () => {
   if (isError || allocations.length === 0) {
     return (
       <SafeAreaView
-        edges={['left', 'right', 'bottom']}
+        edges={['left', 'right']}
         style={[ta.bg_color_max, a.flex_1]}
       >
         <ScrollView
@@ -86,7 +135,7 @@ export const AirdropSelectionScreen = () => {
             />
           }
         >
-          <View style={[a.align_center]}>
+          <View style={[a.align_center, a.flex_1, a.justify_center]}>
             <Icon.Info size={48} color={p.el_gray_min} />
             <Space.Height.xl />
             <Text
@@ -110,17 +159,41 @@ export const AirdropSelectionScreen = () => {
             </Text>
           </View>
         </ScrollView>
+
+        {/* Manual Address Button - fixed at bottom with safe area */}
+        <SafeAreaView edges={['bottom']} style={ta.bg_color_max}>
+          <View style={[a.p_lg]}>
+            <Pressable
+              onPress={handleOpenManualAddress}
+              style={[
+                a.p_lg,
+                a.rounded_sm,
+                a.flex_row,
+                a.align_center,
+                a.justify_center,
+                a.gap_sm,
+                {
+                  borderWidth: 1,
+                  borderColor: p.gray_200,
+                  backgroundColor: p.gray_min,
+                },
+              ]}
+            >
+              <Icon.Plus size={20} color={p.primary_600} />
+              <Text style={[a.body_1_lg_medium, ta.el_primary_medium]}>
+                {strings.airdrop.manualAddress}
+              </Text>
+            </Pressable>
+          </View>
+        </SafeAreaView>
       </SafeAreaView>
     )
   }
 
   return (
-    <SafeAreaView
-      edges={['left', 'right', 'bottom']}
-      style={[ta.bg_color_max, a.flex_1]}
-    >
+    <SafeAreaView edges={['left', 'right']} style={[ta.bg_color_max, a.flex_1]}>
       <ScrollView
-        contentContainerStyle={[a.p_lg, a.gap_md]}
+        contentContainerStyle={[a.p_lg, a.gap_md, {paddingBottom: 0}]}
         style={a.flex_1}
         refreshControl={
           <RefreshControl
@@ -138,7 +211,7 @@ export const AirdropSelectionScreen = () => {
           </Text>
         </View>
 
-        <Space.Height.xs />
+        <Space.Height.lg />
 
         {allocations.map((allocation, index) => (
           <AddressCard
@@ -146,9 +219,41 @@ export const AirdropSelectionScreen = () => {
             allocation={allocation}
             index={index + 1}
             onPress={() => handleSelectAddress(allocation)}
+            onRemove={
+              allocation.isExternal
+                ? () => handleRemoveExternalAddress(allocation.address)
+                : undefined
+            }
           />
         ))}
       </ScrollView>
+
+      {/* Manual Address Button - fixed at bottom with safe area */}
+      <SafeAreaView edges={['bottom']} style={ta.bg_color_max}>
+        <View style={[a.p_lg]}>
+          <Pressable
+            onPress={handleOpenManualAddress}
+            style={[
+              a.p_lg,
+              a.rounded_sm,
+              a.flex_row,
+              a.align_center,
+              a.justify_center,
+              a.gap_sm,
+              {
+                borderWidth: 1,
+                borderColor: p.gray_200,
+                backgroundColor: p.gray_min,
+              },
+            ]}
+          >
+            <Icon.Plus size={20} color={p.primary_600} />
+            <Text style={[a.body_1_lg_medium, ta.el_primary_medium]}>
+              {strings.airdrop.manualAddress}
+            </Text>
+          </Pressable>
+        </View>
+      </SafeAreaView>
     </SafeAreaView>
   )
 }
@@ -157,14 +262,27 @@ type AddressCardProps = {
   allocation: AddressAllocation
   index: number
   onPress: () => void
+  onRemove?: () => void
 }
 
-const AddressCard = ({allocation, index, onPress}: AddressCardProps) => {
+const AddressCard = ({
+  allocation,
+  index,
+  onPress,
+  onRemove,
+}: AddressCardProps) => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
 
   const redeemableAmount = formatAmount(allocation.redeemableAmount)
   const totalToRedeem = formatAmount(allocation.totalLeftToRedeem)
+
+  const handleRemove = (e: GestureResponderEvent) => {
+    e.stopPropagation()
+    if (onRemove) {
+      onRemove()
+    }
+  }
 
   return (
     <Pressable
@@ -191,14 +309,31 @@ const AddressCard = ({allocation, index, onPress}: AddressCardProps) => {
             <View style={[a.flex_row, a.justify_between, a.align_center]}>
               <View style={[a.flex_row, a.align_center, a.gap_xs]}>
                 <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>
-                  {strings.airdrop.destinationAddressNumber.replace(
-                    '{number}',
-                    String(index),
-                  )}
+                  {allocation.isExternal
+                    ? strings.airdrop.externalAddress
+                    : strings.airdrop.destinationAddressNumber.replace(
+                        '{number}',
+                        String(index),
+                      )}
                 </Text>
-                <Icon.InfoCircle size={16} color={p.gray_600} />
+                {allocation.isExternal && (
+                  <Icon.ExternalLink size={16} color={p.gray_600} />
+                )}
+                {!allocation.isExternal && (
+                  <Icon.InfoCircle size={16} color={p.gray_600} />
+                )}
               </View>
-              <Icon.Chevron direction="right" size={24} color={p.gray_600} />
+              <View style={[a.flex_row, a.align_center, a.gap_md]}>
+                {onRemove && (
+                  <TouchableOpacity
+                    onPress={handleRemove}
+                    hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
+                  >
+                    <Icon.Delete size={20} color={p.gray_600} />
+                  </TouchableOpacity>
+                )}
+                <Icon.Chevron direction="right" size={24} color={p.gray_600} />
+              </View>
             </View>
 
             <Space.Height.md />

@@ -203,4 +203,25 @@ export const airdropMessages = defineMessages({
     id: 'airdrop.noRedeemableThaws',
     defaultMessage: '!!!No thaws are currently redeemable',
   },
+  manualAddress: {
+    id: 'airdrop.manualAddress',
+    defaultMessage: '!!!Manual Address',
+  },
+  manualAddressTitle: {
+    id: 'airdrop.manualAddressTitle',
+    defaultMessage: '!!!Add External Address',
+  },
+  manualAddressDescription: {
+    id: 'airdrop.manualAddressDescription',
+    defaultMessage:
+      '!!!You can pay for transaction fees to redeem NIGHT tokens for someone else. Enter their address below to check eligibility and add it to your list.',
+  },
+  checkEligibility: {
+    id: 'airdrop.checkEligibility',
+    defaultMessage: '!!!Check Eligibility',
+  },
+  externalAddress: {
+    id: 'airdrop.externalAddress',
+    defaultMessage: '!!!External Address',
+  },
 })

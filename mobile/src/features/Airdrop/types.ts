@@ -81,4 +81,5 @@ export interface AddressAllocation {
   totalAllocation: number
   redeemedSoFar: number
   totalLeftToRedeem: number
+  isExternal?: boolean // True if this is an external address (not owned by wallet)
 }

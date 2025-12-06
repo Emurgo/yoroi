@@ -59,10 +59,12 @@ export const useAirdropEligibility = () => {
       }
 
       // Load cached addresses to avoid unnecessary API calls
-      const [cachedEligible, cachedNotEligible] = await Promise.all([
-        addressCache.getEligibleAddresses(),
-        addressCache.getNotEligibleAddresses(),
-      ])
+      const [cachedEligible, cachedNotEligible, externalAddresses] =
+        await Promise.all([
+          addressCache.getEligibleAddresses(),
+          addressCache.getNotEligibleAddresses(),
+          addressCache.getExternalAddresses(),
+        ])
 
       // Filter addresses based on cache status
       // - Not eligible: skip entirely (never have allocations)
@@ -70,6 +72,19 @@ export const useAirdropEligibility = () => {
       // - Uncached: always check
       const addressesToCheck: string[] = []
       const skippedAddresses: Array<{address: string; reason: string}> = []
+
+      // Pre-load React Query cache to check if we have cached allocations
+      const previousData =
+        queryClient.getQueryData<AddressAllocation[]>(queryKey)
+      const cachedAllocationsByAddress = new Map<string, AddressAllocation>()
+      if (previousData) {
+        for (const cachedAllocation of previousData) {
+          cachedAllocationsByAddress.set(
+            cachedAllocation.address,
+            cachedAllocation,
+          )
+        }
+      }
 
       for (const address of addresses) {
         if (cachedNotEligible.has(address)) {
@@ -81,6 +96,18 @@ export const useAirdropEligibility = () => {
         // Check if we should fetch for this address
         const checkResult = await addressCache.shouldCheckAddress(address)
         if (!checkResult.shouldCheck) {
+          // Address is cached as eligible but we're skipping the API call
+          // However, if we don't have React Query cache for it, we need to fetch it
+          // This can happen after app restart when React Query cache is empty
+          // but our address cache still has the address marked as eligible
+          const hasCachedAllocation = cachedAllocationsByAddress.has(address)
+          if (!hasCachedAllocation) {
+            // No cached data - fetch it anyway to ensure it appears
+            addressesToCheck.push(address)
+            continue
+          }
+
+          // We have cached data, so we can skip the API call
           skippedAddresses.push({
             address,
             reason: checkResult.reason,
@@ -95,30 +122,13 @@ export const useAirdropEligibility = () => {
         totalAddresses: addresses.length,
         cachedNotEligible: cachedNotEligible.size,
         cachedEligible: Object.keys(cachedEligible).length,
+        externalAddresses: externalAddresses.size,
         addressesToCheck: addressesToCheck.length,
         skippedAddresses: skippedAddresses.length,
-        skippedReasons: skippedAddresses.map((s) => s.reason),
-        allAddresses: addresses,
-        cachedNotEligibleAddresses: Array.from(cachedNotEligible),
-        addressesToCheckList: addressesToCheck,
       })
 
       // Fetch allocations for addresses we need to check
       const allocations: AddressAllocation[] = []
-
-      // First, load cached allocations from React Query cache for skipped eligible addresses
-      // This ensures we show cached data even when skipping API calls
-      const previousData =
-        queryClient.getQueryData<AddressAllocation[]>(queryKey)
-      const cachedAllocationsByAddress = new Map<string, AddressAllocation>()
-      if (previousData) {
-        for (const cachedAllocation of previousData) {
-          cachedAllocationsByAddress.set(
-            cachedAllocation.address,
-            cachedAllocation,
-          )
-        }
-      }
 
       // Include cached allocations for addresses we're skipping
       for (const address of addresses) {
@@ -131,35 +141,57 @@ export const useAirdropEligibility = () => {
           // Address is being skipped - check if we have cached data
           const cachedAllocation = cachedAllocationsByAddress.get(address)
           if (cachedAllocation) {
-            allocations.push(cachedAllocation)
-            logger.info('Including cached allocation (skipping API call)', {
-              address,
-              reason: 'cached_data_available',
-            })
-          } else {
-            // No cached data but we're skipping - this shouldn't happen, but log it
-            logger.warn('Skipping address but no cached data available', {
-              address,
+            allocations.push({
+              ...cachedAllocation,
+              isExternal: externalAddresses.has(address),
             })
           }
+          // Note: If no cached allocation, the address should have been added to
+          // addressesToCheck in the previous loop, so we don't need to handle it here
         }
+      }
+
+      // Also include external addresses that aren't in wallet addresses
+      for (const externalAddress of externalAddresses) {
+        // Skip if already in wallet addresses (handled above)
+        if (addresses.includes(externalAddress)) {
+          continue
+        }
+
+        // Check if we have cached React Query data for this external address
+        const cachedAllocation = cachedAllocationsByAddress.get(externalAddress)
+        if (cachedAllocation) {
+          // We have cached data - include it
+          allocations.push({
+            ...cachedAllocation,
+            isExternal: true,
+          })
+          continue
+        }
+
+        // No cached data - check if we should fetch for this external address
+        const checkResult =
+          await addressCache.shouldCheckAddress(externalAddress)
+        if (!checkResult.shouldCheck) {
+          // Address is cached as eligible but we don't have React Query cache
+          // This can happen when a new external address is just added
+          // Fetch it anyway to ensure it appears
+          addressesToCheck.push(externalAddress)
+          continue
+        }
+
+        // Fetch for external address
+        addressesToCheck.push(externalAddress)
       }
 
       logger.info('Fetching thaw schedules', {
         addressesToCheckCount: addressesToCheck.length,
-        addressesToCheck,
         cachedAllocationsCount: allocations.length,
       })
 
       for (const address of addressesToCheck) {
         try {
-          logger.info('Checking address for eligibility', {address})
           const schedule = await redemptionApi.getThawSchedule(address)
-          logger.info('Address has valid schedule', {
-            address,
-            thawsCount: schedule.thaws.length,
-            numberOfClaimedAllocations: schedule.numberOfClaimedAllocations,
-          })
 
           // Calculate redeemable amount (sum of redeemable thaws)
           const redeemableAmount = schedule.thaws
@@ -189,6 +221,7 @@ export const useAirdropEligibility = () => {
             totalAllocation,
             redeemedSoFar,
             totalLeftToRedeem,
+            isExternal: externalAddresses.has(address),
           })
 
           // Find the next upcoming thaw that hasn't started yet
@@ -216,7 +249,6 @@ export const useAirdropEligibility = () => {
           if (isError(error) && error.message === 'ADDRESS_NOT_FOUND') {
             // Cache as not eligible to avoid future API calls
             await addressCache.addNotEligibleAddress(address)
-            logger.info('Cached address as not eligible', {address})
             continue
           }
 
@@ -268,7 +300,6 @@ export const useAirdropEligibility = () => {
       }
 
       logger.info('Hard refreshing airdrop eligibility', {
-        walletId: wallet.id,
         addressesCount: addresses.length,
       })
 

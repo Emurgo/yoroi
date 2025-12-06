@@ -5,6 +5,7 @@ import {logger} from '~/kernel/logger/logger'
 const STORAGE_KEY_PREFIX = 'airdrop/address-cache/'
 const ELIGIBLE_KEY = 'eligible'
 const NOT_ELIGIBLE_KEY = 'not-eligible'
+const EXTERNAL_KEY = 'external'
 
 interface EligibleAddressInfo {
   lastCheckDate: string // ISO date string
@@ -63,10 +64,6 @@ export const useAirdropAddressCache = () => {
         nextThawDate,
       }
       await cacheStorage.setItem(ELIGIBLE_KEY, JSON.stringify(eligible))
-      logger.info('Updated eligible address cache', {
-        address,
-        nextThawDate,
-      })
     } catch (error) {
       logger.error('Failed to update eligible address cache', {
         address,
@@ -83,7 +80,6 @@ export const useAirdropAddressCache = () => {
         NOT_ELIGIBLE_KEY,
         JSON.stringify([...notEligible]),
       )
-      logger.info('Added address to not-eligible cache', {address})
     } catch (error) {
       logger.error('Failed to add not-eligible address to cache', {
         address,
@@ -128,7 +124,7 @@ export const useAirdropAddressCache = () => {
     try {
       await cacheStorage.removeItem(ELIGIBLE_KEY)
       await cacheStorage.removeItem(NOT_ELIGIBLE_KEY)
-      logger.info('Cleared airdrop address cache')
+      await cacheStorage.removeItem(EXTERNAL_KEY)
     } catch (error) {
       logger.error('Failed to clear airdrop address cache', {error})
     }
@@ -165,22 +161,75 @@ export const useAirdropAddressCache = () => {
           JSON.stringify([...notEligible]),
         )
       }
-
-      logger.info('Cleared cache for addresses', {
-        addressesCount: addresses.length,
-        removedFromEligible: hasChanges,
-        removedFromNotEligible: addressesToRemove.length > 0,
-      })
     } catch (error) {
       logger.error('Failed to clear addresses cache', {addresses, error})
+    }
+  }
+
+  const getExternalAddresses = async (): Promise<Set<string>> => {
+    try {
+      const addressesJson = await cacheStorage.getItem<string>(EXTERNAL_KEY)
+      if (!addressesJson) {
+        return new Set()
+      }
+      const addresses = JSON.parse(addressesJson) as string[]
+      return new Set(addresses)
+    } catch (error) {
+      logger.warn('Failed to read external addresses cache', {error})
+      return new Set()
+    }
+  }
+
+  const addExternalAddress = async (address: string): Promise<void> => {
+    try {
+      const external = await getExternalAddresses()
+      external.add(address)
+      await cacheStorage.setItem(EXTERNAL_KEY, JSON.stringify([...external]))
+    } catch (error) {
+      logger.error('Failed to add external address to cache', {
+        address,
+        error,
+      })
+    }
+  }
+
+  const removeExternalAddress = async (address: string): Promise<void> => {
+    try {
+      const external = await getExternalAddresses()
+      external.delete(address)
+      await cacheStorage.setItem(EXTERNAL_KEY, JSON.stringify([...external]))
+    } catch (error) {
+      logger.error('Failed to remove external address from cache', {
+        address,
+        error,
+      })
+    }
+  }
+
+  const removeEligibleAddress = async (address: string): Promise<void> => {
+    try {
+      const eligible = await getEligibleAddresses()
+      if (eligible[address]) {
+        delete eligible[address]
+        await cacheStorage.setItem(ELIGIBLE_KEY, JSON.stringify(eligible))
+      }
+    } catch (error) {
+      logger.error('Failed to remove address from eligible cache', {
+        address,
+        error,
+      })
     }
   }
 
   return {
     getEligibleAddresses,
     getNotEligibleAddresses,
+    getExternalAddresses,
     updateEligibleAddress,
     addNotEligibleAddress,
+    addExternalAddress,
+    removeExternalAddress,
+    removeEligibleAddress,
     shouldCheckAddress,
     clearCache,
     clearAddressesCache,

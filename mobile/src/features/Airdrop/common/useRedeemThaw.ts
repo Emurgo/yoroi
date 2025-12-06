@@ -60,20 +60,10 @@ export const useRedeemThaw = () => {
         [primaryTokenId]: '5000000' as Balance.Quantity, // 5 ADA in lovelace
       }
 
-      logger.debug('useRedeemThaw: Starting UTXO selection', {
-        destAddress,
-        walletId: wallet.id,
-        feeAmount: feeAmount[primaryTokenId],
-        primaryTokenId,
-      })
-
       const fundingUtxosHex = await CardanoMobileWrapped.cslScope(
         async (csl) => {
           // Convert RawUtxo[] to ModernUtxo[] using current pattern
           const rawUtxos = wallet.utxos()
-          logger.debug('useRedeemThaw: Converting UTXOs', {
-            rawUtxosCount: rawUtxos.length,
-          })
 
           const modernUtxos = rawUtxos.map((rawUtxo: RawUtxo) => {
             const addressing = wallet.getAddressing(rawUtxo.receiver)
@@ -85,11 +75,6 @@ export const useRedeemThaw = () => {
             )
           })
 
-          logger.debug('useRedeemThaw: Selecting UTXOs', {
-            modernUtxosCount: modernUtxos.length,
-            selectionStrategy: 'keepRelevant',
-          })
-
           // Select UTXOs using keepRelevant strategy (same as swap)
           const selection = selectUtxos(
             feeAmount,
@@ -97,19 +82,6 @@ export const useRedeemThaw = () => {
             'keepRelevant' as SelectionStrategy,
             primaryTokenId,
           )
-
-          logger.debug('useRedeemThaw: UTXO selection result', {
-            selectedCount: selection.selected.length,
-            missingAmounts:
-              Object.keys(selection.missingAmounts).length > 0
-                ? selection.missingAmounts
-                : null,
-            selectedUtxos: selection.selected.map((utxo, idx) => ({
-              index: idx,
-              address: utxo.receiver,
-              amounts: Object.keys(utxo.balance),
-            })),
-          })
 
           if (
             selection.selected.length === 0 ||
@@ -123,10 +95,6 @@ export const useRedeemThaw = () => {
           }
 
           // Convert ModernUtxo to hex strings using toTransactionUnspentOutput
-          logger.debug('useRedeemThaw: Converting selected UTXOs to hex', {
-            selectedCount: selection.selected.length,
-          })
-
           const utxoHexStrings = await Promise.all(
             selection.selected.map(async (utxo) => {
               const cslUtxo = utxo.toTransactionUnspentOutput(csl)
@@ -134,22 +102,12 @@ export const useRedeemThaw = () => {
             }),
           )
 
-          logger.debug('useRedeemThaw: UTXO conversion complete', {
-            utxoHexStringsCount: utxoHexStrings.length,
-            utxoPreviews: utxoHexStrings.map(
-              (hex) => `${hex.substring(0, 16)}...`,
-            ),
-          })
-
           return utxoHexStrings
         },
       )
 
       // Get change address
       const changeAddress = wallet.getChangeAddress('multiple')
-      logger.debug('useRedeemThaw: Got change address', {
-        changeAddress,
-      })
 
       // Build transaction request
       const buildRequest: BuildTransactionRequest = {
@@ -158,78 +116,37 @@ export const useRedeemThaw = () => {
         collateral_utxos: [],
       }
 
-      logger.debug('useRedeemThaw: Building transaction request', {
-        destAddress,
-        changeAddress,
-        fundingUtxosCount: buildRequest.funding_utxos.length,
-        collateralUtxosCount: buildRequest.collateral_utxos.length,
-      })
-
       // Build transaction
       const buildResponse = await redemptionApi.buildTransaction(
         destAddress,
         buildRequest,
       )
 
-      logger.debug('useRedeemThaw: Transaction built successfully', {
-        transactionId: buildResponse.transaction_id,
-        redeemedAmount: buildResponse.redeemed_amount,
-        requireThawingExtraSignature:
-          buildResponse.require_thawing_extra_signature,
-        transactionLength: buildResponse.transaction.length,
-      })
-
       // Sign the transaction
       const unsignedTxHex = buildResponse.transaction
-      logger.debug('useRedeemThaw: Signing transaction', {
-        unsignedTxLength: unsignedTxHex.length,
-      })
 
       const signedTxBytes = await CardanoMobileWrapped.cslScope(async (csl) => {
         // Get required signers for this transaction
         const signers = await getTransactionSigners(unsignedTxHex, wallet, meta)
-        logger.debug('useRedeemThaw: Got transaction signers', {
-          signersCount: signers.length,
-          signers: signers.map((s) => s.join('/')),
-        })
 
         // Create private keys for each signer
         const keys = signers.map((signer: number[]) =>
           createRawTxSigningKey(rootKey, signer, csl),
         )
 
-        logger.debug('useRedeemThaw: Created signing keys', {
-          keysCount: keys.length,
-        })
-
         // Sign the transaction using tx package
         const signed = await signRawTransaction(unsignedTxHex, keys)
-        logger.debug('useRedeemThaw: Transaction signed', {
-          signedTxLength: signed.length,
-        })
         return signed
       })
 
       const signedTxHex = Buffer.from(signedTxBytes).toString('hex')
-      logger.debug('useRedeemThaw: Signed transaction converted to hex', {
-        signedTxHexLength: signedTxHex.length,
-      })
 
       // Extract witness set from signed transaction
       const witnessSetHex = CardanoMobileWrapped.cslScope((csl) => {
         const signedTx = csl.Transaction.fromBytes(signedTxBytes)
         const witnessSet = signedTx.witnessSet()
         const witnessSetBytes = witnessSet.toBytes()
-        logger.debug('useRedeemThaw: Extracted witness set', {
-          witnessSetLength: witnessSetBytes.length,
-        })
         return Buffer.from(witnessSetBytes).toString('hex')
-      })
-
-      logger.debug('useRedeemThaw: Submitting transaction', {
-        destAddress,
-        transactionLength: signedTxHex.length,
-        witnessSetLength: witnessSetHex.length,
       })
 
       // Submit transaction
@@ -241,10 +158,9 @@ export const useRedeemThaw = () => {
         },
       )
 
-      logger.info('useRedeemThaw: Transaction submitted successfully', {
-        destAddress,
+      logger.info('Transaction submitted successfully', {
+        address: destAddress,
         transactionId: submitResponse.transaction_id,
-        estimatedSubmissionTime: submitResponse.estimated_submission_time,
       })
 
       return submitResponse.transaction_id
