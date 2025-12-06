@@ -2,7 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {useQueryClient} from '@tanstack/react-query'
 import * as React from 'react'
-import {ScrollView, Text, View} from 'react-native'
+import {ScrollView, Text} from 'react-native'
 
 import {AddressInput} from '~/common/AddressInput/AddressInput'
 import {persistPrefixKeyword} from '~/kernel/connection/ConnectionProvider'
@@ -10,17 +10,91 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 
 import {redemptionApi} from '../api/redemptionApi'
 import {useAirdropAddressCache} from '../common/airdropAddressCache'
 
-export const ManualAddressModal = () => {
+const ManualAddressModalContent = ({
+  address,
+  setAddress,
+  setIsValid,
+  error,
+}: {
+  address: string
+  setAddress: (value: string) => void
+  setIsValid: (value: boolean) => void
+  error: string | null
+}) => {
   const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
+  const {atoms: ta} = useTheme()
+
+  return (
+    <Modal.Content>
+      <ScrollView
+        contentContainerStyle={[a.px_lg, a.pb_lg]}
+        keyboardShouldPersistTaps="handled"
+      >
+        <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
+          {strings.airdrop.manualAddressDescription}
+        </Text>
+
+        <Space.Height.xl />
+
+        <AddressInput
+          value={address}
+          onChangeText={setAddress}
+          onValidationChange={setIsValid}
+          placeholder={strings.send.addressInputLabel}
+          label={strings.airdrop.address}
+        />
+
+        {error && (
+          <>
+            <Space.Height.md />
+            <Text style={[a.body_2_md_regular, ta.text_error]}>{error}</Text>
+          </>
+        )}
+      </ScrollView>
+    </Modal.Content>
+  )
+}
+
+const ManualAddressModalFooter = ({
+  address,
+  isValid,
+  isChecking,
+  onCheckEligibility,
+}: {
+  address: string
+  isValid: boolean
+  isChecking: boolean
+  onCheckEligibility: () => void
+}) => {
+  const strings = useStrings()
+
+  return (
+    <Modal.Footer>
+      <Button
+        title={
+          isChecking
+            ? strings.airdrop.loading
+            : strings.airdrop.checkEligibility
+        }
+        onPress={onCheckEligibility}
+        disabled={!isValid || isChecking || !address.trim()}
+        size="M"
+      />
+    </Modal.Footer>
+  )
+}
+
+export const useManualAddressModal = () => {
   const {closeModal, setLoading} = useModal()
   const addressCache = useAirdropAddressCache()
   const queryClient = useQueryClient()
+  const strings = useStrings()
 
   const [address, setAddress] = React.useState('')
   const [isValid, setIsValid] = React.useState(false)
@@ -124,48 +198,22 @@ export const ManualAddressModal = () => {
     queryClient,
   ])
 
-  return (
-    <View style={[a.flex_1]}>
-      <ScrollView
-        contentContainerStyle={[a.p_lg, a.flex_grow]}
-        style={a.flex_1}
-        keyboardShouldPersistTaps="handled"
-      >
-        <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
-          {strings.airdrop.manualAddressDescription}
-        </Text>
-
-        <Space.Height.xl />
-
-        <AddressInput
-          value={address}
-          onChangeText={setAddress}
-          onValidationChange={setIsValid}
-          placeholder={strings.send.addressInputLabel}
-          label={strings.airdrop.address}
-        />
-
-        {error && (
-          <>
-            <Space.Height.md />
-            <Text style={[a.body_2_md_regular, ta.text_error]}>{error}</Text>
-          </>
-        )}
-      </ScrollView>
-
-      {/* Check Eligibility Button - at bottom */}
-      <View style={[a.p_lg, {borderTopWidth: 1, borderTopColor: p.gray_200}]}>
-        <Button
-          title={
-            isChecking
-              ? strings.airdrop.loading
-              : strings.airdrop.checkEligibility
-          }
-          onPress={handleCheckEligibility}
-          disabled={!isValid || isChecking || !address.trim()}
-          size="M"
-        />
-      </View>
-    </View>
-  )
+  return {
+    Content: () => (
+      <ManualAddressModalContent
+        address={address}
+        setAddress={setAddress}
+        setIsValid={setIsValid}
+        error={error}
+      />
+    ),
+    Footer: () => (
+      <ManualAddressModalFooter
+        address={address}
+        isValid={isValid}
+        isChecking={isChecking}
+        onCheckEligibility={handleCheckEligibility}
+      />
+    ),
+  }
 }

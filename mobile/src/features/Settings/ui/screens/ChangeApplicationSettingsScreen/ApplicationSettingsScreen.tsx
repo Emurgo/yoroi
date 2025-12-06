@@ -17,6 +17,7 @@ import {
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {LanguageRecord, supportedLanguages} from '~/kernel/i18n/localization'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Icon} from '~/ui/Icon'
 import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
 
@@ -30,6 +31,7 @@ export const ApplicationSettingsScreen = () => {
   const {isCrashReportEnabled, toggleIsCrashReportEnabled} = useCrashReport()
   const {currency} = useCurrencyPairing()
   const navigateTo = useNavigateTo()
+  const {navigateToNotificationSettings} = useWalletNavigation()
   const {network} = useSelectedNetwork()
   const {atoms: ta, paletteName: name, palette: p} = useTheme()
   const {languageCode} = useLanguage()
@@ -120,6 +122,12 @@ export const ApplicationSettingsScreen = () => {
             label={strings.settings.applicationSettings.selectTheme}
             onNavigate={navigateTo.changeTheme}
             selected={strings.settings.theme.translateThemeName(name)}
+          />
+
+          <NavigatedSettingsItem
+            icon={<Icon.Bell {...iconProps} />}
+            label={strings.settings.notifications}
+            onNavigate={() => navigateToNotificationSettings()}
           />
         </SettingsSection>
 

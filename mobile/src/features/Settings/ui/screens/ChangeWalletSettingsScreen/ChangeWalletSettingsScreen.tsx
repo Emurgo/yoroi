@@ -50,8 +50,7 @@ const dialogOptions = {
 export const ChangeWalletSettingsScreen = () => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
-  const {resetToWalletSelection, navigateToNotificationSettings} =
-    useWalletNavigation()
+  const {resetToWalletSelection} = useWalletNavigation()
   const authSetting = useAuthSetting()
   const addressMode = useAddressMode()
   const {wallet} = useSelectedWallet()
@@ -183,14 +182,6 @@ export const ChangeWalletSettingsScreen = () => {
           >
             <AddressModeSwitcher isSingle={addressMode.isSingle} />
           </SettingsItem>
-        </SettingsSection>
-
-        <SettingsSection title={strings.settings.notifications}>
-          <NavigatedSettingsItem
-            icon={<Icon.Bell {...iconProps} />}
-            label={strings.settings.notifications}
-            onNavigate={() => navigateToNotificationSettings()}
-          />
         </SettingsSection>
 
         <SettingsSection title={strings.settings.walletSettings.about}>

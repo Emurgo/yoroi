@@ -2,7 +2,7 @@ import {isKeyOf} from '@yoroi/common'
 import {ThemedPalette, atoms as a, useTheme} from '@yoroi/theme'
 
 import {MaterialTopTabNavigationOptions} from '@react-navigation/material-top-tabs'
-import {NavigationState} from '@react-navigation/native'
+import {NavigationState, useNavigation} from '@react-navigation/native'
 import {
   StackNavigationOptions,
   TransitionPresets,
@@ -166,14 +166,30 @@ export const isAuthRoute = (
 
 export const BackButton = (props: TouchableOpacityProps & {color?: string}) => {
   const {palette: p} = useTheme()
+  const navigation = useNavigation()
+  const {onPress: propsOnPress, color, ...restProps} = props
+
+  const handlePress = React.useCallback(
+    (e: Parameters<NonNullable<TouchableOpacityProps['onPress']>>[0]) => {
+      const canGoBack = navigation.canGoBack()
+      const parent = navigation.getParent()
+      const parentCanGoBack = parent?.canGoBack() ?? false
+
+      if (propsOnPress) {
+        propsOnPress(e)
+      } else if (canGoBack) {
+        navigation.goBack()
+      } else if (parentCanGoBack) {
+        // If current navigator can't go back, try parent navigator
+        parent?.goBack()
+      }
+    },
+    [propsOnPress, navigation],
+  )
 
   return (
-    <TouchableOpacity {...props} testID="buttonBack2">
-      <Icon.Chevron
-        direction="left"
-        size={24}
-        color={props.color ?? p.gray_max}
-      />
+    <TouchableOpacity {...restProps} onPress={handlePress} testID="buttonBack2">
+      <Icon.Chevron direction="left" size={24} color={color ?? p.gray_max} />
     </TouchableOpacity>
   )
 }

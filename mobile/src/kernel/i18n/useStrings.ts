@@ -327,6 +327,15 @@ export const useStrings = () => {
         manualAddressDescription: f(airdropMessages.manualAddressDescription),
         checkEligibility: f(airdropMessages.checkEligibility),
         externalAddress: f(airdropMessages.externalAddress),
+        scheduleThawNotifications: f(airdropMessages.scheduleThawNotifications),
+        schedulingNotifications: f(airdropMessages.schedulingNotifications),
+        allNotificationsAlreadyScheduled: f(
+          airdropMessages.allNotificationsAlreadyScheduled,
+        ),
+        viewNotifications: f(airdropMessages.viewNotifications),
+        notificationsScheduledBody: f(
+          airdropMessages.notificationsScheduledBody,
+        ),
         status: {
           upcoming: f(airdropMessages.statusUpcoming),
           redeemable: f(airdropMessages.statusRedeemable),
@@ -2086,7 +2095,7 @@ export const useStrings = () => {
       // ManageNotifications strings
       manageNotifications: {
         manageDisplayDurationScreenTitle: f(
-          manageNotificationsMessages.displayDuration,
+          manageNotificationsMessages.manageDisplayDurationScreenTitle,
         ),
         inAppNotifications: f(manageNotificationsMessages.inAppNotifications),
         displayDuration: f(manageNotificationsMessages.displayDuration),
@@ -2096,6 +2105,29 @@ export const useStrings = () => {
           manageNotificationsMessages.enableNotificationsThroughSettings,
         ),
         notifications: f(manageNotificationsMessages.notifications),
+        scheduledNotifications: f(
+          manageNotificationsMessages.scheduledNotifications,
+        ),
+        removeNotificationTitle: f(
+          manageNotificationsMessages.removeNotificationTitle,
+        ),
+        removeNotificationMessage: f(
+          manageNotificationsMessages.removeNotificationMessage,
+        ),
+        remove: f(manageNotificationsMessages.remove),
+        removeNotificationError: f(
+          manageNotificationsMessages.removeNotificationError,
+        ),
+        loadingScheduledNotifications: f(
+          manageNotificationsMessages.loadingScheduledNotifications,
+        ),
+        noScheduledNotifications: f(
+          manageNotificationsMessages.noScheduledNotifications,
+        ),
+        scheduledFor: f(manageNotificationsMessages.scheduledFor),
+        loadNotificationError: f(
+          manageNotificationsMessages.loadNotificationError,
+        ),
       },
 
       // ManageNotificationDisplayDuration strings

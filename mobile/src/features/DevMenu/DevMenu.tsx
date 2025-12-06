@@ -5,13 +5,16 @@ import {useCreateWalletMnemonic, useWalletManager} from '@yoroi/wallet-manager'
 import {useNavigation} from '@react-navigation/native'
 import {StackNavigationProp} from '@react-navigation/stack'
 import {BigNumber} from 'bignumber.js'
+import * as Notifications from 'expo-notifications'
 import * as React from 'react'
+import {useIntl} from 'react-intl'
 import {Alert, Text, View} from 'react-native'
 import {SystemBars} from 'react-native-edge-to-edge'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {usePairing} from '~/features/Pairing/context/PairingProvider'
+import {isAndroid} from '~/kernel/constants'
 import {decryptData} from '~/kernel/crypto/decrypt-data'
 import {encryptData} from '~/kernel/crypto/encrypt-data'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
@@ -28,6 +31,7 @@ import {TextInput} from '~/ui/TextInput/TextInput'
 
 import {useWalletNameOverride} from '../Discover/common/WalletNameOverrideContext'
 import {WalletNameOverrideModalContent} from '../Discover/common/WalletNameOverrideModalContent'
+import {generateNotificationId} from '../Notifications/common/notifications'
 import {CborReviewModalContent} from './CborReviewModalContent'
 
 export function DevMenu() {
@@ -35,6 +39,7 @@ export function DevMenu() {
   const {authWithHost, changeAuthSetting} = useAuth()
   const {languageCode, selectLanguage} = useLanguage()
   const strings = useStrings()
+  const intl = useIntl()
   const [isLoading, setIsLoading] = React.useState(false)
   const [showCrash, setShowCrash] = React.useState(false)
   const {createWallet} = useCreateWalletMnemonic()
@@ -282,6 +287,100 @@ export function DevMenu() {
           }}
           type={ButtonType.Secondary}
           title="Custom Transaction"
+          style={[a.pt_md, a.p_md, a.rounded_md]}
+        />
+
+        <Button
+          onPress={async () => {
+            try {
+              // Set up notification handler
+              Notifications.setNotificationHandler({
+                handleNotification: async () => ({
+                  shouldPlaySound: true,
+                  shouldSetBadge: false,
+                  shouldShowBanner: true,
+                  shouldShowList: true,
+                }),
+              })
+
+              // Create Android channel if needed
+              if (isAndroid) {
+                await Notifications.setNotificationChannelAsync('default', {
+                  name: 'Default',
+                  importance: Notifications.AndroidImportance.HIGH,
+                })
+              }
+
+              // Check and request permissions
+              const {status: existingStatus} =
+                await Notifications.getPermissionsAsync()
+              let finalStatus = existingStatus
+
+              if (existingStatus !== 'granted') {
+                const {status} = await Notifications.requestPermissionsAsync()
+                finalStatus = status
+              }
+
+              if (finalStatus !== 'granted') {
+                Alert.alert(
+                  'Permission Denied',
+                  'Notification permission is required to schedule notifications',
+                )
+                return
+              }
+
+              // Schedule the notification using Date-based trigger for better accuracy
+              const notificationId = generateNotificationId()
+              const scheduledTime = new Date()
+              scheduledTime.setMinutes(scheduledTime.getMinutes() + 1) // 1 minute from now
+
+              await Notifications.scheduleNotificationAsync({
+                content: {
+                  title: 'Scheduled Notification',
+                  body: `Scheduled at ${intl.formatDate(new Date(), {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}, should fire at ${intl.formatDate(scheduledTime, {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}`,
+                  sound: 'default',
+                  data: {
+                    id: notificationId,
+                    scheduledAt: scheduledTime.toISOString(),
+                  },
+                },
+                trigger: {
+                  type: 'date',
+                  date: scheduledTime,
+                } as Notifications.DateTriggerInput,
+              })
+
+              const actualDelay = Math.round(
+                (scheduledTime.getTime() - Date.now()) / 1000,
+              )
+              Alert.alert(
+                'Notification Scheduled',
+                `Scheduled for ${actualDelay} seconds from now (${intl.formatDate(
+                  scheduledTime,
+                  {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  },
+                )})\n\nNote: Actual timing may vary due to OS power management.`,
+              )
+            } catch (error) {
+              Alert.alert(
+                'Error',
+                `Failed to schedule notification: ${String(error)}`,
+              )
+            }
+          }}
+          type={ButtonType.Secondary}
+          title="Schedule Notification (1 minute)"
           style={[a.pt_md, a.p_md, a.rounded_md]}
         />
 
