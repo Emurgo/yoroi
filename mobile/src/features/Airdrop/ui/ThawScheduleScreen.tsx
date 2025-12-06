@@ -16,6 +16,7 @@ import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 
+import {useAirdropEligibility} from '../common/useAirdropEligibility'
 import {useRedeemThaw} from '../common/useRedeemThaw'
 import type {Thaw} from '../types'
 import type {AirdropRoutes} from './types'
@@ -32,10 +33,17 @@ export const ThawScheduleScreen = () => {
   const strings = useStrings()
   const {atoms: ta} = useTheme()
   const route = useRoute<RouteProp<AirdropRoutes, 'airdrop-thaw-schedule'>>()
-  const {allocation} = route.params
+  const {allocation: allocationFromParams} = route.params
 
   const walletManager = useWalletManager()
   const meta = walletManager.selected.meta ?? null
+
+  // Get fresh allocation data from query instead of static route params
+  const {allocations: freshAllocations} = useAirdropEligibility()
+  const allocationFromQuery = freshAllocations.find(
+    (a) => a.address === allocationFromParams.address,
+  )
+  const allocation = allocationFromQuery ?? allocationFromParams
 
   const {redeemAsync} = useRedeemThaw()
   const {promptRootKey} = usePromptRootKey()
@@ -82,12 +90,6 @@ export const ThawScheduleScreen = () => {
       style={[ta.bg_color_max, a.flex_1]}
     >
       <ScrollView contentContainerStyle={[a.p_lg]} style={a.flex_1}>
-        <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
-          {strings.airdrop.thawScheduleDescription}
-        </Text>
-
-        <Space.Height.xl />
-
         {thaws.map((thaw, index) => (
           <ThawItem
             key={index}

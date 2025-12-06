@@ -33,10 +33,10 @@ export const AirdropNavigator = () => {
     <Stack.Navigator screenOptions={screenOptions}>
       <Stack.Screen
         name="airdrop-address"
+        component={AirdropSelectionScreen}
         options={{
           title: strings.menu.airdrop,
         }}
-        getComponent={() => AirdropSelectionScreen}
       />
 
       <Stack.Screen

@@ -5,7 +5,7 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 import {StackNavigationProp} from '@react-navigation/stack'
 import {BigNumber} from 'bignumber.js'
 import * as React from 'react'
-import {Linking, ScrollView, Text, TouchableOpacity, View} from 'react-native'
+import {ScrollView, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Address} from '~/common/Address/Address'
@@ -17,6 +17,7 @@ import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 
+import {useAirdropEligibility} from '../common/useAirdropEligibility'
 import {useRedeemThaw} from '../common/useRedeemThaw'
 import type {Thaw} from '../types'
 import type {AirdropRoutes} from './types'
@@ -29,13 +30,13 @@ const formatAmount = (amount: number): string => {
   return normalized.toFormat(2)
 }
 
-const calculateTimeRemaining = (endDate: string): string => {
+const calculateTimeRemaining = (startDate: string): string => {
   try {
-    const end = new Date(endDate.replace(/\s/g, ''))
+    const start = new Date(startDate.replace(/\s/g, ''))
     const now = new Date()
-    const diff = end.getTime() - now.getTime()
+    const diff = start.getTime() - now.getTime()
 
-    if (diff <= 0) return 'Ended'
+    if (diff <= 0) return 'Started'
 
     const days = Math.floor(diff / (1000 * 60 * 60 * 24))
     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
@@ -48,16 +49,36 @@ const calculateTimeRemaining = (endDate: string): string => {
   }
 }
 
-const getCurrentThawIndex = (thaws: ReadonlyArray<Thaw>): number => {
+const getCurrentThawIndex = (thaws: ReadonlyArray<Thaw>): number | null => {
+  if (thaws.length === 0) {
+    return null
+  }
+
   const now = new Date()
+
+  // First, try to find an active/redeemable thaw (started but not confirmed)
   for (let i = 0; i < thaws.length; i++) {
     const thaw = thaws[i]
     if (!thaw) continue
     const thawDate = new Date(thaw.thawing_period_start.replace(/\s/g, ''))
+    // Active thaw: started and not confirmed
     if (thawDate <= now && thaw.status !== 'confirmed') {
       return i
     }
   }
+
+  // If no active thaw, find the first upcoming thaw (next one to start)
+  for (let i = 0; i < thaws.length; i++) {
+    const thaw = thaws[i]
+    if (!thaw) continue
+    const thawDate = new Date(thaw.thawing_period_start.replace(/\s/g, ''))
+    if (thawDate > now && thaw.status === 'upcoming') {
+      return i
+    }
+  }
+
+  // If all thaws are confirmed, return the last one
+  // This shouldn't normally happen, but handle it gracefully
   return thaws.length - 1
 }
 
@@ -81,35 +102,73 @@ export const AirdropDetailsScreen = () => {
   const [isRedeeming, setIsRedeeming] = React.useState(false)
   const [detailsExpanded, setDetailsExpanded] = React.useState(true)
   const [timeRemaining, setTimeRemaining] = React.useState('')
+  const [timerLabel, setTimerLabel] = React.useState(strings.airdrop.startsIn)
 
-  const currentThawIndex = getCurrentThawIndex(allocation.schedule.thaws)
-  const currentThaw = allocation.schedule.thaws[currentThawIndex]
-  const totalThaws = allocation.schedule.thaws.length
+  // Get fresh allocation data from query instead of static route params
+  const {allocations: freshAllocations} = useAirdropEligibility()
+  const allocationFromQuery = freshAllocations.find(
+    (a) => a.address === allocation.address,
+  )
+  const currentAllocation = allocationFromQuery ?? allocation
 
-  const redeemableThaws = allocation.schedule.thaws.filter(
+  const currentThawIndex = getCurrentThawIndex(currentAllocation.schedule.thaws)
+  const currentThaw =
+    currentThawIndex !== null
+      ? currentAllocation.schedule.thaws[currentThawIndex]
+      : null
+  const totalThaws = currentAllocation.schedule.thaws.length
+
+  const redeemableThaws = currentAllocation.schedule.thaws.filter(
     (t) => t.status === 'redeemable',
   )
   const canRedeem =
     redeemableThaws.length > 0 && !isReadOnly && isWalletInitialized
 
   React.useEffect(() => {
-    if (!currentThaw) return
+    if (!currentThaw) {
+      setTimeRemaining('')
+      return
+    }
 
     const updateTimer = () => {
-      setTimeRemaining(calculateTimeRemaining(currentThaw.thawing_period_start))
+      const startDate = new Date(
+        currentThaw.thawing_period_start.replace(/\s/g, ''),
+      )
+      const now = new Date()
+      const diff = startDate.getTime() - now.getTime()
+
+      if (diff <= 0) {
+        // Thaw has started - show status instead
+        if (currentThaw.status === 'redeemable') {
+          setTimeRemaining(strings.airdrop.status.redeemable)
+          setTimerLabel(strings.airdrop.active)
+        } else if (currentThaw.status === 'confirmed') {
+          setTimeRemaining(strings.airdrop.redeemed)
+          setTimerLabel('')
+        } else {
+          setTimeRemaining(strings.airdrop.active)
+          setTimerLabel('')
+        }
+      } else {
+        // Thaw hasn't started yet - show countdown
+        setTimeRemaining(
+          calculateTimeRemaining(currentThaw.thawing_period_start),
+        )
+        setTimerLabel(strings.airdrop.startsIn)
+      }
     }
 
     updateTimer()
     const interval = setInterval(updateTimer, 1000)
     return () => clearInterval(interval)
-  }, [currentThaw])
+  }, [currentThaw, strings])
 
   const handleRedeem = () => {
     setIsRedeeming(true)
     promptRootKey({
       onSuccess: async (rootKey: string) => {
         try {
-          await redeemAsync({destAddress: allocation.address, rootKey})
+          await redeemAsync({destAddress: currentAllocation.address, rootKey})
           setIsRedeeming(false)
         } catch (error) {
           setIsRedeeming(false)
@@ -129,7 +188,9 @@ export const AirdropDetailsScreen = () => {
   }
 
   const handleOpenThawSchedule = () => {
-    navigation.navigate('airdrop-thaw-schedule', {allocation})
+    navigation.navigate('airdrop-thaw-schedule', {
+      allocation: currentAllocation,
+    })
   }
 
   return (
@@ -161,7 +222,7 @@ export const AirdropDetailsScreen = () => {
           <Space.Height.md />
 
           <Text style={[a.heading_1_medium, ta.text_gray_max]}>
-            {formatAmount(allocation.redeemableAmount)}
+            {formatAmount(currentAllocation.redeemableAmount)}
             <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
               {' '}
               NIGHT
@@ -174,7 +235,7 @@ export const AirdropDetailsScreen = () => {
             {strings.airdrop.destinationAddress}
           </Text>
           <Address
-            address={allocation.address}
+            address={currentAllocation.address}
             style={a.flex_1}
             textStyle={[a.body_2_md_regular, ta.text_gray_medium]}
           />
@@ -183,49 +244,53 @@ export const AirdropDetailsScreen = () => {
         <Space.Height.lg />
 
         {/* Current Thaw Card */}
-        <TouchableOpacity
-          onPress={handleOpenThawSchedule}
-          activeOpacity={0.8}
-          style={[
-            a.p_lg,
-            a.rounded_sm,
-            {
-              borderWidth: 1,
-              borderColor: p.gray_200,
-            },
-          ]}
-        >
-          <View style={[a.flex_row, a.justify_between, a.align_center]}>
-            <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-              <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>
-                {strings.airdrop.currentThaw}: {currentThawIndex + 1}/
-                {totalThaws}
-              </Text>
-              <Icon.InfoCircle size={16} color={p.gray_600} />
+        {currentThawIndex !== null && currentThaw && totalThaws > 0 && (
+          <TouchableOpacity
+            onPress={handleOpenThawSchedule}
+            activeOpacity={0.8}
+            style={[
+              a.p_lg,
+              a.rounded_sm,
+              {
+                borderWidth: 1,
+                borderColor: p.gray_200,
+              },
+            ]}
+          >
+            <View style={[a.flex_row, a.justify_between, a.align_center]}>
+              <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+                <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>
+                  {strings.airdrop.currentThaw}: {currentThawIndex + 1}/
+                  {totalThaws}
+                </Text>
+                <Icon.InfoCircle size={16} color={p.gray_600} />
+              </View>
+              <Icon.Chevron direction="right" size={24} color={p.gray_600} />
             </View>
-            <Icon.Chevron direction="right" size={24} color={p.gray_600} />
-          </View>
 
-          <Space.Height.xs />
+            <Space.Height.xs />
 
-          <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
-            {strings.airdrop.endsIn}: {timeRemaining}
-          </Text>
+            {timerLabel && timeRemaining && (
+              <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
+                {timerLabel}: {timeRemaining}
+              </Text>
+            )}
 
-          <Space.Height.lg />
+            <Space.Height.lg />
 
-          {/* Progress Indicator */}
-          <ThawProgressIndicator
-            thaws={allocation.schedule.thaws}
-            currentIndex={currentThawIndex}
-          />
+            {/* Progress Indicator */}
+            <ThawProgressIndicator
+              thaws={currentAllocation.schedule.thaws}
+              currentIndex={currentThawIndex}
+            />
 
-          <Space.Height.md />
+            <Space.Height.md />
 
-          <Text style={[a.body_3_sm_regular, ta.text_gray_low]}>
-            {strings.airdrop.thawInfo}
-          </Text>
-        </TouchableOpacity>
+            <Text style={[a.body_3_sm_regular, ta.text_gray_low]}>
+              {strings.airdrop.thawInfo}
+            </Text>
+          </TouchableOpacity>
+        )}
 
         <Space.Height.xl />
 
@@ -237,68 +302,24 @@ export const AirdropDetailsScreen = () => {
         >
           <DetailRow
             label={strings.airdrop.allocationSize}
-            value={`${formatAmount(allocation.totalAllocation)} NIGHT`}
+            value={`${formatAmount(currentAllocation.totalAllocation)} NIGHT`}
           />
           <DetailRow
             label={strings.airdrop.numberOfClaimedAllocations}
-            value={allocation.schedule.number_of_claimed_allocations.toString()}
+            value={currentAllocation.schedule.numberOfClaimedAllocations.toString()}
           />
           <DetailRow
             label={strings.airdrop.redeemedSoFar}
-            value={`${formatAmount(allocation.redeemedSoFar)} NIGHT`}
+            value={`${formatAmount(currentAllocation.redeemedSoFar)} NIGHT`}
           />
           <DetailRow
             label={strings.airdrop.totalLeftToRedeem}
-            value={`${formatAmount(allocation.totalLeftToRedeem)} NIGHT`}
+            value={`${formatAmount(currentAllocation.totalLeftToRedeem)} NIGHT`}
           />
           <DetailRow
             label={strings.airdrop.totalAllocation}
-            value={`${formatAmount(allocation.totalAllocation)} NIGHT`}
+            value={`${formatAmount(currentAllocation.totalAllocation)} NIGHT`}
           />
-
-          <Space.Height.md />
-
-          {/* Explorer Links */}
-          <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
-            {strings.airdrop.detailsOn}
-          </Text>
-          <Space.Height.sm />
-          <View style={[a.flex_row, a.gap_lg]}>
-            {wallet && (
-              <>
-                {wallet.networkManager.explorers.cardanoscan && (
-                  <TouchableOpacity
-                    onPress={() =>
-                      Linking.openURL(
-                        wallet.networkManager.explorers.cardanoscan.address(
-                          allocation.address,
-                        ),
-                      )
-                    }
-                  >
-                    <Text style={[a.body_2_md_medium, ta.el_primary_medium]}>
-                      Cardanoscan
-                    </Text>
-                  </TouchableOpacity>
-                )}
-                {wallet.networkManager.explorers.cexplorer && (
-                  <TouchableOpacity
-                    onPress={() =>
-                      Linking.openURL(
-                        wallet.networkManager.explorers.cexplorer.address(
-                          allocation.address,
-                        ),
-                      )
-                    }
-                  >
-                    <Text style={[a.body_2_md_medium, ta.el_primary_medium]}>
-                      Cexplorer
-                    </Text>
-                  </TouchableOpacity>
-                )}
-              </>
-            )}
-          </View>
         </Accordion>
       </ScrollView>
 
@@ -322,9 +343,13 @@ const ThawProgressIndicator = ({
   currentIndex,
 }: {
   thaws: ReadonlyArray<Thaw>
-  currentIndex: number
+  currentIndex: number | null
 }) => {
   const {palette: p} = useTheme()
+
+  if (currentIndex === null) {
+    return null
+  }
 
   return (
     <View style={[a.flex_row, a.align_center]}>

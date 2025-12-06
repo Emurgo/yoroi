@@ -293,6 +293,8 @@ export const useStrings = () => {
         redeemableNow: f(airdropMessages.redeemableNow),
         currentThaw: f(airdropMessages.currentThaw),
         endsIn: f(airdropMessages.endsIn),
+        startsIn: f(airdropMessages.startsIn),
+        active: f(airdropMessages.active),
         thawInfo: f(airdropMessages.thawInfo),
         numberOfClaimedAllocations: f(
           airdropMessages.numberOfClaimedAllocations,

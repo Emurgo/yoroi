@@ -61,6 +61,14 @@ export const airdropMessages = defineMessages({
     id: 'airdrop.endsIn',
     defaultMessage: '!!!Ends in',
   },
+  startsIn: {
+    id: 'airdrop.startsIn',
+    defaultMessage: '!!!Starts in',
+  },
+  active: {
+    id: 'airdrop.active',
+    defaultMessage: '!!!Active',
+  },
   thawInfo: {
     id: 'airdrop.thawInfo',
     defaultMessage: '!!!Each thaw is 25% of your claimed NIGHT allocation',

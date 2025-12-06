@@ -7,6 +7,7 @@ import * as React from 'react'
 import {
   ActivityIndicator,
   Pressable,
+  RefreshControl,
   ScrollView,
   Text,
   View,
@@ -35,7 +36,17 @@ export const AirdropSelectionScreen = () => {
   const {atoms: ta, palette: p} = useTheme()
   const navigation = useNavigation<StackNavigationProp<AirdropRoutes>>()
 
-  const {allocations, isLoading, isError} = useAirdropEligibility()
+  const {allocations, isLoading, isError, hardRefresh} = useAirdropEligibility()
+  const [isRefreshing, setIsRefreshing] = React.useState(false)
+
+  const handleRefresh = React.useCallback(async () => {
+    setIsRefreshing(true)
+    try {
+      await hardRefresh()
+    } finally {
+      setIsRefreshing(false)
+    }
+  }, [hardRefresh])
 
   const handleSelectAddress = (allocation: AddressAllocation) => {
     navigation.navigate('airdrop-main', {allocation})
@@ -66,6 +77,14 @@ export const AirdropSelectionScreen = () => {
       >
         <ScrollView
           contentContainerStyle={[a.p_lg, a.flex_1, a.justify_center]}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing || isLoading}
+              onRefresh={handleRefresh}
+              tintColor={p.primary_600}
+              colors={[p.primary_600]}
+            />
+          }
         >
           <View style={[a.align_center]}>
             <Icon.Info size={48} color={p.el_gray_min} />
@@ -100,7 +119,18 @@ export const AirdropSelectionScreen = () => {
       edges={['left', 'right', 'bottom']}
       style={[ta.bg_color_max, a.flex_1]}
     >
-      <ScrollView contentContainerStyle={[a.p_lg, a.gap_md]} style={a.flex_1}>
+      <ScrollView
+        contentContainerStyle={[a.p_lg, a.gap_md]}
+        style={a.flex_1}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing || isLoading}
+            onRefresh={handleRefresh}
+            tintColor={p.primary_600}
+            colors={[p.primary_600]}
+          />
+        }
+      >
         {/* Phase Announcement */}
         <View style={[a.flex_row, a.align_start, a.gap_sm]}>
           <Text style={[a.body_1_lg_regular, ta.text_gray_max, a.flex_1]}>

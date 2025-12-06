@@ -1,10 +1,11 @@
-// Using preprod.gd.midnighttge.io for testing/development
+// Production API endpoint for Midnight TGE redemption
 // Previous API URLs:
 // - 'https://sm.midnight.gd' (Phase 2 - Scavenger Mine, ended)
 // - 'https://redeem.prod.gd.midnighttge.io' (deprecated, no longer exists)
+// - 'https://preprod.gd.midnighttge.io' (preprod environment, deprecated)
 // Production endpoint: 'https://redeem.midnight.gd' (Phase 3 - requires SSO auth)
 // If DNS resolution fails, the API calls will handle it gracefully
-export const REDEMPTION_API_BASE_URL = 'https://preprod.gd.midnighttge.io'
+export const REDEMPTION_API_BASE_URL = 'https://mainnet.prod.gd.midnighttge.io'
 
 export type ThawStatus =
   | 'upcoming'
@@ -28,7 +29,7 @@ export interface PhaseConfigResponse {
   jitter_strata_count: number
   redemption_increment_period: number
   redemption_increments: number
-  redemption_initial_delay: number
+  redemption_initial_delay?: number // Optional, not always returned by API
 }
 
 export interface Thaw {
@@ -40,7 +41,7 @@ export interface Thaw {
 }
 
 export interface ThawScheduleResponse {
-  number_of_claimed_allocations: number
+  numberOfClaimedAllocations: number
   thaws: Thaw[]
 }
 
