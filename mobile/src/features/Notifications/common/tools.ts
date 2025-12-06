@@ -7,6 +7,7 @@ import {
   subscribeToTopic,
 } from '@react-native-firebase/messaging'
 import * as Notifications from 'expo-notifications'
+import * as React from 'react'
 import {Linking, PermissionsAndroid} from 'react-native'
 
 import {isAndroid} from '~/kernel/constants'
@@ -234,4 +235,26 @@ const handleInternalNavigation = async (
       logger.error('Navigation failed for notification', {screen, error})
     }
   }
+}
+
+const timeToRequestPermissionInMs = 1000
+
+export const useRequestSystemNotifications = ({
+  enabled,
+}: {
+  enabled: boolean
+}) => {
+  React.useEffect(() => {
+    if (!enabled) return
+
+    const timeout = setTimeout(async () => {
+      const hasBeenPrompted = await uiStorage.getItem(permissionModalStorageKey)
+
+      if (hasBeenPrompted !== true) {
+        await triggerNotificationsPermissionModal()
+      }
+    }, timeToRequestPermissionInMs)
+
+    return () => clearTimeout(timeout)
+  }, [enabled])
 }
