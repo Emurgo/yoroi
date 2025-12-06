@@ -456,7 +456,7 @@ const Counter = <T,>({
 
         <Text
           style={[ta.text_primary_medium, a.body_2_md_medium]}
-        >{` ${counter} ${strings.global.assets(counter)}`}</Text>
+        >{` ${counter} ${strings.send.tokens(counter)}`}</Text>
       </View>
     )
   }

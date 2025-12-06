@@ -148,7 +148,7 @@ const AddressInputWithTransferInner = React.forwardRef<
         // Reset the processed ref so addressRecords can be updated
         lastProcessedValueRef.current = ''
       }
-      onFocusRef.current?.(e)
+      onFocusRef.current?.(_e)
     },
     [propTargetIndex, selectedTargetIndex, targetIndexSelected],
   )

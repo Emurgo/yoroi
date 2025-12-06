@@ -3,7 +3,7 @@
  * Select a parent wallet to generate shared key from
  * Uses SelectMultipleWalletsModal for consistent UI
  */
-import {atoms as a, useTheme} from '@yoroi/theme'
+import {atoms as a} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
 import {useWalletManager} from '@yoroi/wallet-manager'
 
@@ -120,7 +120,7 @@ export const SelectParentWalletScreen = () => {
       <SafeArea>
         <Space.Height.lg />
         <View style={[a.px_lg]}>
-          <Text style={[a.body_1_lg_regular]}>{strings.global.loading}</Text>
+          <Text style={[a.body_1_lg_regular]}>{strings.global.pleaseWait}</Text>
         </View>
       </SafeArea>
     )
