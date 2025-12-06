@@ -12,13 +12,14 @@ export const getTranslatedError = (intl: IntlShape) => {
         if (typeof formatted === 'string') {
           return formatted
         }
-        // Convert MessageFormatElement[] to string by joining text nodes
+        // Convert MessageFormatElement[] to string - formatMessage with values returns string
+        // This should not happen in practice, but TypeScript requires the check
         return String(formatted)
       }
       // Fallback if descriptor is missing id
-      return (
+      const fallback =
         error.descriptor?.defaultMessage || error.message || 'Unknown error'
-      )
+      return typeof fallback === 'string' ? fallback : String(fallback)
     }
 
     const errorMessage = error?.toString()
