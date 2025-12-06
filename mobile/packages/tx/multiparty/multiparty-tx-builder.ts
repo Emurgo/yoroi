@@ -137,13 +137,6 @@ export const buildMultipartyTransaction = async ({
   }
 
   // Multiple wallets - combine UTXOs from all wallets
-  logger.debug(
-    'buildMultipartyTransaction: Building transaction with multiple wallets',
-    {
-      walletCount: inputWallets.length,
-      entriesCount: entries.length,
-    },
-  )
 
   // Use the first wallet's network/protocol params (all should be on same network)
   if (inputWallets.length === 0) {
@@ -218,11 +211,28 @@ export const buildMultipartyTransaction = async ({
   })
 
   // Extract required signers from transaction inputs
-  const requiredSigners = await extractRequiredSigners(
-    result.cbor,
-    inputWallets,
-    utxoToWalletMap,
-  )
+  let requiredSigners: ReadonlyArray<{
+    readonly walletId: string
+    readonly keyHash: string
+    readonly walletName: string
+  }> = []
+  try {
+    requiredSigners = await extractRequiredSigners(
+      result.cbor,
+      inputWallets,
+      utxoToWalletMap,
+    )
+  } catch (error) {
+    logger.error(
+      'buildMultipartyTransaction: Failed to extract required signers',
+      {
+        error: error instanceof Error ? error.message : String(error),
+        cborLength: result.cbor.length,
+        inputWalletsCount: inputWallets.length,
+      },
+    )
+    // Don't throw - return empty array, but log the error
+  }
 
   logger.debug('buildMultipartyTransaction: Transaction built', {
     cborLength: result.cbor.length,
@@ -302,48 +312,58 @@ const extractRequiredSigners = async (
         ...wallet.internalAddresses(),
       ]
 
-      for (const addressHex of addresses) {
+      for (const address of addresses) {
         try {
-          const addr = csl.Address.fromBytes(Buffer.from(addressHex, 'hex'))
-          if (!addr) continue
+          // Addresses from wallets are already bech32 format (Address branded type)
+          // We can use them directly with fromBech32 since Address extends string
+          const addressStr = address as string
+          const addr = csl.Address.fromBech32(addressStr)
+          if (!addr) {
+            continue
+          }
 
-          const addressBech32 = addr.toBech32(undefined)
-          addressToWalletMap.set(addressBech32, {
+          addressToWalletMap.set(addressStr, {
             walletId,
             walletName: meta.name,
           })
 
-          // Also extract key hash for this address
+          // Extract key hash for this address - try different address types
+          let keyHashHex: string | null = null
+
           const baseAddr = csl.BaseAddress.fromAddress(addr)
           if (baseAddr) {
             const paymentCred = baseAddr.paymentCred()
             const keyHash = paymentCred.toKeyhash()
             if (keyHash) {
-              const keyHashHex = keyHash.toHex()
-              if (!signersMap.has(keyHashHex)) {
-                signersMap.set(keyHashHex, {
-                  walletId,
-                  walletName: meta.name,
-                })
+              keyHashHex = keyHash.toHex()
+            }
+          } else {
+            const enterpriseAddr = csl.EnterpriseAddress.fromAddress(addr)
+            if (enterpriseAddr) {
+              const paymentCred = enterpriseAddr.paymentCred()
+              const keyHash = paymentCred.toKeyhash()
+              if (keyHash) {
+                keyHashHex = keyHash.toHex()
+              }
+            } else {
+              const pointerAddr = csl.PointerAddress.fromAddress(addr)
+              if (pointerAddr) {
+                const paymentCred = pointerAddr.paymentCred()
+                const keyHash = paymentCred.toKeyhash()
+                if (keyHash) {
+                  keyHashHex = keyHash.toHex()
+                }
               }
             }
-            continue
           }
 
-          const enterpriseAddr = csl.EnterpriseAddress.fromAddress(addr)
-          if (enterpriseAddr) {
-            const paymentCred = enterpriseAddr.paymentCred()
-            const keyHash = paymentCred.toKeyhash()
-            if (keyHash) {
-              const keyHashHex = keyHash.toHex()
-              if (!signersMap.has(keyHashHex)) {
-                signersMap.set(keyHashHex, {
-                  walletId,
-                  walletName: meta.name,
-                })
-              }
+          if (keyHashHex) {
+            if (!signersMap.has(keyHashHex)) {
+              signersMap.set(keyHashHex, {
+                walletId,
+                walletName: meta.name,
+              })
             }
-            continue
           }
         } catch {
           // Skip invalid addresses
@@ -352,13 +372,9 @@ const extractRequiredSigners = async (
       }
     }
 
-    // Extract key hashes from transaction inputs
-    // We need to get the UTXO addresses from the transaction body
-    // Since we don't have direct access to UTXO data in the transaction body,
-    // we'll use the address-to-wallet mapping we built above
-    // For a more accurate approach, we'd need to track UTXOs during building
-
     // Convert map to array - deduplicate by walletId
+    // Since multiple addresses from the same wallet can have the same key hash,
+    // we want one signer per wallet
     const walletSignersMap = new Map<
       string,
       {

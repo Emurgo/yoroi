@@ -6,7 +6,7 @@ import {isNft, isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import {NotEnoughMoneyToSendError, TransactionOutput} from '@yoroi/tx'
-import {Branded, Portfolio} from '@yoroi/types'
+import {Address, Branded, Portfolio} from '@yoroi/types'
 import {useSelectedWallet, useWalletManager} from '@yoroi/wallet-manager'
 
 import * as CSL from '@emurgo/cross-csl-core'
@@ -53,7 +53,6 @@ export const ListAmountsToSendScreen = () => {
     selectedWalletForAssets,
     setSelectedWalletForAssets,
     getWalletAssets,
-    addWalletAsset,
     removeWalletAsset,
   } = useMultipartySend()
   const {targets, selectedTargetIndex, tokenSelectedChanged, reset, allocated} =
@@ -64,10 +63,18 @@ export const ListAmountsToSendScreen = () => {
     Map<string, boolean>
   >(new Map())
 
-  // Initialize current wallet as expanded and selected for assets if multiple wallets
+  // Initialize all selected wallets as expanded
   React.useEffect(() => {
-    if (selectedInputWalletIds.length > 0 && !expandedWallets.has(wallet.id)) {
-      setExpandedWallets((prev) => new Map(prev).set(wallet.id, true))
+    if (selectedInputWalletIds.length > 0) {
+      setExpandedWallets((prev) => {
+        const updated = new Map(prev)
+        selectedInputWalletIds.forEach((walletId) => {
+          if (!updated.has(walletId)) {
+            updated.set(walletId, true)
+          }
+        })
+        return updated
+      })
     }
     // If multiple wallets and no wallet selected for assets, select current wallet
     if (
@@ -79,8 +86,7 @@ export const ListAmountsToSendScreen = () => {
     }
   }, [
     wallet.id,
-    selectedInputWalletIds.length,
-    expandedWallets,
+    selectedInputWalletIds,
     selectedWalletForAssets,
     setSelectedWalletForAssets,
   ])
@@ -201,11 +207,6 @@ export const ListAmountsToSendScreen = () => {
         // We need to check if useTransfer still works for single wallet
       }
     }
-  }
-
-  const handleSelectWalletForAssets = (walletId: string) => {
-    setSelectedWalletForAssets(walletId)
-    navigateTo.addToken()
   }
 
   const handleOnSuccess = React.useCallback(
@@ -403,11 +404,26 @@ export const ListAmountsToSendScreen = () => {
       // For now, we'll aggregate all assets into a single entry per target
       // TODO: When allocation screen is implemented, assets will be allocated per destination
       entries = targets.map((target) => {
-        // Validate address - use resolved address if entry.address is empty
-        const address =
+        // Validate address - only use resolved address, never unresolved domains
+        const isDomain = target.receiver.as === 'domain'
+        const resolvedAddress =
           target.entry.address && target.entry.address.trim() !== ''
             ? target.entry.address
-            : target.receiver.resolve
+            : null
+
+        // For domains, we MUST have a resolved address
+        if (isDomain && !resolvedAddress) {
+          throw new Error(
+            `Domain "${target.receiver.resolve}" failed to resolve for target at index ${targets.indexOf(target)}`,
+          )
+        }
+
+        // For direct addresses, use entry.address if available, otherwise use receiver.resolve
+        const address =
+          resolvedAddress ??
+          (target.receiver.resolve && !isDomain
+            ? target.receiver.resolve
+            : null)
 
         if (!address || address.trim() === '') {
           throw new Error(
@@ -438,7 +454,7 @@ export const ListAmountsToSendScreen = () => {
 
         // Create entry with aggregated amounts
         return toTransactionOutput({
-          address,
+          address: address as Address,
           amounts: aggregatedAmounts,
           datum: target.entry.datum,
         })
@@ -459,7 +475,7 @@ export const ListAmountsToSendScreen = () => {
       entries = [
         toTransactionOutput({
           ...selectedTarget.entry,
-          address,
+          address: address as Address,
         }),
       ]
     }

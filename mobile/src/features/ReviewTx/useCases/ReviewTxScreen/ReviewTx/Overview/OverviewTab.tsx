@@ -9,8 +9,7 @@ import {
 import {Blockies} from '@yoroi/identicon'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Balance, Branded} from '@yoroi/types'
-import {useSelectedWallet} from '@yoroi/wallet-manager'
-import {useWalletManager} from '@yoroi/wallet-manager'
+import {useSelectedWallet, useWalletManager} from '@yoroi/wallet-manager'
 
 import {CredKind} from '@emurgo/cross-csl-core'
 import {useQuery} from '@tanstack/react-query'
@@ -152,19 +151,96 @@ export const OverviewTab = ({
   const [externalPartiesExpanded, setExternalPartiesExpanded] =
     React.useState(true)
 
+  const {wallet} = useSelectedWallet()
+  const {walletManager} = useWalletManager()
+
   const externalPartiesSection = React.useMemo(() => {
+    // Get outputs to addresses that don't belong to current wallet
     const groupedOutputs = groupOutputsByAddress(notOwnedOutputs)
-    const uniqueAddresses = Array.from(groupedOutputs.keys())
+    const uniqueOutputAddresses = Array.from(groupedOutputs.keys())
 
-    if (uniqueAddresses.length === 1) {
-      const addressKey = uniqueAddresses[0]!
-      const outputsForAddress = groupedOutputs.get(addressKey)!
-      // Combine all outputs for this address into a single "virtual" output
-      const combinedOutput: FormattedOutput = {
-        ...outputsForAddress[0]!,
-        assets: Array.from(groupAssetsByToken(outputsForAddress).values()),
-      }
+    // For multiparty transactions, also include input addresses from other input wallets
+    // but only if they appear in the transaction inputs
+    const otherInputWalletAddresses = new Map<string, string>() // address -> walletId
+    if (multiparty?.inputWalletIds && multiparty.inputWalletIds.length > 0) {
+      // Get addresses from other input wallets that actually appear in transaction inputs
+      const inputAddresses = new Set(
+        tx.inputs.map((input) => input.address).filter(Boolean),
+      )
 
+      multiparty.inputWalletIds.forEach((walletId) => {
+        // Skip current wallet
+        if (walletId === wallet.id) return
+
+        const inputWallet = walletManager?.getWalletById(walletId)
+        if (inputWallet) {
+          // Only add addresses that appear in the transaction inputs
+          inputWallet.internalAddresses().forEach((addr) => {
+            if (inputAddresses.has(addr)) {
+              otherInputWalletAddresses.set(addr, walletId)
+            }
+          })
+          inputWallet.externalAddresses().forEach((addr) => {
+            if (inputAddresses.has(addr)) {
+              otherInputWalletAddresses.set(addr, walletId)
+            }
+          })
+        }
+      })
+    }
+
+    // Combine output addresses with input addresses from other wallets (that appear in tx)
+    const allExternalAddresses = new Set([
+      ...uniqueOutputAddresses,
+      ...Array.from(otherInputWalletAddresses.keys()),
+    ])
+
+    if (allExternalAddresses.size === 0) {
+      return null
+    }
+
+    // Create combined outputs for each unique address
+    const combinedOutputs: Array<FormattedOutput & {walletId?: string}> =
+      Array.from(allExternalAddresses).map((addressKey) => {
+        const outputsForAddress = groupedOutputs.get(addressKey)
+        const walletId = otherInputWalletAddresses.get(addressKey)
+
+        if (outputsForAddress && outputsForAddress.length > 0) {
+          // Has outputs - combine them
+          return {
+            ...outputsForAddress[0]!,
+            assets: Array.from(groupAssetsByToken(outputsForAddress).values()),
+            walletId,
+          }
+        } else {
+          // No outputs but has inputs (other input wallet) - create virtual output
+          // Find an input from this address to get address metadata
+          const inputFromAddress = tx.inputs.find(
+            (input) => input.address === addressKey,
+          )
+          if (inputFromAddress) {
+            return {
+              address: addressKey,
+              rewardAddress: inputFromAddress.rewardAddress,
+              addressKind: inputFromAddress.addressKind,
+              assets: [],
+              ownAddress: false,
+              walletId,
+            } as FormattedOutput & {walletId?: string}
+          }
+          // Fallback - shouldn't happen
+          return {
+            address: addressKey,
+            rewardAddress: null,
+            addressKind: null,
+            assets: [],
+            ownAddress: false,
+            walletId,
+          } as FormattedOutput & {walletId?: string}
+        }
+      })
+
+    if (combinedOutputs.length === 1) {
       return (
         <>
           <Divider verticalSpace="lg" />
@@ -177,23 +253,14 @@ export const OverviewTab = ({
             <OneExternalPartySection
               tx={tx}
               receiverCustomTitle={receiverCustomTitle}
-              output={combinedOutput}
+              output={combinedOutputs[0]!}
             />
           </Accordion>
         </>
       )
     }
 
-    if (uniqueAddresses.length > 1) {
-      // Create combined outputs for each unique address
-      const combinedOutputs = uniqueAddresses.map((addressKey) => {
-        const outputsForAddress = groupedOutputs.get(addressKey)!
-        return {
-          ...outputsForAddress[0]!,
-          assets: Array.from(groupAssetsByToken(outputsForAddress).values()),
-        }
-      })
-
+    if (combinedOutputs.length > 1) {
       return <MultiExternalPartiesSection tx={tx} outputs={combinedOutputs} />
     }
 
@@ -205,6 +272,9 @@ export const OverviewTab = ({
     strings,
     externalPartiesExpanded,
     setExternalPartiesExpanded,
+    multiparty,
+    wallet,
+    walletManager,
   ])
 
   // Detect smart contract interactions
@@ -639,7 +709,9 @@ const MyWalletTokens = ({
   const {wallet} = useSelectedWallet()
 
   // Calculate wallet's own inputs and outputs grouped by token
+  // Only include inputs/outputs from the current wallet (not other input wallets)
   const {sends, receives} = React.useMemo(() => {
+    // Always filter by ownAddress - only show current wallet's inputs/outputs
     const ownInputs = tx.inputs.filter((input) => input.ownAddress === true)
     const ownOutputs = tx.outputs.filter((output) => output.ownAddress === true)
 
@@ -651,7 +723,7 @@ const MyWalletTokens = ({
       fee: tx.fee.quantity,
       operationsFee,
     })
-  }, [tx.inputs, tx.outputs, tx.fee.quantity, operationsFee, wallet])
+  }, [tx, operationsFee, wallet])
 
   return (
     <View style={[a.gap_sm]}>
@@ -1382,15 +1454,26 @@ const MultisignTransactionSection = ({
   const {palette: p, atoms: ta} = useTheme()
   const [expanded, setExpanded] = React.useState(true)
 
+  // Always show required signers count from multiparty/multisig info
+  const requiredSignaturesFromInfo =
+    _multiparty?.requiredSigners.length ?? _multisig?.requiredCoSigners ?? 0
+
   if (!externalSignatureStatus && !_multiparty && !_multisig) return null
 
-  const signatureStatus = externalSignatureStatus || {
-    isFullySigned: false,
-    requiredSignatures:
-      _multiparty?.requiredSigners.length ?? _multisig?.requiredCoSigners ?? 0,
-    collectedSignatures: 0,
-    signerDetails: [],
-  }
+  // Use externalSignatureStatus if available, but always override requiredSignatures with the correct value from multiparty/multisig info
+  const signatureStatus = externalSignatureStatus
+    ? {
+        ...externalSignatureStatus,
+        requiredSignatures:
+          requiredSignaturesFromInfo ||
+          externalSignatureStatus.requiredSignatures,
+      }
+    : {
+        isFullySigned: false,
+        requiredSignatures: requiredSignaturesFromInfo,
+        collectedSignatures: 0,
+        signerDetails: [],
+      }
 
   return (
     <Accordion
