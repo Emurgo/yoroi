@@ -1,6 +1,6 @@
 import {createSendTxFromWallet} from '@yoroi/cardano-wallet'
 import {isNft, isPrimaryToken} from '@yoroi/portfolio'
-import {atoms as a, useTheme} from '@yoroi/theme'
+import {atoms as a} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import {NotEnoughMoneyToSendError, TransactionOutput} from '@yoroi/tx'
 import {Branded, Portfolio} from '@yoroi/types'
@@ -21,12 +21,12 @@ import {toTransactionOutput} from '~/features/Send/common/toTransactionOutput'
 import {isInsufficientBalanceError} from '~/features/Staking/Governance/common/transactionErrorHandling'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
+import {BackButton} from '~/kernel/navigation/common/helpers'
 import {useResultNavigation} from '~/kernel/navigation/hooks/useResultNavigation'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {AddTokenButton} from '~/ui/AddTokenButton/AddTokenButton'
 import {Boundary} from '~/ui/Boundary/Boundary'
 import {Button} from '~/ui/Button/Button'
-import {Icon} from '~/ui/Icon'
 import {RemoveAmountButton} from '~/ui/RemoveAmountButton/RemoveAmountButton'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
@@ -95,8 +95,16 @@ export const ListAmountsToSendScreen = () => {
   ])
 
   React.useLayoutEffect(() => {
-    navigation.setOptions({headerLeft: () => <ListAmountsNavigateBackButton />})
-  }, [navigation])
+    navigation.setOptions({
+      headerLeft: () => (
+        <BackButton
+          onPress={() => {
+            navigateTo.startTxAfterReset()
+          }}
+        />
+      ),
+    })
+  }, [navigation, navigateTo])
 
   const handleOnEdit = (tokenId: Portfolio.Token.Id) => {
     const amount = amounts[tokenId]
@@ -290,22 +298,6 @@ const EditAmountButton = ({onPress, children}: EditAmountButtonProps) => {
       testID="editAmountButton"
     >
       {children}
-    </TouchableOpacity>
-  )
-}
-
-const ListAmountsNavigateBackButton = () => {
-  const navigateTo = useNavigateTo()
-  const {atoms: ta} = useTheme()
-
-  return (
-    <TouchableOpacity
-      onPress={() => {
-        // Use the startTxAfterReset method which properly resets the stack
-        navigateTo.startTxAfterReset()
-      }}
-    >
-      <Icon.Chevron direction="left" color={ta.el_gray_max.color} />
     </TouchableOpacity>
   )
 }
