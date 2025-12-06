@@ -1,7 +1,5 @@
-import {time} from '@yoroi/common'
-import {isError} from '@yoroi/common'
-import {useWalletEvent} from '@yoroi/wallet-manager'
-import {useWalletManager} from '@yoroi/wallet-manager'
+import {isError, time} from '@yoroi/common'
+import {useWalletEvent, useWalletManager} from '@yoroi/wallet-manager'
 
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 import * as React from 'react'
