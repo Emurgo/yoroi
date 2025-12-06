@@ -3,16 +3,24 @@
  * Shows transaction details with signer status for multiparty transactions
  * Reuses the regular ReviewTx component with multiparty props
  */
+import {type ChainId, constructMultipartyTransactionJSON} from '@yoroi/tx'
+import {Bip32PublicKeyHex, TransactionCborHex} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
+import * as Clipboard from 'expo-clipboard'
 import * as React from 'react'
+import {Alert} from 'react-native'
 
 import {useAuth} from '~/features/Auth/context/AuthProvider'
-import {ReviewTxMemoProvider} from '~/features/ReviewTx/common/context/ReviewTxMemoContext'
+import {
+  ReviewTxMemoProvider,
+  useReviewTxMemo,
+} from '~/features/ReviewTx/common/context/ReviewTxMemoContext'
 import {useFormattedTx} from '~/features/ReviewTx/common/hooks/useFormattedTx'
 import {useOnConfirm} from '~/features/ReviewTx/common/hooks/useOnConfirm'
 import {useTxBody} from '~/features/ReviewTx/common/hooks/useTxBody'
 import {FormattedTx, TransactionBody} from '~/features/ReviewTx/common/types'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
 import {ReviewTxRoutes} from '~/kernel/navigation/types'
 
@@ -25,14 +33,87 @@ const MultipartyTransactionReviewContent = ({
   params: NonNullable<ReviewTxRoutes['review-tx']>
   formattedTx: FormattedTx
 }) => {
-  const {meta} = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
   const {isAuthDev} = useAuth()
+  const strings = useStrings()
+  const memoContext = useReviewTxMemo()
 
   if (!params.multiparty) {
     throw new Error(
       'MultipartyTransactionReviewScreen: multiparty info is required',
     )
   }
+
+  // Find current wallet's keyHash from requiredSigners
+  const currentWalletKeyHash = React.useMemo(() => {
+    if (!params.multiparty?.requiredSigners) return null
+    const currentSigner = params.multiparty.requiredSigners.find(
+      (signer) => signer.walletId === wallet.id,
+    )
+    return currentSigner?.keyHash ?? null
+  }, [params.multiparty, wallet.id])
+
+  const handleExportTransaction = React.useCallback(
+    async (signedCbor: string) => {
+      if (!params?.cbor || !params.multiparty) return
+
+      try {
+        if (!currentWalletKeyHash) {
+          Alert.alert(
+            'Error',
+            'Could not determine current wallet key hash for export',
+          )
+          return
+        }
+
+        const chainId =
+          `cip34:${wallet.networkManager.chainId}-${wallet.networkManager.protocolMagic}` as ChainId
+
+        // Convert requiredSigners to MultipartySigner format with signed status
+        // For now, we'll mark all as unsigned since this is the initial export
+        const requiredSigners = params.multiparty.requiredSigners.map(
+          (signer) => ({
+            walletId: signer.walletId,
+            walletName: signer.walletName,
+            keyHash: signer.keyHash,
+            signed: signer.walletId === wallet.id, // Current wallet has signed
+          }),
+        )
+
+        const txJson = constructMultipartyTransactionJSON({
+          cborHex: signedCbor as TransactionCborHex,
+          chainId,
+          createdBy: currentWalletKeyHash as Bip32PublicKeyHex,
+          requiredSigners,
+          note: memoContext.memo || undefined,
+        })
+
+        const jsonString = JSON.stringify(txJson, null, 2)
+        await Clipboard.setStringAsync(jsonString)
+        Alert.alert(
+          strings.setupWallet.transactionExported,
+          strings.setupWallet.transactionCopiedToClipboard,
+        )
+      } catch (error) {
+        Alert.alert(
+          'Error',
+          error instanceof Error
+            ? error.message
+            : 'Failed to export transaction',
+        )
+      }
+    },
+    [
+      params?.cbor,
+      params.multiparty,
+      currentWalletKeyHash,
+      wallet.networkManager.chainId,
+      wallet.networkManager.protocolMagic,
+      wallet.id,
+      strings,
+      memoContext.memo,
+    ],
+  )
 
   const {onConfirm} = useOnConfirm({
     cbor: params?.cbor,
@@ -47,6 +128,7 @@ const MultipartyTransactionReviewContent = ({
     onErrorWithoutFeedback: params?.onErrorWithoutFeedback,
     onCancel: params?.onCancel,
     onClose: params?.onClose,
+    onExportTransaction: handleExportTransaction,
   })
 
   const handleOnConfirm = React.useCallback(() => {
