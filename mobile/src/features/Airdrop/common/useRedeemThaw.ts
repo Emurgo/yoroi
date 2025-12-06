@@ -1,7 +1,9 @@
 import {RawUtxo} from '@yoroi/api'
-import {getTransactionSigners} from '@yoroi/cardano-wallet'
-import {createRawTxSigningKey} from '@yoroi/cardano-wallet'
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
+import {
+  CardanoMobileWrapped,
+  createRawTxSigningKey,
+  getTransactionSigners,
+} from '@yoroi/cardano-wallet'
 import type {SelectionStrategy} from '@yoroi/tx'
 import {rawUtxoToModernUtxo, selectUtxos, signRawTransaction} from '@yoroi/tx'
 import {Balance} from '@yoroi/types'
@@ -10,13 +12,11 @@ import {useWalletManager} from '@yoroi/wallet-manager'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {Buffer} from 'buffer'
 
+import {persistPrefixKeyword} from '~/kernel/connection/ConnectionProvider'
 import {logger} from '~/kernel/logger/logger'
 
 import {redemptionApi} from '../api/redemptionApi'
 import type {BuildTransactionRequest} from '../types'
-
-// Set to true to use mock data instead of API calls (for UI testing)
-const USE_MOCK_DATA = true
 
 /**
  * Hook for redeeming thawed NIGHT tokens
@@ -55,17 +55,6 @@ export const useRedeemThaw = () => {
         throw new Error('Cannot redeem tokens from a readonly wallet')
       }
 
-      // Wallet is considered ready if we can access its properties
-      // The try-catch below will handle cases where wallet is not ready
-
-      // Mock mode - return fake transaction ID
-      if (USE_MOCK_DATA) {
-        logger.debug('useRedeemThaw: Using mock redemption')
-        // Simulate API delay
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-        return `mock-tx-${Date.now()}`
-      }
-
       // Get UTXOs for funding - need enough ADA to cover transaction fees
       // Similar to swap, we request UTXOs that can cover ~5 ADA for fees
       const primaryTokenId = wallet.portfolioPrimaryTokenInfo.id
@@ -76,7 +65,9 @@ export const useRedeemThaw = () => {
       const fundingUtxosHex = await CardanoMobileWrapped.cslScope(
         async (csl) => {
           // Convert RawUtxo[] to ModernUtxo[] using current pattern
-          const modernUtxos = wallet.utxos().map((rawUtxo: RawUtxo) => {
+          const rawUtxos = wallet.utxos()
+
+          const modernUtxos = rawUtxos.map((rawUtxo: RawUtxo) => {
             const addressing = wallet.getAddressing(rawUtxo.receiver)
             return rawUtxoToModernUtxo(
               rawUtxo as Parameters<typeof rawUtxoToModernUtxo>[0],
@@ -98,6 +89,10 @@ export const useRedeemThaw = () => {
             selection.selected.length === 0 ||
             Object.keys(selection.missingAmounts).length > 0
           ) {
+            logger.error('useRedeemThaw: Insufficient UTXOs', {
+              selectedCount: selection.selected.length,
+              missingAmounts: selection.missingAmounts,
+            })
             throw new Error('No UTXOs available with sufficient funds')
           }
 
@@ -131,6 +126,7 @@ export const useRedeemThaw = () => {
 
       // Sign the transaction
       const unsignedTxHex = buildResponse.transaction
+
       const signedTxBytes = await CardanoMobileWrapped.cslScope(async (csl) => {
         // Get required signers for this transaction
         const signers = await getTransactionSigners(unsignedTxHex, wallet, meta)
@@ -141,7 +137,8 @@ export const useRedeemThaw = () => {
         )
 
         // Sign the transaction using tx package
-        return signRawTransaction(unsignedTxHex, keys)
+        const signed = await signRawTransaction(unsignedTxHex, keys)
+        return signed
       })
 
       const signedTxHex = Buffer.from(signedTxBytes).toString('hex')
@@ -150,7 +147,8 @@ export const useRedeemThaw = () => {
       const witnessSetHex = CardanoMobileWrapped.cslScope((csl) => {
         const signedTx = csl.Transaction.fromBytes(signedTxBytes)
         const witnessSet = signedTx.witnessSet()
-        return Buffer.from(witnessSet.toBytes()).toString('hex')
+        const witnessSetBytes = witnessSet.toBytes()
+        return Buffer.from(witnessSetBytes).toString('hex')
       })
 
       // Submit transaction
@@ -162,12 +160,18 @@ export const useRedeemThaw = () => {
         },
       )
 
+      logger.info('Transaction submitted successfully', {
+        address: destAddress,
+        transactionId: submitResponse.transaction_id,
+      })
+
       return submitResponse.transaction_id
     },
     onSuccess: () => {
       // Invalidate eligibility query to refresh allocations
+      // Use the same query key structure as useAirdropEligibility
       queryClient.invalidateQueries({
-        queryKey: ['airdropEligibility', wallet?.id],
+        queryKey: [persistPrefixKeyword, 'airdropEligibility', wallet?.id],
       })
     },
     onError: (error) => {

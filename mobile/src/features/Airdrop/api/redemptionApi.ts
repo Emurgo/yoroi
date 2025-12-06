@@ -1,6 +1,7 @@
 import {fetchData} from '@yoroi/common'
 
-import {REDEMPTION_API_BASE_URL} from '../types'
+import {logger} from '~/kernel/logger/logger'
+
 import type {
   BuildTransactionRequest,
   BuildTransactionResponse,
@@ -10,22 +11,70 @@ import type {
   ThawTransactionRequest,
   ThawTransactionResponse,
 } from '../types'
+import {REDEMPTION_API_BASE_URL} from '../types'
 
 const getApiUrl = (path: string) => `${REDEMPTION_API_BASE_URL}${path}`
+
+interface ApiErrorResponse {
+  type?: string
+  info?: string
+  message?: string
+}
+
+const parseErrorResponse = (responseData: unknown): ApiErrorResponse | null => {
+  if (
+    responseData &&
+    typeof responseData === 'object' &&
+    ('type' in responseData ||
+      'info' in responseData ||
+      'message' in responseData)
+  ) {
+    return responseData as ApiErrorResponse
+  }
+  return null
+}
+
+// Headers to match browser requests and avoid 403 errors
+const getApiHeaders = () => ({
+  'accept': 'application/json, text/plain, */*',
+  'accept-language': 'en-US,en;q=0.9',
+  'cache-control': 'no-cache',
+  'origin': 'https://redeem.midnight.gd',
+  'referer': 'https://redeem.midnight.gd/',
+  'user-agent':
+    'Mozilla/5.0 (Linux; Android 10; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36',
+})
 
 export const redemptionApi = {
   /**
    * Get the current phase configuration
    */
   getPhaseConfig: async (): Promise<PhaseConfigResponse> => {
+    const url = getApiUrl('/thaws/phase-config')
+
     const response = await fetchData<PhaseConfigResponse>({
-      url: getApiUrl('/thaws/phase-config'),
+      url,
       method: 'get',
+      headers: getApiHeaders(),
     })
 
     if (response.tag === 'left') {
+      const errorResponse = parseErrorResponse(response.error.responseData)
+      logger.error('redemptionApi.getPhaseConfig: Failed to get phase config', {
+        status: response.error.status,
+        message: response.error.message,
+        errorType: errorResponse?.type,
+        errorInfo: errorResponse?.info,
+        errorMessage: errorResponse?.message,
+      })
+
+      const errorMsg =
+        errorResponse?.info ||
+        errorResponse?.message ||
+        response.error.message ||
+        'Unknown error'
       throw new Error(
-        `Failed to get phase config: ${response.error.message} (${response.error.status})`,
+        `Failed to get phase config: ${errorMsg} (${response.error.status})`,
       )
     }
 
@@ -38,24 +87,52 @@ export const redemptionApi = {
   getThawSchedule: async (
     destAddress: string,
   ): Promise<ThawScheduleResponse> => {
+    const url = getApiUrl(`/thaws/${encodeURIComponent(destAddress)}/schedule`)
+
     const response = await fetchData<ThawScheduleResponse>({
-      url: getApiUrl(`/thaws/${encodeURIComponent(destAddress)}/schedule`),
+      url,
       method: 'get',
+      headers: getApiHeaders(),
     })
 
     if (response.tag === 'left') {
+      const errorResponse = parseErrorResponse(response.error.responseData)
+      const errorType = errorResponse?.type
+
+      // Handle 403 Forbidden - might be rate limiting or missing headers
+      if (response.error.status === 403) {
+        logger.warn('redemptionApi.getThawSchedule: 403 Forbidden', {
+          destAddress,
+          responseData:
+            typeof response.error.responseData === 'string'
+              ? response.error.responseData.substring(0, 200)
+              : response.error.responseData,
+        })
+        // Treat 403 as temporary access issue - don't cache as not eligible
+        // Use a different error type so it doesn't get cached
+        throw new Error('API_ACCESS_FORBIDDEN')
+      }
+
       // Handle 404 or 400 with "no_redeemable_thaws" as "no allocations"
       if (
         response.error.status === 404 ||
-        (response.error.status === 400 &&
-          response.error.responseData &&
-          typeof response.error.responseData === 'object' &&
-          'type' in response.error.responseData &&
-          response.error.responseData.type === 'no_redeemable_thaws')
+        (response.error.status === 400 && errorType === 'no_redeemable_thaws')
       ) {
         // Address not found - no allocations
         throw new Error('ADDRESS_NOT_FOUND')
       }
+
+      // Handle invalid address format
+      if (errorType === 'incorrect_shelley_address') {
+        logger.error('redemptionApi.getThawSchedule: Invalid address format', {
+          destAddress,
+          errorInfo: errorResponse?.info,
+        })
+        throw new Error(
+          `Invalid address format: ${errorResponse?.info || errorResponse?.message || 'Invalid Cardano address'}`,
+        )
+      }
+
       // Network errors (DNS resolution failures, no response) are expected if API is not deployed yet
       const isNetworkError =
         response.error.status === -1 ||
@@ -63,8 +140,27 @@ export const redemptionApi = {
       if (isNetworkError) {
         throw new Error('ADDRESS_NOT_FOUND') // Treat as no allocations to avoid error spam
       }
+
+      const errorMsg =
+        errorResponse?.info ||
+        errorResponse?.message ||
+        response.error.message ||
+        'Unknown error'
+      logger.error(
+        'redemptionApi.getThawSchedule: Failed to get thaw schedule',
+        {
+          destAddress,
+          status: response.error.status,
+          errorType,
+          errorMsg,
+          responseData:
+            typeof response.error.responseData === 'string'
+              ? response.error.responseData.substring(0, 200)
+              : response.error.responseData,
+        },
+      )
       throw new Error(
-        `Failed to get thaw schedule: ${response.error.message} (${response.error.status})`,
+        `Failed to get thaw schedule: ${errorMsg} (${response.error.status})`,
       )
     }
 
@@ -78,20 +174,46 @@ export const redemptionApi = {
     destAddress: string,
     request: BuildTransactionRequest,
   ): Promise<BuildTransactionResponse> => {
+    const url = getApiUrl(
+      `/thaws/${encodeURIComponent(destAddress)}/transactions/build`,
+    )
+
     const response = await fetchData<
       BuildTransactionResponse,
       BuildTransactionRequest
     >({
-      url: getApiUrl(
-        `/thaws/${encodeURIComponent(destAddress)}/transactions/build`,
-      ),
+      url,
       method: 'post',
       data: request,
+      headers: getApiHeaders(),
     })
 
     if (response.tag === 'left') {
+      const errorResponse = parseErrorResponse(response.error.responseData)
+      logger.error(
+        'redemptionApi.buildTransaction: Failed to build transaction',
+        {
+          destAddress,
+          status: response.error.status,
+          message: response.error.message,
+          errorType: errorResponse?.type,
+          errorInfo: errorResponse?.info,
+          errorMessage: errorResponse?.message,
+          request: {
+            changeAddress: request.change_address,
+            fundingUtxosCount: request.funding_utxos.length,
+            collateralUtxosCount: request.collateral_utxos.length,
+          },
+        },
+      )
+
+      const errorMsg =
+        errorResponse?.info ||
+        errorResponse?.message ||
+        response.error.message ||
+        'Unknown error'
       throw new Error(
-        `Failed to build transaction: ${response.error.message} (${response.error.status})`,
+        `Failed to build transaction: ${errorMsg} (${response.error.status})`,
       )
     }
 
@@ -105,18 +227,42 @@ export const redemptionApi = {
     destAddress: string,
     request: ThawTransactionRequest,
   ): Promise<ThawTransactionResponse> => {
+    const url = getApiUrl(
+      `/thaws/${encodeURIComponent(destAddress)}/transactions`,
+    )
+
     const response = await fetchData<
       ThawTransactionResponse,
       ThawTransactionRequest
     >({
-      url: getApiUrl(`/thaws/${encodeURIComponent(destAddress)}/transactions`),
+      url,
       method: 'post',
       data: request,
+      headers: getApiHeaders(),
     })
 
     if (response.tag === 'left') {
+      const errorResponse = parseErrorResponse(response.error.responseData)
+      logger.error(
+        'redemptionApi.submitTransaction: Failed to submit transaction',
+        {
+          destAddress,
+          status: response.error.status,
+          message: response.error.message,
+          errorType: errorResponse?.type,
+          errorInfo: errorResponse?.info,
+          errorMessage: errorResponse?.message,
+          transactionPreview: `${request.transaction.substring(0, 32)}...`,
+        },
+      )
+
+      const errorMsg =
+        errorResponse?.info ||
+        errorResponse?.message ||
+        response.error.message ||
+        'Unknown error'
       throw new Error(
-        `Failed to submit transaction: ${response.error.message} (${response.error.status})`,
+        `Failed to submit transaction: ${errorMsg} (${response.error.status})`,
       )
     }
 
@@ -130,16 +276,38 @@ export const redemptionApi = {
     destAddress: string,
     transactionId: string,
   ): Promise<GetTransactionResponse> => {
+    const url = getApiUrl(
+      `/thaws/${encodeURIComponent(destAddress)}/transactions/${encodeURIComponent(transactionId)}`,
+    )
+
     const response = await fetchData<GetTransactionResponse>({
-      url: getApiUrl(
-        `/thaws/${encodeURIComponent(destAddress)}/transactions/${encodeURIComponent(transactionId)}`,
-      ),
+      url,
       method: 'get',
+      headers: getApiHeaders(),
     })
 
     if (response.tag === 'left') {
+      const errorResponse = parseErrorResponse(response.error.responseData)
+      logger.error(
+        'redemptionApi.getTransactionStatus: Failed to get transaction status',
+        {
+          destAddress,
+          transactionId,
+          status: response.error.status,
+          message: response.error.message,
+          errorType: errorResponse?.type,
+          errorInfo: errorResponse?.info,
+          errorMessage: errorResponse?.message,
+        },
+      )
+
+      const errorMsg =
+        errorResponse?.info ||
+        errorResponse?.message ||
+        response.error.message ||
+        'Unknown error'
       throw new Error(
-        `Failed to get transaction status: ${response.error.message} (${response.error.status})`,
+        `Failed to get transaction status: ${errorMsg} (${response.error.status})`,
       )
     }
 

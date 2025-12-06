@@ -293,6 +293,8 @@ export const useStrings = () => {
         redeemableNow: f(airdropMessages.redeemableNow),
         currentThaw: f(airdropMessages.currentThaw),
         endsIn: f(airdropMessages.endsIn),
+        startsIn: f(airdropMessages.startsIn),
+        active: f(airdropMessages.active),
         thawInfo: f(airdropMessages.thawInfo),
         numberOfClaimedAllocations: f(
           airdropMessages.numberOfClaimedAllocations,
@@ -320,6 +322,11 @@ export const useStrings = () => {
         redeemableThaws: f(airdropMessages.redeemableThaws),
         readOnlyWallet: f(airdropMessages.readOnlyWallet),
         noRedeemableThaws: f(airdropMessages.noRedeemableThaws),
+        manualAddress: f(airdropMessages.manualAddress),
+        manualAddressTitle: f(airdropMessages.manualAddressTitle),
+        manualAddressDescription: f(airdropMessages.manualAddressDescription),
+        checkEligibility: f(airdropMessages.checkEligibility),
+        externalAddress: f(airdropMessages.externalAddress),
         status: {
           upcoming: f(airdropMessages.statusUpcoming),
           redeemable: f(airdropMessages.statusRedeemable),

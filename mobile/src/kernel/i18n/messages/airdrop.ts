@@ -61,6 +61,14 @@ export const airdropMessages = defineMessages({
     id: 'airdrop.endsIn',
     defaultMessage: '!!!Ends in',
   },
+  startsIn: {
+    id: 'airdrop.startsIn',
+    defaultMessage: '!!!Starts in',
+  },
+  active: {
+    id: 'airdrop.active',
+    defaultMessage: '!!!Active',
+  },
   thawInfo: {
     id: 'airdrop.thawInfo',
     defaultMessage: '!!!Each thaw is 25% of your claimed NIGHT allocation',
@@ -194,5 +202,26 @@ export const airdropMessages = defineMessages({
   noRedeemableThaws: {
     id: 'airdrop.noRedeemableThaws',
     defaultMessage: '!!!No thaws are currently redeemable',
+  },
+  manualAddress: {
+    id: 'airdrop.manualAddress',
+    defaultMessage: '!!!Manual Address',
+  },
+  manualAddressTitle: {
+    id: 'airdrop.manualAddressTitle',
+    defaultMessage: '!!!Add External Address',
+  },
+  manualAddressDescription: {
+    id: 'airdrop.manualAddressDescription',
+    defaultMessage:
+      '!!!You can pay for transaction fees to redeem NIGHT tokens for someone else. Enter their address below to check eligibility and add it to your list.',
+  },
+  checkEligibility: {
+    id: 'airdrop.checkEligibility',
+    defaultMessage: '!!!Check Eligibility',
+  },
+  externalAddress: {
+    id: 'airdrop.externalAddress',
+    defaultMessage: '!!!External Address',
   },
 })
