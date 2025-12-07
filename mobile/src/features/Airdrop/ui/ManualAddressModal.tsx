@@ -2,7 +2,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {useQueryClient} from '@tanstack/react-query'
 import * as React from 'react'
-import {ScrollView, Text, View} from 'react-native'
+import {ScrollView, Text} from 'react-native'
 
 import {AddressInput} from '~/common/AddressInput/AddressInput'
 import {persistPrefixKeyword} from '~/kernel/connection/ConnectionProvider'
@@ -10,29 +10,33 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'
+import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 
 import {redemptionApi} from '../api/redemptionApi'
 import {useAirdropAddressCache} from '../common/airdropAddressCache'
 
-export const ManualAddressModal = () => {
-  const strings = useStrings()
-  const {atoms: ta, palette: p} = useTheme()
-  const {closeModal, setLoading} = useModal()
+const ManualAddressModalContent = () => {
+  const {closeModal, setLoading, setCanContinue, setFooter} = useModal()
   const addressCache = useAirdropAddressCache()
   const queryClient = useQueryClient()
+  const strings = useStrings()
+  const {atoms: ta} = useTheme()
 
   const [address, setAddress] = React.useState('')
   const [isValid, setIsValid] = React.useState(false)
-  const [isChecking, setIsChecking] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
+
+  // Use ref to store the latest handler to avoid recreating footer unnecessarily
+  const handleCheckEligibilityRef = React.useRef<
+    (() => Promise<void>) | undefined
+  >(undefined)
 
   const handleCheckEligibility = React.useCallback(async () => {
     if (!isValid || !address.trim()) {
       return
     }
 
-    setIsChecking(true)
     setError(null)
     setLoading(true)
 
@@ -75,10 +79,7 @@ export const ManualAddressModal = () => {
       })
 
       // Close modal after queries are updated
-      // Use a small delay to ensure UI updates
-      setTimeout(() => {
-        closeModal()
-      }, 200)
+      closeModal()
     } catch (err: unknown) {
       if (
         err &&
@@ -111,7 +112,6 @@ export const ManualAddressModal = () => {
         setError('Failed to check eligibility. Please try again.')
       }
     } finally {
-      setIsChecking(false)
       setLoading(false)
     }
   }, [
@@ -124,13 +124,52 @@ export const ManualAddressModal = () => {
     queryClient,
   ])
 
+  // Store latest handler in ref
+  React.useEffect(() => {
+    handleCheckEligibilityRef.current = handleCheckEligibility
+  }, [handleCheckEligibility])
+
+  // Memoize the validation change handler to prevent infinite loops
+  const handleValidationChange = React.useCallback(
+    (isValid: boolean) => {
+      setIsValid(isValid)
+      setCanContinue(isValid)
+    },
+    [setCanContinue],
+  )
+
+  // Create stable footer handler that uses ref
+  const footerHandlerRef = React.useRef(() => {
+    handleCheckEligibilityRef.current?.()
+  })
+
+  // Memoize footer elements to prevent unnecessary recreations
+  const footerWithHandler = React.useMemo(
+    () => <ManualAddressModalFooter onPress={footerHandlerRef.current} />,
+    [],
+  )
+  const footerWithoutHandler = React.useMemo(
+    () => <ManualAddressModalFooter />,
+    [],
+  )
+
+  // Track previous validity to avoid unnecessary footer updates
+  const prevIsValidRef = React.useRef(isValid)
+
+  // Update footer when validity changes (only depend on isValid to avoid loops)
+  React.useEffect(() => {
+    // Only update footer if validity actually changed
+    if (prevIsValidRef.current !== isValid) {
+      prevIsValidRef.current = isValid
+      setFooter(isValid ? footerWithHandler : footerWithoutHandler)
+    }
+    // footerWithHandler and footerWithoutHandler are stable (memoized with empty deps)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isValid, setFooter])
+
   return (
-    <View style={[a.flex_1]}>
-      <ScrollView
-        contentContainerStyle={[a.p_lg, a.flex_grow]}
-        style={a.flex_1}
-        keyboardShouldPersistTaps="handled"
-      >
+    <Modal.Content>
+      <ScrollView keyboardShouldPersistTaps="handled">
         <Text style={[a.body_1_lg_regular, ta.text_gray_max]}>
           {strings.airdrop.manualAddressDescription}
         </Text>
@@ -140,7 +179,7 @@ export const ManualAddressModal = () => {
         <AddressInput
           value={address}
           onChangeText={setAddress}
-          onValidationChange={setIsValid}
+          onValidationChange={handleValidationChange}
           placeholder={strings.send.addressInputLabel}
           label={strings.airdrop.address}
         />
@@ -152,20 +191,52 @@ export const ManualAddressModal = () => {
           </>
         )}
       </ScrollView>
-
-      {/* Check Eligibility Button - at bottom */}
-      <View style={[a.p_lg, {borderTopWidth: 1, borderTopColor: p.gray_200}]}>
-        <Button
-          title={
-            isChecking
-              ? strings.airdrop.loading
-              : strings.airdrop.checkEligibility
-          }
-          onPress={handleCheckEligibility}
-          disabled={!isValid || isChecking || !address.trim()}
-          size="M"
-        />
-      </View>
-    </View>
+    </Modal.Content>
   )
+}
+
+const ManualAddressModalFooter = ({
+  onPress = () => {},
+}: {
+  onPress?: () => void
+}) => {
+  const strings = useStrings()
+  const {canContinue, isLoading} = useModal()
+
+  return (
+    <Modal.Footer>
+      <Button
+        title={strings.airdrop.checkEligibility}
+        onPress={onPress}
+        disabled={!canContinue}
+        size="M"
+        isLoading={isLoading}
+      />
+    </Modal.Footer>
+  )
+}
+
+export const useManualAddressModal = () => {
+  const {openModal} = useModal()
+  const strings = useStrings()
+  const queryClient = useQueryClient()
+
+  const openManualAddressModal = React.useCallback(() => {
+    openModal({
+      content: <ManualAddressModalContent />,
+      footer: <ManualAddressModalFooter />,
+      title: strings.airdrop.manualAddressTitle,
+      height: 500,
+      canDiscard: true,
+      canContinue: false,
+      onClose: () => {
+        // Invalidate queries to refresh allocations after adding external address
+        queryClient.invalidateQueries({
+          queryKey: [persistPrefixKeyword, 'airdropEligibility'],
+        })
+      },
+    })
+  }, [openModal, strings, queryClient])
+
+  return {openManualAddressModal}
 }

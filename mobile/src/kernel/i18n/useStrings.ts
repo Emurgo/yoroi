@@ -327,6 +327,15 @@ export const useStrings = () => {
         manualAddressDescription: f(airdropMessages.manualAddressDescription),
         checkEligibility: f(airdropMessages.checkEligibility),
         externalAddress: f(airdropMessages.externalAddress),
+        scheduleThawNotifications: f(airdropMessages.scheduleThawNotifications),
+        schedulingNotifications: f(airdropMessages.schedulingNotifications),
+        allNotificationsAlreadyScheduled: f(
+          airdropMessages.allNotificationsAlreadyScheduled,
+        ),
+        viewNotifications: f(airdropMessages.viewNotifications),
+        notificationsScheduledBody: f(
+          airdropMessages.notificationsScheduledBody,
+        ),
         status: {
           upcoming: f(airdropMessages.statusUpcoming),
           redeemable: f(airdropMessages.statusRedeemable),
@@ -646,6 +655,142 @@ export const useStrings = () => {
           ),
           cancel: f(globalMessages.cancel),
           switch: f(globalMessages.switch),
+        },
+        advancedAddressRetrieval: {
+          title: f(settingsMessages.advancedAddressRetrievalTitle),
+          description: f(settingsMessages.advancedAddressRetrievalDescription),
+          numberOfAccounts: f(
+            settingsMessages.advancedAddressRetrievalNumberOfAccounts,
+          ),
+          numberOfAccountsPlaceholder: f(
+            settingsMessages.advancedAddressRetrievalNumberOfAccountsPlaceholder,
+          ),
+          numberOfAccountsHelper: f(
+            settingsMessages.advancedAddressRetrievalNumberOfAccountsHelper,
+          ),
+          addressesPerAccount: f(
+            settingsMessages.advancedAddressRetrievalAddressesPerAccount,
+          ),
+          addressesPerAccountPlaceholder: f(
+            settingsMessages.advancedAddressRetrievalAddressesPerAccountPlaceholder,
+          ),
+          addressesPerAccountHelper: f(
+            settingsMessages.advancedAddressRetrievalAddressesPerAccountHelper,
+          ),
+          invalidInputTitle: f(
+            settingsMessages.advancedAddressRetrievalInvalidInputTitle,
+          ),
+          invalidInputMessage: f(
+            settingsMessages.advancedAddressRetrievalInvalidInputMessage,
+          ),
+          discoveringProgress: f(
+            settingsMessages.advancedAddressRetrievalDiscoveringProgress,
+          ),
+          exportingCsv: f(
+            settingsMessages.advancedAddressRetrievalExportingCsv,
+          ),
+          discoveryCompleteTitle: f(
+            settingsMessages.advancedAddressRetrievalDiscoveryCompleteTitle,
+          ),
+          discoveryCompleteMessage: f(
+            settingsMessages.advancedAddressRetrievalDiscoveryCompleteMessage,
+          ),
+          skip: f(settingsMessages.advancedAddressRetrievalSkip),
+          checkAddresses: f(
+            settingsMessages.advancedAddressRetrievalCheckAddresses,
+          ),
+          errorTitle: f(settingsMessages.advancedAddressRetrievalErrorTitle),
+          discoveryError: f(
+            settingsMessages.advancedAddressRetrievalDiscoveryError,
+          ),
+          checkingAddresses: f(
+            settingsMessages.advancedAddressRetrievalCheckingAddresses,
+          ),
+          checkedProgress: f(
+            settingsMessages.advancedAddressRetrievalCheckedProgress,
+          ),
+          paused: f(settingsMessages.advancedAddressRetrievalPaused),
+          verificationCompleteTitle: f(
+            settingsMessages.advancedAddressRetrievalVerificationCompleteTitle,
+          ),
+          verificationCompleteMessage: f(
+            settingsMessages.advancedAddressRetrievalVerificationCompleteMessage,
+          ),
+          verificationError: f(
+            settingsMessages.advancedAddressRetrievalVerificationError,
+          ),
+          enterPasswordTitle: f(
+            settingsMessages.advancedAddressRetrievalEnterPasswordTitle,
+          ),
+          enterPasswordSummary: f(
+            settingsMessages.advancedAddressRetrievalEnterPasswordSummary,
+          ),
+          hardwareWalletTitle: f(
+            settingsMessages.advancedAddressRetrievalHardwareWalletTitle,
+          ),
+          hardwareWalletContent: f(
+            settingsMessages.advancedAddressRetrievalHardwareWalletContent,
+          ),
+          firstAccountOnlyTitle: f(
+            settingsMessages.advancedAddressRetrievalFirstAccountOnlyTitle,
+          ),
+          firstAccountOnlyContent: f(
+            settingsMessages.advancedAddressRetrievalFirstAccountOnlyContent,
+          ),
+          importantTitle: f(
+            settingsMessages.advancedAddressRetrievalImportantTitle,
+          ),
+          importantContent: f(
+            settingsMessages.advancedAddressRetrievalImportantContent,
+          ),
+          discovering: f(settingsMessages.advancedAddressRetrievalDiscovering),
+          discover: f(settingsMessages.advancedAddressRetrievalDiscover),
+          exportCsv: f(settingsMessages.advancedAddressRetrievalExportCsv),
+          exportCompleteTitle: f(
+            settingsMessages.advancedAddressRetrievalExportCompleteTitle,
+          ),
+          exportError: f(settingsMessages.advancedAddressRetrievalExportError),
+          discoveryCompleteDescription: f(
+            settingsMessages.advancedAddressRetrievalDiscoveryCompleteDescription,
+          ),
+          resumeChecking: f(
+            settingsMessages.advancedAddressRetrievalResumeChecking,
+          ),
+          pause: f(settingsMessages.advancedAddressRetrievalPause),
+          startOver: f(settingsMessages.advancedAddressRetrievalStartOver),
+          checkingAddressesFor: f(
+            settingsMessages.advancedAddressRetrievalCheckingAddressesFor,
+          ),
+          progress: f(settingsMessages.advancedAddressRetrievalProgress),
+          processComplete: f(
+            settingsMessages.advancedAddressRetrievalProcessComplete,
+          ),
+          addressesSavedToWallet: f(
+            settingsMessages.advancedAddressRetrievalAddressesSavedToWallet,
+          ),
+          withUtxos: f(settingsMessages.advancedAddressRetrievalWithUtxos),
+          withHistory: f(settingsMessages.advancedAddressRetrievalWithHistory),
+          eligibleForAirdrop: f(
+            settingsMessages.advancedAddressRetrievalEligibleForAirdrop,
+          ),
+          noStoredAccountKeys: f(
+            settingsMessages.advancedAddressRetrievalNoStoredAccountKeys,
+          ),
+          rootKeyRequired: f(
+            settingsMessages.advancedAddressRetrievalRootKeyRequired,
+          ),
+          csvHeaderAccount: f(
+            settingsMessages.advancedAddressRetrievalCsvHeaderAccount,
+          ),
+          csvHeaderAddressIndex: f(
+            settingsMessages.advancedAddressRetrievalCsvHeaderAddressIndex,
+          ),
+          csvHeaderAddress: f(
+            settingsMessages.advancedAddressRetrievalCsvHeaderAddress,
+          ),
+          csvHeaderDerivationPath: f(
+            settingsMessages.advancedAddressRetrievalCsvHeaderDerivationPath,
+          ),
         },
         appSettingsTitle: f(settingsMessages.appSettingsTitle),
         aboutTitle: f(settingsMessages.aboutTitle),
@@ -1976,6 +2121,7 @@ export const useStrings = () => {
         filterClear: f(transactionsMessages.filterClear),
         utxo: {
           utxoListTitle: f(transactionsMessages.utxoListTitle),
+          noUtxos: f(transactionsMessages.noUtxos),
           utxoConsolidationTitle: f(
             transactionsMessages.utxoConsolidationTitle,
           ),
@@ -2018,6 +2164,46 @@ export const useStrings = () => {
           ),
           messageSigningKeyDescription: f(
             transactionsMessages.messageSigningKeyDescription,
+          ),
+          messageSigningPublicKeyLabel: f(
+            transactionsMessages.messageSigningPublicKeyLabel,
+          ),
+          messageSigningPublicKeyDescription: f(
+            transactionsMessages.messageSigningPublicKeyDescription,
+          ),
+          messageSigningTabSign: f(transactionsMessages.messageSigningTabSign),
+          messageSigningTabVerify: f(
+            transactionsMessages.messageSigningTabVerify,
+          ),
+          messageSigningPayloadFormatText: f(
+            transactionsMessages.messageSigningPayloadFormatText,
+          ),
+          messageSigningPayloadFormatJson: f(
+            transactionsMessages.messageSigningPayloadFormatJson,
+          ),
+          messageSigningPayloadFormatHex: f(
+            transactionsMessages.messageSigningPayloadFormatHex,
+          ),
+          messageSigningVerifyButton: f(
+            transactionsMessages.messageSigningVerifyButton,
+          ),
+          messageSigningVerifySuccess: f(
+            transactionsMessages.messageSigningVerifySuccess,
+          ),
+          messageSigningVerifyError: f(
+            transactionsMessages.messageSigningVerifyError,
+          ),
+          messageSigningVerifySignatureLabel: f(
+            transactionsMessages.messageSigningVerifySignatureLabel,
+          ),
+          messageSigningVerifyKeyLabel: f(
+            transactionsMessages.messageSigningVerifyKeyLabel,
+          ),
+          messageSigningVerifyAddressLabel: f(
+            transactionsMessages.messageSigningVerifyAddressLabel,
+          ),
+          messageSigningVerifyAddressPlaceholder: f(
+            transactionsMessages.messageSigningVerifyAddressPlaceholder,
           ),
           error: f(transactionsMessages.messageSigningError),
         },
@@ -2068,7 +2254,7 @@ export const useStrings = () => {
       // ManageNotifications strings
       manageNotifications: {
         manageDisplayDurationScreenTitle: f(
-          manageNotificationsMessages.displayDuration,
+          manageNotificationsMessages.manageDisplayDurationScreenTitle,
         ),
         inAppNotifications: f(manageNotificationsMessages.inAppNotifications),
         displayDuration: f(manageNotificationsMessages.displayDuration),
@@ -2078,6 +2264,29 @@ export const useStrings = () => {
           manageNotificationsMessages.enableNotificationsThroughSettings,
         ),
         notifications: f(manageNotificationsMessages.notifications),
+        scheduledNotifications: f(
+          manageNotificationsMessages.scheduledNotifications,
+        ),
+        removeNotificationTitle: f(
+          manageNotificationsMessages.removeNotificationTitle,
+        ),
+        removeNotificationMessage: f(
+          manageNotificationsMessages.removeNotificationMessage,
+        ),
+        remove: f(manageNotificationsMessages.remove),
+        removeNotificationError: f(
+          manageNotificationsMessages.removeNotificationError,
+        ),
+        loadingScheduledNotifications: f(
+          manageNotificationsMessages.loadingScheduledNotifications,
+        ),
+        noScheduledNotifications: f(
+          manageNotificationsMessages.noScheduledNotifications,
+        ),
+        scheduledFor: f(manageNotificationsMessages.scheduledFor),
+        loadNotificationError: f(
+          manageNotificationsMessages.loadNotificationError,
+        ),
       },
 
       // ManageNotificationDisplayDuration strings

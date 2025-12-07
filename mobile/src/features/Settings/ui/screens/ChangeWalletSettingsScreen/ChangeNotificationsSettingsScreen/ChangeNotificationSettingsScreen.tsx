@@ -21,6 +21,7 @@ import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
 
 import {useChangeNotificationDisplaySettings} from '../../../../hooks/useChangeNotificationDisplaySettings'
 import {useNotificationDisplaySettings} from '../../../../hooks/useNotificationDisplaySettings'
+import {ScheduledNotificationsList} from './ScheduledNotificationsList'
 import {SettingsNotificationDurationItem} from './SettingsNotificationDurationItem'
 
 export const ChangeNotificationSettingsScreen = () => {
@@ -59,6 +60,12 @@ export const ChangeNotificationSettingsScreen = () => {
             onNavigate={() => navigateToNotificationDisplayDuration()}
             label={strings.settings.walletSettings.displayDuration}
           />
+        </SettingsSection>
+
+        <SettingsSection
+          title={strings.manageNotifications.scheduledNotifications}
+        >
+          <ScheduledNotificationsList />
         </SettingsSection>
       </ScrollView>
     </SafeAreaView>

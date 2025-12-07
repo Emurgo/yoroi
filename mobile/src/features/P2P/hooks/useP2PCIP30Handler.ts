@@ -209,7 +209,14 @@ export const useP2PCIP30Handler = ({
                 const rootKey = await new Promise<string>((resolve, reject) => {
                   let shouldResolveOnClose = true
                   const title = strings.discover.signData
-                  const summary = `${strings.discover.signMessage}: ${Buffer.from(payload, 'hex').toString('utf-8')}`
+                  const decodedMessage = Buffer.from(payload, 'hex').toString(
+                    'utf-8',
+                  )
+                  const messagePreview =
+                    decodedMessage.length > 50
+                      ? `${decodedMessage.slice(0, 50)}...`
+                      : decodedMessage
+                  const summary = `${strings.discover.signMessage}: ${messagePreview}`
                   try {
                     promptRootKey({
                       title,

@@ -8,11 +8,19 @@ export const sign = async (
   address: Buffer,
   signKey: PrivateKey,
   payload: Buffer,
+  publicKey?: Uint8Array,
 ) => {
   const protectedHeader = MSL.HeaderMap.new()
   protectedHeader.setAlgorithmId(
     MSL.Label.fromAlgorithmId(MSL.AlgorithmId.EdDSA),
   )
+  // Label 4 contains the public key (required by CIP-8)
+  if (publicKey) {
+    protectedHeader.setHeader(
+      MSL.Label.newInt(MSL.Int.newI32(4)),
+      MSL.CBORValue.newBytes(publicKey),
+    )
+  }
   protectedHeader.setHeader(
     MSL.Label.newText('address'),
     MSL.CBORValue.newBytes(address),
@@ -45,11 +53,19 @@ export const buildCoseSign1FromSignature = async (
   address: Buffer,
   signature: Buffer,
   payload: Buffer,
+  publicKey?: Uint8Array,
 ) => {
   const protectedHeader = MSL.HeaderMap.new()
   protectedHeader.setAlgorithmId(
     MSL.Label.fromAlgorithmId(MSL.AlgorithmId.EdDSA),
   )
+  // Label 4 contains the public key (required by CIP-8)
+  if (publicKey) {
+    protectedHeader.setHeader(
+      MSL.Label.newInt(MSL.Int.newI32(4)),
+      MSL.CBORValue.newBytes(publicKey),
+    )
+  }
   protectedHeader.setHeader(
     MSL.Label.newText('address'),
     MSL.CBORValue.newBytes(address),

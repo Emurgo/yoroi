@@ -20,9 +20,12 @@ export const useMessageSigning = () => {
   const strings = useStrings()
 
   const signMessage = React.useCallback(
-    (message: string): Promise<{signature: string; key: string}> => {
+    (
+      message: string,
+      selectedAddress?: string,
+    ): Promise<{signature: string; key: string}> => {
       const payloadHex = Buffer.from(message, 'utf-8').toString('hex')
-      const address = wallet.getChangeAddress(addressMode)
+      const address = selectedAddress || wallet.getChangeAddress(addressMode)
 
       if (meta.isHW) {
         // Hardware wallet signing
@@ -72,7 +75,9 @@ export const useMessageSigning = () => {
           (resolve, reject) => {
             let shouldResolveOnClose = true
             const title = strings.discover.signData
-            const summary = `${strings.discover.signMessage}: ${message}`
+            const messagePreview =
+              message.length > 50 ? `${message.slice(0, 50)}...` : message
+            const summary = `${strings.discover.signMessage}: ${messagePreview}`
             try {
               promptRootKey({
                 title,

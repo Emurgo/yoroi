@@ -44,6 +44,7 @@ import {AddressChain} from './account-manager/account-manager'
 import {ReadOnlyAddressChain} from './account-manager/read-only-account-manager'
 import type {CardanoWalletDependencies} from './dependencies'
 import {WalletEncryptedStorage} from './dependencies'
+import type {ManualAddress} from './storage/manual-address-storage'
 
 export type WalletEvent =
   | {type: 'initialize'}
@@ -121,6 +122,7 @@ export interface YoroiWallet {
   ): Promise<Uint8Array | undefined>
 
   getAddressing(address: string): {path: number[]; startLevel: number}
+  getManualAddresses(): Promise<Array<ManualAddress>>
 
   // Sending
   signTx(

@@ -4,6 +4,7 @@ import {useSelectedNetwork} from '@yoroi/wallet-manager'
 import {NavigatorScreenParams, useNavigation} from '@react-navigation/native'
 import * as Linking from 'expo-linking'
 import * as React from 'react'
+import {InteractionManager} from 'react-native'
 
 import {ReviewTxRoutes, SettingsStackRoutes, WalletStackRoutes} from '../types'
 
@@ -253,11 +254,22 @@ export const useWalletNavigation = () => {
     },
 
     navigateToNotificationSettings: () => {
+      // Navigate through app-settings first to ensure proper navigation stack
+      // This ensures the back button works correctly
       navigation.navigate('manage-wallets', {
         screen: 'settings',
         params: {
-          screen: 'manage-notifications',
+          screen: 'app-settings',
         },
+      })
+      // Use InteractionManager to navigate to manage-notifications after app-settings is mounted
+      InteractionManager.runAfterInteractions(() => {
+        navigation.navigate('manage-wallets', {
+          screen: 'settings',
+          params: {
+            screen: 'manage-notifications',
+          },
+        })
       })
     },
 

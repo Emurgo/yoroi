@@ -7,7 +7,7 @@ import type {
   TxStatusResponse,
 } from '@yoroi/api'
 import {AppApi} from '@yoroi/api'
-import {cardanoConfig} from '@yoroi/blockchains'
+import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
 import {getLogger, isNonNullable, throwLoggedError} from '@yoroi/common'
 import {StakePoolInfoRequest, StakingInfo, StakingStatus} from '@yoroi/staking'
 import type {Datum, ModernUtxo, UnsignedTransaction} from '@yoroi/tx'
@@ -94,6 +94,11 @@ import {
   getSpendableUtxos as getSpendableUtxosOp,
 } from './operations/utxo-operations'
 import {
+  type ManualAddress,
+  type ManualAddressStorage,
+  makeManualAddressStorage,
+} from './storage/manual-address-storage'
+import {
   type TransactionManager,
   createTransactionManager,
 } from './transactionManager/transactionManager'
@@ -132,6 +137,9 @@ type WalletState = {
   portfolioPrimaryTokenInfo: Readonly<Portfolio.Token.Info>
   protocolParams: Api.Cardano.ProtocolParams
   encryptedStorage: WalletEncryptedStorage
+  manualAddressStorage: ManualAddressStorage
+  manualAddressCache: Map<string, ManualAddress>
+  storage: App.Storage
   isInitialized: boolean
   subscriptions: Array<WalletSubscription>
   onTxHistoryUpdateSubscriptions: Array<(wallet: YoroiWallet) => void>
@@ -413,6 +421,18 @@ export const makeCardanoWallet = (
     // the calculation of locked deposit, since the cost can change
     const protocolParams = await networkManager.api.protocolParams()
 
+    // Load and cache manual addresses for synchronous access
+    // NOTE: Manual addresses are only discovered/verified on-demand via AdvancedAddressRetrievalScreen.
+    // This only loads addresses that were previously discovered and saved to storage.
+    const manualAddressStorage = makeManualAddressStorage(
+      walletRootStorage.join('wallet/') as unknown as App.Storage,
+    )
+    const manualAddresses = await manualAddressStorage.getAll()
+    const manualAddressCache = new Map<string, ManualAddress>()
+    for (const ma of manualAddresses) {
+      manualAddressCache.set(ma.address, ma)
+    }
+
     const state: WalletState = {
       id,
       publicKeyHex: accountPubKeyHex || '', // Empty for read-only and multisig wallets
@@ -428,6 +448,9 @@ export const makeCardanoWallet = (
       accountVisual,
       protocolParams,
       encryptedStorage: makeWalletEncryptedStorage(id),
+      manualAddressStorage,
+      manualAddressCache,
+      storage: walletRootStorage,
       isInitialized: false,
       subscriptions: [],
       onTxHistoryUpdateSubscriptions: [],
@@ -571,6 +594,28 @@ function createWalletObject(
   }
 
   const getAddressing = (address: string) => {
+    // Check if this is a manual address first
+    const manualAddress = state.manualAddressCache.get(address)
+    if (manualAddress) {
+      // Parse derivation path: m/purpose'/coinType'/account'/role/index
+      const pathParts = manualAddress.derivationPath.split('/')
+      const pathNumbers: number[] = []
+      for (const part of pathParts) {
+        if (part === 'm') continue
+        const numPart = part.replace("'", '')
+        const num = parseInt(numPart, 10)
+        if (!isNaN(num)) {
+          pathNumbers.push(num)
+        }
+      }
+
+      return {
+        path: pathNumbers,
+        startLevel: derivationConfig.keyLevel.purpose,
+      }
+    }
+
+    // Fall back to normal addressing
     return getAddressingOp(
       address,
       {
@@ -581,6 +626,10 @@ function createWalletObject(
       },
       implementation,
     )
+  }
+
+  const getManualAddresses = async () => {
+    return await state.manualAddressStorage.getAll()
   }
 
   const getFirstPaymentAddress = () => {
@@ -1117,7 +1166,19 @@ function createWalletObject(
   }
 
   const syncUtxos = async ({isForced = false}: {isForced?: boolean} = {}) => {
-    const addresses = [...internalAddresses(), ...externalAddresses()]
+    const chainAddresses = [...internalAddresses(), ...externalAddresses()]
+
+    // Get manually added addresses that were previously discovered via AdvancedAddressRetrievalScreen
+    // NOTE: This only loads addresses from storage - it does NOT trigger discovery/verification.
+    // Deep scan (discovery + verification) only happens on-demand in AdvancedAddressRetrievalScreen.
+    const manualAddressStorage = makeManualAddressStorage(
+      state.storage.join('wallet/'),
+    )
+    const manualAddresses = await manualAddressStorage.getAll()
+    const manualAddressStrings = manualAddresses.map((a) => a.address)
+
+    // Combine all addresses
+    const addresses = [...chainAddresses, ...manualAddressStrings]
 
     await state.utxoManager.sync(addresses)
     const newUtxos = await state.utxoManager.getCachedUtxos()
@@ -1435,6 +1496,8 @@ function createWalletObject(
     checkServerStatus,
     getFirstPaymentAddress,
     getWalletContext,
+    // manual address functions
+    getManualAddresses,
   }
 
   setupSubscriptions(wallet)

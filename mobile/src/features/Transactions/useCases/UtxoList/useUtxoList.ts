@@ -29,13 +29,16 @@ export const useUtxoList = () => {
 
   const query = useQuery({
     queryKey,
-    queryFn: () =>
-      getUtxoList({
+    queryFn: async () => {
+      const manualAddresses = await wallet.getManualAddresses()
+      return getUtxoList({
         utxos: allUtxos,
         externalAddresses,
         internalAddresses,
+        manualAddresses,
         getDerivationPath,
-      }),
+      })
+    },
   })
 
   return {utxoList: query.data, ...query}
@@ -46,6 +49,14 @@ type UtxoListProps = {
   utxos: RawUtxo[]
   externalAddresses: string[]
   internalAddresses: string[]
+  manualAddresses: Array<{
+    accountIndex: number
+    addressIndex: number
+    address: string
+    derivationPath: string
+    reasons: Array<'used' | 'utxo' | 'airdrop'>
+    addedAt: string
+  }>
   getDerivationPath: ReturnType<typeof addressVisualDerivationPathMaker>
 }
 
@@ -60,8 +71,14 @@ const getUtxoList = ({
   utxos,
   externalAddresses,
   internalAddresses,
+  manualAddresses,
   getDerivationPath,
 }: UtxoListProps): UtxoList => {
+  // Create a map of manual addresses by address string for quick lookup
+  const manualAddressMap = new Map(
+    manualAddresses.map((ma) => [ma.address, ma]),
+  )
+
   const items = utxos.reduce(
     (acc, cur) => {
       const address = cur.receiver
@@ -73,6 +90,35 @@ const getUtxoList = ({
   )
 
   const result = Object.keys(items).map((address) => {
+    // Check if this is a manual address first
+    const manualAddress = manualAddressMap.get(address)
+    if (manualAddress) {
+      // Use stored derivation path for manual address
+      const path = manualAddress.derivationPath
+
+      // Transform UTXOs
+      const transformedUtxos = items[address]!.map((utxo) =>
+        rawUtxoToModernUtxo(
+          utxo,
+          undefined, // addressing - not needed for display
+          undefined, // derivationPath - not needed for display
+          primaryTokenId,
+        ),
+      )
+
+      return {
+        address,
+        path,
+        utxos: transformedUtxos,
+        externalIndex: -1,
+        internalIndex: -1,
+        role: -1,
+        index: -1,
+        isManual: true,
+      }
+    }
+
+    // Normal address handling
     const externalIndex = externalAddresses.findIndex((v) => v === address)
     const internalIndex = internalAddresses.findIndex((v) => v === address)
     const index = externalIndex >= 0 ? externalIndex : internalIndex
@@ -97,11 +143,29 @@ const getUtxoList = ({
       internalIndex,
       role,
       index,
+      isManual: false,
     }
   })
 
-  // Sort: first external address first, then other external addresses in order, then internal addresses in order
+  // Sort: first external address first, then other external addresses in order, then internal addresses in order, then manual addresses
   result.sort((a, b) => {
+    // Manual addresses come last
+    if (a.isManual && !b.isManual) return 1
+    if (!a.isManual && b.isManual) return -1
+
+    // If both are manual, sort by account index then address index
+    if (a.isManual && b.isManual) {
+      const aManual = manualAddressMap.get(a.address)
+      const bManual = manualAddressMap.get(b.address)
+      if (aManual && bManual) {
+        if (aManual.accountIndex !== bManual.accountIndex) {
+          return aManual.accountIndex - bManual.accountIndex
+        }
+        return aManual.addressIndex - bManual.addressIndex
+      }
+      return 0
+    }
+
     // First external address (index 0) always comes first
     if (a.externalIndex === 0) return -1
     if (b.externalIndex === 0) return 1
@@ -128,6 +192,7 @@ const getUtxoList = ({
       internalIndex: _internalIndex,
       role: _role,
       index: _index,
+      isManual: _isManual,
       ...item
     }) => item,
   )

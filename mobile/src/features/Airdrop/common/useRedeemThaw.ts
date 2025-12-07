@@ -1,14 +1,11 @@
 import {RawUtxo} from '@yoroi/api'
-import {
-  CardanoMobileWrapped,
-  createRawTxSigningKey,
-  getTransactionSigners,
-} from '@yoroi/cardano-wallet'
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import type {SelectionStrategy} from '@yoroi/tx'
-import {rawUtxoToModernUtxo, selectUtxos, signRawTransaction} from '@yoroi/tx'
+import {rawUtxoToModernUtxo, selectUtxos} from '@yoroi/tx'
 import {Balance} from '@yoroi/types'
 import {useWalletManager} from '@yoroi/wallet-manager'
 
+import type {Transaction, WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {Buffer} from 'buffer'
 
@@ -24,8 +21,8 @@ import type {BuildTransactionRequest} from '../types'
  * The API builds the transaction, so we need to:
  * - Select UTXOs with enough ADA for fees
  * - Convert wallet UTXOs to the format expected by the API
- * - Sign the built transaction using wallet's private keys
- * - Extract witness set and submit
+ * - Build transaction via API (returns CBOR)
+ * - Signing and submission handled by review transaction flow
  */
 export const useRedeemThaw = () => {
   const walletManager = useWalletManager()
@@ -33,14 +30,12 @@ export const useRedeemThaw = () => {
   const wallet = walletManager.selected.wallet
   const meta = walletManager.selected.meta
 
-  const mutation = useMutation({
-    mutationFn: async ({
-      destAddress,
-      rootKey,
-    }: {
-      destAddress: string
-      rootKey: string
-    }): Promise<string> => {
+  /**
+   * Build a redemption transaction
+   * Returns the unsigned transaction CBOR
+   */
+  const buildTransactionMutation = useMutation({
+    mutationFn: async (destAddress: string): Promise<string> => {
       if (!wallet || !meta) {
         logger.error('useRedeemThaw: Wallet or meta not available', {
           hasWallet: !!wallet,
@@ -124,34 +119,51 @@ export const useRedeemThaw = () => {
         buildRequest,
       )
 
-      // Sign the transaction
-      const unsignedTxHex = buildResponse.transaction
+      return buildResponse.transaction
+    },
+    onError: (error) => {
+      logger.error('Failed to build redemption transaction', {error})
+    },
+  })
 
-      const signedTxBytes = await CardanoMobileWrapped.cslScope(async (csl) => {
-        // Get required signers for this transaction
-        const signers = await getTransactionSigners(unsignedTxHex, wallet, meta)
+  /**
+   * Submit a signed redemption transaction to the redemption API
+   * Takes signed transaction bytes and extracts witness set for submission
+   */
+  const submitTransactionMutation = useMutation({
+    mutationFn: async ({
+      destAddress,
+      signedTx,
+    }: {
+      destAddress: string
+      signedTx: Transaction | ((csl: WasmModuleProxy) => Transaction)
+    }): Promise<string> => {
+      if (!wallet) {
+        throw new Error('Wallet not available')
+      }
 
-        // Create private keys for each signer
-        const keys = signers.map((signer: number[]) =>
-          createRawTxSigningKey(rootKey, signer, csl),
-        )
-
-        // Sign the transaction using tx package
-        const signed = await signRawTransaction(unsignedTxHex, keys)
-        return signed
+      // Get signed transaction bytes
+      const signedTxBytes = await CardanoMobileWrapped.cslScope((csl) => {
+        const tx = typeof signedTx === 'function' ? signedTx(csl) : signedTx
+        return tx.toBytes()
       })
 
       const signedTxHex = Buffer.from(signedTxBytes).toString('hex')
 
       // Extract witness set from signed transaction
       const witnessSetHex = CardanoMobileWrapped.cslScope((csl) => {
-        const signedTx = csl.Transaction.fromBytes(signedTxBytes)
-        const witnessSet = signedTx.witnessSet()
+        const tx = csl.Transaction.fromBytes(signedTxBytes)
+        const witnessSet = tx.witnessSet()
+        if (!witnessSet) {
+          throw new Error(
+            'Failed to extract witness set from signed transaction',
+          )
+        }
         const witnessSetBytes = witnessSet.toBytes()
         return Buffer.from(witnessSetBytes).toString('hex')
       })
 
-      // Submit transaction
+      // Submit transaction to redemption API
       const submitResponse = await redemptionApi.submitTransaction(
         destAddress,
         {
@@ -175,15 +187,17 @@ export const useRedeemThaw = () => {
       })
     },
     onError: (error) => {
-      logger.error('Failed to redeem thaw', {error})
+      logger.error('Failed to submit redemption transaction', {error})
     },
   })
 
   return {
-    redeem: mutation.mutate,
-    redeemAsync: mutation.mutateAsync,
-    isLoading: mutation.isPending,
-    error: mutation.error,
-    isSuccess: mutation.isSuccess,
+    buildTransaction: buildTransactionMutation.mutateAsync,
+    buildTransactionIsLoading: buildTransactionMutation.isPending,
+    buildTransactionError: buildTransactionMutation.error,
+    submitTransaction: submitTransactionMutation.mutateAsync,
+    submitTransactionIsLoading: submitTransactionMutation.isPending,
+    submitTransactionError: submitTransactionMutation.error,
+    isSuccess: submitTransactionMutation.isSuccess,
   }
 }

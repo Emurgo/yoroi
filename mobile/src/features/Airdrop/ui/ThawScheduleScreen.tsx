@@ -8,9 +8,9 @@ import {useIntl} from 'react-intl'
 import {ScrollView, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {usePromptRootKey} from '~/features/ReviewTx/common/hooks/usePromptRootKey'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Badge} from '~/ui/Badge/Badge'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
@@ -45,8 +45,8 @@ export const ThawScheduleScreen = () => {
   )
   const allocation = allocationFromQuery ?? allocationFromParams
 
-  const {redeemAsync} = useRedeemThaw()
-  const {promptRootKey} = usePromptRootKey()
+  const {buildTransaction, submitTransaction} = useRedeemThaw()
+  const {navigateToTxReview} = useWalletNavigation()
 
   const isReadOnly = meta?.isReadOnly ?? false
   const isWalletInitialized = !!walletManager.selected.wallet
@@ -60,28 +60,57 @@ export const ThawScheduleScreen = () => {
   const canRedeem =
     redeemableThaws.length > 0 && !isReadOnly && isWalletInitialized
 
-  const handleRedeem = () => {
+  const handleRedeem = async () => {
+    if (!canRedeem || isRedeeming) {
+      return
+    }
+
     setIsRedeeming(true)
-    promptRootKey({
-      onSuccess: async (rootKey: string) => {
-        try {
-          await redeemAsync({destAddress: allocation.address, rootKey})
+
+    try {
+      // Build transaction via API to get CBOR
+      const cbor = await buildTransaction(allocation.address)
+
+      // Navigate to review transaction screen
+      navigateToTxReview({
+        cbor,
+        preventSubmit: true,
+        context: 'airdrop',
+        onSuccessWithoutFeedback: async (args) => {
+          if (!args?.signedTx) {
+            logger.error('handleRedeem: No signed transaction in callback')
+            setIsRedeeming(false)
+            throw new Error('Failed to sign transaction')
+          }
+
+          try {
+            // Submit signed transaction to redemption API
+            await submitTransaction({
+              destAddress: allocation.address,
+              signedTx: args.signedTx,
+            })
+            setIsRedeeming(false)
+          } catch (error) {
+            logger.error('handleRedeem: Failed to submit transaction', {error})
+            setIsRedeeming(false)
+            throw error
+          }
+        },
+        onCancel: () => {
           setIsRedeeming(false)
-        } catch (error) {
+        },
+        onClose: () => {
           setIsRedeeming(false)
-          throw error
-        }
-      },
-      onError: (error) => {
-        logger.error('Failed to get root key', {error})
-        setIsRedeeming(false)
-      },
-      onClose: () => {
-        setIsRedeeming(false)
-      },
-      title: strings.airdrop.redeem,
-      summary: strings.airdrop.enterPassword,
-    })
+        },
+        onErrorWithoutFeedback: (error) => {
+          logger.error('handleRedeem: Transaction signing failed', {error})
+          setIsRedeeming(false)
+        },
+      })
+    } catch (error) {
+      logger.error('handleRedeem: Failed to build transaction', {error})
+      setIsRedeeming(false)
+    }
   }
 
   return (

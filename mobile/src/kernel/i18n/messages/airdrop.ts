@@ -222,6 +222,27 @@ export const airdropMessages = defineMessages({
   },
   externalAddress: {
     id: 'airdrop.externalAddress',
-    defaultMessage: '!!!External Address',
+    defaultMessage: '!!!Manual Address',
+  },
+  scheduleThawNotifications: {
+    id: 'airdrop.scheduleThawNotifications',
+    defaultMessage: '!!!Schedule Thaw Notifications',
+  },
+  schedulingNotifications: {
+    id: 'airdrop.schedulingNotifications',
+    defaultMessage: '!!!Scheduling...',
+  },
+  allNotificationsAlreadyScheduled: {
+    id: 'airdrop.allNotificationsAlreadyScheduled',
+    defaultMessage: '!!!All thaws already have notifications scheduled.',
+  },
+  viewNotifications: {
+    id: 'airdrop.viewNotifications',
+    defaultMessage: '!!!View Notifications',
+  },
+  notificationsScheduledBody: {
+    id: 'airdrop.notificationsScheduledBody',
+    defaultMessage:
+      '!!!Scheduled {scheduled} new thaw notifications. Skipped {skipped} existing notifications.',
   },
 })

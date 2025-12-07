@@ -1,11 +1,12 @@
-import {atoms as a} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {useAddressMode} from '@yoroi/wallet-manager'
 
 import {FlashList} from '@shopify/flash-list'
 import * as React from 'react'
-import {View} from 'react-native'
+import {Text, View} from 'react-native'
 
 import {features} from '~/kernel/features'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {Space} from '~/ui/Space/Space'
 
 import {UtxoAddressGroup} from './UtxoAddressGroup'
@@ -15,6 +16,8 @@ import {UtxoList as UtxoListType, useUtxoList} from './useUtxoList'
 export const UtxoList = () => {
   const {utxoList} = useUtxoList()
   const {isSingle} = useAddressMode()
+  const strings = useStrings()
+  const {atoms: ta} = useTheme()
 
   const renderItem = React.useCallback(
     ({item}: {item: UtxoListType[number]}) => <UtxoAddressGroup item={item} />,
@@ -43,7 +46,26 @@ export const UtxoList = () => {
     [utxoList, isSingle],
   )
 
+  const ListEmptyComponent = React.useCallback(
+    () => (
+      <View style={[a.flex_1, a.justify_center, a.align_center, a.pt_2xl]}>
+        <Text style={[a.heading_3_medium, ta.text_gray_max, a.text_center]}>
+          {strings.transactions.utxo.noUtxos}
+        </Text>
+      </View>
+    ),
+    [strings.transactions.utxo.noUtxos, ta.text_gray_max],
+  )
+
   if (utxoList === undefined || !Array.isArray(utxoList)) return null
+
+  if (utxoList.length === 0) {
+    return (
+      <View style={[a.flex, a.flex_1, a.p_lg]}>
+        <ListEmptyComponent />
+      </View>
+    )
+  }
 
   return (
     <View style={[a.flex, a.flex_1, a.p_lg]}>

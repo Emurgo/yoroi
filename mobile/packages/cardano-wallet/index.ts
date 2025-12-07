@@ -17,6 +17,7 @@ export type {
 export {deriveAccountFromRootKey, keyManager} from './key-manager/key-manager'
 
 // Account manager
+export {createAddressGenerator} from './account-manager/account-manager'
 export type {AddressChain} from './account-manager/account-manager'
 export {deriveAddressFromXPub} from './account-manager/derive-address-from-xpub'
 export type {ReadOnlyAddressChain} from './account-manager/read-only-account-manager'
@@ -141,3 +142,10 @@ export * from './delegationUtils'
 // Multisig utilities
 export * from './multisig'
 export {getMultisigMeta, isMultisigWallet, isScriptWallet} from './types'
+// Manual Address Storage
+export {
+  makeManualAddressStorage,
+  type ManualAddress,
+  type ManualAddressReason,
+  type ManualAddressStorage,
+} from './storage/manual-address-storage'

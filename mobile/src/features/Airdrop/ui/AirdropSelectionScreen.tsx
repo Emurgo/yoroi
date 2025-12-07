@@ -20,14 +20,19 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {persistPrefixKeyword} from '~/kernel/connection/ConnectionProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
+import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/context/ModalContext'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 
 import {useAirdropAddressCache} from '../common/airdropAddressCache'
+import {scheduleThawNotifications} from '../common/scheduleThawNotifications'
 import {useAirdropEligibility} from '../common/useAirdropEligibility'
 import type {AddressAllocation} from '../types'
-import {ManualAddressModal} from './ManualAddressModal'
+import {useManualAddressModal} from './ManualAddressModal'
+import {NotificationsScheduledModal} from './NotificationsScheduledModal'
 import type {AirdropRoutes} from './types'
 
 // NIGHT token has 6 decimals
@@ -44,11 +49,15 @@ export const AirdropSelectionScreen = () => {
   const {atoms: ta, palette: p} = useTheme()
   const navigation = useNavigation<StackNavigationProp<AirdropRoutes>>()
   const {openModal} = useModal()
+  const {navigateToNotificationSettings} = useWalletNavigation()
   const queryClient = useQueryClient()
+  const {openManualAddressModal} = useManualAddressModal()
 
   const {allocations, isLoading, isError, hardRefresh} = useAirdropEligibility()
   const addressCache = useAirdropAddressCache()
   const [isRefreshing, setIsRefreshing] = React.useState(false)
+  const [isSchedulingNotifications, setIsSchedulingNotifications] =
+    React.useState(false)
 
   const handleRefresh = React.useCallback(async () => {
     setIsRefreshing(true)
@@ -64,19 +73,8 @@ export const AirdropSelectionScreen = () => {
   }
 
   const handleOpenManualAddress = React.useCallback(() => {
-    openModal({
-      content: <ManualAddressModal />,
-      title: strings.airdrop.manualAddressTitle,
-      height: 500,
-      canDiscard: true,
-      onClose: () => {
-        // Invalidate queries to refresh allocations after adding external address
-        queryClient.invalidateQueries({
-          queryKey: ['persist', 'airdropEligibility'],
-        })
-      },
-    })
-  }, [openModal, strings, queryClient])
+    openManualAddressModal()
+  }, [openManualAddressModal])
 
   const handleRemoveExternalAddress = React.useCallback(
     async (address: string) => {
@@ -101,12 +99,50 @@ export const AirdropSelectionScreen = () => {
     [addressCache, queryClient],
   )
 
+  const handleScheduleNotifications = React.useCallback(async () => {
+    if (isSchedulingNotifications || allocations.length === 0) {
+      return
+    }
+
+    setIsSchedulingNotifications(true)
+    try {
+      const result = await scheduleThawNotifications(allocations)
+      if (result.scheduled > 0 || result.skipped > 0) {
+        openModal({
+          content: (
+            <NotificationsScheduledModal.Content
+              scheduled={result.scheduled}
+              skipped={result.skipped}
+            />
+          ),
+          footer: (
+            <NotificationsScheduledModal.Footer
+              onViewNotifications={() => {
+                navigateToNotificationSettings()
+              }}
+            />
+          ),
+          title: strings.manageNotifications.scheduledNotifications,
+          height: 300,
+          canDiscard: true,
+        })
+      }
+    } catch (error) {
+      logger.error('Failed to schedule notifications', {error})
+    } finally {
+      setIsSchedulingNotifications(false)
+    }
+  }, [
+    allocations,
+    isSchedulingNotifications,
+    openModal,
+    strings,
+    navigateToNotificationSettings,
+  ])
+
   if (isLoading) {
     return (
-      <SafeAreaView
-        edges={['left', 'right', 'bottom']}
-        style={[ta.bg_color_max, a.flex_1]}
-      >
+      <SafeAreaView style={[ta.bg_color_max, a.flex_1]}>
         <View style={[a.flex_1, a.justify_center, a.align_center]}>
           <ActivityIndicator size="large" color={p.el_primary_medium} />
           <Space.Height.lg />
@@ -120,10 +156,7 @@ export const AirdropSelectionScreen = () => {
 
   if (isError || allocations.length === 0) {
     return (
-      <SafeAreaView
-        edges={['left', 'right']}
-        style={[ta.bg_color_max, a.flex_1]}
-      >
+      <SafeAreaView style={[ta.bg_color_max, a.flex_1]}>
         <ScrollView
           contentContainerStyle={[a.p_lg, a.flex_1, a.justify_center]}
           refreshControl={
@@ -161,37 +194,19 @@ export const AirdropSelectionScreen = () => {
         </ScrollView>
 
         {/* Manual Address Button - fixed at bottom with safe area */}
-        <SafeAreaView edges={['bottom']} style={ta.bg_color_max}>
-          <View style={[a.p_lg]}>
-            <Pressable
-              onPress={handleOpenManualAddress}
-              style={[
-                a.p_lg,
-                a.rounded_sm,
-                a.flex_row,
-                a.align_center,
-                a.justify_center,
-                a.gap_sm,
-                {
-                  borderWidth: 1,
-                  borderColor: p.gray_200,
-                  backgroundColor: p.gray_min,
-                },
-              ]}
-            >
-              <Icon.Plus size={20} color={p.primary_600} />
-              <Text style={[a.body_1_lg_medium, ta.el_primary_medium]}>
-                {strings.airdrop.manualAddress}
-              </Text>
-            </Pressable>
-          </View>
-        </SafeAreaView>
+        <SafeArea.Footer>
+          <Button
+            onPress={handleOpenManualAddress}
+            title={strings.airdrop.manualAddress}
+            icon={(props) => <Icon.Plus {...props} />}
+          />
+        </SafeArea.Footer>
       </SafeAreaView>
     )
   }
 
   return (
-    <SafeAreaView edges={['left', 'right']} style={[ta.bg_color_max, a.flex_1]}>
+    <SafeAreaView style={[ta.bg_color_max, a.flex_1]}>
       <ScrollView
         contentContainerStyle={[a.p_lg, a.gap_md, {paddingBottom: 0}]}
         style={a.flex_1}
@@ -211,6 +226,22 @@ export const AirdropSelectionScreen = () => {
           </Text>
         </View>
 
+        <Space.Height.md />
+
+        {/* Notification Button */}
+        <Button
+          onPress={handleScheduleNotifications}
+          type={ButtonType.Secondary}
+          disabled={isSchedulingNotifications || allocations.length === 0}
+          title={
+            isSchedulingNotifications
+              ? strings.airdrop.schedulingNotifications
+              : strings.airdrop.scheduleThawNotifications
+          }
+          icon={(props) => <Icon.Bell {...props} />}
+          isLoading={isSchedulingNotifications}
+        />
+
         <Space.Height.lg />
 
         {allocations.map((allocation, index) => (
@@ -229,31 +260,13 @@ export const AirdropSelectionScreen = () => {
       </ScrollView>
 
       {/* Manual Address Button - fixed at bottom with safe area */}
-      <SafeAreaView edges={['bottom']} style={ta.bg_color_max}>
-        <View style={[a.p_lg]}>
-          <Pressable
-            onPress={handleOpenManualAddress}
-            style={[
-              a.p_lg,
-              a.rounded_sm,
-              a.flex_row,
-              a.align_center,
-              a.justify_center,
-              a.gap_sm,
-              {
-                borderWidth: 1,
-                borderColor: p.gray_200,
-                backgroundColor: p.gray_min,
-              },
-            ]}
-          >
-            <Icon.Plus size={20} color={p.primary_600} />
-            <Text style={[a.body_1_lg_medium, ta.el_primary_medium]}>
-              {strings.airdrop.manualAddress}
-            </Text>
-          </Pressable>
-        </View>
-      </SafeAreaView>
+      <SafeArea.Footer style={[a.p_lg]}>
+        <Button
+          onPress={handleOpenManualAddress}
+          title={strings.airdrop.manualAddress}
+          icon={(props) => <Icon.Plus {...props} />}
+        />
+      </SafeArea.Footer>
     </SafeAreaView>
   )
 }
@@ -276,6 +289,7 @@ const AddressCard = ({
 
   const redeemableAmount = formatAmount(allocation.redeemableAmount)
   const totalToRedeem = formatAmount(allocation.totalLeftToRedeem)
+  const hasRedeemable = allocation.redeemableAmount > 0
 
   const handleRemove = (e: GestureResponderEvent) => {
     e.stopPropagation()
@@ -300,7 +314,8 @@ const AddressCard = ({
           style={[
             a.flex_row,
             {
-              backgroundColor: pressed ? p.bg_gradient_1[0] : 'transparent',
+              backgroundColor:
+                pressed || hasRedeemable ? p.bg_gradient_1[0] : 'transparent',
             },
           ]}
         >

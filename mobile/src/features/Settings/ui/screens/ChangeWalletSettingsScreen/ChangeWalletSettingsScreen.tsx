@@ -1,8 +1,7 @@
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
-import {useAddressMode} from '@yoroi/wallet-manager'
-import {useSelectedWallet} from '@yoroi/wallet-manager'
+import {useAddressMode, useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
@@ -50,8 +49,7 @@ const dialogOptions = {
 export const ChangeWalletSettingsScreen = () => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
-  const {resetToWalletSelection, navigateToNotificationSettings} =
-    useWalletNavigation()
+  const {resetToWalletSelection} = useWalletNavigation()
   const authSetting = useAuthSetting()
   const addressMode = useAddressMode()
   const {wallet} = useSelectedWallet()
@@ -160,6 +158,16 @@ export const ChangeWalletSettingsScreen = () => {
         )}
 
         <SettingsSection title={strings.settings.walletSettings.actions}>
+          {!isReadOnly && (
+            <NavigatedSettingsItem
+              icon={<Icon.Wallet {...iconProps} />}
+              label={strings.settings.advancedAddressRetrieval.title}
+              onNavigate={() =>
+                settingsNavigation.navigate('advanced-address-retrieval')
+              }
+            />
+          )}
+
           <NavigatedSettingsItem
             icon={<Icon.CrossCircle {...iconProps} />}
             label={strings.settings.walletSettings.removeWallet}
@@ -199,14 +207,6 @@ export const ChangeWalletSettingsScreen = () => {
           >
             <AddressModeSwitcher isSingle={addressMode.isSingle} />
           </SettingsItem>
-        </SettingsSection>
-
-        <SettingsSection title={strings.settings.notifications}>
-          <NavigatedSettingsItem
-            icon={<Icon.Bell {...iconProps} />}
-            label={strings.settings.notifications}
-            onNavigate={() => navigateToNotificationSettings()}
-          />
         </SettingsSection>
 
         <SettingsSection title={strings.settings.walletSettings.about}>

@@ -69,4 +69,45 @@ export const manageNotificationsMessages = defineMessages({
     id: 'components.settings.manageNotificationDisplayDuration.inputError',
     defaultMessage: '!!!Input Error',
   },
+  scheduledNotifications: {
+    id: 'components.settings.manageNotifications.scheduledNotifications',
+    defaultMessage: '!!!Scheduled Notifications',
+  },
+  manageDisplayDurationScreenTitle: {
+    id: 'components.settings.manageNotifications.manageDisplayDurationScreenTitle',
+    defaultMessage: '!!!Manage Display Duration',
+  },
+  removeNotificationTitle: {
+    id: 'components.settings.manageNotifications.removeNotificationTitle',
+    defaultMessage: '!!!Remove Notification',
+  },
+  removeNotificationMessage: {
+    id: 'components.settings.manageNotifications.removeNotificationMessage',
+    defaultMessage:
+      '!!!Are you sure you want to remove this scheduled notification?',
+  },
+  remove: {
+    id: 'components.settings.manageNotifications.remove',
+    defaultMessage: '!!!Remove',
+  },
+  removeNotificationError: {
+    id: 'components.settings.manageNotifications.removeNotificationError',
+    defaultMessage: '!!!Failed to remove notification',
+  },
+  loadingScheduledNotifications: {
+    id: 'components.settings.manageNotifications.loadingScheduledNotifications',
+    defaultMessage: '!!!Loading scheduled notifications...',
+  },
+  noScheduledNotifications: {
+    id: 'components.settings.manageNotifications.noScheduledNotifications',
+    defaultMessage: '!!!No scheduled notifications',
+  },
+  scheduledFor: {
+    id: 'components.settings.manageNotifications.scheduledFor',
+    defaultMessage: '!!!Scheduled for',
+  },
+  loadNotificationError: {
+    id: 'components.settings.manageNotifications.loadNotificationError',
+    defaultMessage: '!!!Failed to load scheduled notifications',
+  },
 })

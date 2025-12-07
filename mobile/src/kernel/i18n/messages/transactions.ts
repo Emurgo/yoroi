@@ -109,6 +109,10 @@ export const transactionsMessages = defineMessages({
     id: 'components.utxoConsolidationWarning',
     defaultMessage: '!!!Consolidate your UTxOs to improve wallet performance',
   },
+  noUtxos: {
+    id: 'components.utxoList.noUtxos',
+    defaultMessage: '!!!No UTxOs found',
+  },
   messageSigningTitle: {
     id: 'components.messageSigning.title',
     defaultMessage: '!!!Message Signing',
@@ -162,6 +166,63 @@ export const transactionsMessages = defineMessages({
     id: 'components.messageSigning.keyDescription',
     defaultMessage:
       '!!!The public key (COSE key format) used to verify the signature. Together with the signature, this proves ownership of the wallet address.',
+  },
+  messageSigningPublicKeyLabel: {
+    id: 'components.messageSigning.publicKeyLabel',
+    defaultMessage: '!!!Public Key',
+  },
+  messageSigningPublicKeyDescription: {
+    id: 'components.messageSigning.publicKeyDescription',
+    defaultMessage:
+      '!!!The raw Ed25519 public key extracted from the COSE key. This can be used to verify the signature.',
+  },
+  messageSigningTabSign: {
+    id: 'components.messageSigning.tabSign',
+    defaultMessage: '!!!Sign',
+  },
+  messageSigningTabVerify: {
+    id: 'components.messageSigning.tabVerify',
+    defaultMessage: '!!!Verify',
+  },
+  messageSigningPayloadFormatText: {
+    id: 'components.messageSigning.payloadFormatText',
+    defaultMessage: '!!!Text',
+  },
+  messageSigningPayloadFormatJson: {
+    id: 'components.messageSigning.payloadFormatJson',
+    defaultMessage: '!!!JSON',
+  },
+  messageSigningPayloadFormatHex: {
+    id: 'components.messageSigning.payloadFormatHex',
+    defaultMessage: '!!!Hex',
+  },
+  messageSigningVerifyButton: {
+    id: 'components.messageSigning.verifyButton',
+    defaultMessage: '!!!Verify',
+  },
+  messageSigningVerifySuccess: {
+    id: 'components.messageSigning.verifySuccess',
+    defaultMessage: '!!!Signature is valid',
+  },
+  messageSigningVerifyError: {
+    id: 'components.messageSigning.verifyError',
+    defaultMessage: '!!!Signature verification failed',
+  },
+  messageSigningVerifySignatureLabel: {
+    id: 'components.messageSigning.verifySignatureLabel',
+    defaultMessage: '!!!Signature',
+  },
+  messageSigningVerifyKeyLabel: {
+    id: 'components.messageSigning.verifyKeyLabel',
+    defaultMessage: '!!!Key',
+  },
+  messageSigningVerifyAddressLabel: {
+    id: 'components.messageSigning.verifyAddressLabel',
+    defaultMessage: '!!!Address (optional)',
+  },
+  messageSigningVerifyAddressPlaceholder: {
+    id: 'components.messageSigning.verifyAddressPlaceholder',
+    defaultMessage: '!!!Enter address to verify ownership',
   },
   noTransactions: {
     id: 'components.txhistory.txhistory.noTransactions',

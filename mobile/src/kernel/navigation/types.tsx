@@ -19,6 +19,7 @@ export type ReviewContext =
   | 'withdraw rewards'
   | 'delegate vote'
   | 'utxo-consolidation'
+  | 'airdrop'
 
 export type WalletTabRoutes = {
   history: NavigatorScreenParams<TxHistoryRoutes>
@@ -237,6 +238,7 @@ export type SettingsStackRoutes = {
   'settings-preparing-wallet': undefined
   'share-wallet': undefined
   'multisig-wallet-details': undefined
+  'advanced-address-retrieval': undefined
 }
 
 export type ManageNotificationsRoutes = {
