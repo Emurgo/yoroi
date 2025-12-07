@@ -16,9 +16,6 @@ import {Space} from '~/ui/Space/Space'
 import {redemptionApi} from '../api/redemptionApi'
 import {useAirdropAddressCache} from '../common/airdropAddressCache'
 
-// Shared handler ref so footer can access it
-let handleCheckEligibilityRef: (() => Promise<void>) | null = null
-
 const ManualAddressModalContent = () => {
   const {closeModal, setLoading, setCanContinue, setFooter} = useModal()
   const addressCache = useAirdropAddressCache()
@@ -28,15 +25,18 @@ const ManualAddressModalContent = () => {
 
   const [address, setAddress] = React.useState('')
   const [isValid, setIsValid] = React.useState(false)
-  const [isChecking, setIsChecking] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
+
+  // Use ref to store the latest handler to avoid recreating footer unnecessarily
+  const handleCheckEligibilityRef = React.useRef<
+    (() => Promise<void>) | undefined
+  >(undefined)
 
   const handleCheckEligibility = React.useCallback(async () => {
     if (!isValid || !address.trim()) {
       return
     }
 
-    setIsChecking(true)
     setError(null)
     setLoading(true)
 
@@ -79,10 +79,7 @@ const ManualAddressModalContent = () => {
       })
 
       // Close modal after queries are updated
-      // Use a small delay to ensure UI updates
-      setTimeout(() => {
-        closeModal()
-      }, 200)
+      closeModal()
     } catch (err: unknown) {
       if (
         err &&
@@ -115,7 +112,6 @@ const ManualAddressModalContent = () => {
         setError('Failed to check eligibility. Please try again.')
       }
     } finally {
-      setIsChecking(false)
       setLoading(false)
     }
   }, [
@@ -128,56 +124,48 @@ const ManualAddressModalContent = () => {
     queryClient,
   ])
 
-  // Store handler in ref so footer can access it
+  // Store latest handler in ref
   React.useEffect(() => {
-    handleCheckEligibilityRef = handleCheckEligibility
-    return () => {
-      handleCheckEligibilityRef = null
-    }
+    handleCheckEligibilityRef.current = handleCheckEligibility
   }, [handleCheckEligibility])
 
-  // Update footer dynamically based on state
-  React.useEffect(() => {
-    setFooter(
-      <Modal.Footer>
-        <Button
-          title={
-            isChecking
-              ? strings.airdrop.loading
-              : strings.airdrop.checkEligibility
-          }
-          onPress={() => {
-            handleCheckEligibilityRef?.()
-          }}
-          disabled={!isValid || isChecking || !address.trim()}
-          size="M"
-        />
-      </Modal.Footer>,
-    )
-  }, [isChecking, isValid, address, setFooter, strings])
+  // Memoize the validation change handler to prevent infinite loops
+  const handleValidationChange = React.useCallback(
+    (isValid: boolean) => {
+      setIsValid(isValid)
+      setCanContinue(isValid)
+    },
+    [setCanContinue],
+  )
 
-  // Update canContinue based on validation state
-  React.useEffect(() => {
-    const canContinue = isValid && !isChecking && address.trim().length > 0
-    setCanContinue(canContinue)
-  }, [isValid, isChecking, address, setCanContinue])
+  // Create stable footer handler that uses ref
+  const footerHandlerRef = React.useRef(() => {
+    handleCheckEligibilityRef.current?.()
+  })
 
-  // Reset state when component mounts (modal opens)
+  // Memoize footer elements to prevent unnecessary recreations
+  const footerWithHandler = React.useMemo(
+    () => <ManualAddressModalFooter onPress={footerHandlerRef.current} />,
+    [],
+  )
+  const footerWithoutHandler = React.useMemo(
+    () => <ManualAddressModalFooter />,
+    [],
+  )
+
+  // Track previous validity to avoid unnecessary footer updates
+  const prevIsValidRef = React.useRef(isValid)
+
+  // Update footer when validity changes (only depend on isValid to avoid loops)
   React.useEffect(() => {
-    setAddress('')
-    setIsValid(false)
-    setIsChecking(false)
-    setError(null)
-    setCanContinue(false)
-    return () => {
-      // Reset state when component unmounts (modal closes)
-      setAddress('')
-      setIsValid(false)
-      setIsChecking(false)
-      setError(null)
-      handleCheckEligibilityRef = null
+    // Only update footer if validity actually changed
+    if (prevIsValidRef.current !== isValid) {
+      prevIsValidRef.current = isValid
+      setFooter(isValid ? footerWithHandler : footerWithoutHandler)
     }
-  }, [setCanContinue])
+    // footerWithHandler and footerWithoutHandler are stable (memoized with empty deps)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isValid, setFooter])
 
   return (
     <Modal.Content>
@@ -191,7 +179,7 @@ const ManualAddressModalContent = () => {
         <AddressInput
           value={address}
           onChangeText={setAddress}
-          onValidationChange={setIsValid}
+          onValidationChange={handleValidationChange}
           placeholder={strings.send.addressInputLabel}
           label={strings.airdrop.address}
         />
@@ -207,19 +195,22 @@ const ManualAddressModalContent = () => {
   )
 }
 
-const ManualAddressModalFooter = () => {
+const ManualAddressModalFooter = ({
+  onPress = () => {},
+}: {
+  onPress?: () => void
+}) => {
   const strings = useStrings()
-  const {canContinue = false} = useModal()
+  const {canContinue, isLoading} = useModal()
 
   return (
     <Modal.Footer>
       <Button
         title={strings.airdrop.checkEligibility}
-        onPress={() => {
-          handleCheckEligibilityRef?.()
-        }}
+        onPress={onPress}
         disabled={!canContinue}
         size="M"
+        isLoading={isLoading}
       />
     </Modal.Footer>
   )
@@ -229,16 +220,11 @@ export const useManualAddressModal = () => {
   const {openModal} = useModal()
   const strings = useStrings()
   const queryClient = useQueryClient()
-  const modalKeyRef = React.useRef(0)
 
   const openManualAddressModal = React.useCallback(() => {
-    // Increment key to force remount and reset state
-    modalKeyRef.current += 1
-    const currentKey = modalKeyRef.current
-
     openModal({
-      content: <ManualAddressModalContent key={`content-${currentKey}`} />,
-      footer: <ManualAddressModalFooter key={`footer-${currentKey}`} />,
+      content: <ManualAddressModalContent />,
+      footer: <ManualAddressModalFooter />,
       title: strings.airdrop.manualAddressTitle,
       height: 500,
       canDiscard: true,
@@ -246,7 +232,7 @@ export const useManualAddressModal = () => {
       onClose: () => {
         // Invalidate queries to refresh allocations after adding external address
         queryClient.invalidateQueries({
-          queryKey: ['persist', 'airdropEligibility'],
+          queryKey: [persistPrefixKeyword, 'airdropEligibility'],
         })
       },
     })
