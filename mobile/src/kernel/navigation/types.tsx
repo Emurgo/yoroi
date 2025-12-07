@@ -195,6 +195,7 @@ export type SettingsStackRoutes = {
   }
   'settings-preparing-wallet': undefined
   'share-wallet': undefined
+  'advanced-address-retrieval': undefined
 }
 
 export type ManageNotificationsRoutes = {

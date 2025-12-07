@@ -30,6 +30,7 @@ import {SelectLanguageScreen} from '../screens/ChangeApplicationSettingsScreen/S
 import {SelectNetworkScreen} from '../screens/ChangeApplicationSettingsScreen/SelectNetworkScreen/SelectNetworkScreen'
 import {SelectThemeScreen} from '../screens/ChangeApplicationSettingsScreen/SelectThemeScreen/SelectThemeScreen'
 import {ToggleAnalyticsSettingsScreen} from '../screens/ChangeApplicationSettingsScreen/ToggleAnalyticsSettings/ToggleAnalyticsSettingsScreen'
+import {AdvancedAddressRetrievalScreen} from '../screens/ChangeWalletSettingsScreen/AdvancedAddressRetrievalScreen/AdvancedAddressRetrievalScreen'
 import {ChangePasswordScreen} from '../screens/ChangeWalletSettingsScreen/ChangePasswordScreen/ChangePasswordScreen'
 import {ChangeWalletSettingsScreen} from '../screens/ChangeWalletSettingsScreen/ChangeWalletSettingsScreen'
 import {EnableEasyConfirmationScreen} from '../screens/ChangeWalletSettingsScreen/EnableEasyConfirmationScreen/EnableEasyConfirmationScreen'
@@ -212,6 +213,14 @@ export const SettingsScreenNavigator = () => {
         getComponent={() => ToggleAnalyticsSettingsScreen}
         options={{
           title: strings.settings.toggleAnalytics.toggleAnalyticsSettingsTitle,
+        }}
+      />
+
+      <Stack.Screen
+        name="advanced-address-retrieval"
+        getComponent={() => AdvancedAddressRetrievalScreen}
+        options={{
+          title: 'Advanced Address Retrieval',
         }}
       />
     </Stack.Navigator>

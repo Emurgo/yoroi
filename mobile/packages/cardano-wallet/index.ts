@@ -18,6 +18,7 @@ export {deriveAccountFromRootKey, keyManager} from './key-manager/key-manager'
 
 // Account manager
 export type {AddressChain} from './account-manager/account-manager'
+export {createAddressGenerator} from './account-manager/account-manager'
 export {deriveAddressFromXPub} from './account-manager/derive-address-from-xpub'
 export type {ReadOnlyAddressChain} from './account-manager/read-only-account-manager'
 
