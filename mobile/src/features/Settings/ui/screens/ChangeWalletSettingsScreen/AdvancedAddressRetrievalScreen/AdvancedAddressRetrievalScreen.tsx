@@ -66,6 +66,7 @@ export const AdvancedAddressRetrievalScreen = () => {
   const [isPaused, setIsPaused] = React.useState(false)
   const isPausedRef = React.useRef(false)
   const [isProcessing, setIsProcessing] = React.useState(false)
+  const [isExporting, setIsExporting] = React.useState(false)
   const [processedCount, setProcessedCount] = React.useState(0)
   const [utxoCount, setUtxoCount] = React.useState(0)
   const [historyCount, setHistoryCount] = React.useState(0)
@@ -293,16 +294,14 @@ export const AdvancedAddressRetrievalScreen = () => {
             accountPubKeyHex: string
           }> = []
 
-          for (let accountIndex = 0; accountIndex < 100; accountIndex++) {
-            try {
-              const accountPubKeyHex =
-                await encryptedStorage.xpub.read(accountIndex)
-              if (accountPubKeyHex) {
-                storedAccountPubKeys.push({accountIndex, accountPubKeyHex})
-              }
-            } catch {
-              // Account public key not found, skip
+          // Hardware wallets are restricted to first account (account 0) only
+          try {
+            const accountPubKeyHex = await encryptedStorage.xpub.read(0)
+            if (accountPubKeyHex) {
+              storedAccountPubKeys.push({accountIndex: 0, accountPubKeyHex})
             }
+          } catch {
+            // Account public key not found
           }
 
           if (storedAccountPubKeys.length === 0) {
@@ -378,7 +377,7 @@ export const AdvancedAddressRetrievalScreen = () => {
       return
     }
 
-    setIsProcessing(true)
+    setIsExporting(true)
     setProgress(strings.settings.advancedAddressRetrieval.exportingCsv)
 
     try {
@@ -410,7 +409,7 @@ export const AdvancedAddressRetrievalScreen = () => {
       await saveCsvToDownloads(csvContent, csvFileName)
 
       setProgress('')
-      setIsProcessing(false)
+      setIsExporting(false)
 
       Alert.alert(
         strings.settings.advancedAddressRetrieval.exportCompleteTitle,
@@ -427,7 +426,7 @@ export const AdvancedAddressRetrievalScreen = () => {
           ? error.message
           : strings.settings.advancedAddressRetrieval.exportError,
       )
-      setIsProcessing(false)
+      setIsExporting(false)
     }
   }, [discoveredAddresses, strings.settings.advancedAddressRetrieval, intl])
 
@@ -518,9 +517,45 @@ export const AdvancedAddressRetrievalScreen = () => {
           bounces={false}
           keyboardShouldPersistTaps="handled"
         >
+          {isHardwareWallet ? (
+            <WarningBanner
+              title={
+                strings.settings.advancedAddressRetrieval.hardwareWalletTitle
+              }
+              content={
+                strings.settings.advancedAddressRetrieval.hardwareWalletContent
+              }
+            />
+          ) : (
+            <WarningBanner
+              title={strings.settings.advancedAddressRetrieval.importantTitle}
+              content={
+                strings.settings.advancedAddressRetrieval.importantContent
+              }
+            />
+          )}
+
+          <Space.Height.lg />
+
           <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
             {strings.settings.advancedAddressRetrieval.description}
           </Text>
+
+          {isHardwareWallet && (
+            <>
+              <Space.Height.md />
+              <WarningBanner
+                title={
+                  strings.settings.advancedAddressRetrieval
+                    .firstAccountOnlyTitle
+                }
+                content={
+                  strings.settings.advancedAddressRetrieval
+                    .firstAccountOnlyContent
+                }
+              />
+            </>
+          )}
 
           <Space.Height.lg />
 
@@ -686,26 +721,6 @@ export const AdvancedAddressRetrievalScreen = () => {
               </Text>
             </View>
           )}
-
-          <Space.Height.lg />
-
-          {isHardwareWallet ? (
-            <WarningBanner
-              title={
-                strings.settings.advancedAddressRetrieval.hardwareWalletTitle
-              }
-              content={
-                strings.settings.advancedAddressRetrieval.hardwareWalletContent
-              }
-            />
-          ) : (
-            <WarningBanner
-              title={strings.settings.advancedAddressRetrieval.importantTitle}
-              content={
-                strings.settings.advancedAddressRetrieval.importantContent
-              }
-            />
-          )}
         </ScrollView>
 
         <Actions>
@@ -724,18 +739,19 @@ export const AdvancedAddressRetrievalScreen = () => {
           {step === 'discovered' && (
             <View style={a.gap_sm}>
               <Button
-                onPress={handleVerification}
-                title={strings.settings.advancedAddressRetrieval.checkAddresses}
-              />
-              <Button
                 onPress={handleExport}
-                disabled={isProcessing}
-                type={ButtonType.Secondary}
+                disabled={isExporting}
                 title={
-                  isProcessing
+                  isExporting
                     ? strings.settings.advancedAddressRetrieval.exportingCsv
                     : strings.settings.advancedAddressRetrieval.exportCsv
                 }
+              />
+              <Button
+                onPress={handleVerification}
+                type={ButtonType.Secondary}
+                disabled={isProcessing}
+                title={strings.settings.advancedAddressRetrieval.checkAddresses}
               />
             </View>
           )}

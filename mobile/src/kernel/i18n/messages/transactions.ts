@@ -109,6 +109,10 @@ export const transactionsMessages = defineMessages({
     id: 'components.utxoConsolidationWarning',
     defaultMessage: '!!!Consolidate your UTxOs to improve wallet performance',
   },
+  noUtxos: {
+    id: 'components.utxoList.noUtxos',
+    defaultMessage: '!!!No UTxOs found',
+  },
   messageSigningTitle: {
     id: 'components.messageSigning.title',
     defaultMessage: '!!!Message Signing',

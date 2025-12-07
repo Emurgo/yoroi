@@ -636,6 +636,15 @@ export const settingsMessages = defineMessages({
     defaultMessage:
       '!!!For hardware wallets, addresses will be generated only for accounts that have already been set up and have their public keys stored. New accounts cannot be derived without connecting to your hardware device.',
   },
+  advancedAddressRetrievalFirstAccountOnlyTitle: {
+    id: 'components.settings.advancedaddressretrieval.firstAccountOnlyTitle',
+    defaultMessage: '!!!First Account Only',
+  },
+  advancedAddressRetrievalFirstAccountOnlyContent: {
+    id: 'components.settings.advancedaddressretrieval.firstAccountOnlyContent',
+    defaultMessage:
+      '!!!Hardware wallets are restricted to the first account (account 0) only. This is because hardware wallets require physical device connection to derive addresses for additional accounts.',
+  },
   advancedAddressRetrievalImportantTitle: {
     id: 'components.settings.advancedaddressretrieval.importantTitle',
     defaultMessage: '!!!Important',

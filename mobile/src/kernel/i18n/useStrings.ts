@@ -730,6 +730,12 @@ export const useStrings = () => {
           hardwareWalletContent: f(
             settingsMessages.advancedAddressRetrievalHardwareWalletContent,
           ),
+          firstAccountOnlyTitle: f(
+            settingsMessages.advancedAddressRetrievalFirstAccountOnlyTitle,
+          ),
+          firstAccountOnlyContent: f(
+            settingsMessages.advancedAddressRetrievalFirstAccountOnlyContent,
+          ),
           importantTitle: f(
             settingsMessages.advancedAddressRetrievalImportantTitle,
           ),
@@ -2093,6 +2099,7 @@ export const useStrings = () => {
         filterClear: f(transactionsMessages.filterClear),
         utxo: {
           utxoListTitle: f(transactionsMessages.utxoListTitle),
+          noUtxos: f(transactionsMessages.noUtxos),
           utxoConsolidationTitle: f(
             transactionsMessages.utxoConsolidationTitle,
           ),

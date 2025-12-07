@@ -142,7 +142,7 @@ export const ChangeWalletSettingsScreen = () => {
         )}
 
         <SettingsSection title={strings.settings.walletSettings.actions}>
-          {!isHW && !isReadOnly && (
+          {!isReadOnly && (
             <NavigatedSettingsItem
               icon={<Icon.Wallet {...iconProps} />}
               label={strings.settings.advancedAddressRetrieval.title}
