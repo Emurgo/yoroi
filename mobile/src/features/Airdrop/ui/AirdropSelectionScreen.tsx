@@ -51,7 +51,7 @@ export const AirdropSelectionScreen = () => {
   const {openModal} = useModal()
   const {navigateToNotificationSettings} = useWalletNavigation()
   const queryClient = useQueryClient()
-  const ManualAddressModal = useManualAddressModal()
+  const {openManualAddressModal} = useManualAddressModal()
 
   const {allocations, isLoading, isError, hardRefresh} = useAirdropEligibility()
   const addressCache = useAirdropAddressCache()
@@ -73,20 +73,8 @@ export const AirdropSelectionScreen = () => {
   }
 
   const handleOpenManualAddress = React.useCallback(() => {
-    openModal({
-      content: <ManualAddressModal.Content />,
-      footer: <ManualAddressModal.Footer />,
-      title: strings.airdrop.manualAddressTitle,
-      height: 500,
-      canDiscard: true,
-      onClose: () => {
-        // Invalidate queries to refresh allocations after adding external address
-        queryClient.invalidateQueries({
-          queryKey: ['persist', 'airdropEligibility'],
-        })
-      },
-    })
-  }, [openModal, strings, queryClient, ManualAddressModal])
+    openManualAddressModal()
+  }, [openManualAddressModal])
 
   const handleRemoveExternalAddress = React.useCallback(
     async (address: string) => {
@@ -307,6 +295,7 @@ const AddressCard = ({
 
   const redeemableAmount = formatAmount(allocation.redeemableAmount)
   const totalToRedeem = formatAmount(allocation.totalLeftToRedeem)
+  const hasRedeemable = allocation.redeemableAmount > 0
 
   const handleRemove = (e: GestureResponderEvent) => {
     e.stopPropagation()
@@ -331,7 +320,8 @@ const AddressCard = ({
           style={[
             a.flex_row,
             {
-              backgroundColor: pressed ? p.bg_gradient_1[0] : 'transparent',
+              backgroundColor:
+                pressed || hasRedeemable ? p.bg_gradient_1[0] : 'transparent',
             },
           ]}
         >
