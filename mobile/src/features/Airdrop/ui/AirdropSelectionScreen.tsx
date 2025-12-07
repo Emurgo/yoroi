@@ -142,10 +142,7 @@ export const AirdropSelectionScreen = () => {
 
   if (isLoading) {
     return (
-      <SafeAreaView
-        edges={['left', 'right', 'bottom']}
-        style={[ta.bg_color_max, a.flex_1]}
-      >
+      <SafeAreaView style={[ta.bg_color_max, a.flex_1]}>
         <View style={[a.flex_1, a.justify_center, a.align_center]}>
           <ActivityIndicator size="large" color={p.el_primary_medium} />
           <Space.Height.lg />
@@ -159,10 +156,7 @@ export const AirdropSelectionScreen = () => {
 
   if (isError || allocations.length === 0) {
     return (
-      <SafeAreaView
-        edges={['left', 'right']}
-        style={[ta.bg_color_max, a.flex_1]}
-      >
+      <SafeAreaView style={[ta.bg_color_max, a.flex_1]}>
         <ScrollView
           contentContainerStyle={[a.p_lg, a.flex_1, a.justify_center]}
           refreshControl={
@@ -212,7 +206,7 @@ export const AirdropSelectionScreen = () => {
   }
 
   return (
-    <SafeAreaView edges={['left', 'right']} style={[ta.bg_color_max, a.flex_1]}>
+    <SafeAreaView style={[ta.bg_color_max, a.flex_1]}>
       <ScrollView
         contentContainerStyle={[a.p_lg, a.gap_md, {paddingBottom: 0}]}
         style={a.flex_1}
