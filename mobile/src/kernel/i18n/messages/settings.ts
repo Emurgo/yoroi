@@ -506,4 +506,229 @@ export const settingsMessages = defineMessages({
     id: 'components.settings.applicationsettingsscreen.network.tag.modal.text',
     defaultMessage: '!!!Network Tag Modal Text',
   },
+
+  // Advanced Address Retrieval
+  advancedAddressRetrievalTitle: {
+    id: 'components.settings.advancedaddressretrieval.title',
+    defaultMessage: '!!!Advanced Address Retrieval',
+  },
+  advancedAddressRetrievalDescription: {
+    id: 'components.settings.advancedaddressretrieval.description',
+    defaultMessage:
+      '!!!Generate addresses from multiple accounts for airdrop recovery. This tool will derive addresses from your wallet seed phrase.',
+  },
+  advancedAddressRetrievalNumberOfAccounts: {
+    id: 'components.settings.advancedaddressretrieval.numberOfAccounts',
+    defaultMessage: '!!!Number of Accounts',
+  },
+  advancedAddressRetrievalNumberOfAccountsPlaceholder: {
+    id: 'components.settings.advancedaddressretrieval.numberOfAccountsPlaceholder',
+    defaultMessage: '!!!e.g., 10',
+  },
+  advancedAddressRetrievalNumberOfAccountsHelper: {
+    id: 'components.settings.advancedaddressretrieval.numberOfAccountsHelper',
+    defaultMessage: '!!!Enter the number of accounts to generate (1-1000)',
+  },
+  advancedAddressRetrievalAddressesPerAccount: {
+    id: 'components.settings.advancedaddressretrieval.addressesPerAccount',
+    defaultMessage: '!!!Addresses per Account',
+  },
+  advancedAddressRetrievalAddressesPerAccountPlaceholder: {
+    id: 'components.settings.advancedaddressretrieval.addressesPerAccountPlaceholder',
+    defaultMessage: '!!!e.g., 20',
+  },
+  advancedAddressRetrievalAddressesPerAccountHelper: {
+    id: 'components.settings.advancedaddressretrieval.addressesPerAccountHelper',
+    defaultMessage:
+      '!!!Enter the number of addresses to generate per account (1-10000)',
+  },
+  advancedAddressRetrievalInvalidInputTitle: {
+    id: 'components.settings.advancedaddressretrieval.invalidInputTitle',
+    defaultMessage: '!!!Invalid Input',
+  },
+  advancedAddressRetrievalInvalidInputMessage: {
+    id: 'components.settings.advancedaddressretrieval.invalidInputMessage',
+    defaultMessage:
+      '!!!Please enter valid numbers: accounts (1-1000) and addresses per account (1-10000).',
+  },
+  advancedAddressRetrievalDiscoveringProgress: {
+    id: 'components.settings.advancedaddressretrieval.discoveringProgress',
+    defaultMessage:
+      '!!!Discovering {accountCount} accounts with {addressCount} addresses each...',
+  },
+  advancedAddressRetrievalExportingCsv: {
+    id: 'components.settings.advancedaddressretrieval.exportingCsv',
+    defaultMessage: '!!!Exporting CSV...',
+  },
+  advancedAddressRetrievalDiscoveryCompleteTitle: {
+    id: 'components.settings.advancedaddressretrieval.discoveryCompleteTitle',
+    defaultMessage: '!!!Discovery Complete',
+  },
+  advancedAddressRetrievalDiscoveryCompleteMessage: {
+    id: 'components.settings.advancedaddressretrieval.discoveryCompleteMessage',
+    defaultMessage: '!!!Discovered {count} addresses.',
+  },
+  advancedAddressRetrievalDiscoveryCompleteDescription: {
+    id: 'components.settings.advancedaddressretrieval.discoveryCompleteDescription',
+    defaultMessage:
+      '!!!You can now check addresses for UTXOs, history, and airdrop eligibility, or export them to a CSV file.',
+  },
+  advancedAddressRetrievalExportCompleteMessage: {
+    id: 'components.settings.advancedaddressretrieval.exportCompleteMessage',
+    defaultMessage:
+      '!!!Exported {count} addresses to CSV file: {fileName}\n\nThe file has been saved to your Downloads folder.',
+  },
+  advancedAddressRetrievalSkip: {
+    id: 'components.settings.advancedaddressretrieval.skip',
+    defaultMessage: '!!!Skip',
+  },
+  advancedAddressRetrievalCheckAddresses: {
+    id: 'components.settings.advancedaddressretrieval.checkAddresses',
+    defaultMessage: '!!!Check Addresses',
+  },
+  advancedAddressRetrievalErrorTitle: {
+    id: 'components.settings.advancedaddressretrieval.errorTitle',
+    defaultMessage: '!!!Error',
+  },
+  advancedAddressRetrievalDiscoveryError: {
+    id: 'components.settings.advancedaddressretrieval.discoveryError',
+    defaultMessage: '!!!Failed to discover addresses. Please try again.',
+  },
+  advancedAddressRetrievalCheckingAddresses: {
+    id: 'components.settings.advancedaddressretrieval.checkingAddresses',
+    defaultMessage: '!!!Checking addresses...',
+  },
+  advancedAddressRetrievalCheckedProgress: {
+    id: 'components.settings.advancedaddressretrieval.checkedProgress',
+    defaultMessage: '!!!Checked {checked} of {total} addresses...',
+  },
+  advancedAddressRetrievalPaused: {
+    id: 'components.settings.advancedaddressretrieval.paused',
+    defaultMessage: '!!!Paused. Click Resume to continue.',
+  },
+  advancedAddressRetrievalVerificationCompleteTitle: {
+    id: 'components.settings.advancedaddressretrieval.verificationCompleteTitle',
+    defaultMessage: '!!!Verification Complete',
+  },
+  advancedAddressRetrievalVerificationCompleteMessage: {
+    id: 'components.settings.advancedaddressretrieval.verificationCompleteMessage',
+    defaultMessage:
+      '!!!Checked {total} addresses.\n\nSaved {saved} addresses to wallet:\n• {utxoCount} with UTXOs\n• {historyCount} with history\n• {airdropCount} eligible for airdrop',
+  },
+  advancedAddressRetrievalVerificationError: {
+    id: 'components.settings.advancedaddressretrieval.verificationError',
+    defaultMessage: '!!!Failed to verify addresses. Please try again.',
+  },
+  advancedAddressRetrievalEnterPasswordTitle: {
+    id: 'components.settings.advancedaddressretrieval.enterPasswordTitle',
+    defaultMessage: '!!!Enter Wallet Password',
+  },
+  advancedAddressRetrievalEnterPasswordSummary: {
+    id: 'components.settings.advancedaddressretrieval.enterPasswordSummary',
+    defaultMessage: '!!!Enter your wallet password to discover addresses.',
+  },
+  advancedAddressRetrievalHardwareWalletTitle: {
+    id: 'components.settings.advancedaddressretrieval.hardwareWalletTitle',
+    defaultMessage: '!!!Hardware Wallet Mode',
+  },
+  advancedAddressRetrievalHardwareWalletContent: {
+    id: 'components.settings.advancedaddressretrieval.hardwareWalletContent',
+    defaultMessage:
+      '!!!For hardware wallets, addresses will be generated only for accounts that have already been set up and have their public keys stored. New accounts cannot be derived without connecting to your hardware device.',
+  },
+  advancedAddressRetrievalImportantTitle: {
+    id: 'components.settings.advancedaddressretrieval.importantTitle',
+    defaultMessage: '!!!Important',
+  },
+  advancedAddressRetrievalImportantContent: {
+    id: 'components.settings.advancedaddressretrieval.importantContent',
+    defaultMessage:
+      '!!!This feature generates addresses from your wallet seed phrase. Make sure you are in a secure environment and do not share the exported files with untrusted parties.',
+  },
+  advancedAddressRetrievalDiscovering: {
+    id: 'components.settings.advancedaddressretrieval.discovering',
+    defaultMessage: '!!!Discovering...',
+  },
+  advancedAddressRetrievalDiscover: {
+    id: 'components.settings.advancedaddressretrieval.discover',
+    defaultMessage: '!!!Discover Addresses',
+  },
+  advancedAddressRetrievalExportCsv: {
+    id: 'components.settings.advancedaddressretrieval.exportCsv',
+    defaultMessage: '!!!Export CSV',
+  },
+  advancedAddressRetrievalExportCompleteTitle: {
+    id: 'components.settings.advancedaddressretrieval.exportCompleteTitle',
+    defaultMessage: '!!!Export Complete',
+  },
+  advancedAddressRetrievalExportError: {
+    id: 'components.settings.advancedaddressretrieval.exportError',
+    defaultMessage: '!!!Failed to export CSV. Please try again.',
+  },
+  advancedAddressRetrievalResumeChecking: {
+    id: 'components.settings.advancedaddressretrieval.resumeChecking',
+    defaultMessage: '!!!Resume Checking',
+  },
+  advancedAddressRetrievalPause: {
+    id: 'components.settings.advancedaddressretrieval.pause',
+    defaultMessage: '!!!Pause',
+  },
+  advancedAddressRetrievalStartOver: {
+    id: 'components.settings.advancedaddressretrieval.startOver',
+    defaultMessage: '!!!Start Over',
+  },
+  advancedAddressRetrievalCheckingAddressesFor: {
+    id: 'components.settings.advancedaddressretrieval.checkingAddressesFor',
+    defaultMessage:
+      '!!!Checking addresses for UTXOs, history, and airdrop eligibility...',
+  },
+  advancedAddressRetrievalProgress: {
+    id: 'components.settings.advancedaddressretrieval.progress',
+    defaultMessage: '!!!Progress: {processed} / {total}',
+  },
+  advancedAddressRetrievalProcessComplete: {
+    id: 'components.settings.advancedaddressretrieval.processComplete',
+    defaultMessage: '!!!Process complete!',
+  },
+  advancedAddressRetrievalAddressesSavedToWallet: {
+    id: 'components.settings.advancedaddressretrieval.addressesSavedToWallet',
+    defaultMessage: '!!!Addresses saved to wallet:',
+  },
+  advancedAddressRetrievalWithUtxos: {
+    id: 'components.settings.advancedaddressretrieval.withUtxos',
+    defaultMessage: '!!!• {count} with UTXOs',
+  },
+  advancedAddressRetrievalWithHistory: {
+    id: 'components.settings.advancedaddressretrieval.withHistory',
+    defaultMessage: '!!!• {count} with history',
+  },
+  advancedAddressRetrievalEligibleForAirdrop: {
+    id: 'components.settings.advancedaddressretrieval.eligibleForAirdrop',
+    defaultMessage: '!!!• {count} eligible for airdrop',
+  },
+  advancedAddressRetrievalNoStoredAccountKeys: {
+    id: 'components.settings.advancedaddressretrieval.noStoredAccountKeys',
+    defaultMessage:
+      '!!!No stored account public keys found. Hardware wallets need to have accounts set up first.',
+  },
+  advancedAddressRetrievalRootKeyRequired: {
+    id: 'components.settings.advancedaddressretrieval.rootKeyRequired',
+    defaultMessage: '!!!Root key required for non-hardware wallets',
+  },
+  advancedAddressRetrievalCsvHeaderAccount: {
+    id: 'components.settings.advancedaddressretrieval.csvHeaderAccount',
+    defaultMessage: '!!!Account',
+  },
+  advancedAddressRetrievalCsvHeaderAddressIndex: {
+    id: 'components.settings.advancedaddressretrieval.csvHeaderAddressIndex',
+    defaultMessage: '!!!Address Index',
+  },
+  advancedAddressRetrievalCsvHeaderAddress: {
+    id: 'components.settings.advancedaddressretrieval.csvHeaderAddress',
+    defaultMessage: '!!!Address',
+  },
+  advancedAddressRetrievalCsvHeaderDerivationPath: {
+    id: 'components.settings.advancedaddressretrieval.csvHeaderDerivationPath',
+    defaultMessage: '!!!Derivation Path',
+  },
 })

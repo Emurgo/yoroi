@@ -655,6 +655,136 @@ export const useStrings = () => {
           cancel: f(globalMessages.cancel),
           switch: f(globalMessages.switch),
         },
+        advancedAddressRetrieval: {
+          title: f(settingsMessages.advancedAddressRetrievalTitle),
+          description: f(settingsMessages.advancedAddressRetrievalDescription),
+          numberOfAccounts: f(
+            settingsMessages.advancedAddressRetrievalNumberOfAccounts,
+          ),
+          numberOfAccountsPlaceholder: f(
+            settingsMessages.advancedAddressRetrievalNumberOfAccountsPlaceholder,
+          ),
+          numberOfAccountsHelper: f(
+            settingsMessages.advancedAddressRetrievalNumberOfAccountsHelper,
+          ),
+          addressesPerAccount: f(
+            settingsMessages.advancedAddressRetrievalAddressesPerAccount,
+          ),
+          addressesPerAccountPlaceholder: f(
+            settingsMessages.advancedAddressRetrievalAddressesPerAccountPlaceholder,
+          ),
+          addressesPerAccountHelper: f(
+            settingsMessages.advancedAddressRetrievalAddressesPerAccountHelper,
+          ),
+          invalidInputTitle: f(
+            settingsMessages.advancedAddressRetrievalInvalidInputTitle,
+          ),
+          invalidInputMessage: f(
+            settingsMessages.advancedAddressRetrievalInvalidInputMessage,
+          ),
+          discoveringProgress: f(
+            settingsMessages.advancedAddressRetrievalDiscoveringProgress,
+          ),
+          exportingCsv: f(
+            settingsMessages.advancedAddressRetrievalExportingCsv,
+          ),
+          discoveryCompleteTitle: f(
+            settingsMessages.advancedAddressRetrievalDiscoveryCompleteTitle,
+          ),
+          discoveryCompleteMessage: f(
+            settingsMessages.advancedAddressRetrievalDiscoveryCompleteMessage,
+          ),
+          skip: f(settingsMessages.advancedAddressRetrievalSkip),
+          checkAddresses: f(
+            settingsMessages.advancedAddressRetrievalCheckAddresses,
+          ),
+          errorTitle: f(settingsMessages.advancedAddressRetrievalErrorTitle),
+          discoveryError: f(
+            settingsMessages.advancedAddressRetrievalDiscoveryError,
+          ),
+          checkingAddresses: f(
+            settingsMessages.advancedAddressRetrievalCheckingAddresses,
+          ),
+          checkedProgress: f(
+            settingsMessages.advancedAddressRetrievalCheckedProgress,
+          ),
+          paused: f(settingsMessages.advancedAddressRetrievalPaused),
+          verificationCompleteTitle: f(
+            settingsMessages.advancedAddressRetrievalVerificationCompleteTitle,
+          ),
+          verificationCompleteMessage: f(
+            settingsMessages.advancedAddressRetrievalVerificationCompleteMessage,
+          ),
+          verificationError: f(
+            settingsMessages.advancedAddressRetrievalVerificationError,
+          ),
+          enterPasswordTitle: f(
+            settingsMessages.advancedAddressRetrievalEnterPasswordTitle,
+          ),
+          enterPasswordSummary: f(
+            settingsMessages.advancedAddressRetrievalEnterPasswordSummary,
+          ),
+          hardwareWalletTitle: f(
+            settingsMessages.advancedAddressRetrievalHardwareWalletTitle,
+          ),
+          hardwareWalletContent: f(
+            settingsMessages.advancedAddressRetrievalHardwareWalletContent,
+          ),
+          importantTitle: f(
+            settingsMessages.advancedAddressRetrievalImportantTitle,
+          ),
+          importantContent: f(
+            settingsMessages.advancedAddressRetrievalImportantContent,
+          ),
+          discovering: f(settingsMessages.advancedAddressRetrievalDiscovering),
+          discover: f(settingsMessages.advancedAddressRetrievalDiscover),
+          exportCsv: f(settingsMessages.advancedAddressRetrievalExportCsv),
+          exportCompleteTitle: f(
+            settingsMessages.advancedAddressRetrievalExportCompleteTitle,
+          ),
+          exportError: f(settingsMessages.advancedAddressRetrievalExportError),
+          discoveryCompleteDescription: f(
+            settingsMessages.advancedAddressRetrievalDiscoveryCompleteDescription,
+          ),
+          resumeChecking: f(
+            settingsMessages.advancedAddressRetrievalResumeChecking,
+          ),
+          pause: f(settingsMessages.advancedAddressRetrievalPause),
+          startOver: f(settingsMessages.advancedAddressRetrievalStartOver),
+          checkingAddressesFor: f(
+            settingsMessages.advancedAddressRetrievalCheckingAddressesFor,
+          ),
+          progress: f(settingsMessages.advancedAddressRetrievalProgress),
+          processComplete: f(
+            settingsMessages.advancedAddressRetrievalProcessComplete,
+          ),
+          addressesSavedToWallet: f(
+            settingsMessages.advancedAddressRetrievalAddressesSavedToWallet,
+          ),
+          withUtxos: f(settingsMessages.advancedAddressRetrievalWithUtxos),
+          withHistory: f(settingsMessages.advancedAddressRetrievalWithHistory),
+          eligibleForAirdrop: f(
+            settingsMessages.advancedAddressRetrievalEligibleForAirdrop,
+          ),
+          noStoredAccountKeys: f(
+            settingsMessages.advancedAddressRetrievalNoStoredAccountKeys,
+          ),
+          rootKeyRequired: f(
+            settingsMessages.advancedAddressRetrievalRootKeyRequired,
+          ),
+          csvHeaderAccount: f(
+            settingsMessages.advancedAddressRetrievalCsvHeaderAccount,
+          ),
+          csvHeaderAddressIndex: f(
+            settingsMessages.advancedAddressRetrievalCsvHeaderAddressIndex,
+          ),
+          csvHeaderAddress: f(
+            settingsMessages.advancedAddressRetrievalCsvHeaderAddress,
+          ),
+          csvHeaderDerivationPath: f(
+            settingsMessages.advancedAddressRetrievalCsvHeaderDerivationPath,
+          ),
+        },
         appSettingsTitle: f(settingsMessages.appSettingsTitle),
         aboutTitle: f(settingsMessages.aboutTitle),
         systemLogTitle: f(settingsMessages.systemLogTitle),

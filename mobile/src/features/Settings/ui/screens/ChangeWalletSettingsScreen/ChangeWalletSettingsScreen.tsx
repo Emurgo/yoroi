@@ -1,8 +1,7 @@
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
-import {useAddressMode} from '@yoroi/wallet-manager'
-import {useSelectedWallet} from '@yoroi/wallet-manager'
+import {useAddressMode, useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
@@ -143,6 +142,16 @@ export const ChangeWalletSettingsScreen = () => {
         )}
 
         <SettingsSection title={strings.settings.walletSettings.actions}>
+          {!isHW && !isReadOnly && (
+            <NavigatedSettingsItem
+              icon={<Icon.Wallet {...iconProps} />}
+              label={strings.settings.advancedAddressRetrieval.title}
+              onNavigate={() =>
+                settingsNavigation.navigate('advanced-address-retrieval')
+              }
+            />
+          )}
+
           <NavigatedSettingsItem
             icon={<Icon.CrossCircle {...iconProps} />}
             label={strings.settings.walletSettings.removeWallet}

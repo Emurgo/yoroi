@@ -222,7 +222,7 @@ export const airdropMessages = defineMessages({
   },
   externalAddress: {
     id: 'airdrop.externalAddress',
-    defaultMessage: '!!!External Address',
+    defaultMessage: '!!!Manual Address',
   },
   scheduleThawNotifications: {
     id: 'airdrop.scheduleThawNotifications',
