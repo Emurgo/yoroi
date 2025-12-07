@@ -45,6 +45,7 @@ import {Observable} from 'rxjs'
 
 import {buildPortfolioTokenManagers} from '~/features/Portfolio/common/helpers/build-token-managers'
 
+import type {ManualAddress} from '../../storage/manual-address-storage'
 import type {CardanoTypes, WalletSubscription, YoroiWallet} from '../../types'
 import {getTokenFingerprint} from '../../utils/format'
 import {CardanoMobile} from '../../wrappedCsl'
@@ -89,6 +90,9 @@ const networkManagers = buildNetworkManagers({
 const wallet: YoroiWallet = {
   getAddressing(_address: string): {path: number[]; startLevel: number} {
     throw new Error('Method not implemented.')
+  },
+  getManualAddresses(): Promise<Array<ManualAddress>> {
+    return Promise.resolve([])
   },
   networkManager: networkManagers.mainnet,
   isEmpty: () => false,

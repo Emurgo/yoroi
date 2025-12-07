@@ -1,5 +1,9 @@
 import {cardanoConfig, protocolParamsPlaceholder} from '@yoroi/blockchains'
-import {CardanoMobile, YoroiWallet} from '@yoroi/cardano-wallet'
+import {
+  CardanoMobile,
+  type ManualAddress,
+  YoroiWallet,
+} from '@yoroi/cardano-wallet'
 import {createPrimaryTokenInfo} from '@yoroi/portfolio'
 import {
   StakePoolInfoAndHistory,
@@ -171,6 +175,9 @@ export const walletMeta: Wallet.Meta = {
 const wallet: YoroiWallet = {
   getAddressing(_address: string): {path: number[]; startLevel: number} {
     throw new Error('Method not implemented.')
+  },
+  getManualAddresses(): Promise<Array<ManualAddress>> {
+    return Promise.resolve([])
   },
   networkManager: mockNetworkManager,
   _dependencies: {

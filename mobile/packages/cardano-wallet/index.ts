@@ -138,3 +138,11 @@ export {
 
 // DelegationUtils
 export * from './delegationUtils'
+
+// Manual Address Storage
+export {
+  makeManualAddressStorage,
+  type ManualAddress,
+  type ManualAddressReason,
+  type ManualAddressStorage,
+} from './storage/manual-address-storage'

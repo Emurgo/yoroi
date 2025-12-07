@@ -1,41 +1,251 @@
+import {
+  type ManualAddress,
+  makeManualAddressStorage,
+} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {App} from '@yoroi/types'
 import {useSelectedNetwork, useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as FileSystem from 'expo-file-system'
 import * as React from 'react'
+import {useIntl} from 'react-intl'
 import {Alert, Platform, ScrollView, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useAirdropAddressCache} from '~/features/Airdrop/common/airdropAddressCache'
 import {usePromptRootKey} from '~/features/ReviewTx/common/hooks/usePromptRootKey'
+import {settingsMessages} from '~/kernel/i18n/messages/settings'
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {makeWalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
-import {Button} from '~/ui/Button/Button'
+import {Button, ButtonType} from '~/ui/Button/Button'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {TextInput} from '~/ui/TextInput/TextInput'
 import {WarningBanner} from '~/ui/WarningBanner/WarningBanner'
 
+import {checkAddressesBatch} from './utils/checkAddressStatus'
 import {deriveAddressesForAccounts} from './utils/deriveAddresses'
 import {deriveAddressesFromAccountPubKeys} from './utils/deriveAddressesFromAccountPubKeys'
+
+type Step = 'discovery' | 'discovered' | 'verification' | 'complete'
+
+type DiscoveredAddress = {
+  accountIndex: number
+  addressIndex: number
+  address: string
+  derivationPath: string
+}
 
 export const AdvancedAddressRetrievalScreen = () => {
   const {atoms: ta, palette: p} = useTheme()
   const {wallet, meta} = useSelectedWallet()
   const {networkManager} = useSelectedNetwork()
   const {promptRootKey} = usePromptRootKey()
+  const strings = useStrings()
+  const intl = useIntl()
+  const addressCache = useAirdropAddressCache()
+  const manualAddressStorage = React.useMemo(
+    () =>
+      makeManualAddressStorage(
+        networkManager.rootStorage.join(
+          `legacy/${networkManager.network}/v1/${wallet.id}/wallet/`,
+        ) as unknown as App.Storage,
+      ),
+    [networkManager.rootStorage, networkManager.network, wallet.id],
+  )
 
   const [numAccounts, setNumAccounts] = React.useState('')
   const [numAddressesPerAccount, setNumAddressesPerAccount] = React.useState('')
-  const [isGenerating, setIsGenerating] = React.useState(false)
+  const [step, setStep] = React.useState<Step>('discovery')
   const [progress, setProgress] = React.useState('')
+  const [discoveredAddresses, setDiscoveredAddresses] = React.useState<
+    DiscoveredAddress[]
+  >([])
+  const [isPaused, setIsPaused] = React.useState(false)
+  const isPausedRef = React.useRef(false)
+  const [isProcessing, setIsProcessing] = React.useState(false)
+  const [processedCount, setProcessedCount] = React.useState(0)
+  const [utxoCount, setUtxoCount] = React.useState(0)
+  const [historyCount, setHistoryCount] = React.useState(0)
+  const [airdropCount, setAirdropCount] = React.useState(0)
+  const [savedUtxoCount, setSavedUtxoCount] = React.useState(0)
+  const [savedHistoryCount, setSavedHistoryCount] = React.useState(0)
+  const [savedAirdropCount, setSavedAirdropCount] = React.useState(0)
+  const [savedTotalCount, setSavedTotalCount] = React.useState(0)
 
   // Hardware wallets don't store root keys, but they may have account public keys stored
-  // We can derive addresses from stored account public keys, but not new accounts
   const isHardwareWallet = meta.isHW
 
-  const handleGenerateWithRootKey = React.useCallback(
-    async (rootKeyHex: string) => {
+  // Step 2 & 3: Verification (UTXO + History + Airdrop)
+  const handleVerification = React.useCallback(async () => {
+    if (discoveredAddresses.length === 0) {
+      return
+    }
+
+    setIsProcessing(true)
+    setIsPaused(false)
+    isPausedRef.current = false
+    setProcessedCount(0)
+    setUtxoCount(0)
+    setHistoryCount(0)
+    setAirdropCount(0)
+    setSavedTotalCount(0)
+    setSavedUtxoCount(0)
+    setSavedHistoryCount(0)
+    setSavedAirdropCount(0)
+    setProgress(strings.settings.advancedAddressRetrieval.checkingAddresses)
+
+    const addressStrings = discoveredAddresses.map((a) => a.address)
+    const apiUrl = networkManager.legacyApiBaseUrl
+
+    try {
+      const results = await checkAddressesBatch(
+        addressStrings,
+        apiUrl,
+        10, // batch size
+        (checked, total, result) => {
+          // Update counts based on result
+          setProcessedCount(checked)
+          if (result.hasUtxo) {
+            setUtxoCount((prev) => prev + 1)
+          }
+          if (result.hasHistory) {
+            setHistoryCount((prev) => prev + 1)
+          }
+          if (result.isAirdropEligible) {
+            setAirdropCount((prev) => prev + 1)
+          }
+          setProgress(
+            intl.formatMessage(
+              settingsMessages.advancedAddressRetrievalCheckedProgress,
+              {checked, total},
+            ),
+          )
+        },
+        () => isPausedRef.current, // shouldPause callback
+      )
+
+      // Get normally discovered addresses to exclude from manual storage
+      const normalExternalAddresses = wallet.externalAddresses()
+      const normalInternalAddresses = wallet.internalAddresses()
+      const normalAddressesSet = new Set<string>()
+      for (const addr of normalExternalAddresses) {
+        normalAddressesSet.add(
+          typeof addr === 'string' ? addr : (addr as string),
+        )
+      }
+      for (const addr of normalInternalAddresses) {
+        normalAddressesSet.add(
+          typeof addr === 'string' ? addr : (addr as string),
+        )
+      }
+
+      // Save addresses with reasons to manual storage
+      // Exclude addresses that are already in the normal discovery range
+      const addressesToSave: ManualAddress[] = []
+      for (const discoveredAddr of discoveredAddresses) {
+        const result = results.get(discoveredAddr.address)
+        if (result && result.reasons.length > 0) {
+          // Skip if address is already in normal discovery (account 0, addresses 0-49 or until gap limit)
+          if (normalAddressesSet.has(discoveredAddr.address)) {
+            continue
+          }
+
+          addressesToSave.push({
+            accountIndex: discoveredAddr.accountIndex,
+            addressIndex: discoveredAddr.addressIndex,
+            address: discoveredAddr.address,
+            derivationPath: discoveredAddr.derivationPath,
+            reasons: result.reasons,
+            addedAt: new Date().toISOString(),
+          })
+        }
+      }
+
+      // Save to manual address storage
+      for (const addr of addressesToSave) {
+        await manualAddressStorage.add(addr)
+
+        // If address is airdrop eligible, also add it to airdrop cache
+        if (addr.reasons.includes('airdrop')) {
+          const result = results.get(addr.address)
+          if (result && result.isAirdropEligible) {
+            // Add to airdrop cache as eligible with nextThawDate
+            await addressCache.updateEligibleAddress(
+              addr.address,
+              result.nextThawDate,
+            )
+            // Add as external address so it's included in airdrop eligibility checks
+            await addressCache.addExternalAddress(addr.address)
+          }
+        }
+      }
+
+      const savedCount = addressesToSave.length
+      const utxoCount = addressesToSave.filter((a) =>
+        a.reasons.includes('utxo'),
+      ).length
+      const historyCount = addressesToSave.filter((a) =>
+        a.reasons.includes('used'),
+      ).length
+      const airdropCount = addressesToSave.filter((a) =>
+        a.reasons.includes('airdrop'),
+      ).length
+
+      // Store saved counts for display on complete screen
+      setSavedTotalCount(savedCount)
+      setSavedUtxoCount(utxoCount)
+      setSavedHistoryCount(historyCount)
+      setSavedAirdropCount(airdropCount)
+
+      setStep('complete')
+      setIsProcessing(false)
+      setProgress('')
+
+      Alert.alert(
+        strings.settings.advancedAddressRetrieval.verificationCompleteTitle,
+        intl.formatMessage(
+          settingsMessages.advancedAddressRetrievalVerificationCompleteMessage,
+          {
+            total: discoveredAddresses.length,
+            saved: savedCount,
+            utxoCount,
+            historyCount,
+            airdropCount,
+          },
+        ),
+      )
+    } catch (error) {
+      if (error instanceof Error && error.message === 'PAUSED') {
+        setProgress(strings.settings.advancedAddressRetrieval.paused)
+        setIsProcessing(false)
+        return
+      }
+
+      logger.error('Failed to verify addresses', {error})
+      Alert.alert(
+        strings.settings.advancedAddressRetrieval.errorTitle,
+        error instanceof Error
+          ? error.message
+          : strings.settings.advancedAddressRetrieval.verificationError,
+      )
+      setIsProcessing(false)
+    }
+  }, [
+    discoveredAddresses,
+    networkManager.legacyApiBaseUrl,
+    manualAddressStorage,
+    addressCache,
+    strings.settings.advancedAddressRetrieval,
+    intl,
+    wallet,
+  ])
+
+  // Step 1: Discovery - Just discover addresses
+  const handleDiscovery = React.useCallback(
+    async (rootKeyHex?: string) => {
       const accountCount = parseInt(numAccounts, 10)
       const addressCount = parseInt(numAddressesPerAccount, 10)
 
@@ -48,153 +258,106 @@ export const AdvancedAddressRetrievalScreen = () => {
         addressCount > 10000
       ) {
         Alert.alert(
-          'Invalid Input',
-          'Please enter valid numbers: accounts (1-1000) and addresses per account (1-10000).',
+          strings.settings.advancedAddressRetrieval.invalidInputTitle,
+          strings.settings.advancedAddressRetrieval.invalidInputMessage,
         )
         return
       }
 
-      setIsGenerating(true)
+      setIsProcessing(true)
+      setStep('discovery')
       setProgress('')
 
       try {
         setProgress(
-          `Generating ${accountCount} accounts with ${addressCount} addresses each...`,
+          intl.formatMessage(
+            settingsMessages.advancedAddressRetrievalDiscoveringProgress,
+            {accountCount, addressCount},
+          ),
         )
 
-        const addresses = await deriveAddressesForAccounts({
-          rootKeyHex,
-          accountCount,
-          addressesPerAccount: addressCount,
-          implementation: meta.implementation,
-          chainId: networkManager.chainId,
-        })
+        let addresses: Array<{
+          accountIndex: number
+          accountPublicKey: string
+          addresses: Array<{
+            index: number
+            address: string
+            derivationPath: string
+          }>
+        }>
 
-        setProgress('Exporting to file...')
+        if (isHardwareWallet) {
+          const encryptedStorage = makeWalletEncryptedStorage(wallet.id)
+          const storedAccountPubKeys: Array<{
+            accountIndex: number
+            accountPubKeyHex: string
+          }> = []
 
-        // Create CSV content
-        const csvRows = [
-          ['Account', 'Address Index', 'Address', 'Derivation Path'].join(','),
-        ]
+          for (let accountIndex = 0; accountIndex < 100; accountIndex++) {
+            try {
+              const accountPubKeyHex =
+                await encryptedStorage.xpub.read(accountIndex)
+              if (accountPubKeyHex) {
+                storedAccountPubKeys.push({accountIndex, accountPubKeyHex})
+              }
+            } catch {
+              // Account public key not found, skip
+            }
+          }
 
-        addresses.forEach((accountData) => {
-          accountData.addresses.forEach((addr, index) => {
-            csvRows.push(
-              [
-                accountData.accountIndex,
-                index,
-                addr.address,
-                addr.derivationPath,
-              ].join(','),
+          if (storedAccountPubKeys.length === 0) {
+            throw new Error(
+              strings.settings.advancedAddressRetrieval.noStoredAccountKeys,
             )
+          }
+
+          addresses = await deriveAddressesFromAccountPubKeys({
+            accountPubKeys: storedAccountPubKeys,
+            addressesPerAccount: addressCount,
+            implementation: meta.implementation,
+            chainId: networkManager.chainId,
+          })
+        } else {
+          if (!rootKeyHex) {
+            throw new Error(
+              strings.settings.advancedAddressRetrieval.rootKeyRequired,
+            )
+          }
+          addresses = await deriveAddressesForAccounts({
+            rootKeyHex,
+            accountCount,
+            addressesPerAccount: addressCount,
+            implementation: meta.implementation,
+            chainId: networkManager.chainId,
+          })
+        }
+
+        // Flatten addresses for easier processing
+        const flatAddresses: DiscoveredAddress[] = []
+        addresses.forEach((accountData) => {
+          accountData.addresses.forEach((addr) => {
+            flatAddresses.push({
+              accountIndex: accountData.accountIndex,
+              addressIndex: addr.index,
+              address: addr.address,
+              derivationPath: addr.derivationPath,
+            })
           })
         })
 
-        const csvContent = csvRows.join('\n')
-
-        // Create JSON content
-        const jsonContent = JSON.stringify(
-          {
-            generatedAt: new Date().toISOString(),
-            walletId: wallet.id,
-            accountCount,
-            addressesPerAccount: addressCount,
-            accounts: addresses.map((accountData) => ({
-              accountIndex: accountData.accountIndex,
-              accountPublicKey: accountData.accountPublicKey,
-              addresses: accountData.addresses.map((addr) => ({
-                index: addr.index,
-                address: addr.address,
-                derivationPath: addr.derivationPath,
-              })),
-            })),
-          },
-          null,
-          2,
-        )
-
-        // Save files to Downloads folder
-        const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
-        const csvFileName = `yoroi-addresses-${timestamp}.csv`
-        const jsonFileName = `yoroi-addresses-${timestamp}.json`
-
-        setProgress('Saving files to Downloads...')
-
-        if (Platform.OS === 'android') {
-          // Android: Use Storage Access Framework to save to Downloads
-          try {
-            const permissions =
-              await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync()
-            if (!permissions.granted) {
-              throw new Error('Storage permission denied')
-            }
-
-            const csvUri =
-              await FileSystem.StorageAccessFramework.createFileAsync(
-                permissions.directoryUri,
-                csvFileName,
-                'text/csv',
-              )
-            await FileSystem.writeAsStringAsync(csvUri, csvContent, {
-              encoding: FileSystem.EncodingType.UTF8,
-            })
-
-            const jsonUri =
-              await FileSystem.StorageAccessFramework.createFileAsync(
-                permissions.directoryUri,
-                jsonFileName,
-                'application/json',
-              )
-            await FileSystem.writeAsStringAsync(jsonUri, jsonContent, {
-              encoding: FileSystem.EncodingType.UTF8,
-            })
-
-            setProgress('')
-            Alert.alert(
-              'Success',
-              `Successfully generated ${addresses.length} accounts with addresses.\n\nFiles saved to Downloads:\n• ${csvFileName}\n• ${jsonFileName}`,
-            )
-          } catch (error) {
-            // Fallback to document directory if Storage Access Framework fails
-            if (!FileSystem.documentDirectory) {
-              throw new Error('Document directory not available')
-            }
-            const csvPath = `${FileSystem.documentDirectory}${csvFileName}`
-            const jsonPath = `${FileSystem.documentDirectory}${jsonFileName}`
-            await FileSystem.writeAsStringAsync(csvPath, csvContent)
-            await FileSystem.writeAsStringAsync(jsonPath, jsonContent)
-            setProgress('')
-            Alert.alert(
-              'Success',
-              `Successfully generated ${addresses.length} accounts with addresses.\n\nFiles saved:\n• ${csvFileName}\n• ${jsonFileName}\n\nFiles are saved in the app's document directory.`,
-            )
-          }
-        } else {
-          // iOS: Save to documentDirectory (accessible via Files app)
-          if (!FileSystem.documentDirectory) {
-            throw new Error('Document directory not available')
-          }
-          const csvPath = `${FileSystem.documentDirectory}${csvFileName}`
-          const jsonPath = `${FileSystem.documentDirectory}${jsonFileName}`
-          await FileSystem.writeAsStringAsync(csvPath, csvContent)
-          await FileSystem.writeAsStringAsync(jsonPath, jsonContent)
-          setProgress('')
-          Alert.alert(
-            'Success',
-            `Successfully generated ${addresses.length} accounts with addresses.\n\nFiles saved:\n• ${csvFileName}\n• ${jsonFileName}\n\nFiles are saved in the app's document directory. You can access them via the Files app.`,
-          )
-        }
+        setDiscoveredAddresses(flatAddresses)
+        setProgress('')
+        setIsProcessing(false)
+        setStep('discovered') // New step: addresses discovered, ready for export or verification
       } catch (error) {
-        logger.error('Failed to generate addresses', {error})
+        logger.error('Failed to discover addresses', {error})
         Alert.alert(
-          'Error',
+          strings.settings.advancedAddressRetrieval.errorTitle,
           error instanceof Error
             ? error.message
-            : 'Failed to generate addresses. Please try again.',
+            : strings.settings.advancedAddressRetrieval.discoveryError,
         )
-      } finally {
-        setIsGenerating(false)
-        setProgress('')
+        setIsProcessing(false)
       }
     },
     [
@@ -203,236 +366,146 @@ export const AdvancedAddressRetrievalScreen = () => {
       wallet.id,
       meta.implementation,
       networkManager.chainId,
+      isHardwareWallet,
+      strings.settings.advancedAddressRetrieval,
+      intl,
     ],
   )
 
-  const handleGenerateForHardwareWallet = React.useCallback(async () => {
-    const addressCount = parseInt(numAddressesPerAccount, 10)
-
-    if (!addressCount || addressCount < 1 || addressCount > 10000) {
-      Alert.alert(
-        'Invalid Input',
-        'Please enter a valid number of addresses per account (1-10000).',
-      )
+  // Export discovered addresses to CSV
+  const handleExport = React.useCallback(async () => {
+    if (discoveredAddresses.length === 0) {
       return
     }
 
-    setIsGenerating(true)
-    setProgress('')
+    setIsProcessing(true)
+    setProgress(strings.settings.advancedAddressRetrieval.exportingCsv)
 
     try {
-      setProgress('Reading stored account public keys...')
-      const encryptedStorage = makeWalletEncryptedStorage(wallet.id)
-
-      // Check which account public keys are stored (typically 0, but could be more)
-      // We'll check accounts 0-99 to find stored ones
-      const storedAccountPubKeys: Array<{
-        accountIndex: number
-        accountPubKeyHex: string
-      }> = []
-
-      for (let accountIndex = 0; accountIndex < 100; accountIndex++) {
-        try {
-          const accountPubKeyHex =
-            await encryptedStorage.xpub.read(accountIndex)
-          if (accountPubKeyHex) {
-            storedAccountPubKeys.push({accountIndex, accountPubKeyHex})
-          }
-        } catch {
-          // Account public key not found, skip
-        }
-      }
-
-      if (storedAccountPubKeys.length === 0) {
-        throw new Error(
-          'No stored account public keys found. Hardware wallets need to have accounts set up first.',
-        )
-      }
-
-      setProgress(
-        `Generating addresses for ${storedAccountPubKeys.length} stored account(s)...`,
-      )
-
-      const addresses = await deriveAddressesFromAccountPubKeys({
-        accountPubKeys: storedAccountPubKeys,
-        addressesPerAccount: addressCount,
-        implementation: meta.implementation,
-        chainId: networkManager.chainId,
-      })
-
-      setProgress('Exporting to file...')
-
-      // Create CSV content
+      // Export CSV
       const csvRows = [
-        ['Account', 'Address Index', 'Address', 'Derivation Path'].join(','),
+        [
+          strings.settings.advancedAddressRetrieval.csvHeaderAccount,
+          strings.settings.advancedAddressRetrieval.csvHeaderAddressIndex,
+          strings.settings.advancedAddressRetrieval.csvHeaderAddress,
+          strings.settings.advancedAddressRetrieval.csvHeaderDerivationPath,
+        ].join(','),
       ]
 
-      addresses.forEach((accountData) => {
-        accountData.addresses.forEach((addr, index) => {
-          csvRows.push(
-            [
-              accountData.accountIndex,
-              index,
-              addr.address,
-              addr.derivationPath,
-            ].join(','),
-          )
-        })
+      discoveredAddresses.forEach((addr) => {
+        csvRows.push(
+          [
+            addr.accountIndex,
+            addr.addressIndex,
+            addr.address,
+            addr.derivationPath,
+          ].join(','),
+        )
       })
 
       const csvContent = csvRows.join('\n')
-
-      // Create JSON content
-      const jsonContent = JSON.stringify(
-        {
-          generatedAt: new Date().toISOString(),
-          walletId: wallet.id,
-          accountCount: storedAccountPubKeys.length,
-          addressesPerAccount: addressCount,
-          accounts: addresses.map((accountData) => ({
-            accountIndex: accountData.accountIndex,
-            accountPublicKey: accountData.accountPublicKey,
-            addresses: accountData.addresses.map((addr) => ({
-              index: addr.index,
-              address: addr.address,
-              derivationPath: addr.derivationPath,
-            })),
-          })),
-        },
-        null,
-        2,
-      )
-
-      // Save files to Downloads folder
       const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
       const csvFileName = `yoroi-addresses-${timestamp}.csv`
-      const jsonFileName = `yoroi-addresses-${timestamp}.json`
 
-      setProgress('Saving files to Downloads...')
+      await saveCsvToDownloads(csvContent, csvFileName)
 
-      if (Platform.OS === 'android') {
-        // Android: Use Storage Access Framework to save to Downloads
-        try {
-          const permissions =
-            await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync()
-          if (!permissions.granted) {
-            throw new Error('Storage permission denied')
-          }
+      setProgress('')
+      setIsProcessing(false)
 
-          const csvUri =
-            await FileSystem.StorageAccessFramework.createFileAsync(
-              permissions.directoryUri,
-              csvFileName,
-              'text/csv',
-            )
-          await FileSystem.writeAsStringAsync(csvUri, csvContent, {
-            encoding: FileSystem.EncodingType.UTF8,
-          })
-
-          const jsonUri =
-            await FileSystem.StorageAccessFramework.createFileAsync(
-              permissions.directoryUri,
-              jsonFileName,
-              'application/json',
-            )
-          await FileSystem.writeAsStringAsync(jsonUri, jsonContent, {
-            encoding: FileSystem.EncodingType.UTF8,
-          })
-
-          setProgress('')
-          Alert.alert(
-            'Success',
-            `Successfully generated addresses for ${storedAccountPubKeys.length} stored account(s).\n\nFiles saved to Downloads:\n• ${csvFileName}\n• ${jsonFileName}`,
-          )
-        } catch (error) {
-          // Fallback to document directory if Storage Access Framework fails
-          if (!FileSystem.documentDirectory) {
-            throw new Error('Document directory not available')
-          }
-          const csvPath = `${FileSystem.documentDirectory}${csvFileName}`
-          const jsonPath = `${FileSystem.documentDirectory}${jsonFileName}`
-          await FileSystem.writeAsStringAsync(csvPath, csvContent)
-          await FileSystem.writeAsStringAsync(jsonPath, jsonContent)
-          setProgress('')
-          Alert.alert(
-            'Success',
-            `Successfully generated addresses for ${storedAccountPubKeys.length} stored account(s).\n\nFiles saved:\n• ${csvFileName}\n• ${jsonFileName}\n\nFiles are saved in the app's document directory.`,
-          )
-        }
-      } else {
-        // iOS: Save to documentDirectory (accessible via Files app)
-        if (!FileSystem.documentDirectory) {
-          throw new Error('Document directory not available')
-        }
-        const csvPath = `${FileSystem.documentDirectory}${csvFileName}`
-        const jsonPath = `${FileSystem.documentDirectory}${jsonFileName}`
-        await FileSystem.writeAsStringAsync(csvPath, csvContent)
-        await FileSystem.writeAsStringAsync(jsonPath, jsonContent)
-        setProgress('')
-        Alert.alert(
-          'Success',
-          `Successfully generated addresses for ${storedAccountPubKeys.length} stored account(s).\n\nFiles saved:\n• ${csvFileName}\n• ${jsonFileName}\n\nFiles are saved in the app's document directory. You can access them via the Files app.`,
-        )
-      }
-    } catch (error) {
-      logger.error('Failed to generate addresses', {error})
       Alert.alert(
-        'Error',
+        strings.settings.advancedAddressRetrieval.exportCompleteTitle,
+        intl.formatMessage(
+          settingsMessages.advancedAddressRetrievalExportCompleteMessage,
+          {count: discoveredAddresses.length, fileName: csvFileName},
+        ),
+      )
+    } catch (error) {
+      logger.error('Failed to export CSV', {error})
+      Alert.alert(
+        strings.settings.advancedAddressRetrieval.errorTitle,
         error instanceof Error
           ? error.message
-          : 'Failed to generate addresses. Please try again.',
+          : strings.settings.advancedAddressRetrieval.exportError,
       )
-    } finally {
-      setIsGenerating(false)
-      setProgress('')
+      setIsProcessing(false)
     }
-  }, [
-    numAddressesPerAccount,
-    wallet.id,
-    meta.implementation,
-    networkManager.chainId,
-  ])
+  }, [discoveredAddresses, strings.settings.advancedAddressRetrieval, intl])
+
+  const handlePause = React.useCallback(() => {
+    setIsPaused(true)
+    isPausedRef.current = true
+  }, [])
+
+  const handleResume = React.useCallback(() => {
+    setIsPaused(false)
+    isPausedRef.current = false
+    handleVerification()
+  }, [handleVerification])
 
   const handleGenerate = React.useCallback(() => {
     if (isHardwareWallet) {
-      handleGenerateForHardwareWallet()
-      return
-    }
-
-    const accountCount = parseInt(numAccounts, 10)
-    const addressCount = parseInt(numAddressesPerAccount, 10)
-
-    if (
-      !accountCount ||
-      accountCount < 1 ||
-      accountCount > 1000 ||
-      !addressCount ||
-      addressCount < 1 ||
-      addressCount > 10000
-    ) {
-      Alert.alert(
-        'Invalid Input',
-        'Please enter valid numbers: accounts (1-1000) and addresses per account (1-10000).',
-      )
+      handleDiscovery()
       return
     }
 
     promptRootKey({
-      title: 'Enter Wallet Password',
-      summary: 'Enter your wallet password to generate addresses.',
-      onSuccess: handleGenerateWithRootKey,
+      title: strings.settings.advancedAddressRetrieval.enterPasswordTitle,
+      summary: strings.settings.advancedAddressRetrieval.enterPasswordSummary,
+      onSuccess: (rootKeyHex) => handleDiscovery(rootKeyHex),
       onError: (error: unknown) => {
         logger.error('Password error', {error})
       },
     })
   }, [
     isHardwareWallet,
-    numAccounts,
-    numAddressesPerAccount,
     promptRootKey,
-    handleGenerateWithRootKey,
-    handleGenerateForHardwareWallet,
+    handleDiscovery,
+    strings.settings.advancedAddressRetrieval.enterPasswordTitle,
+    strings.settings.advancedAddressRetrieval.enterPasswordSummary,
   ])
+
+  const saveCsvToDownloads = async (
+    csvContent: string,
+    fileName: string,
+  ): Promise<void> => {
+    if (Platform.OS === 'android') {
+      try {
+        const permissions =
+          await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync()
+        if (!permissions.granted) {
+          throw new Error('Storage permission denied')
+        }
+
+        const csvUri = await FileSystem.StorageAccessFramework.createFileAsync(
+          permissions.directoryUri,
+          fileName,
+          'text/csv',
+        )
+        await FileSystem.writeAsStringAsync(csvUri, csvContent, {
+          encoding: FileSystem.EncodingType.UTF8,
+        })
+      } catch (error) {
+        // Fallback to document directory
+        if (!FileSystem.documentDirectory) {
+          throw new Error('Document directory not available')
+        }
+        const csvPath = `${FileSystem.documentDirectory}${fileName}`
+        await FileSystem.writeAsStringAsync(csvPath, csvContent)
+      }
+    } else {
+      if (!FileSystem.documentDirectory) {
+        throw new Error('Document directory not available')
+      }
+      const csvPath = `${FileSystem.documentDirectory}${fileName}`
+      await FileSystem.writeAsStringAsync(csvPath, csvContent)
+    }
+  }
+
+  const canStartDiscovery =
+    !isProcessing &&
+    (!isHardwareWallet
+      ? numAccounts && numAddressesPerAccount
+      : numAddressesPerAccount)
 
   return (
     <KeyboardAvoidingView style={[ta.bg_color_max, a.flex_1]} enabled>
@@ -445,48 +518,166 @@ export const AdvancedAddressRetrievalScreen = () => {
           bounces={false}
           keyboardShouldPersistTaps="handled"
         >
-          <View style={a.gap_sm}>
-            <Text style={[a.heading_3_medium, {color: p.gray_900}]}>
-              Advanced Address Retrieval
-            </Text>
-
-            <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
-              Generate addresses from multiple accounts for airdrop recovery.
-              This tool will derive addresses from your wallet seed phrase.
-            </Text>
-          </View>
+          <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+            {strings.settings.advancedAddressRetrieval.description}
+          </Text>
 
           <Space.Height.lg />
 
-          {!isHardwareWallet && (
-            <AccountsInput
-              returnKeyType="done"
-              errorDelay={0}
-              enablesReturnKeyAutomatically
-              label="Number of Accounts"
-              value={numAccounts}
-              onChangeText={setNumAccounts}
-              placeholder="e.g., 10"
-              keyboardType="numeric"
-              editable={!isGenerating}
-              helper="Enter the number of accounts to generate (1-1000)"
-            />
+          {step === 'discovery' && (
+            <>
+              {!isHardwareWallet && (
+                <AccountsInput
+                  returnKeyType="done"
+                  errorDelay={0}
+                  enablesReturnKeyAutomatically
+                  label={
+                    strings.settings.advancedAddressRetrieval.numberOfAccounts
+                  }
+                  value={numAccounts}
+                  onChangeText={setNumAccounts}
+                  placeholder={
+                    strings.settings.advancedAddressRetrieval
+                      .numberOfAccountsPlaceholder
+                  }
+                  keyboardType="numeric"
+                  editable={!isProcessing}
+                  helper={
+                    strings.settings.advancedAddressRetrieval
+                      .numberOfAccountsHelper
+                  }
+                />
+              )}
+
+              <AddressesInput
+                returnKeyType="done"
+                errorDelay={0}
+                enablesReturnKeyAutomatically
+                label={
+                  strings.settings.advancedAddressRetrieval.addressesPerAccount
+                }
+                value={numAddressesPerAccount}
+                onChangeText={setNumAddressesPerAccount}
+                placeholder={
+                  strings.settings.advancedAddressRetrieval
+                    .addressesPerAccountPlaceholder
+                }
+                keyboardType="numeric"
+                editable={!isProcessing}
+                helper={
+                  strings.settings.advancedAddressRetrieval
+                    .addressesPerAccountHelper
+                }
+              />
+            </>
           )}
 
-          <AddressesInput
-            returnKeyType="done"
-            errorDelay={0}
-            enablesReturnKeyAutomatically
-            label="Addresses per Account"
-            value={numAddressesPerAccount}
-            onChangeText={setNumAddressesPerAccount}
-            placeholder="e.g., 20"
-            keyboardType="numeric"
-            editable={!isGenerating && !isHardwareWallet}
-            helper="Enter the number of addresses to generate per account (1-10000)"
-          />
+          {step === 'discovered' && (
+            <View style={a.gap_md}>
+              <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
+                {intl.formatMessage(
+                  settingsMessages.advancedAddressRetrievalDiscoveryCompleteMessage,
+                  {count: discoveredAddresses.length},
+                )}
+              </Text>
+              <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+                {
+                  strings.settings.advancedAddressRetrieval
+                    .discoveryCompleteDescription
+                }
+              </Text>
+            </View>
+          )}
 
-          {progress ? (
+          {step === 'verification' && (
+            <View style={a.gap_md}>
+              <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
+                {strings.settings.advancedAddressRetrieval.checkingAddressesFor}
+              </Text>
+              {progress && (
+                <View
+                  style={[
+                    a.p_md,
+                    a.rounded_md,
+                    {backgroundColor: p.primary_100},
+                  ]}
+                >
+                  <Text style={[a.body_2_md_regular, {color: p.gray_900}]}>
+                    {progress}
+                  </Text>
+                </View>
+              )}
+              {discoveredAddresses.length > 0 && (
+                <View style={a.gap_sm}>
+                  <Text style={[a.body_2_md_regular, {color: p.gray_900}]}>
+                    {intl.formatMessage(
+                      settingsMessages.advancedAddressRetrievalProgress,
+                      {
+                        processed: processedCount,
+                        total: discoveredAddresses.length,
+                      },
+                    )}
+                  </Text>
+                  <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+                    {intl.formatMessage(
+                      settingsMessages.advancedAddressRetrievalWithUtxos,
+                      {count: utxoCount},
+                    )}
+                  </Text>
+                  <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+                    {intl.formatMessage(
+                      settingsMessages.advancedAddressRetrievalWithHistory,
+                      {count: historyCount},
+                    )}
+                  </Text>
+                  <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+                    {intl.formatMessage(
+                      settingsMessages.advancedAddressRetrievalEligibleForAirdrop,
+                      {count: airdropCount},
+                    )}
+                  </Text>
+                </View>
+              )}
+            </View>
+          )}
+
+          {step === 'complete' && (
+            <View style={a.gap_md}>
+              <Text style={[a.body_1_lg_regular, {color: p.gray_900}]}>
+                {strings.settings.advancedAddressRetrieval.processComplete}
+              </Text>
+              {savedTotalCount > 0 && (
+                <View style={a.gap_sm}>
+                  <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+                    {
+                      strings.settings.advancedAddressRetrieval
+                        .addressesSavedToWallet
+                    }
+                  </Text>
+                  <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+                    {intl.formatMessage(
+                      settingsMessages.advancedAddressRetrievalWithUtxos,
+                      {count: savedUtxoCount},
+                    )}
+                  </Text>
+                  <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+                    {intl.formatMessage(
+                      settingsMessages.advancedAddressRetrievalWithHistory,
+                      {count: savedHistoryCount},
+                    )}
+                  </Text>
+                  <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
+                    {intl.formatMessage(
+                      settingsMessages.advancedAddressRetrievalEligibleForAirdrop,
+                      {count: savedAirdropCount},
+                    )}
+                  </Text>
+                </View>
+              )}
+            </View>
+          )}
+
+          {progress && step !== 'verification' && (
             <View
               style={[a.p_md, a.rounded_md, {backgroundColor: p.primary_100}]}
             >
@@ -494,35 +685,90 @@ export const AdvancedAddressRetrievalScreen = () => {
                 {progress}
               </Text>
             </View>
-          ) : null}
+          )}
 
           <Space.Height.lg />
 
           {isHardwareWallet ? (
             <WarningBanner
-              title="Hardware Wallet Mode"
-              content="For hardware wallets, addresses will be generated only for accounts that have already been set up and have their public keys stored. New accounts cannot be derived without connecting to your hardware device."
+              title={
+                strings.settings.advancedAddressRetrieval.hardwareWalletTitle
+              }
+              content={
+                strings.settings.advancedAddressRetrieval.hardwareWalletContent
+              }
             />
           ) : (
             <WarningBanner
-              title="Important"
-              content="This feature generates addresses from your wallet seed phrase. Make sure you are in a secure environment and do not share the exported files with untrusted parties."
+              title={strings.settings.advancedAddressRetrieval.importantTitle}
+              content={
+                strings.settings.advancedAddressRetrieval.importantContent
+              }
             />
           )}
         </ScrollView>
 
         <Actions>
-          <Button
-            onPress={handleGenerate}
-            disabled={
-              isGenerating ||
-              (!isHardwareWallet && !numAccounts) ||
-              !numAddressesPerAccount
-            }
-            title={
-              isGenerating ? 'Generating...' : 'Generate & Export Addresses'
-            }
-          />
+          {step === 'discovery' && (
+            <Button
+              onPress={handleGenerate}
+              disabled={!canStartDiscovery}
+              title={
+                isProcessing
+                  ? strings.settings.advancedAddressRetrieval.discovering
+                  : strings.settings.advancedAddressRetrieval.discover
+              }
+            />
+          )}
+
+          {step === 'discovered' && (
+            <View style={a.gap_sm}>
+              <Button
+                onPress={handleVerification}
+                title={strings.settings.advancedAddressRetrieval.checkAddresses}
+              />
+              <Button
+                onPress={handleExport}
+                disabled={isProcessing}
+                type={ButtonType.Secondary}
+                title={
+                  isProcessing
+                    ? strings.settings.advancedAddressRetrieval.exportingCsv
+                    : strings.settings.advancedAddressRetrieval.exportCsv
+                }
+              />
+            </View>
+          )}
+
+          {step === 'verification' && (
+            <View style={a.gap_sm}>
+              {isPaused ? (
+                <Button
+                  onPress={handleResume}
+                  title={
+                    strings.settings.advancedAddressRetrieval.resumeChecking
+                  }
+                />
+              ) : (
+                <Button
+                  onPress={handlePause}
+                  disabled={!isProcessing}
+                  title={strings.settings.advancedAddressRetrieval.pause}
+                />
+              )}
+            </View>
+          )}
+
+          {step === 'complete' && (
+            <Button
+              onPress={() => {
+                setStep('discovery')
+                setDiscoveredAddresses([])
+                setProcessedCount(0)
+              }}
+              title={strings.settings.advancedAddressRetrieval.startOver}
+            />
+          )}
         </Actions>
       </SafeAreaView>
     </KeyboardAvoidingView>

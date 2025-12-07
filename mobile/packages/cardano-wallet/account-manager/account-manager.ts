@@ -1,6 +1,5 @@
 import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
-import {parseSafe} from '@yoroi/common'
-import {getLogger} from '@yoroi/common'
+import {getLogger, parseSafe} from '@yoroi/common'
 import {
   Address,
   App,
@@ -27,7 +26,6 @@ export type AddressGenerator = {
   toJSON(): AddressGeneratorJSON
 }
 
-// NOTE: needs full refactor
 export function createAddressGenerator(
   accountPubKeyHex: string,
   role: number,

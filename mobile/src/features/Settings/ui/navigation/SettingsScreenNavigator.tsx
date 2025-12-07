@@ -220,7 +220,7 @@ export const SettingsScreenNavigator = () => {
         name="advanced-address-retrieval"
         getComponent={() => AdvancedAddressRetrievalScreen}
         options={{
-          title: 'Advanced Address Retrieval',
+          title: strings.settings.advancedAddressRetrieval.title,
         }}
       />
     </Stack.Navigator>
