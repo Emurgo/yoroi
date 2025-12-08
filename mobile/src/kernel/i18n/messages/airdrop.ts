@@ -57,6 +57,10 @@ export const airdropMessages = defineMessages({
     id: 'airdrop.currentThaw',
     defaultMessage: '!!!Current thaw',
   },
+  nextThaw: {
+    id: 'airdrop.nextThaw',
+    defaultMessage: '!!!Next thaw',
+  },
   endsIn: {
     id: 'airdrop.endsIn',
     defaultMessage: '!!!Ends in',
@@ -148,6 +152,24 @@ export const airdropMessages = defineMessages({
   destinationAddressNumber: {
     id: 'airdrop.destinationAddressNumber',
     defaultMessage: '!!!Destination address {number}',
+  },
+  redeemableNowInfoTitle: {
+    id: 'airdrop.redeemableNowInfoTitle',
+    defaultMessage: '!!!Redeemable now',
+  },
+  redeemableNowInfoMessage: {
+    id: 'airdrop.redeemableNowInfoMessage',
+    defaultMessage:
+      '!!!Each thaw cycle you can redeem a certain amount of NIGHT. There are 4 cycles in total, where you will be able to redeem your airdrop reward 4 times.',
+  },
+  destinationAddressInfoTitle: {
+    id: 'airdrop.destinationAddressInfoTitle',
+    defaultMessage: '!!!Destination address',
+  },
+  destinationAddressInfoMessage: {
+    id: 'airdrop.destinationAddressInfoMessage',
+    defaultMessage:
+      '!!!Your "Destination address" for the Midnight (NIGHT) Glacier Drop airdrop is a new, unused Cardano (ADA) wallet address where you\'ll receive your NIGHT tokens.',
   },
   apply: {
     id: 'airdrop.apply',

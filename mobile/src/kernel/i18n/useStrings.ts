@@ -292,6 +292,7 @@ export const useStrings = () => {
         totalLeftToRedeem: f(airdropMessages.totalLeftToRedeem),
         redeemableNow: f(airdropMessages.redeemableNow),
         currentThaw: f(airdropMessages.currentThaw),
+        nextThaw: f(airdropMessages.nextThaw),
         endsIn: f(airdropMessages.endsIn),
         startsIn: f(airdropMessages.startsIn),
         active: f(airdropMessages.active),
@@ -301,6 +302,14 @@ export const useStrings = () => {
         ),
         destinationAddressTitle: f(airdropMessages.destinationAddressTitle),
         destinationAddressNumber: f(airdropMessages.destinationAddressNumber),
+        redeemableNowInfoTitle: f(airdropMessages.redeemableNowInfoTitle),
+        redeemableNowInfoMessage: f(airdropMessages.redeemableNowInfoMessage),
+        destinationAddressInfoTitle: f(
+          airdropMessages.destinationAddressInfoTitle,
+        ),
+        destinationAddressInfoMessage: f(
+          airdropMessages.destinationAddressInfoMessage,
+        ),
         apply: f(airdropMessages.apply),
         thawSchedule: f(airdropMessages.thawSchedule),
         thawScheduleDescription: f(airdropMessages.thawScheduleDescription),

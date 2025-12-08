@@ -180,11 +180,42 @@ export const useAirdropAddressCache = () => {
     }
   }
 
+  const getExternalAddressesList = async (): Promise<string[]> => {
+    try {
+      const addressesJson = await cacheStorage.getItem<string>(EXTERNAL_KEY)
+      if (!addressesJson) {
+        return []
+      }
+      const addresses = JSON.parse(addressesJson) as string[]
+      return addresses
+    } catch (error) {
+      logger.warn('Failed to read external addresses cache', {error})
+      return []
+    }
+  }
+
+  const getExternalAddressNumber = async (
+    address: string,
+  ): Promise<number | null> => {
+    try {
+      const addresses = await getExternalAddressesList()
+      const index = addresses.indexOf(address)
+      return index >= 0 ? index + 1 : null
+    } catch (error) {
+      logger.warn('Failed to get external address number', {error})
+      return null
+    }
+  }
+
   const addExternalAddress = async (address: string): Promise<void> => {
     try {
-      const external = await getExternalAddresses()
-      external.add(address)
-      await cacheStorage.setItem(EXTERNAL_KEY, JSON.stringify([...external]))
+      const external = await getExternalAddressesList()
+      // Don't add if already exists
+      if (external.includes(address)) {
+        return
+      }
+      external.push(address)
+      await cacheStorage.setItem(EXTERNAL_KEY, JSON.stringify(external))
     } catch (error) {
       logger.error('Failed to add external address to cache', {
         address,
@@ -195,9 +226,12 @@ export const useAirdropAddressCache = () => {
 
   const removeExternalAddress = async (address: string): Promise<void> => {
     try {
-      const external = await getExternalAddresses()
-      external.delete(address)
-      await cacheStorage.setItem(EXTERNAL_KEY, JSON.stringify([...external]))
+      const external = await getExternalAddressesList()
+      const index = external.indexOf(address)
+      if (index >= 0) {
+        external.splice(index, 1)
+        await cacheStorage.setItem(EXTERNAL_KEY, JSON.stringify(external))
+      }
     } catch (error) {
       logger.error('Failed to remove external address from cache', {
         address,
@@ -225,6 +259,8 @@ export const useAirdropAddressCache = () => {
     getEligibleAddresses,
     getNotEligibleAddresses,
     getExternalAddresses,
+    getExternalAddressesList,
+    getExternalAddressNumber,
     updateEligibleAddress,
     addNotEligibleAddress,
     addExternalAddress,

@@ -20,6 +20,7 @@ import {Space} from '~/ui/Space/Space'
 import {useAirdropEligibility} from '../common/useAirdropEligibility'
 import {useRedeemThaw} from '../common/useRedeemThaw'
 import type {Thaw} from '../types'
+import {useRedeemableNowInfoModal} from './InfoModals'
 import type {AirdropRoutes} from './types'
 
 const NIGHT_DECIMALS = 6
@@ -85,6 +86,7 @@ const getCurrentThawIndex = (thaws: ReadonlyArray<Thaw>): number | null => {
 export const AirdropDetailsScreen = () => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
+  const {openRedeemableNowInfoModal} = useRedeemableNowInfoModal()
   const route = useRoute<RouteProp<AirdropRoutes, 'airdrop-main'>>()
   const navigation = useNavigation<StackNavigationProp<AirdropRoutes>>()
   const {allocation} = route.params
@@ -244,7 +246,12 @@ export const AirdropDetailsScreen = () => {
               <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>
                 {strings.airdrop.redeemableNow}
               </Text>
-              <Icon.InfoCircle size={16} color={p.gray_600} />
+              <TouchableOpacity
+                onPress={openRedeemableNowInfoModal}
+                hitSlop={{top: 5, bottom: 5, left: 5, right: 5}}
+              >
+                <Icon.InfoCircle size={16} color={p.gray_600} />
+              </TouchableOpacity>
             </View>
           </View>
 

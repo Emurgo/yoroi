@@ -82,4 +82,6 @@ export interface AddressAllocation {
   redeemedSoFar: number
   totalLeftToRedeem: number
   isExternal?: boolean // True if this is an external address (not owned by wallet)
+  displayName?: string // Display name for the address (e.g., "Manual address 1")
+  nextThawDate?: string | null // ISO date string of next upcoming thaw, or null if all thaws have started
 }
