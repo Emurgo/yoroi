@@ -4,9 +4,10 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
 
 import * as React from 'react'
-import {Alert, Linking, Text, View} from 'react-native'
+import {Alert, Keyboard, Linking, Text, View} from 'react-native'
 
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useIsKeyboardOpen} from '~/hooks/useIsKeyboardOpen'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'
@@ -55,12 +56,31 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
   const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined)
   const showCardRef = React.useRef(showCard)
   const isInputFocusedRef = React.useRef(false)
+  const shouldCloseAfterKeyboardDismissRef = React.useRef(false)
+  const isKeyboardOpen = useIsKeyboardOpen()
 
   React.useEffect(() => {
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current)
     }
   }, [])
+
+  const requestCloseModal = React.useCallback(() => {
+    if (isKeyboardOpen) {
+      shouldCloseAfterKeyboardDismissRef.current = true
+      Keyboard.dismiss()
+      return
+    }
+
+    closeModal()
+  }, [closeModal, isKeyboardOpen])
+
+  React.useEffect(() => {
+    if (!isKeyboardOpen && shouldCloseAfterKeyboardDismissRef.current) {
+      shouldCloseAfterKeyboardDismissRef.current = false
+      closeModal()
+    }
+  }, [closeModal, isKeyboardOpen])
 
   const handleDrepIdChange = React.useCallback(
     (text: string) => {
@@ -114,7 +134,7 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
     try {
       const {hash, type} = parseDrepId(drepId, CardanoMobile)
       onSubmit?.({hash, type, CIP105: !error && drepId.length === 56})
-      closeModal()
+      requestCloseModal()
     } catch (e) {
       Alert.alert(strings.global.error, strings.staking.invalidDRepId)
     }
