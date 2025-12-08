@@ -222,15 +222,21 @@ export const VoteDelegationOperation = ({
 
         <Space.Width.lg />
 
-        <Text
-          style={[
-            a.body_2_md_regular,
-            {color: p.text_gray_medium},
-            strike && {textDecorationLine: 'line-through'},
-          ]}
+        <View
+          style={[a.flex_shrink, {maxWidth: '60%', alignItems: 'flex-end'}]}
         >
-          {CIP129label}
-        </Text>
+          <Text
+            style={[
+              a.body_2_md_regular,
+              {color: p.text_gray_medium, textAlign: 'right'},
+              strike && {textDecorationLine: 'line-through'},
+            ]}
+            ellipsizeMode="middle"
+            numberOfLines={1}
+          >
+            {CIP129label}
+          </Text>
+        </View>
       </View>
 
       <Space.Height.sm />
@@ -244,15 +250,21 @@ export const VoteDelegationOperation = ({
 
         <Space.Width.lg />
 
-        <Text
-          style={[
-            a.body_2_md_regular,
-            {color: p.text_gray_medium},
-            strike && {textDecorationLine: 'line-through'},
-          ]}
+        <View
+          style={[a.flex_shrink, {maxWidth: '60%', alignItems: 'flex-end'}]}
         >
-          {CIP105label}
-        </Text>
+          <Text
+            style={[
+              a.body_2_md_regular,
+              {color: p.text_gray_medium, textAlign: 'right'},
+              strike && {textDecorationLine: 'line-through'},
+            ]}
+            ellipsizeMode="middle"
+            numberOfLines={1}
+          >
+            {CIP105label}
+          </Text>
+        </View>
       </View>
     </>
   )
