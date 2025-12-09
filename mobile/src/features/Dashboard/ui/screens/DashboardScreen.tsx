@@ -1,13 +1,11 @@
-import {createWithdrawalWithGovernanceTxFromWallet} from '@yoroi/cardano-wallet'
-import {isEmptyString} from '@yoroi/cardano-wallet'
-import {Amounts} from '@yoroi/cardano-wallet'
-import {getYoroiDrepIdHex} from '@yoroi/staking'
+import {Amounts, isEmptyString} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {Branded, KeyHash} from '@yoroi/types'
-import {useIsOnline} from '@yoroi/wallet-manager'
-import {useSelectedNetwork} from '@yoroi/wallet-manager'
-import {useSelectedWallet} from '@yoroi/wallet-manager'
-import {useSync} from '@yoroi/wallet-manager'
+import {
+  useIsOnline,
+  useSelectedNetwork,
+  useSelectedWallet,
+  useSync,
+} from '@yoroi/wallet-manager'
 
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {StackNavigationProp} from '@react-navigation/stack'
@@ -78,7 +76,7 @@ export const DashboardScreen = () => {
   const {wallet, meta} = useSelectedWallet()
   const {isPending: isSyncing, sync} = useSync(wallet)
   const isOnline = useIsOnline(wallet)
-  const {openModal, closeModal} = useModal()
+  const {openModal} = useModal()
   const walletNavigateTo = useWalletNavigation()
 
   const balances = useBalances(wallet)
@@ -95,72 +93,30 @@ export const DashboardScreen = () => {
 
   const {isParticipating, isLoading: isGovernanceParticipationLoading} =
     useGovernanceParticipation()
-  const {networkManager} = useSelectedNetwork()
-
-  const [isBuildingCombinedTx, setIsBuildingCombinedTx] = React.useState(false)
 
   const createOnWithdraw =
     ({shouldDeregister}: {shouldDeregister: boolean}) =>
     () => {
-      // For undelegation, always just undelegate without combining with DRep
-      if (shouldDeregister) {
-        createWithdrawalTx({shouldDeregister})
-        return
-      }
-
-      // For withdrawal only, show modal if not participating in governance
+      // Show modal if not participating in governance (for both withdrawal and undelegation)
+      // In Conway era, rewards cannot be withdrawn unless stake credential is already delegated to a DRep
       if (isGovernanceParticipationLoading) {
         return
       }
       if (!isParticipating) {
-        const handleDelegateAndWithdraw = async () => {
-          closeModal()
-          setIsBuildingCombinedTx(true)
-
-          try {
-            // Create combined transaction with withdrawal + DRep delegation
-            const drepValue: {KeyHash: KeyHash} = {
-              KeyHash: Branded.asKeyHash(
-                getYoroiDrepIdHex(wallet.networkManager.network),
-              ),
-            }
-            const result = await createWithdrawalWithGovernanceTxFromWallet(
-              wallet,
-              {
-                shouldDeregister,
-                addressMode: meta.addressMode,
-                networkManager,
-                drepValue,
-              },
-            )
-
-            // Navigate to tx review with combined operations
-            walletNavigateTo.navigateToTxReview({
-              cbor: result.cbor,
-              operations: [<StakeRewardsWithdrawalOperation key="0" />],
-              context: 'withdraw rewards',
-            })
-          } catch {
-            navigateTo.failedTx()
-          } finally {
-            setIsBuildingCombinedTx(false)
-          }
-        }
         openModal({
-          title: strings.staking.withdrawWarningTitle,
+          title: strings.staking.governanceRequiredTitle,
           content: React.createElement(WithdrawGovernanceWarningModal.Content),
-          footer: React.createElement(WithdrawGovernanceWarningModal.Footer, {
-            onDelegateAndWithdraw: handleDelegateAndWithdraw,
-          }),
+          footer: React.createElement(WithdrawGovernanceWarningModal.Footer),
           height: screenHeight * 0.7,
         })
         return
       }
 
+      // If already participating in governance, proceed with withdrawal/undelegation
       createWithdrawalTx({shouldDeregister})
     }
 
-  const isLoading = isWithdrawLoading || isBuildingCombinedTx
+  const isLoading = isWithdrawLoading
 
   return (
     <SafeArea

@@ -54,8 +54,15 @@ export type CreateWithdrawalWithGovernanceTxParams = {
  * 1. Stake rewards withdrawal
  * 2. DRep vote delegation (governance)
  *
- * This allows users to withdraw their staking rewards and delegate voting power
- * to a DRep (like Yoroi) in a single transaction.
+ * ⚠️ NOTE: This transaction is NOT VALID in Conway era.
+ * In Conway era, rewards cannot be withdrawn unless the stake credential is already
+ * delegated to a DRep. Attempting to combine withdrawal + delegation in a single
+ * transaction will fail with `ConwayWdrlNotDelegatedToDRep` error.
+ *
+ * The delegation must happen first in a separate transaction and be confirmed on-chain
+ * before withdrawal is allowed.
+ *
+ * This function is kept for reference but should not be used in Conway era networks.
  */
 export async function createWithdrawalWithGovernanceTx({
   utxos,
