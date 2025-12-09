@@ -1,7 +1,6 @@
 import {formatTokenWithText} from '@yoroi/cardano-wallet'
 import {
-  isBoolean,
-  parseSafe,
+  parseBoolean,
   useAsyncStorage,
   useMutationWithInvalidations,
 } from '@yoroi/common'
@@ -1186,8 +1185,8 @@ const useShowOperationsNotice = (operations: Operations) => {
     queryKey: ['useShowOperationsNotice'],
     queryFn: () =>
       storage.getItem(operationsNoticeShownKey).then((value) => {
-        const parsed = parseSafe(value)
-        return isBoolean(parsed) ? parsed : true
+        // parseBoolean handles both cases: if it's already a boolean, return it; if it's a string, parse it
+        return parseBoolean(value) ?? true
       }),
     placeholderData: false,
     staleTime: Infinity,

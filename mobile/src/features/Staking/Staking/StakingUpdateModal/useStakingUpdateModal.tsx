@@ -1,6 +1,6 @@
 import {getPoolBech32Id} from '@yoroi/cardano-wallet'
 import {
-  isBoolean,
+  parseBoolean,
   useAsyncStorage,
   useMutationWithInvalidations,
 } from '@yoroi/common'
@@ -37,22 +37,12 @@ export const useStakingUpdateModal = () => {
     queryKey: QUERY_KEY,
     queryFn: async () => {
       try {
-        // storage.getItem already parses the value using parseSafe internally
-        // So we get the actual parsed value directly (boolean, string, null, etc.)
+        // parseBoolean handles both cases: if it's already a boolean, return it; if it's a string, parse it
         const storedValue = await storage.getItem(
           STAKING_UPDATE_MODAL_SHOWN_KEY,
         )
 
-        // Since getItem already parses, check if it's already a boolean
-        // If not, it might be a string that needs parsing (shouldn't happen but safe)
-        const result =
-          typeof storedValue === 'boolean'
-            ? storedValue
-            : isBoolean(storedValue)
-              ? storedValue
-              : false
-
-        return result
+        return parseBoolean(storedValue) ?? false
       } catch (error) {
         return false
       }
