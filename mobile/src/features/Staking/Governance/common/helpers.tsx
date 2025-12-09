@@ -1,4 +1,4 @@
-import {CardanoMobile} from '@yoroi/cardano-wallet'
+import {CardanoMobile, isByron} from '@yoroi/cardano-wallet'
 import {isNonNullable, isString, useAsyncStorage} from '@yoroi/common'
 import {
   type StakingKeyState,
@@ -27,7 +27,14 @@ import {useNavigateTo} from './navigation'
 import {useGovernanceVoteFlow} from './useGovernanceVoteFlow'
 
 export const useGovernanceParticipation = () => {
-  const {wallet} = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
+
+  // Skip governance for Byron wallets
+  const isByronWallet = React.useMemo(
+    () => (meta ? isByron(meta.implementation) : false),
+    [meta],
+  )
+
   const stakingKeyHash = useStakingKey(wallet)
   const {
     data: stakingStatus,
@@ -37,8 +44,17 @@ export const useGovernanceParticipation = () => {
 
   useWalletEvent(wallet, 'utxos', refetch)
 
-  const isParticipating = stakingStatus?.drepDelegation != null
-  return {isParticipating, isLoading} as const
+  const isParticipating = React.useMemo(
+    () =>
+      isByronWallet || !stakingKeyHash
+        ? false
+        : stakingStatus?.drepDelegation != null,
+    [isByronWallet, stakingKeyHash, stakingStatus?.drepDelegation],
+  )
+  return {
+    isParticipating,
+    isLoading: isByronWallet ? false : isLoading,
+  } as const
 }
 
 export const useGovernanceStatus = () => {

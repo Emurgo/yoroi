@@ -1,10 +1,12 @@
 import {isError, time} from '@yoroi/common'
+import {isByronAddress} from '@yoroi/tx'
 import {useWalletEvent, useWalletManager} from '@yoroi/wallet-manager'
 
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 import * as React from 'react'
 
 import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
+import {useIsByronWallet} from '~/features/WalletManager/hooks/useIsByronWallet'
 import {persistPrefixKeyword} from '~/kernel/connection/ConnectionProvider'
 import {logger} from '~/kernel/logger/logger'
 
@@ -17,6 +19,7 @@ export const useAirdropEligibility = () => {
   const wallet = walletManager.selected.wallet
   const {config} = useRemoteConfig()
   const isAirdropEnabled = config?.features?.midnightAirdrop?.enabled ?? false
+  const isByronWallet = useIsByronWallet()
   const addressCache = useAirdropAddressCache()
   const queryClient = useQueryClient()
 
@@ -32,7 +35,11 @@ export const useAirdropEligibility = () => {
 
   const query = useQuery({
     queryKey,
-    enabled: isAirdropEnabled && wallet?.isMainnet === true && !!wallet,
+    enabled:
+      isAirdropEnabled &&
+      wallet?.isMainnet === true &&
+      !!wallet &&
+      !isByronWallet,
     staleTime: time.fiveMinutes,
     queryFn: async (): Promise<AddressAllocation[]> => {
       if (!wallet || !wallet.isMainnet) {
@@ -229,6 +236,11 @@ export const useAirdropEligibility = () => {
 
       for (const address of addressesToCheck) {
         try {
+          // Skip Byron addresses - they don't support airdrop
+          if (isByronAddress(address)) {
+            continue
+          }
+
           const schedule = await redemptionApi.getThawSchedule(address)
 
           // Calculate redeemable amount (sum of redeemable thaws)

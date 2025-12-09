@@ -1,3 +1,4 @@
+import {isByron} from '@yoroi/cardano-wallet'
 import {useAsyncStorage} from '@yoroi/common'
 import {App, Notifications as NotificationTypes} from '@yoroi/types'
 import {useWalletManager} from '@yoroi/wallet-manager'
@@ -23,6 +24,10 @@ const buildNotifications = async (
   for (const walletId of walletIds) {
     const wallet = walletManager.getWalletById(walletId)
     if (!wallet) continue
+
+    const meta = walletManager.walletMetas.get(walletId)
+    // Skip Byron wallets - they don't support staking
+    if (meta && isByron(meta.implementation)) continue
 
     const fullStorageKey =
       `wallet/${walletId}/${wallet.networkManager.network}/${storageKey}/` as const

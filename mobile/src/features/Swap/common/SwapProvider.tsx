@@ -1,7 +1,8 @@
-import {convertBech32ToHex} from '@yoroi/cardano-wallet'
+import {convertBech32ToHex, isByron} from '@yoroi/cardano-wallet'
 import {isLeft, isRight, parseNumberFromText} from '@yoroi/common'
 import {isPrimaryToken, primaryTokenId} from '@yoroi/portfolio'
 import {swapManagerMaker, swapStorageMaker} from '@yoroi/swap'
+import {isByronAddress} from '@yoroi/tx'
 import {Api, App, Balance, Branded, Portfolio, Swap} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
@@ -121,13 +122,18 @@ export type SwapContext = SwapState & {
 export const SwapProvider = ({children}: React.PropsWithChildren) => {
   const navigate = useNavigateTo()
   const strings = useStrings()
-  const {wallet} = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
   const {getInputs} = useGetInputs()
   const network = wallet.networkManager.network
   const balances = usePortfolioBalances({wallet})
 
   const {config, isLoading: configLoading} = useRemoteConfig()
   const [isLoading, setIsLoading] = React.useState(false)
+
+  // Skip swap for Byron wallets
+  const isByronWallet = React.useMemo(() => {
+    return meta ? isByron(meta.implementation) : false
+  }, [meta])
 
   // Check if partners are ready and have at least one entry
   const partnersReady = React.useMemo(() => {
@@ -137,24 +143,37 @@ export const SwapProvider = ({children}: React.PropsWithChildren) => {
   }, [configLoading, config?.swap?.partners])
 
   const swapManager = React.useMemo(() => {
+    // Skip swap for Byron wallets
+    if (isByronWallet) return null
+
     // Don't create swapManager until config is loaded and partners are ready
     if (!partnersReady || !config?.swap?.partners) return null
 
-    const address = wallet.externalAddresses()[0]
-    if (!address) throw new App.Errors.InvalidState('No External Address')
+    try {
+      const address = wallet.externalAddresses()[0]
+      if (!address) throw new App.Errors.InvalidState('No External Address')
 
-    const addressHex = convertBech32ToHex(address)
-    const storage = swapStorageMaker()
-    return swapManagerMaker({
-      storage,
-      network,
-      address,
-      addressHex,
-      primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
-      isPrimaryToken,
-      partners: config.swap.partners,
-    })
-  }, [network, wallet, partnersReady, config?.swap?.partners])
+      // Check if address is Byron format - skip swap
+      if (isByronAddress(address)) {
+        return null
+      }
+
+      const addressHex = convertBech32ToHex(address)
+      const storage = swapStorageMaker()
+      return swapManagerMaker({
+        storage,
+        network,
+        address,
+        addressHex,
+        primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
+        isPrimaryToken,
+        partners: config.swap.partners,
+      })
+    } catch (error) {
+      // If address parsing fails (e.g., Byron address), skip swap
+      return null
+    }
+  }, [network, wallet, partnersReady, config?.swap?.partners, isByronWallet])
 
   const {data: orders = [], refetch: refetchOrders} = useQuery({
     queryKey: ['persist', 'useSwapOrders', network, wallet.id],

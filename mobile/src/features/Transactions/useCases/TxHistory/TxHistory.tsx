@@ -4,10 +4,9 @@ import {useSelectedWallet, useSync} from '@yoroi/wallet-manager'
 import {useNavigation} from '@react-navigation/native'
 import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
-import {BackHandler, LayoutAnimation, Platform, Text, View} from 'react-native'
+import {BackHandler, Platform, Text, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
-import infoIcon from '~/assets/img/icon/info-light-green.png'
 import {useAirdropBanner} from '~/features/Airdrop/common/useAirdropBanner'
 import {useBuyCryptoBanner} from '~/features/Exchange/common/useBuyCryptoBanner'
 import {useRequestSystemNotifications} from '~/features/Notifications/common/tools'
@@ -15,11 +14,13 @@ import {useEarnRewardsBanner} from '~/features/Staking/Governance/useCases/EarnR
 import {useGovernanceBanner} from '~/features/Staking/Governance/useCases/useGovernanceBanner'
 import {usePoolTransitionModal} from '~/features/Staking/Staking/PoolTransition/usePoolTransitionModal'
 import {useStakingUpdateModal} from '~/features/Staking/Staking/StakingUpdateModal/useStakingUpdateModal'
+import {useIsByronWallet} from '~/features/WalletManager/hooks/useIsByronWallet'
 import {features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
+import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
 import {Space} from '~/ui/Space/Space'
 
 import {TxFilter} from '../TxList/TxFilterProvider'
@@ -29,7 +30,6 @@ import {ActionsBanner} from './ActionsBanner'
 import {BalanceBanner} from './BalanceBanner'
 import {CollapsibleHeader} from './CollapsibleHeader'
 import {LockedDeposit} from './LockedDeposit'
-import {WarningBanner} from './WarningBanner'
 import {useOnScroll} from './useOnScroll'
 import {useTxFilterModal} from './useTxFilterModal'
 
@@ -55,11 +55,8 @@ export const TxHistory = () => {
 
   useRequestSystemNotifications({enabled: features.pushNotifications})
 
-  const {wallet, meta} = useSelectedWallet()
-
-  const [showWarning, setShowWarning] = React.useState(
-    meta.implementation === 'cardano-bip44',
-  )
+  const {wallet} = useSelectedWallet()
+  const isByronWallet = useIsByronWallet()
 
   const {sync, isPending: isLoadingWallet} = useSync(wallet)
   const {isLoading: isLoadingPoolTransition} = usePoolTransitionModal()
@@ -186,27 +183,21 @@ export const TxHistory = () => {
 
         <Space.Height.xl />
 
+        {isByronWallet && (
+          <View style={[a.px_lg, a.pb_md]}>
+            <InfoBanner
+              title={strings.transactions.byronWalletNoticeTitle}
+              content={strings.transactions.byronWalletNoticeMessage}
+              iconSize={20}
+            />
+          </View>
+        )}
+
         <LockedDeposit />
 
         <Space.Height.md />
 
         {earnRewardsBanner}
-
-        {meta.implementation === 'cardano-bip44' && showWarning && (
-          <WarningBanner
-            title={strings.transactions.warningTitle.toUpperCase()}
-            icon={infoIcon}
-            message={strings.transactions.warningMessage}
-            showCloseIcon
-            onRequestClose={() => {
-              LayoutAnimation.configureNext(
-                LayoutAnimation.Presets.easeInEaseOut,
-              )
-              setShowWarning(false)
-            }}
-            style={{position: 'absolute', zIndex: 2, bottom: 0}}
-          />
-        )}
 
         <TxFilter
           selectedOperations={filters.selectedOperations}

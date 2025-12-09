@@ -248,6 +248,15 @@ export const transactionsMessages = defineMessages({
     id: 'components.txhistory.txhistory.warningbanner.message',
     defaultMessage: '!!!Message',
   },
+  byronWalletNoticeTitle: {
+    id: 'components.txhistory.txhistory.byronWalletNotice.title',
+    defaultMessage: '!!!Byron Wallet',
+  },
+  byronWalletNoticeMessage: {
+    id: 'components.txhistory.txhistory.byronWalletNotice.message',
+    defaultMessage:
+      '!!!This is a Byron-era wallet. Staking, governance, catalyst voting, and airdrop features are not available. To use these features, you will need to create a new Shelley-era wallet.',
+  },
   unknownAssetName: {
     id: 'components.txhistory.txhistory.title',
     defaultMessage: '!!!Unknown Asset Name',

@@ -1,3 +1,4 @@
+import {isByron} from '@yoroi/cardano-wallet'
 import {time} from '@yoroi/common'
 import {useNotificationManager} from '@yoroi/notifications'
 import {Branded, Notifications} from '@yoroi/types'
@@ -17,10 +18,13 @@ import {useGovernanceParticipation} from '../common/helpers'
 
 export const useGovernanceBanner = () => {
   const strings = useStrings()
-  const {wallet} = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
   const manager = useNotificationManager()
   // Use selector hook instead of full context to prevent unnecessary re-renders
   const {network} = useSelectedNetwork()
+
+  // Skip governance for Byron wallets
+  const isByronWallet = meta ? isByron(meta.implementation) : false
   const {isParticipating, isLoading} = useGovernanceParticipation()
 
   const queryKey = governanceQueryKeys.banner(wallet?.id, network)
@@ -32,7 +36,7 @@ export const useGovernanceBanner = () => {
 
   useQuery({
     queryKey: [...queryKey, isParticipating],
-    enabled: !isLoading,
+    enabled: !isLoading && !isByronWallet,
     staleTime: time.fiveMinutes,
     queryFn: async () => {
       const balance = wallet?.balanceManager.getPrimaryBalance()

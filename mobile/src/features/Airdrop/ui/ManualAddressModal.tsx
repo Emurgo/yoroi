@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {isByronAddress} from '@yoroi/tx'
 
 import {useQueryClient} from '@tanstack/react-query'
 import * as React from 'react'
@@ -37,13 +38,22 @@ const ManualAddressModalContent = () => {
       return
     }
 
+    const trimmedAddress = address.trim()
+
+    // Skip Byron addresses - they don't support airdrop
+    if (isByronAddress(trimmedAddress)) {
+      setError('Byron addresses are not supported for airdrop')
+      setLoading(false)
+      return
+    }
+
     setError(null)
     setLoading(true)
 
     try {
       // Check if address already exists in wallet addresses
       // This would be handled by useAirdropEligibility, but we check here to avoid duplicates
-      const schedule = await redemptionApi.getThawSchedule(address.trim())
+      const schedule = await redemptionApi.getThawSchedule(trimmedAddress)
 
       // Calculate next thaw date
       const now = new Date()
@@ -64,8 +74,8 @@ const ManualAddressModalContent = () => {
           : null
 
       // Save as external address and eligible
-      await addressCache.addExternalAddress(address.trim())
-      await addressCache.updateEligibleAddress(address.trim(), nextThawDate)
+      await addressCache.addExternalAddress(trimmedAddress)
+      await addressCache.updateEligibleAddress(trimmedAddress, nextThawDate)
 
       // Invalidate queries to refresh allocations
       await queryClient.invalidateQueries({

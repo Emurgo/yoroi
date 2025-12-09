@@ -1,9 +1,10 @@
 import {RawUtxo} from '@yoroi/api'
-import {getLogger} from '@yoroi/common'
+import {getLogger, isHex} from '@yoroi/common'
 import {primaryTokenId as defaultPrimaryTokenId} from '@yoroi/portfolio'
 import {
   SendToken,
   TransactionOutput,
+  normalizeToAddress,
   validateAndExtractAddressInfo,
 } from '@yoroi/tx'
 import {Balance, BaseAsset, Chain, Portfolio, Wallet} from '@yoroi/types'
@@ -43,8 +44,20 @@ export const deriveRewardAddressFromAddress = (
   chainId: number,
 ): string => {
   return CardanoMobileWrapped.cslScope((csl) => {
-    const wasmAddress = csl.Address.fromBech32(address)
-    if (!wasmAddress) {
+    // Handle Byron addresses (base58) - they don't have stake credentials
+    if (csl.ByronAddress.isValid(address)) {
+      throw new Error(
+        `deriveRewardAddressFromAddress: Byron addresses do not support staking/reward addresses: ${address}`,
+      )
+    }
+
+    // Parse address - supports hex or bech32
+    const isHexAddr = isHex(address)
+    const wasmAddress = isHexAddr
+      ? csl.Address.fromHex(address)
+      : csl.Address.fromBech32(address)
+
+    if (!wasmAddress || wasmAddress.isMalformed()) {
       throw new Error(
         `deriveRewardAddressFromAddress: Invalid address format: ${address}`,
       )
@@ -291,7 +304,8 @@ export const generateCIP30UtxoCbor = (utxo: RawUtxo) => {
 
     const index = utxo.tx_index
     const input = csl.TransactionInput.new(txHash, index)
-    const address = csl.Address.fromBech32(utxo.receiver)
+    // Use normalizeToAddress to handle Byron (base58), Shelley (bech32), and hex addresses
+    const address = normalizeToAddress(csl, utxo.receiver)
     if (!address) throw new Error('Invalid address')
 
     const amount = csl.BigNum.fromStr(utxo.amount)

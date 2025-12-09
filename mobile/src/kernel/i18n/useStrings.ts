@@ -1908,6 +1908,10 @@ export const useStrings = () => {
         title: f(transactionsMessages.title),
         warningTitle: f(transactionsMessages.warningTitle),
         warningMessage: f(transactionsMessages.message),
+        byronWalletNoticeTitle: f(transactionsMessages.byronWalletNoticeTitle),
+        byronWalletNoticeMessage: f(
+          transactionsMessages.byronWalletNoticeMessage,
+        ),
         transactions: f(txLabels.transactions),
         assets: (qty: number) => f(globalMessages.assets, {qty}),
         sendLabel: f(actionMessages.send),

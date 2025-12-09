@@ -1,3 +1,4 @@
+import {isByron} from '@yoroi/cardano-wallet'
 import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {StakingInfo} from '@yoroi/staking'
 import {useTheme} from '@yoroi/theme'
@@ -36,12 +37,19 @@ export const StakePoolInfos = ({ctaProps}: {ctaProps?: ButtonProps}) => {
 
 export const usePrefetchStakingInfo = (wallet: YoroiWallet) => {
   const queryClient = useQueryClient()
+  const {meta} = useSelectedWallet()
+  const isByronWallet = React.useMemo(
+    () => (meta ? isByron(meta.implementation) : false),
+    [meta],
+  )
 
-  return () =>
+  return () => {
+    if (isByronWallet) return
     queryClient.prefetchQuery({
       queryKey: [wallet.id, 'useStakingInfo'],
       queryFn: () => wallet.getStakingInfo(),
     })
+  }
 }
 
 const useStakePoolIds = (

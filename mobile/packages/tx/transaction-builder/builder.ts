@@ -25,6 +25,7 @@ import {Buffer} from 'buffer'
 
 import {NoOutputsError, NotEnoughMoneyToSendError} from '../errors'
 import {CardanoHaskellConfig, Datum} from '../types'
+import {normalizeToAddress} from '../utils/addresses'
 import {ModernUtxo} from '../utxo/models'
 import {createCertificateFromData} from './certificates'
 import type {
@@ -539,7 +540,8 @@ function outputToCSL(
   output: TransactionOutput,
   primaryTokenId: Portfolio.Token.Id = defaultPrimaryTokenId,
 ): CSLTransactionOutput {
-  const address = csl.Address.fromBech32(output.address)
+  // Use normalizeToAddress to handle Byron (base58), Shelley (bech32), and hex addresses
+  const address = normalizeToAddress(csl, output.address)
   if (!address) {
     getLogger().error('outputToCSL: Invalid address', {
       address: output.address,
@@ -764,7 +766,9 @@ export async function buildTransaction(
         })
 
         try {
-          const address = csl.Address.fromBech32(withdrawal.rewardAddress)
+          // Use normalizeToAddress to handle Byron (base58), Shelley (bech32), and hex addresses
+          // Note: Withdrawals are only for Shelley wallets, but normalizeToAddress handles all formats
+          const address = normalizeToAddress(csl, withdrawal.rewardAddress)
           if (!address) {
             getLogger().error('buildTransaction: Invalid withdrawal address', {
               withdrawalIndex: i,
@@ -894,7 +898,8 @@ export async function buildTransaction(
       if (!input) continue
       const utxo = input.utxo
       try {
-        const cslAddr = csl.Address.fromBech32(utxo.receiver)
+        // Use normalizeToAddress to handle Byron (base58), Shelley (bech32), and hex addresses
+        const cslAddr = normalizeToAddress(csl, utxo.receiver)
         if (!cslAddr) {
           getLogger().error('buildTransaction: Invalid address for input', {
             inputIndex: i,
@@ -1078,7 +1083,8 @@ export async function buildTransaction(
       cslTxBuilder.addOutput(cslChangeOutput)
     } else if (state.options.changeAddress && !state.options.manualFee) {
       // Use CSL's automatic change handling
-      const changeAddr = csl.Address.fromBech32(state.options.changeAddress)
+      // Use normalizeToAddress to handle Byron (base58), Shelley (bech32), and hex addresses
+      const changeAddr = normalizeToAddress(csl, state.options.changeAddress)
       if (!changeAddr) {
         getLogger().error('buildTransaction: Invalid change address', {
           changeAddress: state.options.changeAddress,

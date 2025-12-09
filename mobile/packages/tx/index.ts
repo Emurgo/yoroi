@@ -9,8 +9,8 @@ export * from './ledger/transform'
 export * from './transaction-builder/builder'
 export * from './transaction-builder/helpers'
 export * from './transaction-builder/multiparty'
-export * from './types'
 export * from './transaction-builder/types'
+export * from './types'
 export * from './utils/adapters'
 export * from './utils/addresses'
 export * from './utils/assets'
@@ -86,6 +86,7 @@ export {
 // Export utility functions
 export {
   derivePublicByAddressing,
+  isByronAddress,
   normalizeToAddress,
   validateAndExtractAddressInfo,
   type AddressInfo,

@@ -19,6 +19,7 @@ import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {usePrefetchStakingInfo} from '~/features/Dashboard/ui/shared/StakePoolInfos'
 import {useCanVote} from '~/features/RegisterCatalyst/common/hooks'
 import {NetworkTag} from '~/features/Settings/ui/shared/NetworkTag'
+import {useIsByronWallet} from '~/features/WalletManager/hooks/useIsByronWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
@@ -64,6 +65,7 @@ export const Menu = () => {
   const {config} = useRemoteConfig()
   const isAirdropEnabled = config?.features?.midnightAirdrop?.enabled ?? false
   const {hasRedeemableThaws} = useHasRedeemableThaws()
+  const isByronWallet = useIsByronWallet()
 
   return (
     <SafeAreaView edges={['left', 'right']} style={[ta.bg_color_max, a.flex_1]}>
@@ -74,28 +76,34 @@ export const Menu = () => {
           left={<Icon.Gear size={24} color={p.gray_600} />}
         />
 
-        <Staking
-          label={strings.menu.stakingCenter}
-          onPress={navigateTo.stakingCenter}
-          left={<Icon.TabStaking size={24} color={p.gray_600} />}
-          right={
-            isPoolRetiring ? (
-              <Icon.Warning size={24} color={p.sys_magenta_500} />
-            ) : null
-          }
-        />
+        {!isByronWallet && (
+          <Staking
+            label={strings.menu.stakingCenter}
+            onPress={navigateTo.stakingCenter}
+            left={<Icon.TabStaking size={24} color={p.gray_600} />}
+            right={
+              isPoolRetiring ? (
+                <Icon.Warning size={24} color={p.sys_magenta_500} />
+              ) : null
+            }
+          />
+        )}
 
-        <Governance
-          label={strings.menu.governanceCentre}
-          onPress={navigateTo.governanceCentre}
-          left={<Icon.Governance size={24} color={p.gray_600} />}
-        />
+        {!isByronWallet && (
+          <Governance
+            label={strings.menu.governanceCentre}
+            onPress={navigateTo.governanceCentre}
+            left={<Icon.Governance size={24} color={p.gray_600} />}
+          />
+        )}
 
-        <Catalyst
-          label={strings.menu.catalystVoting}
-          onPress={navigateTo.catalystVoting}
-          left={<Icon.Catalyst size={24} color={p.gray_600} />}
-        />
+        {!isByronWallet && (
+          <Catalyst
+            label={strings.menu.catalystVoting}
+            onPress={navigateTo.catalystVoting}
+            left={<Icon.Catalyst size={24} color={p.gray_600} />}
+          />
+        )}
 
         {isAuthDev && (
           <UtxoList
@@ -111,7 +119,7 @@ export const Menu = () => {
           left={<Icon.Message size={24} color={p.gray_600} />}
         />
 
-        {isAirdropEnabled && (
+        {isAirdropEnabled && !isByronWallet && (
           <Airdrop
             label={strings.menu.airdrop}
             onPress={navigateTo.airdrop}

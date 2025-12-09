@@ -1,6 +1,7 @@
 import type {AccountStateResponse} from '@yoroi/api'
 import {cardanoConfig} from '@yoroi/blockchains'
 import type {StakingInfo} from '@yoroi/staking'
+import {isByronAddress} from '@yoroi/tx'
 import {Balance, Branded, Portfolio, Wallet} from '@yoroi/types'
 
 import {Buffer} from 'buffer'
@@ -41,7 +42,24 @@ export const getStakingKey = (
 
     for (const address of addresses) {
       try {
-        const wasmAddress = CardanoMobile.Address.fromBech32(address)
+        // Skip Byron addresses - they don't support staking
+        if (
+          isByronAddress(address) ||
+          CardanoMobile.ByronAddress.isValid(address)
+        ) {
+          continue
+        }
+
+        // Parse address - supports hex or bech32
+        const isHexAddr = /^[0-9a-fA-F]{64,}$/.test(address)
+        const wasmAddress = isHexAddr
+          ? CardanoMobile.Address.fromHex(address)
+          : CardanoMobile.Address.fromBech32(address)
+
+        if (!wasmAddress || wasmAddress.isMalformed()) {
+          continue
+        }
+
         const baseAddr = CardanoMobile.BaseAddress.fromAddress(wasmAddress)
         if (baseAddr?.hasValue()) {
           const stakeCred = baseAddr.stakeCred()

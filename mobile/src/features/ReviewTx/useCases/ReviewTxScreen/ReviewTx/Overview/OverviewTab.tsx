@@ -1,3 +1,4 @@
+import {isByron} from '@yoroi/cardano-wallet'
 import {formatTokenWithText} from '@yoroi/cardano-wallet'
 import {
   parseBoolean,
@@ -425,6 +426,10 @@ const WalletInfoSection = ({
   const {plate, seed} = walletManager.checksum(wallet.publicKeyHex)
   const seedImage = Blockies({seed}).asBase64()
   const {height: windowHeight} = useWindowDimensions()
+  const isByronWallet = React.useMemo(
+    () => (meta ? isByron(meta.implementation) : false),
+    [meta],
+  )
 
   const handleShowWalletBalance = () => {
     openModal({
@@ -467,7 +472,7 @@ const WalletInfoSection = ({
 
       <Space.Height.sm />
 
-      {createdBy != null && createdBy.url && (
+      {!isByronWallet && createdBy != null && createdBy.url && (
         <>
           <CreatedByInfoItem
             logo={createdBy.logo}

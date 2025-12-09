@@ -9,7 +9,7 @@ import {
   validatePassword,
   validateWalletName,
 } from '@yoroi/cardano-wallet'
-import {getLogger, parseSafe, throwLoggedError} from '@yoroi/common'
+import {getLogger, isHex, parseSafe, throwLoggedError} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
 import {Chain, HW, Network, Portfolio, Wallet} from '@yoroi/types'
 
@@ -1296,7 +1296,24 @@ export const makeWalletManager = (
           try {
             const chainId = networkManagers[network].chainId
             const rewardAddressBech32 = CardanoMobileWrapped.cslScope((csl) => {
-              const addr = csl.Address.fromBech32(addressToUse)
+              // Handle Byron addresses (base58) - they don't have stake credentials
+              if (csl.ByronAddress.isValid(addressToUse)) {
+                // Byron addresses don't support staking, so we can't derive a reward address
+                throw new Error(
+                  'Byron addresses do not support staking/reward addresses',
+                )
+              }
+
+              // Parse address - supports hex or bech32
+              const isHexAddr = isHex(addressToUse)
+              const addr = isHexAddr
+                ? csl.Address.fromHex(addressToUse)
+                : csl.Address.fromBech32(addressToUse)
+
+              if (!addr || addr.isMalformed()) {
+                throw new Error('Invalid address format')
+              }
+
               const baseAddr = csl.BaseAddress.fromAddress(addr)
               if (!baseAddr) {
                 throw new Error('Address is not a base address')

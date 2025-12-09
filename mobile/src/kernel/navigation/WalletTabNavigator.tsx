@@ -19,6 +19,7 @@ import {useGovernanceManagerMaker} from '~/features/Staking/Governance/common/he
 import {PoolTransitionProvider} from '~/features/Staking/Staking/PoolTransition/PoolTransitionProvider'
 import {SwapProvider} from '~/features/Swap/common/SwapProvider'
 import {TxHistoryNavigator} from '~/features/Transactions/TxHistoryNavigator'
+import {useIsByronWallet} from '~/features/WalletManager/hooks/useIsByronWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
 import {WalletTabNotification} from '~/ui/WalletTabNotification/WalletTabNotification'
@@ -56,6 +57,7 @@ export const WalletTabNavigator = () => {
   const strings = useStrings()
   const manager = useGovernanceManagerMaker()
   const {hasRedeemableThaws} = useHasRedeemableThaws()
+  const isByronWallet = useIsByronWallet()
 
   // Memoize screenOptions to prevent recreation on every render
   const screenOptions = React.useMemo(
@@ -149,11 +151,13 @@ export const WalletTabNavigator = () => {
         options={portfolioOptions}
       />
 
-      <Tab.Screen
-        name="discover"
-        getComponent={() => DiscoverNavigator}
-        options={discoverOptions}
-      />
+      {!isByronWallet && (
+        <Tab.Screen
+          name="discover"
+          getComponent={() => DiscoverNavigator}
+          options={discoverOptions}
+        />
+      )}
 
       <Tab.Screen
         name="menu"
