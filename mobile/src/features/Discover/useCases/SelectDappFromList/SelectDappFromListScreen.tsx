@@ -4,7 +4,12 @@ import * as React from 'react'
 import {FlatList, View} from 'react-native'
 
 import {ChainDAppsWarning} from '~/features/Discover/common/ChainDAppsWarning'
-import {DAppItem, getGoogleSearchItem} from '~/features/Discover/common/helpers'
+import {
+  DAppItem,
+  getDirectUrlItem,
+  getGoogleSearchItem,
+  looksLikeUrl,
+} from '~/features/Discover/common/helpers'
 import {useDAppsConnected} from '~/features/Discover/common/useDAppsConnected'
 import {useDappList} from '~/features/Discover/common/useDappList'
 import {useShowWelcomeDApp} from '~/features/Discover/common/useShowWelcomeDApp'
@@ -39,6 +44,7 @@ export const SelectDappFromListScreen = () => {
     [],
   )
   const [isShowedWelcomeDApp] = useShowWelcomeDApp()
+  const {search} = useSearch()
 
   useSearchOnNavBar({
     title: strings.discover.discoverTitle,
@@ -88,8 +94,14 @@ export const SelectDappFromListScreen = () => {
 
         <FlatList
           data={myDapps}
-          extraData={connectedOrigins}
-          keyExtractor={(item) => item.id.toString()}
+          extraData={[connectedOrigins, search]}
+          keyExtractor={(item, index) => {
+            // Include search value in key for direct URL and Google items to ensure they update
+            if (item.id === 'direct_url' || item.id === 'google_search') {
+              return `${item.id}-${search || index}`
+            }
+            return item.id.toString()
+          }}
           ListHeaderComponent={
             <>
               <HeaderControl
@@ -238,14 +250,29 @@ const useFilteredDappList = (tab: TDAppTabs, categoriesSelected: string[]) => {
 
   if (isSearching) {
     if (search?.length > 0) {
-      return allDapps
+      const filteredDapps = allDapps
         .filter((dApp) =>
           dApp.name.toLowerCase().includes(search.toLowerCase()),
         )
         .sort((dAppFirst, dAppSecond) =>
           dAppFirst.name.localeCompare(dAppSecond.name),
         )
-        .concat(getGoogleSearchItem(search))
+
+      const results: DAppItem[] = []
+      const isUrl = looksLikeUrl(search)
+
+      // Add direct URL option first if it's a URL
+      if (isUrl) {
+        results.push(getDirectUrlItem(search))
+      }
+
+      // Add filtered dapps
+      results.push(...filteredDapps)
+
+      // Add Google search option last
+      results.push(getGoogleSearchItem(search))
+
+      return results
     }
 
     return allDapps
