@@ -124,14 +124,6 @@ export const Menu = () => {
           />
         )}
 
-        {isAuthDev && (
-          <MintBurn
-            label={strings.menu.mintBurn}
-            onPress={navigateTo.mintBurn}
-            left={<Icon.Burger size={24} color={p.gray_600} />}
-          />
-        )}
-
         <KnowledgeBase //
           label={strings.menu.knowledgeBase}
           onPress={navigateTo.knowledgeBase}
@@ -229,7 +221,6 @@ const Governance = Item
 const AppSettings = Item
 const KnowledgeBase = Item
 const Airdrop = Item
-const MintBurn = Item
 const Catalyst = ({
   label,
   left,
@@ -288,7 +279,6 @@ const useNavigateTo = () => {
     navigateToUtxoList,
     navigateToMessageSigning,
     navigateToAirdrop,
-    navigateToMintBurn,
   } = useWalletNavigation()
   const {wallet} = useSelectedWallet()
 
@@ -309,6 +299,5 @@ const useNavigateTo = () => {
     knowledgeBase: () => Linking.openURL(KNOWLEDGE_BASE_LINK),
     governanceCentre: () => navigateToGovernanceCentre(),
     airdrop: () => navigateToAirdrop(),
-    mintBurn: () => navigateToMintBurn(),
   }
 }
