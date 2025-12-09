@@ -237,6 +237,23 @@ export const stakingMessages = defineMessages({
     id: 'components.stakingcenter.title',
     defaultMessage: '!!!Update',
   },
+  stakingUpdatesTitle: {
+    id: 'components.staking.stakingUpdatesTitle',
+    defaultMessage: '!!!Staking updates',
+  },
+  stakingUpdateHeading: {
+    id: 'components.staking.stakingUpdateHeading',
+    defaultMessage: '!!!Upcoming update to EMURGO and Yoroi stakepools',
+  },
+  stakingUpdateDescription: {
+    id: 'components.staking.stakingUpdateDescription',
+    defaultMessage:
+      '!!!EMURGO is updating the margin fee on its stakepools as part of a broader 2026 modernization effort.',
+  },
+  skip: {
+    id: 'components.staking.skip',
+    defaultMessage: '!!!SKIP',
+  },
   governanceCentreTitle: {
     id: 'components.governance.governanceCentreTitle',
     defaultMessage: '!!!Governance Dashboard',
