@@ -16,6 +16,7 @@ import {errorMessages} from '~/kernel/i18n/messages/global'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
+import {Icon} from '~/ui/Icon'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {TextInput} from '~/ui/TextInput/TextInput'
@@ -180,12 +181,12 @@ export const SignTransactionScreen = () => {
       multiparty: parsed.type === 'multiparty' ? parsed.multiparty : undefined,
       multisig: parsed.type === 'multisig' ? parsed.multisig : undefined,
       details: {
-        title: 'Sign Transaction',
+        title: 'Import transaction',
         component: (
           <Text style={[a.body_2_md_regular, {color: p.text_gray_medium}]}>
             {inputType === 'json'
-              ? 'You are signing a transaction from a JSON file. Review the details carefully before signing.'
-              : 'You are signing a custom transaction. This is advanced functionality and should only be used if you know what you are doing.'}
+              ? 'You are importing a transaction from a JSON file. Review the details carefully before signing.'
+              : 'You are importing a custom transaction. This is advanced functionality and should only be used if you know what you are doing.'}
           </Text>
         ),
       },
@@ -201,18 +202,19 @@ export const SignTransactionScreen = () => {
       >
         <View style={[a.gap_md]}>
           <Text style={[a.body_1_lg_medium, {color: p.text_gray_max}]}>
-            {strings.setupWallet.signTransaction}
+            {strings.setupWallet.importTransaction}
           </Text>
 
           <Text style={[a.body_2_md_regular, {color: p.text_gray_medium}]}>
-            {strings.setupWallet.signTransactionDescription}
+            {strings.setupWallet.importTransactionDescription}
           </Text>
 
           <Space.Height.md />
 
           <Button
             type={ButtonType.Secondary}
-            title={strings.setupWallet.selectDifferentFile}
+            title={strings.setupWallet.importFromFile}
+            icon={Icon.Document}
             onPress={handlePickFile}
           />
 

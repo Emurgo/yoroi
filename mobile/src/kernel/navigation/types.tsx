@@ -131,6 +131,7 @@ export type TxHistoryRoutes = {
     signature: string
     key: string
   }
+  'sign-transaction': undefined
   'airdrop': undefined
   'receive-single': undefined
   'receive-specific-amount': undefined
@@ -374,7 +375,6 @@ export type NftRouteNavigation = StackNavigationProp<NftRoutes>
 export type MenuRoutes = {
   '_menu': undefined
   'voting-registration': undefined
-  'sign-transaction': undefined
 }
 
 export type AppRoutes = {

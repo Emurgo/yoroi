@@ -19,7 +19,6 @@ import {useHasRedeemableThaws} from '~/features/Airdrop/common/useHasRedeemableT
 import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {usePrefetchStakingInfo} from '~/features/Dashboard/ui/shared/StakePoolInfos'
 import {useCanVote} from '~/features/RegisterCatalyst/common/hooks'
-import {SignTransactionScreen} from '~/features/ReviewTx/useCases/SignTransactionScreen/SignTransactionScreen'
 import {NetworkTag} from '~/features/Settings/ui/shared/NetworkTag'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
@@ -52,13 +51,6 @@ export const MenuNavigator = () => {
         name="_menu"
         component={Menu}
         options={{title: strings.menu.menu}}
-      />
-      <MenuStack.Screen
-        name="sign-transaction"
-        options={{
-          title: strings.menu.signTransaction,
-        }}
-        getComponent={() => SignTransactionScreen}
       />
     </MenuStack.Navigator>
   )
@@ -121,9 +113,9 @@ export const Menu = () => {
         />
 
         <SignTransaction
-          label={strings.menu.signTransaction}
+          label={strings.menu.importTransaction}
           onPress={navigateTo.signTransaction}
-          left={<Icon.Message size={24} color={p.gray_600} />}
+          left={<Icon.Document size={24} color={p.gray_600} />}
         />
 
         {isAirdropEnabled && (
@@ -312,8 +304,8 @@ const useNavigateTo = () => {
     utxoList: () => navigateToUtxoList(),
     messageSigning: () => navigateToMessageSigning(),
     signTransaction: () => {
-      // @ts-ignore - sign-transaction is a menu route
-      navigation.navigate('sign-transaction')
+      // @ts-ignore - sign-transaction is a history route
+      navigation.navigate('history', {screen: 'sign-transaction'})
     },
     settings: () => navigateToSettings(),
     support: () => Linking.openURL(SUPPORT_TICKET_LINK),

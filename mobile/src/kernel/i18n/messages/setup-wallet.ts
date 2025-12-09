@@ -533,6 +533,14 @@ export const setupWalletMessages = defineMessages({
     defaultMessage:
       '!!!Import a transaction JSON file to sign it with your wallet.',
   },
+  signTransaction: {
+    id: 'setupWallet.signTransaction',
+    defaultMessage: '!!!Sign Transaction',
+  },
+  selectDifferentFile: {
+    id: 'setupWallet.selectDifferentFile',
+    defaultMessage: '!!!Select Different File',
+  },
   multisigTransaction: {
     id: 'setupWallet.multisigTransaction',
     defaultMessage: '!!!Multisig Transaction',
@@ -590,13 +598,18 @@ export const setupWalletMessages = defineMessages({
     id: 'setupWallet.review',
     defaultMessage: '!!!Review',
   },
-  signTransaction: {
-    id: 'setupWallet.signTransaction',
-    defaultMessage: '!!!Sign Transaction',
+  importTransaction: {
+    id: 'setupWallet.importTransaction',
+    defaultMessage: '!!!Import transaction',
   },
-  selectDifferentFile: {
-    id: 'setupWallet.selectDifferentFile',
-    defaultMessage: '!!!Select Different File',
+  importTransactionDescription: {
+    id: 'setupWallet.importTransactionDescription',
+    defaultMessage:
+      '!!!Paste a transaction JSON or CBOR to import and sign it with your wallet.',
+  },
+  importFromFile: {
+    id: 'setupWallet.importFromFile',
+    defaultMessage: '!!!Import from file',
   },
   multisigSigningStatus: {
     id: 'setupWallet.multisigSigningStatus',

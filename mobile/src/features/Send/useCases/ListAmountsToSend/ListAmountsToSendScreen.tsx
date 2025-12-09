@@ -3,7 +3,7 @@ import {
   createSendTxFromWallet,
 } from '@yoroi/cardano-wallet'
 import {isNft, isPrimaryToken} from '@yoroi/portfolio'
-import {atoms as a} from '@yoroi/theme'
+import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import {NotEnoughMoneyToSendError, TransactionOutput} from '@yoroi/tx'
 import {Address, Branded, Portfolio} from '@yoroi/types'

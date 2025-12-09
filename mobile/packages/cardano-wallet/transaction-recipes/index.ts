@@ -35,7 +35,5 @@ export {
   createWithdrawalTxFromWallet,
   createWithdrawalWithGovernanceTxFromWallet,
 } from './wallet-helpers'
-
-// Multiparty transaction helpers
-export type {MultipartyTransactionResult} from '@yoroi/tx'
 export {createMultipartySendTxFromWallets} from './multiparty-wallet-helpers'
+export type {MultipartyTransactionResult} from '@yoroi/tx'

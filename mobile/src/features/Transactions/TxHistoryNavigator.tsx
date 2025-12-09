@@ -9,7 +9,6 @@ import * as React from 'react'
 
 import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
 import {AirdropNavigator} from '~/features/Airdrop/ui/AirdropNavigator'
-import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {ClaimScreen} from '~/features/Claim/useCases/ClaimScreen'
 import {ShowSuccessScreen} from '~/features/Claim/useCases/ShowSuccessScreen'
 import {CreateExchangeOrderScreen} from '~/features/Exchange/useCases/CreateExchangeOrderScreen/CreateExchangeOrderScreen'
@@ -19,6 +18,7 @@ import {P2PConnectionScreen} from '~/features/P2P/useCases/P2PConnectionScreen/P
 import {DescribeSelectedAddressScreen} from '~/features/Receive/useCases/DescribeSelectedAddressScreen'
 import {ListMultipleAddressesScreen} from '~/features/Receive/useCases/ListMultipleAddressesScreen'
 import {RequestSpecificAmountScreen} from '~/features/Receive/useCases/RequestSpecificAmountScreen'
+import {SignTransactionScreen} from '~/features/ReviewTx/useCases/SignTransactionScreen/SignTransactionScreen'
 import {ScanCodeScreen} from '~/features/Scan/useCases/ScanCodeScreen'
 import {ShowCameraPermissionDeniedScreen} from '~/features/Scan/useCases/ShowCameraPermissionDeniedScreen/ShowCameraPermissionDeniedScreen'
 import {AllocateAssetsToDestinationsScreen} from '~/features/Send/useCases/AllocateAssetsToDestinations/AllocateAssetsToDestinationsScreen'
@@ -55,7 +55,6 @@ export const TxHistoryNavigator = () => {
   const {meta} = useSelectedWallet()
   const walletNavigation = useWalletNavigation()
   const {config} = useRemoteConfig()
-  const {isAuthDev} = useAuth()
   const isAirdropEnabled = config?.features?.midnightAirdrop?.enabled ?? false
 
   // Memoize headerTitle component to prevent recreation on every render
@@ -177,6 +176,14 @@ export const TxHistoryNavigator = () => {
               strings.transactions.messageSigning.messageSigningResultTitle,
           }}
           getComponent={() => MessageSigningResultScreen}
+        />
+
+        <Stack.Screen
+          name="sign-transaction"
+          options={{
+            title: strings.menu.importTransaction,
+          }}
+          getComponent={() => SignTransactionScreen}
         />
 
         {/* Send Screens */}
@@ -330,7 +337,6 @@ export const TxHistoryNavigator = () => {
             getComponent={() => AirdropNavigator}
           />
         )}
-
       </Stack.Navigator>
     </WithWalletOpened>
   )

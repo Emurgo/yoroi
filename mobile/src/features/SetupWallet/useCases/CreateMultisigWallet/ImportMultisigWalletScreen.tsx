@@ -300,7 +300,7 @@ export const ImportMultisigWalletScreen = () => {
               <Space.Height.md />
 
               <Button
-                title={strings.setupWallet.selectDifferentFile}
+                title={strings.setupWallet.importFromFile}
                 onPress={() => {
                   setImportedData(null)
                   setError(null)

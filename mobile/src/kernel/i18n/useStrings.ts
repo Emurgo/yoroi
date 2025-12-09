@@ -550,7 +550,7 @@ export const useStrings = () => {
         governanceCentre: f(menuMessages.governanceCentre),
         utxoList: f(transactionsMessages.utxoListTitle),
         messageSigning: f(menuMessages.messageSigning),
-        signTransaction: f(menuMessages.signTransaction),
+        importTransaction: f(menuMessages.importTransaction),
         airdrop: f(menuMessages.airdrop),
       },
 
@@ -2538,6 +2538,8 @@ export const useStrings = () => {
         coSignTransactionDescription: f(
           setupWalletMessages.coSignTransactionDescription,
         ),
+        signTransaction: f(setupWalletMessages.signTransaction),
+        selectDifferentFile: f(setupWalletMessages.selectDifferentFile),
         multisigTransaction: f(setupWalletMessages.multisigTransaction),
         multipartyTransaction: f(setupWalletMessages.multipartyTransaction),
         selectJSONFile: f(setupWalletMessages.selectJSONFile),
@@ -2548,14 +2550,14 @@ export const useStrings = () => {
         fee: f(setupWalletMessages.fee),
         outputs: f(setupWalletMessages.outputs),
         passwordInputLabel: f(setupWalletMessages.passwordInputLabel),
-        signTransaction: f(setupWalletMessages.signTransaction),
-        signTransactionDescription: f(
-          setupWalletMessages.signTransactionDescription,
+        importTransaction: f(setupWalletMessages.importTransaction),
+        importTransactionDescription: f(
+          setupWalletMessages.importTransactionDescription,
         ),
         orPasteManually: f(setupWalletMessages.orPasteManually),
         export: f(setupWalletMessages.export),
         review: f(setupWalletMessages.review),
-        selectDifferentFile: f(setupWalletMessages.selectDifferentFile),
+        importFromFile: f(setupWalletMessages.importFromFile),
         multisigSigningStatus: f(setupWalletMessages.multisigSigningStatus),
         quorumNotMet: f(setupWalletMessages.quorumNotMet),
         transactionExported: f(setupWalletMessages.transactionExported),
