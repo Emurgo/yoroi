@@ -9,7 +9,6 @@ import * as React from 'react'
 
 import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
 import {AirdropNavigator} from '~/features/Airdrop/ui/AirdropNavigator'
-import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {ClaimScreen} from '~/features/Claim/useCases/ClaimScreen'
 import {ShowSuccessScreen} from '~/features/Claim/useCases/ShowSuccessScreen'
 import {CreateExchangeOrderScreen} from '~/features/Exchange/useCases/CreateExchangeOrderScreen/CreateExchangeOrderScreen'
@@ -54,7 +53,6 @@ export const TxHistoryNavigator = () => {
   const {meta} = useSelectedWallet()
   const walletNavigation = useWalletNavigation()
   const {config} = useRemoteConfig()
-  const {isAuthDev} = useAuth()
   const isAirdropEnabled = config?.features?.midnightAirdrop?.enabled ?? false
 
   // Memoize headerTitle component to prevent recreation on every render
@@ -321,7 +319,6 @@ export const TxHistoryNavigator = () => {
             getComponent={() => AirdropNavigator}
           />
         )}
-
       </Stack.Navigator>
     </WithWalletOpened>
   )
