@@ -176,7 +176,7 @@ export const StakingCenter = () => {
           }}
         />
       ),
-      height: 600,
+      height: 680,
     })
   }, [
     pendingPoolId,

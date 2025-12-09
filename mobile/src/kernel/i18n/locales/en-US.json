@@ -189,7 +189,7 @@
   "components.governance.txFees": "Transaction fee",
   "components.governance.withdrawWarningButton": "Participate on governance",
   "components.governance.withdrawWarningDescription": "Participating in governance is required to withdraw rewards on Cardano. First, delegate your ADA in the Governance Center. Once your delegation is confirmed, you can then withdraw your rewards.",
-  "components.governance.withdrawWarningTitle": "Participation in governance is required to withdraw",
+  "components.governance.withdrawWarningTitle": "Governance is required to withdraw",
   "components.governance.delegateAndWithdraw": "Delegate and withdraw",
   "components.governance.goToGovernanceCenter": "Go to governance center",
   "components.governance.workingOnHardwareWalletSupport": "We are currently working on integrating hardware wallet support for Governance",
