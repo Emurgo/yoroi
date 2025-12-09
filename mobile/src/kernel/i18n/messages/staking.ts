@@ -239,7 +239,7 @@ export const stakingMessages = defineMessages({
   },
   governanceCentreTitle: {
     id: 'components.governance.governanceCentreTitle',
-    defaultMessage: '!!!Governance Centre Title',
+    defaultMessage: '!!!Governance Dashboard',
   },
   confirmTxTitle: {
     id: 'components.stakingcenter.confirmDelegation.title',
