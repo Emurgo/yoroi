@@ -1,7 +1,6 @@
 import {getPoolBech32Id} from '@yoroi/cardano-wallet'
 import {
   isBoolean,
-  parseSafe,
   useAsyncStorage,
   useMutationWithInvalidations,
 } from '@yoroi/common'
@@ -37,9 +36,26 @@ export const useStakingUpdateModal = () => {
   const hasBeenShownQuery = useQuery({
     queryKey: QUERY_KEY,
     queryFn: async () => {
-      const storedValue = await storage.getItem(STAKING_UPDATE_MODAL_SHOWN_KEY)
-      const parsed = parseSafe(storedValue)
-      return isBoolean(parsed) ? parsed : false
+      try {
+        // storage.getItem already parses the value using parseSafe internally
+        // So we get the actual parsed value directly (boolean, string, null, etc.)
+        const storedValue = await storage.getItem(
+          STAKING_UPDATE_MODAL_SHOWN_KEY,
+        )
+
+        // Since getItem already parses, check if it's already a boolean
+        // If not, it might be a string that needs parsing (shouldn't happen but safe)
+        const result =
+          typeof storedValue === 'boolean'
+            ? storedValue
+            : isBoolean(storedValue)
+              ? storedValue
+              : false
+
+        return result
+      } catch (error) {
+        return false
+      }
     },
     placeholderData: false,
     staleTime: Infinity, // Never refetch - once shown, always shown
@@ -63,6 +79,9 @@ export const useStakingUpdateModal = () => {
   const hasTriggeredRef = React.useRef(false)
 
   React.useEffect(() => {
+    const poolId =
+      stakingInfo?.status === 'staked' ? stakingInfo.poolId : undefined
+
     // Don't show if:
     // 1. Still loading storage check
     // 2. Already shown before
@@ -80,7 +99,7 @@ export const useStakingUpdateModal = () => {
       isLoadingConfig ||
       !config?.popups?.stakingUpdate?.display ||
       stakingInfo?.status !== 'staked' ||
-      !stakingInfo?.poolId
+      !poolId
     ) {
       return
     }
@@ -90,13 +109,11 @@ export const useStakingUpdateModal = () => {
     // Convert wallet's poolId (hex) to bech32 format for comparison with config pool IDs
     let walletPoolIdBech32: string | null = null
     try {
-      walletPoolIdBech32 = getPoolBech32Id(stakingInfo.poolId)
+      walletPoolIdBech32 = getPoolBech32Id(poolId)
     } catch (error) {
       // If conversion fails, poolId might already be bech32 or invalid
       // Try direct comparison first, then fallback
-      walletPoolIdBech32 = stakingInfo.poolId.startsWith('pool')
-        ? stakingInfo.poolId
-        : null
+      walletPoolIdBech32 = poolId.startsWith('pool') ? poolId : null
     }
 
     const isStakingToAffectedPool =
