@@ -5,6 +5,7 @@ import {StackNavigationProp} from '@react-navigation/stack'
 import {useQueryClient} from '@tanstack/react-query'
 import {BigNumber} from 'bignumber.js'
 import * as React from 'react'
+import {useIntl} from 'react-intl'
 import {
   ActivityIndicator,
   GestureResponderEvent,
@@ -31,6 +32,10 @@ import {useAirdropAddressCache} from '../common/airdropAddressCache'
 import {scheduleThawNotifications} from '../common/scheduleThawNotifications'
 import {useAirdropEligibility} from '../common/useAirdropEligibility'
 import type {AddressAllocation} from '../types'
+import {
+  useDestinationAddressInfoModal,
+  useRedeemableNowInfoModal,
+} from './InfoModals'
 import {useManualAddressModal} from './ManualAddressModal'
 import {NotificationsScheduledModal} from './NotificationsScheduledModal'
 import type {AirdropRoutes} from './types'
@@ -285,11 +290,23 @@ const AddressCard = ({
   onRemove,
 }: AddressCardProps) => {
   const strings = useStrings()
+  const intl = useIntl()
   const {atoms: ta, palette: p} = useTheme()
+  const {openDestinationAddressInfoModal} = useDestinationAddressInfoModal()
+  const {openRedeemableNowInfoModal} = useRedeemableNowInfoModal()
 
   const redeemableAmount = formatAmount(allocation.redeemableAmount)
   const totalToRedeem = formatAmount(allocation.totalLeftToRedeem)
   const hasRedeemable = allocation.redeemableAmount > 0
+
+  // Format next thaw date using intl (same pattern as ThawScheduleScreen)
+  const nextThawDateFormatted = allocation.nextThawDate
+    ? intl.formatDate(new Date(allocation.nextThawDate.replace(/\s/g, '')), {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      })
+    : ''
 
   const handleRemove = (e: GestureResponderEvent) => {
     e.stopPropagation()
@@ -297,6 +314,26 @@ const AddressCard = ({
       onRemove()
     }
   }
+
+  const handleAddressInfoPress = (e: GestureResponderEvent) => {
+    e.stopPropagation()
+    openDestinationAddressInfoModal()
+  }
+
+  const handleRedeemableInfoPress = (e: GestureResponderEvent) => {
+    e.stopPropagation()
+    openRedeemableNowInfoModal()
+  }
+
+  // Determine display name
+  const displayName = allocation.displayName
+    ? allocation.displayName
+    : allocation.isExternal
+      ? strings.airdrop.externalAddress
+      : strings.airdrop.destinationAddressNumber.replace(
+          '{number}',
+          String(index),
+        )
 
   return (
     <Pressable
@@ -324,19 +361,14 @@ const AddressCard = ({
             <View style={[a.flex_row, a.justify_between, a.align_center]}>
               <View style={[a.flex_row, a.align_center, a.gap_xs]}>
                 <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>
-                  {allocation.isExternal
-                    ? strings.airdrop.externalAddress
-                    : strings.airdrop.destinationAddressNumber.replace(
-                        '{number}',
-                        String(index),
-                      )}
+                  {displayName}
                 </Text>
-                {allocation.isExternal && (
-                  <Icon.ExternalLink size={16} color={p.gray_600} />
-                )}
-                {!allocation.isExternal && (
+                <TouchableOpacity
+                  onPress={handleAddressInfoPress}
+                  hitSlop={{top: 5, bottom: 5, left: 5, right: 5}}
+                >
                   <Icon.InfoCircle size={16} color={p.gray_600} />
-                )}
+                </TouchableOpacity>
               </View>
               <View style={[a.flex_row, a.align_center, a.gap_md]}>
                 {onRemove && (
@@ -365,9 +397,17 @@ const AddressCard = ({
 
             {/* Redeemable row */}
             <View style={[a.flex_row, a.justify_between, a.align_center]}>
-              <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
-                {strings.airdrop.status.redeemable}
-              </Text>
+              <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+                <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
+                  {strings.airdrop.redeemableNow}
+                </Text>
+                <TouchableOpacity
+                  onPress={handleRedeemableInfoPress}
+                  hitSlop={{top: 5, bottom: 5, left: 5, right: 5}}
+                >
+                  <Icon.InfoCircle size={14} color={p.gray_600} />
+                </TouchableOpacity>
+              </View>
               <Text style={[a.body_2_md_medium, ta.text_gray_max]}>
                 {redeemableAmount} NIGHT
               </Text>
@@ -384,6 +424,21 @@ const AddressCard = ({
                 {totalToRedeem} NIGHT
               </Text>
             </View>
+
+            {/* Next thaw row */}
+            {nextThawDateFormatted && (
+              <>
+                <Space.Height.sm />
+                <View style={[a.flex_row, a.justify_between, a.align_center]}>
+                  <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
+                    {strings.airdrop.nextThaw}
+                  </Text>
+                  <Text style={[a.body_2_md_medium, ta.text_gray_max]}>
+                    {nextThawDateFormatted}
+                  </Text>
+                </View>
+              </>
+            )}
           </View>
         </View>
       )}

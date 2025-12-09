@@ -7,8 +7,9 @@ import {Chain} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
-import {Alert, Linking, Text, View} from 'react-native'
+import {Alert, Keyboard, Linking, Text, View} from 'react-native'
 
+import {useIsKeyboardOpen} from '~/common/hooks/useIsKeyboardOpen'
 import {YoroiDrepCard} from '~/features/Staking/Governance/common/YoroiDrepCard/YoroiDrepCard'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
@@ -56,6 +57,8 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
   const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined)
   const showCardRef = React.useRef(showCard)
   const isInputFocusedRef = React.useRef(false)
+  const shouldCloseAfterKeyboardDismissRef = React.useRef(false)
+  const isKeyboardOpen = useIsKeyboardOpen()
 
   // Update drepId when initialDrepId changes
   React.useEffect(() => {
@@ -69,6 +72,23 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current)
     }
   }, [])
+
+  const requestCloseModal = React.useCallback(() => {
+    if (isKeyboardOpen) {
+      shouldCloseAfterKeyboardDismissRef.current = true
+      Keyboard.dismiss()
+      return
+    }
+
+    closeModal()
+  }, [closeModal, isKeyboardOpen])
+
+  React.useEffect(() => {
+    if (!isKeyboardOpen && shouldCloseAfterKeyboardDismissRef.current) {
+      shouldCloseAfterKeyboardDismissRef.current = false
+      closeModal()
+    }
+  }, [closeModal, isKeyboardOpen])
 
   const handleDrepIdChange = React.useCallback(
     (text: string) => {
@@ -185,7 +205,7 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
         !isHandle && !error && /^(22|23)[0-9a-fA-F]{56}$/.test(trimmedDrepId)
 
       onSubmit?.({hash, type, CIP105: isCIP105Format})
-      closeModal()
+      requestCloseModal()
     } catch (e) {
       Alert.alert(strings.global.error, strings.staking.invalidDRepId)
     }

@@ -14,7 +14,6 @@ import {ClaimScreen} from '~/features/Claim/useCases/ClaimScreen'
 import {ShowSuccessScreen} from '~/features/Claim/useCases/ShowSuccessScreen'
 import {CreateExchangeOrderScreen} from '~/features/Exchange/useCases/CreateExchangeOrderScreen/CreateExchangeOrderScreen'
 import {SelectProviderFromListScreen} from '~/features/Exchange/useCases/SelectProviderFromListScreen/SelectProviderFromListScreen'
-import {MintBurnNavigator} from '~/features/MintBurn/navigator'
 import {ViewNotificationHistoryScreen} from '~/features/Notifications/useCases/ViewNotificationHistory/ViewNotificationHistoryScreen'
 import {P2PConnectionScreen} from '~/features/P2P/useCases/P2PConnectionScreen/P2PConnectionScreen'
 import {DescribeSelectedAddressScreen} from '~/features/Receive/useCases/DescribeSelectedAddressScreen'
@@ -332,15 +331,6 @@ export const TxHistoryNavigator = () => {
           />
         )}
 
-        {isAuthDev && (
-          <Stack.Screen
-            name="mint-burn"
-            options={{
-              title: strings.menu.mintBurn,
-            }}
-            getComponent={() => MintBurnNavigator}
-          />
-        )}
       </Stack.Navigator>
     </WithWalletOpened>
   )

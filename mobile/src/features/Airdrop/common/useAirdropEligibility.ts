@@ -139,9 +139,32 @@ export const useAirdropEligibility = () => {
           // Address is being skipped - check if we have cached data
           const cachedAllocation = cachedAllocationsByAddress.get(address)
           if (cachedAllocation) {
+            const isExternal = externalAddresses.has(address)
+            let displayName: string | undefined
+            let nextThawDate: string | null | undefined
+
+            // Get next thaw date from eligible cache for both external and regular addresses
+            const eligibleInfo = (await addressCache.getEligibleAddresses())[
+              address
+            ]
+            nextThawDate = eligibleInfo?.nextThawDate ?? null
+
+            if (isExternal) {
+              // Get display name for external address
+              const externalAddressesList =
+                await addressCache.getExternalAddressesList()
+              const addressIndex = externalAddressesList.indexOf(address)
+              displayName =
+                addressIndex >= 0
+                  ? `Manual address ${addressIndex + 1}`
+                  : 'Manual address'
+            }
+
             allocations.push({
               ...cachedAllocation,
-              isExternal: externalAddresses.has(address),
+              isExternal,
+              displayName,
+              nextThawDate,
             })
           }
           // Note: If no cached allocation, the address should have been added to
@@ -150,11 +173,26 @@ export const useAirdropEligibility = () => {
       }
 
       // Also include external addresses that aren't in wallet addresses
+      const externalAddressesList =
+        await addressCache.getExternalAddressesList()
       for (const externalAddress of externalAddresses) {
         // Skip if already in wallet addresses (handled above)
         if (addresses.includes(externalAddress)) {
           continue
         }
+
+        // Get the number for this external address
+        const addressIndex = externalAddressesList.indexOf(externalAddress)
+        const displayName =
+          addressIndex >= 0
+            ? `Manual address ${addressIndex + 1}`
+            : 'Manual address'
+
+        // Get next thaw date from eligible cache
+        const eligibleInfo = (await addressCache.getEligibleAddresses())[
+          externalAddress
+        ]
+        const nextThawDate = eligibleInfo?.nextThawDate ?? null
 
         // Check if we have cached React Query data for this external address
         const cachedAllocation = cachedAllocationsByAddress.get(externalAddress)
@@ -163,6 +201,8 @@ export const useAirdropEligibility = () => {
           allocations.push({
             ...cachedAllocation,
             isExternal: true,
+            displayName,
+            nextThawDate,
           })
           continue
         }
@@ -212,16 +252,6 @@ export const useAirdropEligibility = () => {
 
           const totalLeftToRedeem = totalAllocation - redeemedSoFar
 
-          allocations.push({
-            address,
-            schedule,
-            redeemableAmount,
-            totalAllocation,
-            redeemedSoFar,
-            totalLeftToRedeem,
-            isExternal: externalAddresses.has(address),
-          })
-
           // Find the next upcoming thaw that hasn't started yet
           const now = new Date()
           const upcomingThaws = schedule.thaws
@@ -239,6 +269,31 @@ export const useAirdropEligibility = () => {
             upcomingThaws.length > 0
               ? (upcomingThaws[0]?.thawing_period_start ?? null)
               : null
+
+          // Get display name for external address
+          const isExternal = externalAddresses.has(address)
+          let displayName: string | undefined
+          if (isExternal) {
+            const externalAddressesList =
+              await addressCache.getExternalAddressesList()
+            const addressIndex = externalAddressesList.indexOf(address)
+            displayName =
+              addressIndex >= 0
+                ? `Manual address ${addressIndex + 1}`
+                : 'Manual address'
+          }
+
+          allocations.push({
+            address,
+            schedule,
+            redeemableAmount,
+            totalAllocation,
+            redeemedSoFar,
+            totalLeftToRedeem,
+            isExternal,
+            displayName,
+            nextThawDate,
+          })
 
           // Cache as eligible with next thaw date
           await addressCache.updateEligibleAddress(address, nextThawDate)

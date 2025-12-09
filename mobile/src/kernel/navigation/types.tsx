@@ -132,7 +132,6 @@ export type TxHistoryRoutes = {
     key: string
   }
   'airdrop': undefined
-  'mint-burn': undefined
   'receive-single': undefined
   'receive-specific-amount': undefined
   'receive-multiple': undefined
@@ -432,7 +431,6 @@ export type WalletNavigation = {
   navigateToMessageSigningResult: (signature: string, key: string) => void
   navigateToTxDetails: (id: string) => void
   navigateToAirdrop: () => void
-  navigateToMintBurn: () => void
 }
 
 declare global {
