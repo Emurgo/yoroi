@@ -1,7 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {Text, View} from 'react-native'
+import {Linking, Text, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
@@ -9,6 +9,9 @@ import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 import {StakingUpdateIllustration} from '~/ui/StakingUpdateIllustration/StakingUpdateIllustration'
+
+const STAKING_UPDATE_LEARN_MORE_URL =
+  'https://help.yoroi-wallet.com/en/article/upcoming-update-to-emurgo-and-yoroi-stake-pools-1giae8b/'
 
 const StakingUpdateModalContent = () => {
   const strings = useStrings()
@@ -54,7 +57,7 @@ const StakingUpdateModalFooter = () => {
 
   const handleLearnMore = () => {
     closeModal()
-    // TODO: Add navigation to learn more page or external link when available
+    Linking.openURL(STAKING_UPDATE_LEARN_MORE_URL)
   }
 
   return (
