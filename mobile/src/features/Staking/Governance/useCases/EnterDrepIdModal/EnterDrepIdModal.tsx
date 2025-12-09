@@ -221,7 +221,7 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
       type: 'key',
       CIP105: false,
     })
-    closeModal()
+    requestCloseModal()
   }
 
   return (

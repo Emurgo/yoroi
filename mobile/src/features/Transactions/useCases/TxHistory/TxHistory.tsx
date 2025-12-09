@@ -14,6 +14,7 @@ import {useRequestSystemNotifications} from '~/features/Notifications/common/too
 import {useEarnRewardsBanner} from '~/features/Staking/Governance/useCases/EarnRewardsBanner/useEarnRewardsBanner'
 import {useGovernanceBanner} from '~/features/Staking/Governance/useCases/useGovernanceBanner'
 import {usePoolTransitionModal} from '~/features/Staking/Staking/PoolTransition/usePoolTransitionModal'
+import {useStakingUpdateModal} from '~/features/Staking/Staking/StakingUpdateModal/useStakingUpdateModal'
 import {features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
@@ -62,7 +63,9 @@ export const TxHistory = () => {
 
   const {sync, isPending: isLoadingWallet} = useSync(wallet)
   const {isLoading: isLoadingPoolTransition} = usePoolTransitionModal()
-  const isLoading = isLoadingWallet || isLoadingPoolTransition
+  const {isLoading: isLoadingStakingUpdate} = useStakingUpdateModal()
+  const isLoading =
+    isLoadingWallet || isLoadingPoolTransition || isLoadingStakingUpdate
 
   const [expanded, setExpanded] = React.useState(true)
   const onScroll = useOnScroll({
