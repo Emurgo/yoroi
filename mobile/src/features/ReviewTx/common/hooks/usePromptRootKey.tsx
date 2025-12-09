@@ -1,7 +1,6 @@
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
-import {Keyboard} from 'react-native'
 
 import {ConfirmRawTxWithOs} from '~/features/Swap/common/ConfirmRawTx/ConfirmRawTxWithOs'
 import {ConfirmRawTxWithPassword} from '~/features/Swap/common/ConfirmRawTx/ConfirmRawTxWithPassword'
@@ -26,20 +25,17 @@ export const usePromptRootKey = () => {
   const promptRootKey = React.useCallback(
     ({onSuccess, onError, onClose, title, summary}: PromptRootKeyOptions) => {
       const handleOnConfirm = async (rootKey: string) => {
-        Keyboard.dismiss()
         closeModal()
 
         try {
           await onSuccess(rootKey)
         } catch (error) {
-          Keyboard.dismiss()
           closeModal()
           onError?.(error)
         }
       }
 
       const handleOnError = (error?: unknown) => {
-        Keyboard.dismiss()
         closeModal()
         onError?.(error)
       }
