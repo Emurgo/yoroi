@@ -178,6 +178,19 @@ export const redemptionApi = {
       `/thaws/${encodeURIComponent(destAddress)}/transactions/build`,
     )
 
+    logger.info('redemptionApi.buildTransaction: Sending request to backend', {
+      url,
+      destAddress,
+      request: {
+        changeAddress: request.change_address,
+        fundingUtxosCount: request.funding_utxos.length,
+        collateralUtxosCount: request.collateral_utxos.length,
+        fundingUtxosPreview: request.funding_utxos
+          .slice(0, 2)
+          .map((utxo) => `${utxo.substring(0, 32)}...`),
+      },
+    })
+
     const response = await fetchData<
       BuildTransactionResponse,
       BuildTransactionRequest
@@ -199,6 +212,10 @@ export const redemptionApi = {
           errorType: errorResponse?.type,
           errorInfo: errorResponse?.info,
           errorMessage: errorResponse?.message,
+          responseData:
+            typeof response.error.responseData === 'string'
+              ? response.error.responseData.substring(0, 500)
+              : response.error.responseData,
           request: {
             changeAddress: request.change_address,
             fundingUtxosCount: request.funding_utxos.length,
@@ -216,6 +233,21 @@ export const redemptionApi = {
         `Failed to build transaction: ${errorMsg} (${response.error.status})`,
       )
     }
+
+    logger.info(
+      'redemptionApi.buildTransaction: Received response from backend',
+      {
+        destAddress,
+        response: {
+          redeemedAmount: response.value.data.redeemed_amount,
+          requireThawingExtraSignature:
+            response.value.data.require_thawing_extra_signature,
+          transactionId: response.value.data.transaction_id,
+          transactionCborLength: response.value.data.transaction.length,
+          transactionCborPreview: `${response.value.data.transaction.substring(0, 64)}...`,
+        },
+      },
+    )
 
     return response.value.data
   },

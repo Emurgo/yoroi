@@ -1,3 +1,4 @@
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useWalletManager} from '@yoroi/wallet-manager'
 
@@ -107,7 +108,8 @@ export const AirdropDetailsScreen = () => {
   const [timerLabel, setTimerLabel] = React.useState(strings.airdrop.startsIn)
 
   // Get fresh allocation data from query instead of static route params
-  const {allocations: freshAllocations} = useAirdropEligibility()
+  const {allocations: freshAllocations, refetch: refetchEligibility} =
+    useAirdropEligibility()
   const allocationFromQuery = freshAllocations.find(
     (a) => a.address === allocation.address,
   )
@@ -120,9 +122,31 @@ export const AirdropDetailsScreen = () => {
       : null
   const totalThaws = currentAllocation.schedule.thaws.length
 
-  const redeemableThaws = currentAllocation.schedule.thaws.filter(
-    (t) => t.status === 'redeemable',
+  // Calculate thaws that can be redeemed right now
+  // Use backend's 'redeemable' status if available, otherwise include thaws that have started
+  // but aren't confirmed/submitted/failed yet (in case backend hasn't updated status yet)
+  const now = new Date()
+  const redeemableThaws = currentAllocation.schedule.thaws.filter((thaw) => {
+    const thawDate = new Date(thaw.thawing_period_start.replace(/\s/g, ''))
+    const hasStarted = thawDate <= now
+    const isRedeemable = thaw.status === 'redeemable'
+    const isPendingRedeemable =
+      thaw.status === 'upcoming' || thaw.status === 'queued'
+    const isNotRedeemed =
+      thaw.status !== 'confirmed' &&
+      thaw.status !== 'confirming' &&
+      thaw.status !== 'submitted' &&
+      thaw.status !== 'failed'
+
+    return isRedeemable || (hasStarted && isPendingRedeemable && isNotRedeemed)
+  })
+
+  // Calculate amount that can be redeemed right now
+  const currentlyRedeemableAmount = redeemableThaws.reduce(
+    (sum, thaw) => sum + thaw.amount,
+    0,
   )
+
   const canRedeem =
     redeemableThaws.length > 0 && !isReadOnly && isWalletInitialized
 
@@ -131,6 +155,9 @@ export const AirdropDetailsScreen = () => {
       setTimeRemaining('')
       return
     }
+
+    let lastRefetchTime = 0
+    const REFETCH_INTERVAL_MS = 30000 // Refetch every 30 seconds when thaw has started
 
     const updateTimer = () => {
       const startDate = new Date(
@@ -151,19 +178,37 @@ export const AirdropDetailsScreen = () => {
           setTimeRemaining(strings.airdrop.active)
           setTimerLabel('')
         }
+
+        // Periodically refetch eligibility when thaw period has started
+        // to get updated status (in case backend hasn't marked it as redeemable yet)
+        const timeSinceLastRefetch = now.getTime() - lastRefetchTime
+        if (
+          currentThaw.status !== 'redeemable' &&
+          currentThaw.status !== 'confirmed' &&
+          timeSinceLastRefetch >= REFETCH_INTERVAL_MS
+        ) {
+          lastRefetchTime = now.getTime()
+          refetchEligibility().catch((error) => {
+            logger.error('Failed to refetch eligibility when thaw started', {
+              error,
+            })
+          })
+        }
       } else {
         // Thaw hasn't started yet - show countdown
         setTimeRemaining(
           calculateTimeRemaining(currentThaw.thawing_period_start),
         )
         setTimerLabel(strings.airdrop.startsIn)
+        // Reset refetch time if thaw hasn't started yet
+        lastRefetchTime = 0
       }
     }
 
     updateTimer()
     const interval = setInterval(updateTimer, 1000)
     return () => clearInterval(interval)
-  }, [currentThaw, strings])
+  }, [currentThaw, strings, refetchEligibility])
 
   const handleRedeem = async () => {
     if (!canRedeem || isRedeeming) {
@@ -175,6 +220,20 @@ export const AirdropDetailsScreen = () => {
     try {
       // Build transaction via API to get CBOR
       const cbor = await buildTransaction(currentAllocation.address)
+
+      // Parse CBOR to get transaction body for logging
+      const parsedTxBody = await CardanoMobileWrapped.cslScope((csl) => {
+        const tx = csl.Transaction.fromHex(cbor)
+        const jsonString = tx.toJson()
+        return JSON.parse(jsonString).body
+      })
+
+      logger.info('handleRedeem: Parsed transaction CBOR for review', {
+        destAddress: currentAllocation.address,
+        transactionBody: parsedTxBody,
+        cborLength: cbor.length,
+        cborPreview: `${cbor.substring(0, 64)}...`,
+      })
 
       // Navigate to review transaction screen
       navigateToTxReview({
@@ -237,7 +296,8 @@ export const AirdropDetailsScreen = () => {
             a.p_lg,
             a.rounded_sm,
             {
-              backgroundColor: p.bg_gradient_2[0],
+              backgroundColor:
+                currentlyRedeemableAmount > 0 ? p.bg_gradient_2[0] : p.gray_400,
             },
           ]}
         >
@@ -258,7 +318,7 @@ export const AirdropDetailsScreen = () => {
           <Space.Height.md />
 
           <Text style={[a.heading_1_medium, ta.text_gray_max]}>
-            {formatAmount(currentAllocation.redeemableAmount)}
+            {formatAmount(currentlyRedeemableAmount)}
             <Text style={[a.body_1_lg_regular, ta.text_gray_medium]}>
               {' '}
               NIGHT
@@ -318,6 +378,7 @@ export const AirdropDetailsScreen = () => {
             <ThawProgressIndicator
               thaws={currentAllocation.schedule.thaws}
               currentIndex={currentThawIndex}
+              redeemableThaws={redeemableThaws}
             />
 
             <Space.Height.md />
@@ -377,9 +438,11 @@ export const AirdropDetailsScreen = () => {
 const ThawProgressIndicator = ({
   thaws,
   currentIndex,
+  redeemableThaws,
 }: {
   thaws: ReadonlyArray<Thaw>
   currentIndex: number | null
+  redeemableThaws: ReadonlyArray<Thaw>
 }) => {
   const {palette: p} = useTheme()
 
@@ -387,11 +450,23 @@ const ThawProgressIndicator = ({
     return null
   }
 
+  // Check if a thaw is redeemable by checking if it's in the redeemableThaws array
+  const isThawRedeemable = (thaw: Thaw) => {
+    return redeemableThaws.some(
+      (rt) =>
+        rt.thawing_period_start === thaw.thawing_period_start &&
+        rt.amount === thaw.amount,
+    )
+  }
+
   return (
     <View style={[a.flex_row, a.align_center]}>
       {thaws.map((thaw, index) => {
         const isCompleted = thaw.status === 'confirmed'
-        const isCurrent = index === currentIndex && thaw.status !== 'confirmed'
+        // Only highlight as current if it's actually redeemable (not just started)
+        const isRedeemable = isThawRedeemable(thaw)
+        const isCurrent =
+          index === currentIndex && thaw.status !== 'confirmed' && isRedeemable
 
         return (
           <React.Fragment key={index}>

@@ -295,9 +295,52 @@ const AddressCard = ({
   const {openDestinationAddressInfoModal} = useDestinationAddressInfoModal()
   const {openRedeemableNowInfoModal} = useRedeemableNowInfoModal()
 
-  const redeemableAmount = formatAmount(allocation.redeemableAmount)
+  // Calculate if this allocation has redeemable thaws
+  // Check both backend 'redeemable' status and thaws that have started
+  const now = new Date()
+  const hasRedeemableThaws = allocation.schedule.thaws.some((thaw) => {
+    const thawDate = new Date(thaw.thawing_period_start.replace(/\s/g, ''))
+    const hasStarted = thawDate <= now
+    const isRedeemable = thaw.status === 'redeemable'
+    const isPendingRedeemable =
+      thaw.status === 'upcoming' || thaw.status === 'queued'
+    const isNotRedeemed =
+      thaw.status !== 'confirmed' &&
+      thaw.status !== 'confirming' &&
+      thaw.status !== 'submitted' &&
+      thaw.status !== 'failed'
+
+    return isRedeemable || (hasStarted && isPendingRedeemable && isNotRedeemed)
+  })
+
+  // Calculate redeemable amount dynamically (same logic as AirdropDetailsScreen)
+  const currentlyRedeemableAmount = allocation.schedule.thaws.reduce(
+    (sum, thaw) => {
+      const thawDate = new Date(thaw.thawing_period_start.replace(/\s/g, ''))
+      const hasStarted = thawDate <= now
+      const isRedeemable = thaw.status === 'redeemable'
+      const isPendingRedeemable =
+        thaw.status === 'upcoming' || thaw.status === 'queued'
+      const isNotRedeemed =
+        thaw.status !== 'confirmed' &&
+        thaw.status !== 'confirming' &&
+        thaw.status !== 'submitted' &&
+        thaw.status !== 'failed'
+
+      if (
+        isRedeemable ||
+        (hasStarted && isPendingRedeemable && isNotRedeemed)
+      ) {
+        return sum + thaw.amount
+      }
+      return sum
+    },
+    0,
+  )
+
+  const redeemableAmount = formatAmount(currentlyRedeemableAmount)
   const totalToRedeem = formatAmount(allocation.totalLeftToRedeem)
-  const hasRedeemable = allocation.redeemableAmount > 0
+  const hasRedeemable = hasRedeemableThaws
 
   // Format next thaw date using intl (same pattern as ThawScheduleScreen)
   const nextThawDateFormatted = allocation.nextThawDate

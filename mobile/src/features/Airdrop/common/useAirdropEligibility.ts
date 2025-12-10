@@ -390,6 +390,7 @@ export const useAirdropEligibility = () => {
     isLoading: query.isLoading,
     isError: query.isError,
     error: query.error,
+    refetch: query.refetch,
     hasEligibleAddresses: (query.data?.length ?? 0) > 0,
     totalRedeemableAmount:
       query.data?.reduce((sum, alloc) => sum + alloc.redeemableAmount, 0) ?? 0,

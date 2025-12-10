@@ -113,10 +113,33 @@ export const useRedeemThaw = () => {
         collateral_utxos: [],
       }
 
+      logger.info(
+        'useRedeemThaw.buildTransaction: Requesting transaction build',
+        {
+          destAddress,
+          changeAddress,
+          fundingUtxosCount: fundingUtxosHex.length,
+          collateralUtxosCount: buildRequest.collateral_utxos.length,
+        },
+      )
+
       // Build transaction
       const buildResponse = await redemptionApi.buildTransaction(
         destAddress,
         buildRequest,
+      )
+
+      logger.info(
+        'useRedeemThaw.buildTransaction: Received transaction build response',
+        {
+          destAddress,
+          redeemedAmount: buildResponse.redeemed_amount,
+          requireThawingExtraSignature:
+            buildResponse.require_thawing_extra_signature,
+          transactionId: buildResponse.transaction_id,
+          transactionCborLength: buildResponse.transaction.length,
+          transactionCborPreview: `${buildResponse.transaction.substring(0, 64)}...`,
+        },
       )
 
       return buildResponse.transaction

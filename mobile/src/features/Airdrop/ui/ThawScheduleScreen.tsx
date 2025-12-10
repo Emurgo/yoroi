@@ -1,3 +1,4 @@
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useWalletManager} from '@yoroi/wallet-manager'
 
@@ -39,7 +40,8 @@ export const ThawScheduleScreen = () => {
   const meta = walletManager.selected.meta ?? null
 
   // Get fresh allocation data from query instead of static route params
-  const {allocations: freshAllocations} = useAirdropEligibility()
+  const {allocations: freshAllocations, refetch: refetchEligibility} =
+    useAirdropEligibility()
   const allocationFromQuery = freshAllocations.find(
     (a) => a.address === allocationFromParams.address,
   )
@@ -56,9 +58,56 @@ export const ThawScheduleScreen = () => {
   const thaws = allocation.schedule.thaws
   const totalThaws = thaws.length
 
-  const redeemableThaws = thaws.filter((t) => t.status === 'redeemable')
+  // Calculate thaws that can be redeemed right now
+  // Use backend's 'redeemable' status if available, otherwise include thaws that have started
+  // but aren't confirmed/submitted/failed yet (in case backend hasn't updated status yet)
+  const now = new Date()
+  const redeemableThaws = thaws.filter((thaw) => {
+    const thawDate = new Date(thaw.thawing_period_start.replace(/\s/g, ''))
+    const hasStarted = thawDate <= now
+    const isRedeemable = thaw.status === 'redeemable'
+    const isPendingRedeemable =
+      thaw.status === 'upcoming' || thaw.status === 'queued'
+    const isNotRedeemed =
+      thaw.status !== 'confirmed' &&
+      thaw.status !== 'confirming' &&
+      thaw.status !== 'submitted' &&
+      thaw.status !== 'failed'
+
+    return isRedeemable || (hasStarted && isPendingRedeemable && isNotRedeemed)
+  })
+
   const canRedeem =
     redeemableThaws.length > 0 && !isReadOnly && isWalletInitialized
+
+  // Periodically refetch eligibility when there are thaws that should be redeemable
+  // but haven't been marked as such yet
+  React.useEffect(() => {
+    const now = new Date()
+    const thawsThatShouldBeRedeemable = thaws.filter((thaw) => {
+      const thawDate = new Date(thaw.thawing_period_start.replace(/\s/g, ''))
+      return (
+        thawDate <= now &&
+        thaw.status !== 'redeemable' &&
+        thaw.status !== 'confirmed'
+      )
+    })
+
+    if (thawsThatShouldBeRedeemable.length === 0) {
+      return
+    }
+
+    // Refetch every 30 seconds if there are thaws that should be redeemable
+    const interval = setInterval(() => {
+      refetchEligibility().catch((error) => {
+        logger.error('Failed to refetch eligibility for thaw schedule', {
+          error,
+        })
+      })
+    }, 30000)
+
+    return () => clearInterval(interval)
+  }, [thaws, refetchEligibility])
 
   const handleRedeem = async () => {
     if (!canRedeem || isRedeeming) {
@@ -70,6 +119,20 @@ export const ThawScheduleScreen = () => {
     try {
       // Build transaction via API to get CBOR
       const cbor = await buildTransaction(allocation.address)
+
+      // Parse CBOR to get transaction body for logging
+      const parsedTxBody = await CardanoMobileWrapped.cslScope((csl) => {
+        const tx = csl.Transaction.fromHex(cbor)
+        const jsonString = tx.toJson()
+        return JSON.parse(jsonString).body
+      })
+
+      logger.info('handleRedeem: Parsed transaction CBOR for review', {
+        destAddress: allocation.address,
+        transactionBody: parsedTxBody,
+        cborLength: cbor.length,
+        cborPreview: `${cbor.substring(0, 64)}...`,
+      })
 
       // Navigate to review transaction screen
       navigateToTxReview({
@@ -156,19 +219,34 @@ const ThawItem = ({thaw, index, totalThaws, isLast}: ThawItemProps) => {
   const intl = useIntl()
   const {atoms: ta, palette: p} = useTheme()
 
-  const isCompleted = thaw.status === 'confirmed'
-  const isRedeemable = thaw.status === 'redeemable'
+  const now = new Date()
+  const thawDate = new Date(thaw.thawing_period_start.replace(/\s/g, ''))
+  const hasStarted = thawDate <= now
 
-  const formattedDate = intl.formatDate(
-    new Date(thaw.thawing_period_start.replace(/\s/g, '')),
-    {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    },
-  )
+  const isCompleted =
+    thaw.status === 'confirmed' || thaw.status === 'confirming'
+  const isRedeemableBackend = thaw.status === 'redeemable'
+  const isPendingRedeemable =
+    thaw.status === 'upcoming' || thaw.status === 'queued'
+  const isNotRedeemed =
+    thaw.status !== 'confirmed' &&
+    thaw.status !== 'confirming' &&
+    thaw.status !== 'submitted' &&
+    thaw.status !== 'failed'
+
+  // Thaw is redeemable if:
+  // 1. Backend marked it as 'redeemable', OR
+  // 2. Thaw period has started and status suggests it should be redeemable
+  const isRedeemable =
+    isRedeemableBackend || (hasStarted && isPendingRedeemable && isNotRedeemed)
+
+  const formattedDate = intl.formatDate(thawDate, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
 
   const getStatusBadge = () => {
     if (isCompleted) {
