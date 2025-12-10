@@ -7,7 +7,7 @@ import {BackHandler, LayoutAnimation, Platform, Text, View} from 'react-native'
 
 import infoIcon from '~/assets/img/icon/info-light-green.png'
 import {useBuyCryptoBanner} from '~/features/Exchange/common/useBuyCryptoBanner'
-import {useGetImportantAlertsModal} from '~/features/Notifications/common/GetImportantAlertsModal'
+import {useRequestSystemNotifications} from '~/features/Notifications/common/tools'
 import {useGovernanceBanner} from '~/features/Staking/Governance/useCases/useGovernanceBanner'
 import {usePoolTransitionModal} from '~/features/Staking/Staking/PoolTransition/usePoolTransitionModal'
 import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
@@ -36,7 +36,7 @@ export const TxHistory = () => {
   const navigation = useNavigation()
   const walletNavigation = useWalletNavigation()
 
-  useGetImportantAlertsModal({enabled: features.pushNotifications})
+  useRequestSystemNotifications({enabled: features.pushNotifications})
 
   const {wallet, meta} = useSelectedWallet()
   const [showWarning, setShowWarning] = React.useState(
