@@ -55,7 +55,7 @@ const preprodManager = networkManagers.preprod
 import {derivationConfig} from '@yoroi/blockchains'
 
 // Access derivation path configuration
-console.log(derivationConfig.gapLimit) // 20
+console.log(derivationConfig.gapLimit) // 40
 console.log(derivationConfig.keyLevel.root) // 0
 console.log(derivationConfig.keyLevel.purpose) // 1
 console.log(derivationConfig.keyLevel.coinType) // 2
