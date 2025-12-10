@@ -31,6 +31,7 @@ type TokenAmountItemProps = {
   variant?: 'swap'
   priceImpactRisk?: SwapPriceImpactRisk
   orderType?: 'limit' | 'market'
+  tokenActivity?: Portfolio.Api.TokenActivityResponse
 }
 
 export const TokenAmountItem = ({
@@ -40,6 +41,7 @@ export const TokenAmountItem = ({
   variant,
   priceImpactRisk,
   orderType,
+  tokenActivity,
 }: TokenAmountItemProps) => {
   const strings = useStrings()
   const {openModal} = useModal()
@@ -133,6 +135,7 @@ export const TokenAmountItem = ({
             textStyle={a.text_right}
             amount={amount}
             ignorePrivacy={ignorePrivacy}
+            tokenActivity={tokenActivity}
           />
         )}
 
@@ -150,6 +153,7 @@ export const TokenAmountItem = ({
                   textStyle={a.text_right}
                   amount={amount}
                   ignorePrivacy={ignorePrivacy}
+                  tokenActivity={tokenActivity}
                 />
               </View>
             )}
