@@ -92,6 +92,7 @@ export {
 // Export utility functions
 export {
   derivePublicByAddressing,
+  isByronAddress,
   normalizeToAddress,
   validateAndExtractAddressInfo,
   type AddressInfo,

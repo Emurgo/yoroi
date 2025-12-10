@@ -16,7 +16,8 @@ export const availableNetworks: ReadonlyArray<Chain.SupportedNetworks> = freeze(
   [
     Chain.Network.Mainnet,
     Chain.Network.Preprod,
-    Chain.Network.Preview,
+    // NOTE: Preview is not supported yet on mobile - keeping infrastructure but disabled from UI
+    // Chain.Network.Preview,
   ] as const,
 )
 

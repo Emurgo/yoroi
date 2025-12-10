@@ -14,6 +14,24 @@ import {
 import {Addressing} from '../types'
 
 /**
+ * Check if an address is a Byron address by checking common prefixes
+ * This is a fast check that doesn't require CSL parsing
+ * @param address - The address string to check
+ * @returns true if the address appears to be a Byron address, false otherwise
+ */
+export function isByronAddress(address: string): boolean {
+  if (!address || typeof address !== 'string') {
+    return false
+  }
+  const trimmed = address.trim()
+  return (
+    trimmed.startsWith('DdzFF') ||
+    trimmed.startsWith('Ae2') ||
+    trimmed.startsWith('37btjr')
+  )
+}
+
+/**
  * Address information extracted from WASM objects (safe to use outside cslScope)
  */
 export type AddressInfo = {

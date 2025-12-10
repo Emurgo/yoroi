@@ -5,6 +5,7 @@ import {
   CIP30TransactionError,
   RemoteUnspentOutput,
   calculateTxId,
+  normalizeToAddress,
   parseTokenList,
   signRawTransaction,
   validateTransactionCbor,
@@ -80,9 +81,9 @@ export const cip30ExtensionMaker = (
         const bech32Addresses = wallet
           .receiveAddresses()
           .filter((address) => !wallet.isUsedAddressIndex()[address])
-        const addresses = bech32Addresses.map((addr) =>
-          csl.Address.fromBech32(addr),
-        )
+        const addresses = bech32Addresses
+          .map((addr) => normalizeToAddress(csl, addr))
+          .filter((addr): addr is Address => addr !== undefined)
         return copyMultipleFromCSL(addresses, CardanoMobile.Address)
       })
     },
@@ -91,9 +92,9 @@ export const cip30ExtensionMaker = (
       return CardanoMobileWrapped.cslScope((csl) => {
         const allAddresses = wallet.externalAddresses()
         const selectedAddresses = paginate(allAddresses, pagination)
-        const addresses = selectedAddresses.map((addr) =>
-          csl.Address.fromBech32(addr),
-        )
+        const addresses = selectedAddresses
+          .map((addr) => normalizeToAddress(csl, addr))
+          .filter((addr): addr is Address => addr !== undefined)
         return copyMultipleFromCSL(addresses, CardanoMobile.Address)
       })
     },
@@ -101,7 +102,11 @@ export const cip30ExtensionMaker = (
     getChangeAddress() {
       return CardanoMobileWrapped.cslScope((csl) => {
         const changeAddr = wallet.getChangeAddress(meta.addressMode)
-        const address = csl.Address.fromBech32(changeAddr)
+        // Use normalizeToAddress to handle Byron (base58), Shelley (bech32), and hex addresses
+        const address = normalizeToAddress(csl, changeAddr)
+        if (!address) {
+          throw new Error(`Invalid change address: ${changeAddr}`)
+        }
         return copyFromCSL(CardanoMobile.Address, address)
       })
     },
@@ -408,7 +413,8 @@ const cardanoUtxoFromRemoteFormat = (
     value.setMultiasset(multiasset)
   }
 
-  const receiver = csl.Address.fromBech32(u.receiver)
+  // Use normalizeToAddress to handle Byron (base58), Shelley (bech32), and hex addresses
+  const receiver = normalizeToAddress(csl, u.receiver)
   if (!receiver) {
     throw new Error(`Invalid receiver address: ${u.receiver}`)
   }

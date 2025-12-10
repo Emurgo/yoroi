@@ -16,6 +16,7 @@ import {setPendingSwapToken} from '~/features/Notifications/common/tools'
 import {useReceive} from '~/features/Receive/common/ReceiveProvider'
 import {useMultipleAddressesInfo} from '~/features/Receive/common/useMultipleAddressesInfo'
 import {useReceiveAddressesStatus} from '~/features/Receive/common/useReceiveAddressesStatus'
+import {useIsByronWallet} from '~/features/WalletManager/hooks/useIsByronWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
@@ -40,6 +41,7 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
 
   const {meta} = useSelectedWallet()
   const {network} = useSelectedNetwork()
+  const isByronWallet = useIsByronWallet()
 
   const handleOnSwap = async () => {
     if (network === Chain.Network.Preprod) {
@@ -111,49 +113,53 @@ export const ActionsBanner = (props: {disabled: boolean}) => {
         </Text>
       </View>
 
-      <View style={[a.align_center, a.justify_center]}>
-        <Button
-          type={ButtonType.Circle}
-          icon={Icon.Send}
-          onPress={handleOnPressTransfer}
-          testID="sendButton"
-          disabled={disabled}
-        />
+      {!isByronWallet && (
+        <View style={[a.align_center, a.justify_center]}>
+          <Button
+            type={ButtonType.Circle}
+            icon={Icon.Send}
+            onPress={handleOnPressTransfer}
+            testID="sendButton"
+            disabled={disabled}
+          />
 
-        <Text
-          style={[
-            a.pt_sm,
-            a.body_3_sm_medium,
-            ta.text_gray_medium,
-            disabled && ta.text_gray_low,
-          ]}
-        >
-          {strings.transactions.sendLabel}
-        </Text>
-      </View>
+          <Text
+            style={[
+              a.pt_sm,
+              a.body_3_sm_medium,
+              ta.text_gray_medium,
+              disabled && ta.text_gray_low,
+            ]}
+          >
+            {strings.transactions.sendLabel}
+          </Text>
+        </View>
+      )}
 
-      <View style={[a.align_center, a.justify_center]}>
-        <Button
-          type={ButtonType.Circle}
-          icon={Icon.Swap}
-          onPress={handleOnSwap}
-          testID="swapButton"
-          disabled={disabled}
-        />
+      {!isByronWallet && (
+        <View style={[a.align_center, a.justify_center]}>
+          <Button
+            type={ButtonType.Circle}
+            icon={Icon.Swap}
+            onPress={handleOnSwap}
+            testID="swapButton"
+            disabled={disabled}
+          />
 
-        <Text
-          style={[
-            a.pt_sm,
-            a.body_3_sm_medium,
-            ta.text_gray_medium,
-            disabled && ta.text_gray_low,
-          ]}
-        >
-          {strings.transactions.swapLabel}
-        </Text>
-      </View>
+          <Text
+            style={[
+              a.pt_sm,
+              a.body_3_sm_medium,
+              ta.text_gray_medium,
+              disabled && ta.text_gray_low,
+            ]}
+          >
+            {strings.transactions.swapLabel}
+          </Text>
+        </View>
+      )}
 
-      {!meta.isReadOnly && (
+      {!meta.isReadOnly && !isByronWallet && (
         <View style={[a.align_center, a.justify_center]}>
           <Button
             type={ButtonType.Circle}

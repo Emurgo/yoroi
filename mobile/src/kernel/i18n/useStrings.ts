@@ -1467,6 +1467,10 @@ export const useStrings = () => {
         skipNoRewards: f(stakingMessages.skipNoRewards),
         updateKeepEarning: f(stakingMessages.updateKeepEarning),
         update: f(stakingMessages.update),
+        stakingUpdatesTitle: f(stakingMessages.stakingUpdatesTitle),
+        stakingUpdateHeading: f(stakingMessages.stakingUpdateHeading),
+        stakingUpdateDescription: f(stakingMessages.stakingUpdateDescription),
+        skip: f(stakingMessages.skip),
         governanceCentreTitle: f(stakingMessages.governanceCentreTitle),
         confirmTxTitle: f(stakingMessages.confirmTxTitle),
         learnMoreAboutGovernance: f(stakingMessages.learnMoreAboutGovernance),
@@ -1603,6 +1607,9 @@ export const useStrings = () => {
         orDelegateToYoroiDrepBelow: f(
           stakingMessages.orDelegateToYoroiDrepBelow,
         ),
+        failedToLoadPools: f(stakingMessages.failedToLoadPools),
+        poolStake: f(stakingMessages.poolStake),
+        poweredBy: f(stakingMessages.poweredBy),
         // Add missing strings
         delegationSuccess: f(stakingMessages.delegationSuccess),
         delegationFailed: f(stakingMessages.delegationFailed),
@@ -1645,6 +1652,9 @@ export const useStrings = () => {
         ),
         delegateToYoroiDRep: f(stakingMessages.delegateToYoroiDRep),
         delegateStakeOnly: f(stakingMessages.delegateStakeOnly),
+        poolROA: f(stakingMessages.poolROA),
+        poolSaturation: f(stakingMessages.poolSaturation),
+        resolvedDrepId: f(stakingMessages.resolvedDrepId),
       },
 
       // ReviewTx strings
@@ -1926,6 +1936,10 @@ export const useStrings = () => {
         title: f(transactionsMessages.title),
         warningTitle: f(transactionsMessages.warningTitle),
         warningMessage: f(transactionsMessages.message),
+        byronWalletNoticeTitle: f(transactionsMessages.byronWalletNoticeTitle),
+        byronWalletNoticeMessage: f(
+          transactionsMessages.byronWalletNoticeMessage,
+        ),
         transactions: f(txLabels.transactions),
         assets: (qty: number) => f(globalMessages.assets, {qty}),
         sendLabel: f(actionMessages.send),

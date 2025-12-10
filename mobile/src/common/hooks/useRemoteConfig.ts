@@ -3,10 +3,11 @@ import {App} from '@yoroi/types'
 
 import {useQuery} from '@tanstack/react-query'
 
+import {persistPrefixKeyword} from '~/kernel/connection/ConnectionProvider'
 import {isDev} from '~/kernel/constants'
 import {logger} from '~/kernel/logger/logger'
 
-const queryKey = ['persist', 'yoroi-config', isDev]
+const queryKey = [persistPrefixKeyword, 'yoroi-config', isDev]
 const basePath =
   'https://raw.githubusercontent.com/Emurgo/yoroi-config/refs/heads/main/'
 const url = `${basePath}${isDev ? 'dev.json' : 'prod.json'}`
@@ -30,6 +31,7 @@ export const useRemoteConfig = () => {
       return response.value.data
     },
     staleTime: time.minutes(5),
+    gcTime: time.hours(24), // Keep in cache for 24 hours for persistence
   })
 
   return {

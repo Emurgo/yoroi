@@ -389,6 +389,10 @@ export namespace App {
       firefoxSupportAnnouncement?: Readonly<{
         display?: boolean
       }>
+      stakingUpdate?: Readonly<{
+        display?: boolean
+        affectedPools?: ReadonlyArray<string>
+      }>
     }>
     features?: Readonly<{
       midnightAirdrop?: Readonly<{

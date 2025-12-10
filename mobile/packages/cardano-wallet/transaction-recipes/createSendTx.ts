@@ -1,5 +1,5 @@
-import {isHex} from '@yoroi/common'
-import {getLogger} from '@yoroi/common'
+import {getLogger, isHex} from '@yoroi/common'
+import type {TransactionMetadata} from '@yoroi/tx'
 import {
   ModernUtxo,
   NoOutputsError,
@@ -15,7 +15,6 @@ import {
   setChangeAddress,
   setTTLWithBuffer,
 } from '@yoroi/tx'
-import type {TransactionMetadata} from '@yoroi/tx'
 import {
   Address,
   Balance,
@@ -26,6 +25,7 @@ import {
 } from '@yoroi/types'
 
 import type {Address as CSLAddress} from '@emurgo/cross-csl-core'
+import BigNumber from 'bignumber.js'
 
 import {cardanoValueFromAmounts} from '../cardanoValueFromAmounts'
 import {CardanoMobileWrapped} from '../wrappedCsl'
@@ -339,6 +339,181 @@ export async function createSendTx({
       })
 
       return {cbor: unsignedTx.cbor || '', fee}
+    }
+
+    // If subtractFeeFromAmount is true, proactively reduce the output amount BEFORE building
+    // This prevents initial build failures when the wallet has just enough ADA to cover fee + min UTXO
+    // We reduce the first entry's ADA amount by a conservative fee estimate
+    if (subtractFeeFromAmount && entries.length > 0) {
+      const firstEntry = entries[0]
+      if (firstEntry) {
+        const minAdaForEntry = entryMinAda.get(0) || minUtxoValue
+
+        // Calculate total input ADA
+        const totalInputAda = selectedUtxos.reduce(
+          (sum, utxo) =>
+            sum + BigInt(utxo.balance[primaryTokenId] ?? Branded.ZERO_QUANTITY),
+          BigInt(0),
+        )
+
+        // Calculate total output ADA (excluding change)
+        const totalOutputAda = entries.reduce(
+          (sum, entry) =>
+            sum +
+            BigInt(entry.amounts[primaryTokenId] ?? Branded.ZERO_QUANTITY),
+          BigInt(0),
+        )
+
+        // Check if there are non-ADA assets that will go to change
+        const totalInputAmounts: Record<string, bigint> = {}
+        for (const utxo of selectedUtxos) {
+          for (const [tokenId, quantity] of Object.entries(utxo.balance)) {
+            totalInputAmounts[tokenId] =
+              (totalInputAmounts[tokenId] || BigInt(0)) + BigInt(quantity)
+          }
+        }
+        const totalOutputAmounts: Record<string, bigint> = {}
+        for (const entry of entries) {
+          for (const [tokenId, quantity] of Object.entries(entry.amounts)) {
+            totalOutputAmounts[tokenId] =
+              (totalOutputAmounts[tokenId] || BigInt(0)) + BigInt(quantity)
+          }
+        }
+        let hasNonAdaAssetsInChange = false
+        for (const [tokenId, inputAmount] of Object.entries(
+          totalInputAmounts,
+        )) {
+          if (tokenId === primaryTokenId) continue
+          const outputAmount = totalOutputAmounts[tokenId] || BigInt(0)
+          if (inputAmount > outputAmount) {
+            hasNonAdaAssetsInChange = true
+            break
+          }
+        }
+
+        // Calculate minimum ADA for change output if needed
+        let minAdaForChange = BigInt(0)
+        if (hasNonAdaAssetsInChange) {
+          minAdaForChange = (minUtxoValue * BigInt(3)) / BigInt(2) // 1.5x safety margin
+        }
+
+        // Proactively reduce the output amount by estimated fee + change requirement
+        // Use a conservative fee estimate to avoid initial build failure
+        const conservativeFeeEstimate =
+          BigInt(protocolParams.linearFee.constant) +
+          BigInt(protocolParams.linearFee.coefficient) * BigInt(600) // 600 bytes estimate
+
+        // Calculate how much we can actually send
+        // Available = totalInput - fee - minAdaForChange
+        // When subtractFeeFromAmount is true, we allow output to be less than minAdaForEntry
+        // if that's all that's available after fees (the build will handle validation)
+        const availableAfterFeeAndChange =
+          totalInputAda - conservativeFeeEstimate - minAdaForChange
+
+        // When sending all ADA (totalOutputAda >= totalInputAda), reduce by fee estimate
+        // This ensures we don't try to send more than available
+        const isSendingAllAda = totalOutputAda >= totalInputAda
+
+        if (isSendingAllAda) {
+          // When sending all ADA, reduce output by fee estimate
+          // Use availableAfterFeeAndChange, but ensure it's at least some minimum (even if below minAdaForEntry)
+          // The actual minimum will be validated during build
+          const adjustedAdaAmount =
+            availableAfterFeeAndChange > BigInt(0)
+              ? availableAfterFeeAndChange
+              : BigInt(0)
+
+          getLogger().info(
+            'createSendTx: Proactively reducing amount for subtractFeeFromAmount (sending all ADA)',
+            {
+              totalInputAda: totalInputAda.toString(),
+              totalOutputAda: totalOutputAda.toString(),
+              conservativeFeeEstimate: conservativeFeeEstimate.toString(),
+              minAdaForChange: minAdaForChange.toString(),
+              availableAfterFeeAndChange: availableAfterFeeAndChange.toString(),
+              adjustedAdaAmount: adjustedAdaAmount.toString(),
+              minAdaForEntry: minAdaForEntry.toString(),
+              firstEntryBefore: firstEntry.amounts[primaryTokenId],
+              isSendingAllAda,
+            },
+          )
+
+          // Always reduce when sending all ADA, even if below minimum UTXO
+          // The build will validate and fail with a clear error if truly insufficient
+          if (adjustedAdaAmount > BigInt(0)) {
+            // Update the first entry with reduced amount
+            entries[0] = {
+              ...firstEntry,
+              amounts: {
+                ...firstEntry.amounts,
+                [primaryTokenId]:
+                  adjustedAdaAmount.toString() as Balance.Quantity,
+              },
+            }
+
+            getLogger().info(
+              'createSendTx: Updated entry with reduced amount',
+              {
+                firstEntryAfter: entries[0]?.amounts[primaryTokenId],
+                adjustedAdaAmount: adjustedAdaAmount.toString(),
+                newTotalOutputAda: entries
+                  .reduce(
+                    (sum, entry) =>
+                      sum +
+                      BigInt(
+                        entry.amounts[primaryTokenId] ?? Branded.ZERO_QUANTITY,
+                      ),
+                    BigInt(0),
+                  )
+                  .toString(),
+              },
+            )
+          } else {
+            getLogger().warn(
+              'createSendTx: Cannot reduce amount - available after fees is zero or negative',
+              {
+                totalInputAda: totalInputAda.toString(),
+                conservativeFeeEstimate: conservativeFeeEstimate.toString(),
+                minAdaForChange: minAdaForChange.toString(),
+                availableAfterFeeAndChange:
+                  availableAfterFeeAndChange.toString(),
+              },
+            )
+          }
+        } else {
+          // When not sending all ADA, ensure output doesn't exceed available after fees
+          const maxSendableAda =
+            availableAfterFeeAndChange > minAdaForEntry
+              ? availableAfterFeeAndChange
+              : minAdaForEntry
+
+          if (
+            totalOutputAda > maxSendableAda &&
+            maxSendableAda >= minAdaForEntry
+          ) {
+            getLogger().debug(
+              'createSendTx: Proactively reducing amount for subtractFeeFromAmount',
+              {
+                totalInputAda: totalInputAda.toString(),
+                totalOutputAda: totalOutputAda.toString(),
+                conservativeFeeEstimate: conservativeFeeEstimate.toString(),
+                minAdaForChange: minAdaForChange.toString(),
+                maxSendableAda: maxSendableAda.toString(),
+                minAdaForEntry: minAdaForEntry.toString(),
+              },
+            )
+
+            // Update the first entry with reduced amount
+            entries[0] = {
+              ...firstEntry,
+              amounts: {
+                ...firstEntry.amounts,
+                [primaryTokenId]: maxSendableAda.toString() as Balance.Quantity,
+              },
+            }
+          }
+        }
+      }
     }
 
     // Build transaction first to get actual fee

@@ -1,15 +1,24 @@
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useWalletManager} from '@yoroi/wallet-manager'
 
-import {RouteProp, useRoute} from '@react-navigation/native'
+import {
+  CommonActions,
+  RouteProp,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native'
+import {StackNavigationProp} from '@react-navigation/stack'
 import {BigNumber} from 'bignumber.js'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {ScrollView, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {isInsufficientBalanceError} from '~/features/Staking/Governance/common/transactionErrorHandling'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
+import {useResultNavigation} from '~/kernel/navigation/hooks/useResultNavigation'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Badge} from '~/ui/Badge/Badge'
 import {Button} from '~/ui/Button/Button'
@@ -33,13 +42,15 @@ export const ThawScheduleScreen = () => {
   const strings = useStrings()
   const {atoms: ta} = useTheme()
   const route = useRoute<RouteProp<AirdropRoutes, 'airdrop-thaw-schedule'>>()
+  const navigation = useNavigation<StackNavigationProp<AirdropRoutes>>()
   const {allocation: allocationFromParams} = route.params
 
   const walletManager = useWalletManager()
   const meta = walletManager.selected.meta ?? null
 
   // Get fresh allocation data from query instead of static route params
-  const {allocations: freshAllocations} = useAirdropEligibility()
+  const {allocations: freshAllocations, refetch: refetchEligibility} =
+    useAirdropEligibility()
   const allocationFromQuery = freshAllocations.find(
     (a) => a.address === allocationFromParams.address,
   )
@@ -47,6 +58,7 @@ export const ThawScheduleScreen = () => {
 
   const {buildTransaction, submitTransaction} = useRedeemThaw()
   const {navigateToTxReview} = useWalletNavigation()
+  const resultNavigation = useResultNavigation()
 
   const isReadOnly = meta?.isReadOnly ?? false
   const isWalletInitialized = !!walletManager.selected.wallet
@@ -56,9 +68,56 @@ export const ThawScheduleScreen = () => {
   const thaws = allocation.schedule.thaws
   const totalThaws = thaws.length
 
-  const redeemableThaws = thaws.filter((t) => t.status === 'redeemable')
+  // Calculate thaws that can be redeemed right now
+  // Use backend's 'redeemable' status if available, otherwise include thaws that have started
+  // but aren't confirmed/submitted/failed yet (in case backend hasn't updated status yet)
+  const now = new Date()
+  const redeemableThaws = thaws.filter((thaw) => {
+    const thawDate = new Date(thaw.thawing_period_start.replace(/\s/g, ''))
+    const hasStarted = thawDate <= now
+    const isRedeemable = thaw.status === 'redeemable'
+    const isPendingRedeemable =
+      thaw.status === 'upcoming' || thaw.status === 'queued'
+    const isNotRedeemed =
+      thaw.status !== 'confirmed' &&
+      thaw.status !== 'confirming' &&
+      thaw.status !== 'submitted' &&
+      thaw.status !== 'failed'
+
+    return isRedeemable || (hasStarted && isPendingRedeemable && isNotRedeemed)
+  })
+
   const canRedeem =
     redeemableThaws.length > 0 && !isReadOnly && isWalletInitialized
+
+  // Periodically refetch eligibility when there are thaws that should be redeemable
+  // but haven't been marked as such yet
+  React.useEffect(() => {
+    const now = new Date()
+    const thawsThatShouldBeRedeemable = thaws.filter((thaw) => {
+      const thawDate = new Date(thaw.thawing_period_start.replace(/\s/g, ''))
+      return (
+        thawDate <= now &&
+        thaw.status !== 'redeemable' &&
+        thaw.status !== 'confirmed'
+      )
+    })
+
+    if (thawsThatShouldBeRedeemable.length === 0) {
+      return
+    }
+
+    // Refetch every 30 seconds if there are thaws that should be redeemable
+    const interval = setInterval(() => {
+      refetchEligibility().catch((error) => {
+        logger.error('Failed to refetch eligibility for thaw schedule', {
+          error,
+        })
+      })
+    }, 30000)
+
+    return () => clearInterval(interval)
+  }, [thaws, refetchEligibility])
 
   const handleRedeem = async () => {
     if (!canRedeem || isRedeeming) {
@@ -70,6 +129,20 @@ export const ThawScheduleScreen = () => {
     try {
       // Build transaction via API to get CBOR
       const cbor = await buildTransaction(allocation.address)
+
+      // Parse CBOR to get transaction body for logging
+      const parsedTxBody = await CardanoMobileWrapped.cslScope((csl) => {
+        const tx = csl.Transaction.fromHex(cbor)
+        const jsonString = tx.toJson()
+        return JSON.parse(jsonString).body
+      })
+
+      logger.info('handleRedeem: Parsed transaction CBOR for review', {
+        destAddress: allocation.address,
+        transactionBody: parsedTxBody,
+        cborLength: cbor.length,
+        cborPreview: `${cbor.substring(0, 64)}...`,
+      })
 
       // Navigate to review transaction screen
       navigateToTxReview({
@@ -108,7 +181,40 @@ export const ThawScheduleScreen = () => {
         },
       })
     } catch (error) {
-      logger.error('handleRedeem: Failed to build transaction', {error})
+      // Check if error is due to insufficient funds
+      if (isInsufficientBalanceError(error)) {
+        logger.info(
+          'handleRedeem: Failed to build transaction (insufficient funds)',
+          {error},
+        )
+        resultNavigation.showResultScreen({
+          type: 'error',
+          context: 'default',
+          title: strings.airdrop.insufficientFunds,
+          message: strings.airdrop.redeemError,
+          primaryAction: {
+            title: strings.txReview.failedTxButton,
+            onPress: () => {
+              setIsRedeeming(false)
+              // Navigate back to thaw schedule screen - use reset which works with useBlockGoBack()
+              // Use CommonActions.reset to ensure it works correctly
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [
+                    {
+                      name: 'airdrop-thaw-schedule',
+                      params: {allocation},
+                    },
+                  ],
+                }),
+              )
+            },
+          },
+        })
+        return
+      }
+
       setIsRedeeming(false)
     }
   }
@@ -156,19 +262,34 @@ const ThawItem = ({thaw, index, totalThaws, isLast}: ThawItemProps) => {
   const intl = useIntl()
   const {atoms: ta, palette: p} = useTheme()
 
-  const isCompleted = thaw.status === 'confirmed'
-  const isRedeemable = thaw.status === 'redeemable'
+  const now = new Date()
+  const thawDate = new Date(thaw.thawing_period_start.replace(/\s/g, ''))
+  const hasStarted = thawDate <= now
 
-  const formattedDate = intl.formatDate(
-    new Date(thaw.thawing_period_start.replace(/\s/g, '')),
-    {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    },
-  )
+  const isCompleted =
+    thaw.status === 'confirmed' || thaw.status === 'confirming'
+  const isRedeemableBackend = thaw.status === 'redeemable'
+  const isPendingRedeemable =
+    thaw.status === 'upcoming' || thaw.status === 'queued'
+  const isNotRedeemed =
+    thaw.status !== 'confirmed' &&
+    thaw.status !== 'confirming' &&
+    thaw.status !== 'submitted' &&
+    thaw.status !== 'failed'
+
+  // Thaw is redeemable if:
+  // 1. Backend marked it as 'redeemable', OR
+  // 2. Thaw period has started and status suggests it should be redeemable
+  const isRedeemable =
+    isRedeemableBackend || (hasStarted && isPendingRedeemable && isNotRedeemed)
+
+  const formattedDate = intl.formatDate(thawDate, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
 
   const getStatusBadge = () => {
     if (isCompleted) {

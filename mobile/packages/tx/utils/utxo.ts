@@ -10,6 +10,7 @@ import type {
 import {Buffer} from 'buffer'
 
 import {Addressing} from '../types'
+import {normalizeToAddress} from '../utils/addresses'
 import {ModernUtxo} from '../utxo/models'
 
 // RawUtxo type from wallet types
@@ -175,7 +176,8 @@ function toTransactionUnspentOutput(
     value.setMultiasset(multiAsset)
   }
 
-  const receiver = csl.Address.fromBech32(this.receiver)
+  // Use normalizeToAddress to handle Byron (base58), Shelley (bech32), and hex addresses
+  const receiver = normalizeToAddress(csl, this.receiver)
   if (!receiver) throw new Error('Invalid receiver address')
   const output = csl.TransactionOutput.new(receiver, value)
 

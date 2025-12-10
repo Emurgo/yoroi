@@ -1,5 +1,6 @@
 import {cardanoWalletApiMaker} from '@yoroi/api'
 import type {ManualAddressReason} from '@yoroi/cardano-wallet'
+import {isByronAddress} from '@yoroi/tx'
 import {Branded} from '@yoroi/types'
 
 import {redemptionApi} from '~/features/Airdrop/api/redemptionApi'
@@ -85,6 +86,11 @@ export async function checkAddressHistory(
 export async function checkAirdropEligibility(
   address: string,
 ): Promise<{isEligible: boolean; nextThawDate: string | null}> {
+  // Skip Byron addresses - they don't support airdrop
+  if (isByronAddress(address)) {
+    return {isEligible: false, nextThawDate: null}
+  }
+
   try {
     const schedule = await redemptionApi.getThawSchedule(address)
     // If no error, address is eligible - calculate next thaw date

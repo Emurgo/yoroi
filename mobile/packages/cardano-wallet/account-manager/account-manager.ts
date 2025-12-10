@@ -156,7 +156,7 @@ export type AddressChain = {
 export function createAddressChain(
   addressGenerator: AddressGenerator,
   blockSize = 50,
-  gapLimit = 20,
+  gapLimit = 40,
   lastUsedIndex = 0,
   lastUsedIndexVisual = lastUsedIndex,
   initialAddresses?: Address[],

@@ -247,13 +247,12 @@ export const AdvancedAddressRetrievalScreen = () => {
   // Step 1: Discovery - Just discover addresses
   const handleDiscovery = React.useCallback(
     async (rootKeyHex?: string) => {
-      const accountCount = parseInt(numAccounts, 10)
+      const accountCount = isHardwareWallet ? 1 : parseInt(numAccounts, 10)
       const addressCount = parseInt(numAddressesPerAccount, 10)
 
       if (
-        !accountCount ||
-        accountCount < 1 ||
-        accountCount > 1000 ||
+        (!isHardwareWallet &&
+          (!accountCount || accountCount < 1 || accountCount > 1000)) ||
         !addressCount ||
         addressCount < 1 ||
         addressCount > 10000
@@ -517,25 +516,17 @@ export const AdvancedAddressRetrievalScreen = () => {
           bounces={false}
           keyboardShouldPersistTaps="handled"
         >
-          {isHardwareWallet ? (
-            <WarningBanner
-              title={
-                strings.settings.advancedAddressRetrieval.hardwareWalletTitle
-              }
-              content={
-                strings.settings.advancedAddressRetrieval.hardwareWalletContent
-              }
-            />
-          ) : (
-            <WarningBanner
-              title={strings.settings.advancedAddressRetrieval.importantTitle}
-              content={
-                strings.settings.advancedAddressRetrieval.importantContent
-              }
-            />
+          {!isHardwareWallet && (
+            <>
+              <WarningBanner
+                title={strings.settings.advancedAddressRetrieval.importantTitle}
+                content={
+                  strings.settings.advancedAddressRetrieval.importantContent
+                }
+              />
+              <Space.Height.lg />
+            </>
           )}
-
-          <Space.Height.lg />
 
           <Text style={[a.body_2_md_regular, {color: p.gray_600}]}>
             {strings.settings.advancedAddressRetrieval.description}

@@ -237,9 +237,26 @@ export const stakingMessages = defineMessages({
     id: 'components.stakingcenter.title',
     defaultMessage: '!!!Update',
   },
+  stakingUpdatesTitle: {
+    id: 'components.staking.stakingUpdatesTitle',
+    defaultMessage: '!!!Staking updates',
+  },
+  stakingUpdateHeading: {
+    id: 'components.staking.stakingUpdateHeading',
+    defaultMessage: '!!!Upcoming update to EMURGO and Yoroi stakepools',
+  },
+  stakingUpdateDescription: {
+    id: 'components.staking.stakingUpdateDescription',
+    defaultMessage:
+      '!!!EMURGO is updating the margin fee on its stakepools as part of a broader 2026 modernization effort.',
+  },
+  skip: {
+    id: 'components.staking.skip',
+    defaultMessage: '!!!SKIP',
+  },
   governanceCentreTitle: {
     id: 'components.governance.governanceCentreTitle',
-    defaultMessage: '!!!Governance Centre Title',
+    defaultMessage: '!!!Governance Dashboard',
   },
   confirmTxTitle: {
     id: 'components.stakingcenter.confirmDelegation.title',
@@ -660,5 +677,21 @@ export const stakingMessages = defineMessages({
   orDelegateToYoroiDrepBelow: {
     id: 'components.governance.orDelegateToYoroiDrepBelow',
     defaultMessage: '!!!or delegate to Yoroi DRep below',
+  },
+  failedToLoadPools: {
+    id: 'components.staking.failedToLoadPools',
+    defaultMessage: '!!!Failed to load pools',
+  },
+  poolStake: {
+    id: 'components.staking.poolStake',
+    defaultMessage: '!!!Stake',
+  },
+  poweredBy: {
+    id: 'components.staking.poweredBy',
+    defaultMessage: '!!!Powered by',
+  },
+  resolvedDrepId: {
+    id: 'components.governance.resolvedDrepId',
+    defaultMessage: '!!!Resolved DRep ID:',
   },
 })

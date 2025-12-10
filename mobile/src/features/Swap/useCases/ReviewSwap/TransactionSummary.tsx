@@ -1,6 +1,7 @@
 import {parseNumberFromText} from '@yoroi/common'
+import {isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {Swap} from '@yoroi/types'
+import {Portfolio, Swap} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import _ from 'lodash'
@@ -14,6 +15,7 @@ import {
   PRICE_IMPACT_MODERATE_RISK,
   undefinedToken,
 } from '~/features/Swap/common/constants'
+import {useSwapTokenActivity} from '~/features/Swap/common/useSwapTokenActivity'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Divider} from '~/ui/Divider/Divider'
@@ -45,6 +47,19 @@ export const TransactionSummary = ({
   const tokenOutInfo = swapForm.tokenInfos.get(
     swapForm.tokenOutInput.tokenId ?? undefinedToken,
   )
+
+  const swapTokenIds = React.useMemo(() => {
+    const ids: Portfolio.Token.Id[] = []
+    if (tokenInInfo && !isPrimaryToken(tokenInInfo)) {
+      ids.push(tokenInInfo.id)
+    }
+    if (tokenOutInfo && !isPrimaryToken(tokenOutInfo)) {
+      ids.push(tokenOutInfo.id)
+    }
+    return ids
+  }, [tokenInInfo, tokenOutInfo])
+
+  const {data: tokenActivity = {}} = useSwapTokenActivity(swapTokenIds)
 
   if (tokenInInfo === undefined || tokenOutInfo === undefined)
     throw new Error('Missing tokenInfos')
@@ -223,7 +238,11 @@ export const TransactionSummary = ({
         {strings.swap.swapFrom}
       </Text>
 
-      <TokenAmountItem amount={amountIn} orderType={orderType} />
+      <TokenAmountItem
+        amount={amountIn}
+        orderType={orderType}
+        tokenActivity={tokenActivity}
+      />
 
       <Space.Height.lg />
 
@@ -235,6 +254,7 @@ export const TransactionSummary = ({
         amount={amountOut}
         priceImpactRisk={priceImpactRisk}
         orderType={orderType}
+        tokenActivity={tokenActivity}
       />
 
       <Divider verticalSpace="lg" />

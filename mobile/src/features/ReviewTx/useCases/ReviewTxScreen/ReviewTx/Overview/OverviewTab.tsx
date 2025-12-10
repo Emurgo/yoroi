@@ -1,8 +1,8 @@
+import {isByron} from '@yoroi/cardano-wallet'
 import {formatTokenWithText} from '@yoroi/cardano-wallet'
 import {
   getLogger,
-  isBoolean,
-  parseSafe,
+  parseBoolean,
   useAsyncStorage,
   useMutationWithInvalidations,
 } from '@yoroi/common'
@@ -570,6 +570,10 @@ const WalletInfoSection = ({
   const {plate, seed} = walletManager.checksum(wallet.publicKeyHex)
   const seedImage = Blockies({seed}).asBase64()
   const {height: windowHeight} = useWindowDimensions()
+  const isByronWallet = React.useMemo(
+    () => (meta ? isByron(meta.implementation) : false),
+    [meta],
+  )
 
   const handleShowWalletBalance = () => {
     openModal({
@@ -612,7 +616,7 @@ const WalletInfoSection = ({
 
       <Space.Height.sm />
 
-      {createdBy != null && createdBy.url && (
+      {!isByronWallet && createdBy != null && createdBy.url && (
         <>
           <CreatedByInfoItem
             logo={createdBy.logo}
@@ -1341,8 +1345,8 @@ const useShowOperationsNotice = (operations: Operations) => {
     queryKey: ['useShowOperationsNotice'],
     queryFn: () =>
       storage.getItem(operationsNoticeShownKey).then((value) => {
-        const parsed = parseSafe(value)
-        return isBoolean(parsed) ? parsed : true
+        // parseBoolean handles both cases: if it's already a boolean, return it; if it's a string, parse it
+        return parseBoolean(value) ?? true
       }),
     placeholderData: false,
     staleTime: Infinity,

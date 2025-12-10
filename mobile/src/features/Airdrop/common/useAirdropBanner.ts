@@ -1,10 +1,10 @@
 import {time} from '@yoroi/common'
 import {useNotificationManager} from '@yoroi/notifications'
 import {Notifications} from '@yoroi/types'
-import {useWalletEvent} from '@yoroi/wallet-manager'
-import {useWalletManager} from '@yoroi/wallet-manager'
+import {useWalletEvent, useWalletManager} from '@yoroi/wallet-manager'
 
 import {useQuery, useQueryClient} from '@tanstack/react-query'
+import {BigNumber} from 'bignumber.js'
 
 import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
 import {BannerIds, showBanner} from '~/features/Notifications/common/banners'
@@ -12,6 +12,14 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 
 import {useAirdropEligibility} from './useAirdropEligibility'
+
+const NIGHT_DECIMALS = 6
+
+const formatAmount = (amount: number): string => {
+  const normalizationFactor = Math.pow(10, NIGHT_DECIMALS)
+  const normalized = new BigNumber(amount).dividedBy(normalizationFactor)
+  return normalized.toFormat(2)
+}
 
 export const useAirdropBanner = () => {
   const walletManager = useWalletManager()
@@ -72,10 +80,8 @@ export const useAirdropBanner = () => {
           ev.id === BannerIds.Airdrop,
       )
 
-      // Format amount with commas
-      const formattedAmount = totalRedeemableAmount.toLocaleString('en-US', {
-        maximumFractionDigits: 2,
-      })
+      // Format amount (divide by 10^6 to account for NIGHT decimals)
+      const formattedAmount = formatAmount(totalRedeemableAmount)
 
       if (!last || new Date(last.date).getTime() + time.oneWeek < Date.now()) {
         showBanner({

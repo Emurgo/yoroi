@@ -1,5 +1,4 @@
-import {time} from '@yoroi/common'
-import {getLogger} from '@yoroi/common'
+import {getLogger, isHex, time} from '@yoroi/common'
 import {
   Address,
   App,
@@ -172,9 +171,24 @@ async function discoverUsedAddressesByStakingCredential({
 
   // Step 2: Extract staking credential for filtering
   const stakingCredentialHex = CardanoMobileWrapped.cslScope((csl) => {
-    const baseAddr = csl.BaseAddress.fromAddress(
-      csl.Address.fromBech32(knownBaseAddress),
-    )
+    // Handle Byron addresses (base58) - they don't have stake credentials
+    if (csl.ByronAddress.isValid(knownBaseAddress)) {
+      throw new Error(
+        'Byron addresses do not support staking credentials for address discovery',
+      )
+    }
+
+    // Parse address - supports hex or bech32
+    const isHexAddr = isHex(knownBaseAddress)
+    const wasmAddress = isHexAddr
+      ? csl.Address.fromHex(knownBaseAddress)
+      : csl.Address.fromBech32(knownBaseAddress)
+
+    if (!wasmAddress || wasmAddress.isMalformed()) {
+      throw new Error('Failed to parse base address')
+    }
+
+    const baseAddr = csl.BaseAddress.fromAddress(wasmAddress)
     if (!baseAddr) {
       throw new Error('Failed to parse base address')
     }

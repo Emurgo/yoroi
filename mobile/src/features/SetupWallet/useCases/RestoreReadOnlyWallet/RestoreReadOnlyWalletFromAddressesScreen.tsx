@@ -3,6 +3,7 @@ import {getWalletNameError} from '@yoroi/cardano-wallet'
 import {useAsyncStorage} from '@yoroi/common'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {isByronAddress} from '@yoroi/tx'
 import {Api, Wallet} from '@yoroi/types'
 import {useCreateReadOnlyWalletFromAddresses} from '@yoroi/wallet-manager'
 import {useWalletManager} from '@yoroi/wallet-manager'
@@ -30,9 +31,21 @@ import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {TextInput} from '~/ui/TextInput/TextInput'
 
-const DEFAULT_IMPLEMENTATION: Wallet.Implementation = 'cardano-cip1852'
 const DEFAULT_ADDRESS_MODE: Wallet.AddressMode = 'single'
 const DEFAULT_ACCOUNT_VISUAL = 0
+
+/**
+ * Detect wallet implementation from address
+ * Byron addresses use cardano-bip44, Shelley addresses use cardano-cip1852
+ */
+const detectImplementationFromAddress = (
+  address: string,
+): Wallet.Implementation => {
+  if (isByronAddress(address)) {
+    return 'cardano-bip44'
+  }
+  return 'cardano-cip1852'
+}
 
 export const RestoreReadOnlyWalletFromAddressesScreen = () => {
   const navigation = useNavigation<SetupWalletRouteNavigation>()
@@ -59,7 +72,15 @@ export const RestoreReadOnlyWalletFromAddressesScreen = () => {
   const nameRef = React.useRef<RNTextInput>(null)
   const addressInputRef = React.useRef<RNTextInput>(null)
 
-  const implementation: Wallet.Implementation = DEFAULT_IMPLEMENTATION
+  // Detect implementation from the address
+  const finalKnownAddressCheck = resolvedAddress || knownAddress.trim() || ''
+  const implementation: Wallet.Implementation = React.useMemo(() => {
+    if (!finalKnownAddressCheck) {
+      return 'cardano-cip1852' // Default to Shelley if no address yet
+    }
+    return detectImplementationFromAddress(finalKnownAddressCheck)
+  }, [finalKnownAddressCheck])
+
   const addressMode: Wallet.AddressMode = DEFAULT_ADDRESS_MODE
   const accountVisual = DEFAULT_ACCOUNT_VISUAL
 
@@ -150,8 +171,6 @@ export const RestoreReadOnlyWalletFromAddressesScreen = () => {
       enableDiscovery,
     })
   }
-
-  const finalKnownAddressCheck = resolvedAddress || knownAddress.trim() || ''
 
   const canRestore =
     !isEmptyString(name) &&

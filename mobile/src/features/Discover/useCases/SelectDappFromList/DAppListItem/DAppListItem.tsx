@@ -169,7 +169,7 @@ const DAppListItemComponent = ({dApp, connected, onPress}: Props) => {
         {isGoogleSearchItem(dApp) ? (
           <Icon.Google />
         ) : isDirectUrlItem(dApp) ? (
-          <Icon.Globe />
+          <Icon.Globe color={p.gray_max} />
         ) : (
           <Image
             source={{uri: logo}}
@@ -218,9 +218,11 @@ const DAppListItemComponent = ({dApp, connected, onPress}: Props) => {
 export const DAppListItem = React.memo(
   DAppListItemComponent,
   (prevProps, nextProps) => {
-    // Only re-render if dApp ID, connected status, or onPress callback changes
+    // Re-render if dApp ID, name, uri, connected status, or onPress callback changes
     return (
       prevProps.dApp.id === nextProps.dApp.id &&
+      prevProps.dApp.name === nextProps.dApp.name &&
+      prevProps.dApp.uri === nextProps.dApp.uri &&
       prevProps.connected === nextProps.connected &&
       prevProps.onPress === nextProps.onPress
     )

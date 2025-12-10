@@ -84,7 +84,7 @@ export const useRedeemThaw = () => {
             selection.selected.length === 0 ||
             Object.keys(selection.missingAmounts).length > 0
           ) {
-            logger.error('useRedeemThaw: Insufficient UTXOs', {
+            logger.info('useRedeemThaw: Insufficient UTXOs', {
               selectedCount: selection.selected.length,
               missingAmounts: selection.missingAmounts,
             })
@@ -113,16 +113,39 @@ export const useRedeemThaw = () => {
         collateral_utxos: [],
       }
 
+      logger.info(
+        'useRedeemThaw.buildTransaction: Requesting transaction build',
+        {
+          destAddress,
+          changeAddress,
+          fundingUtxosCount: fundingUtxosHex.length,
+          collateralUtxosCount: buildRequest.collateral_utxos.length,
+        },
+      )
+
       // Build transaction
       const buildResponse = await redemptionApi.buildTransaction(
         destAddress,
         buildRequest,
       )
 
+      logger.info(
+        'useRedeemThaw.buildTransaction: Received transaction build response',
+        {
+          destAddress,
+          redeemedAmount: buildResponse.redeemed_amount,
+          requireThawingExtraSignature:
+            buildResponse.require_thawing_extra_signature,
+          transactionId: buildResponse.transaction_id,
+          transactionCborLength: buildResponse.transaction.length,
+          transactionCborPreview: `${buildResponse.transaction.substring(0, 64)}...`,
+        },
+      )
+
       return buildResponse.transaction
     },
     onError: (error) => {
-      logger.error('Failed to build redemption transaction', {error})
+      logger.info('Failed to build redemption transaction', {error})
     },
   })
 

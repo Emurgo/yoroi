@@ -1,5 +1,5 @@
 import {
-  isBoolean,
+  parseBoolean,
   useAsyncStorage,
   useMutationWithInvalidations,
 } from '@yoroi/common'
@@ -25,9 +25,9 @@ export const useDisclaimerState = (name: Disclaimer, key = 'accepted') => {
   const query = useSuspenseQuery({
     queryKey,
     queryFn: async () => {
-      // getItem already parses the value using parseSafe internally
+      // parseBoolean handles both cases: if it's already a boolean, return it; if it's a string, parse it
       const storedValue = await walletStorage.getItem(key)
-      return isBoolean(storedValue) ? storedValue : false
+      return parseBoolean(storedValue) ?? false
     },
   })
 

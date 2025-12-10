@@ -303,7 +303,7 @@ const InputSearch = ({placeholder}: Props) => {
       autoFocus
       value={search}
       placeholder={placeholder}
-      onChangeText={(search) => searchChanged(search)}
+      onChangeText={searchChanged}
       autoCapitalize="none"
       style={[a.flex_1, {color: p.el_gray_max}]}
       testID="inputSearch"
