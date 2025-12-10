@@ -399,7 +399,15 @@ export const AirdropDetailsScreen = () => {
         >
           <DetailRow
             label={strings.airdrop.allocationSize}
-            value={`${formatAmount(currentAllocation.totalAllocation)} NIGHT`}
+            value={`${formatAmount(
+              currentAllocation.schedule.numberOfClaimedAllocations > 0
+                ? currentAllocation.totalAllocation /
+                    currentAllocation.schedule.numberOfClaimedAllocations
+                : currentAllocation.schedule.thaws.length > 0
+                  ? currentAllocation.totalAllocation /
+                    currentAllocation.schedule.thaws.length
+                  : currentAllocation.totalAllocation,
+            )} NIGHT`}
           />
           <DetailRow
             label={strings.airdrop.numberOfClaimedAllocations}
