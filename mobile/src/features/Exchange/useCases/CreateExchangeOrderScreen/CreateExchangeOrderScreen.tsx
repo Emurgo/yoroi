@@ -46,7 +46,7 @@ export const CreateExchangeOrderScreen = () => {
     selected: {network},
   } = useWalletManager()
 
-  const {openModal, closeModal} = useModal()
+  const {openModal, closeModal, forceCloseModal} = useModal()
 
   const navigateTo = useNavigateTo()
   const {
@@ -122,7 +122,7 @@ export const CreateExchangeOrderScreen = () => {
         })
       },
       onSuccess: (referralLink) => {
-        closeModal()
+        forceCloseModal()
 
         if (referralLink.toString() !== '') {
           Linking.openURL(referralLink.toString())

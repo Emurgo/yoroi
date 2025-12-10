@@ -51,6 +51,7 @@ type ModalActions = {
     canExpand?: boolean
   }) => void
   closeModal: () => void
+  forceCloseModal: () => void
   setLoading: (isLoading: boolean) => void
   setFooter: (footer: React.ReactNode | undefined) => void
   setTitle: (title: string) => void
@@ -105,6 +106,13 @@ export const ModalProvider = ({children, initialState}: Props) => {
       type: 'closeAndProcessQueue',
     })
   }, [isKeyboardOpen])
+
+  const forceCloseModal = React.useCallback(() => {
+    Keyboard.dismiss()
+    dispatch({
+      type: 'closeAndProcessQueue',
+    })
+  }, [])
 
   const openModal = React.useCallback(
     ({
@@ -176,6 +184,7 @@ export const ModalProvider = ({children, initialState}: Props) => {
   const actions = React.useMemo<ModalActions>(
     () => ({
       closeModal,
+      forceCloseModal,
       openModal,
       setLoading: (isLoading: boolean) => {
         dispatch({
@@ -237,7 +246,7 @@ export const ModalProvider = ({children, initialState}: Props) => {
         })
       },
     }),
-    [closeModal, openModal],
+    [closeModal, forceCloseModal, openModal],
   )
 
   const context = React.useMemo(
