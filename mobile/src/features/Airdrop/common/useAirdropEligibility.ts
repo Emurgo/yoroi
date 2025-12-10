@@ -112,6 +112,14 @@ export const useAirdropEligibility = () => {
             continue
           }
 
+          // Check if cached allocation has redeemable thaws - if so, refetch to check redemption status
+          const cachedAllocation = cachedAllocationsByAddress.get(address)
+          if (cachedAllocation && cachedAllocation.redeemableAmount > 0) {
+            // Has redeemable thaws - refetch to check if they're still unredeemed
+            addressesToCheck.push(address)
+            continue
+          }
+
           // We have cached data, so we can skip the API call
           skippedAddresses.push({
             address,
@@ -204,6 +212,13 @@ export const useAirdropEligibility = () => {
         // Check if we have cached React Query data for this external address
         const cachedAllocation = cachedAllocationsByAddress.get(externalAddress)
         if (cachedAllocation) {
+          // Check if cached allocation has redeemable thaws - if so, refetch to check redemption status
+          if (cachedAllocation.redeemableAmount > 0) {
+            // Has redeemable thaws - refetch to check if they're still unredeemed
+            addressesToCheck.push(externalAddress)
+            continue
+          }
+
           // We have cached data - include it
           allocations.push({
             ...cachedAllocation,
