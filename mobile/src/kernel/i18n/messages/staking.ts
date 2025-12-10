@@ -678,4 +678,20 @@ export const stakingMessages = defineMessages({
     id: 'components.governance.orDelegateToYoroiDrepBelow',
     defaultMessage: '!!!or delegate to Yoroi DRep below',
   },
+  failedToLoadPools: {
+    id: 'components.staking.failedToLoadPools',
+    defaultMessage: '!!!Failed to load pools',
+  },
+  poolStake: {
+    id: 'components.staking.poolStake',
+    defaultMessage: '!!!Stake',
+  },
+  poweredBy: {
+    id: 'components.staking.poweredBy',
+    defaultMessage: '!!!Powered by',
+  },
+  resolvedDrepId: {
+    id: 'components.governance.resolvedDrepId',
+    defaultMessage: '!!!Resolved DRep ID:',
+  },
 })

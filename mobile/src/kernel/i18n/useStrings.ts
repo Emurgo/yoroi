@@ -1586,6 +1586,9 @@ export const useStrings = () => {
         orDelegateToYoroiDrepBelow: f(
           stakingMessages.orDelegateToYoroiDrepBelow,
         ),
+        failedToLoadPools: f(stakingMessages.failedToLoadPools),
+        poolStake: f(stakingMessages.poolStake),
+        poweredBy: f(stakingMessages.poweredBy),
         // Add missing strings
         delegationSuccess: f(stakingMessages.delegationSuccess),
         delegationFailed: f(stakingMessages.delegationFailed),
@@ -1628,6 +1631,9 @@ export const useStrings = () => {
         ),
         delegateToYoroiDRep: f(stakingMessages.delegateToYoroiDRep),
         delegateStakeOnly: f(stakingMessages.delegateStakeOnly),
+        poolROA: f(stakingMessages.poolROA),
+        poolSaturation: f(stakingMessages.poolSaturation),
+        resolvedDrepId: f(stakingMessages.resolvedDrepId),
       },
 
       // ReviewTx strings

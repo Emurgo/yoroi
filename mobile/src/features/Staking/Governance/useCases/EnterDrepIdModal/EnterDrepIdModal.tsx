@@ -242,7 +242,7 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
 
           <View style={[a.flex_row, a.justify_between, a.px_lg]}>
             <Text style={[a.body_3_sm_regular, ta.text_gray_max]}>
-              Resolved DRep ID:
+              {strings.staking.resolvedDrepId}
             </Text>
 
             <Text
