@@ -18,6 +18,7 @@ export const isInsufficientBalanceError = (error: unknown): boolean => {
     errorMessage.includes('Insufficient input') ||
     errorMessage.includes('Not enough ADA to create change output') ||
     errorMessage.includes('change output requires more ADA') ||
-    errorMessage.includes('Not enough balance for transaction')
+    errorMessage.includes('Not enough balance for transaction') ||
+    errorMessage.includes('No UTXOs available with sufficient funds')
   )
 }

@@ -84,7 +84,7 @@ export const useRedeemThaw = () => {
             selection.selected.length === 0 ||
             Object.keys(selection.missingAmounts).length > 0
           ) {
-            logger.error('useRedeemThaw: Insufficient UTXOs', {
+            logger.info('useRedeemThaw: Insufficient UTXOs', {
               selectedCount: selection.selected.length,
               missingAmounts: selection.missingAmounts,
             })
@@ -145,7 +145,7 @@ export const useRedeemThaw = () => {
       return buildResponse.transaction
     },
     onError: (error) => {
-      logger.error('Failed to build redemption transaction', {error})
+      logger.info('Failed to build redemption transaction', {error})
     },
   })
 

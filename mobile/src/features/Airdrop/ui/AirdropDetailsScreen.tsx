@@ -2,7 +2,12 @@ import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useWalletManager} from '@yoroi/wallet-manager'
 
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
+import {
+  CommonActions,
+  RouteProp,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native'
 import {StackNavigationProp} from '@react-navigation/stack'
 import {BigNumber} from 'bignumber.js'
 import * as React from 'react'
@@ -10,8 +15,10 @@ import {ScrollView, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Address} from '~/common/Address/Address'
+import {isInsufficientBalanceError} from '~/features/Staking/Governance/common/transactionErrorHandling'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
+import {useResultNavigation} from '~/kernel/navigation/hooks/useResultNavigation'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Accordion} from '~/ui/Accordion/Accordion'
 import {Button} from '~/ui/Button/Button'
@@ -98,6 +105,7 @@ export const AirdropDetailsScreen = () => {
 
   const {buildTransaction, submitTransaction} = useRedeemThaw()
   const {navigateToTxReview} = useWalletNavigation()
+  const resultNavigation = useResultNavigation()
 
   const isReadOnly = meta?.isReadOnly ?? false
   const isWalletInitialized = !!wallet
@@ -272,7 +280,42 @@ export const AirdropDetailsScreen = () => {
         },
       })
     } catch (error) {
-      logger.error('handleRedeem: Failed to build transaction', {error})
+      // Check if error is due to insufficient funds
+      if (isInsufficientBalanceError(error)) {
+        logger.info(
+          'handleRedeem: Failed to build transaction (insufficient funds)',
+          {error},
+        )
+        resultNavigation.showResultScreen({
+          type: 'error',
+          context: 'default',
+          title: strings.airdrop.insufficientFunds,
+          message: strings.airdrop.redeemError,
+          primaryAction: {
+            title: strings.txReview.failedTxButton,
+            onPress: () => {
+              setIsRedeeming(false)
+              // Navigate back to airdrop screen - use reset which works with useBlockGoBack()
+              // The navigation object from AirdropDetailsScreen is the AirdropNavigator navigation
+              // We need to reset to remove result-screen from the stack
+              // Use CommonActions.reset to ensure it works correctly
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [
+                    {
+                      name: 'airdrop-main',
+                      params: {allocation: currentAllocation},
+                    },
+                  ],
+                }),
+              )
+            },
+          },
+        })
+        return
+      }
+
       setIsRedeeming(false)
     }
   }

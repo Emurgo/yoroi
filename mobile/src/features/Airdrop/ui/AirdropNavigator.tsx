@@ -9,6 +9,7 @@ import * as React from 'react'
 import {NetworkTag} from '~/features/Settings/ui/shared/NetworkTag'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
+import {ResultScreen} from '~/ui/ResultScreen/ResultScreen'
 
 import {AirdropDetailsScreen} from './AirdropDetailsScreen'
 import {AirdropSelectionScreen} from './AirdropSelectionScreen'
@@ -53,6 +54,16 @@ export const AirdropNavigator = () => {
           title: strings.airdrop.thawSchedule,
         }}
         getComponent={() => ThawScheduleScreen}
+      />
+
+      <Stack.Screen
+        name="result-screen"
+        component={
+          ResultScreen as unknown as React.ComponentType<
+            Record<string, unknown>
+          >
+        }
+        options={{headerShown: false}}
       />
     </Stack.Navigator>
   )

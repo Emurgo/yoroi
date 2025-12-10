@@ -2,15 +2,23 @@ import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useWalletManager} from '@yoroi/wallet-manager'
 
-import {RouteProp, useRoute} from '@react-navigation/native'
+import {
+  CommonActions,
+  RouteProp,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native'
+import {StackNavigationProp} from '@react-navigation/stack'
 import {BigNumber} from 'bignumber.js'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {ScrollView, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {isInsufficientBalanceError} from '~/features/Staking/Governance/common/transactionErrorHandling'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
+import {useResultNavigation} from '~/kernel/navigation/hooks/useResultNavigation'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Badge} from '~/ui/Badge/Badge'
 import {Button} from '~/ui/Button/Button'
@@ -34,6 +42,7 @@ export const ThawScheduleScreen = () => {
   const strings = useStrings()
   const {atoms: ta} = useTheme()
   const route = useRoute<RouteProp<AirdropRoutes, 'airdrop-thaw-schedule'>>()
+  const navigation = useNavigation<StackNavigationProp<AirdropRoutes>>()
   const {allocation: allocationFromParams} = route.params
 
   const walletManager = useWalletManager()
@@ -49,6 +58,7 @@ export const ThawScheduleScreen = () => {
 
   const {buildTransaction, submitTransaction} = useRedeemThaw()
   const {navigateToTxReview} = useWalletNavigation()
+  const resultNavigation = useResultNavigation()
 
   const isReadOnly = meta?.isReadOnly ?? false
   const isWalletInitialized = !!walletManager.selected.wallet
@@ -171,7 +181,40 @@ export const ThawScheduleScreen = () => {
         },
       })
     } catch (error) {
-      logger.error('handleRedeem: Failed to build transaction', {error})
+      // Check if error is due to insufficient funds
+      if (isInsufficientBalanceError(error)) {
+        logger.info(
+          'handleRedeem: Failed to build transaction (insufficient funds)',
+          {error},
+        )
+        resultNavigation.showResultScreen({
+          type: 'error',
+          context: 'default',
+          title: strings.airdrop.insufficientFunds,
+          message: strings.airdrop.redeemError,
+          primaryAction: {
+            title: strings.txReview.failedTxButton,
+            onPress: () => {
+              setIsRedeeming(false)
+              // Navigate back to thaw schedule screen - use reset which works with useBlockGoBack()
+              // Use CommonActions.reset to ensure it works correctly
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [
+                    {
+                      name: 'airdrop-thaw-schedule',
+                      params: {allocation},
+                    },
+                  ],
+                }),
+              )
+            },
+          },
+        })
+        return
+      }
+
       setIsRedeeming(false)
     }
   }
