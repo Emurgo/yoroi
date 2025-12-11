@@ -162,6 +162,7 @@ export const useRedeemThaw = () => {
       signedTx: Transaction | ((csl: WasmModuleProxy) => Transaction)
     }): Promise<string> => {
       if (!wallet) {
+        logger.error('useRedeemThaw.submitTransaction: Wallet not available')
         throw new Error('Wallet not available')
       }
 
@@ -178,6 +179,12 @@ export const useRedeemThaw = () => {
         const tx = csl.Transaction.fromBytes(signedTxBytes)
         const witnessSet = tx.witnessSet()
         if (!witnessSet) {
+          logger.error(
+            'useRedeemThaw.submitTransaction: Failed to extract witness set',
+            {
+              destAddress,
+            },
+          )
           throw new Error(
             'Failed to extract witness set from signed transaction',
           )
@@ -194,11 +201,6 @@ export const useRedeemThaw = () => {
           transaction_witness_set: witnessSetHex,
         },
       )
-
-      logger.info('Transaction submitted successfully', {
-        address: destAddress,
-        transactionId: submitResponse.transaction_id,
-      })
 
       return submitResponse.transaction_id
     },

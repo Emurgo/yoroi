@@ -131,7 +131,7 @@ export const useAirdropEligibility = () => {
         addressesToCheck.push(address)
       }
 
-      logger.info('Address eligibility check', {
+      logger.debug('Address eligibility check', {
         totalAddresses: addresses.length,
         cachedNotEligible: cachedNotEligible.size,
         cachedEligible: Object.keys(cachedEligible).length,
@@ -244,7 +244,7 @@ export const useAirdropEligibility = () => {
         addressesToCheck.push(externalAddress)
       }
 
-      logger.info('Fetching thaw schedules', {
+      logger.debug('Fetching thaw schedules', {
         addressesToCheckCount: addressesToCheck.length,
         cachedAllocationsCount: allocations.length,
       })

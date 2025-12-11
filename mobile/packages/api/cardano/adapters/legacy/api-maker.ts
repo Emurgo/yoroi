@@ -1,3 +1,4 @@
+import {getLogger} from '@yoroi/common'
 import {
   RemoteCertificateMeta,
   StakePoolInfoRequest,
@@ -36,6 +37,8 @@ import {
 import {handleError} from '../../errors'
 import {Addresses, CardanoApiAdapter, WalletContext} from '../../types'
 import {fetchDefault} from '../../utils/fetch'
+
+const logger = getLogger()
 
 /**
  * Internal RawTransaction type - only used within API adapters
@@ -324,7 +327,12 @@ export const legacyApiMaker = ({
       try {
         await fetchDefault('txs/signed', {signedTx: txStr}, baseApiUrl)
       } catch (e) {
-        throw e instanceof Error ? handleError(e) : e
+        const error = e instanceof Error ? handleError(e) : e
+        logger.error('legacyApi.submitTransaction: HTTP request failed', {
+          error: error instanceof Error ? error.message : String(error),
+          errorStack: error instanceof Error ? error.stack : undefined,
+        })
+        throw error
       }
     },
 

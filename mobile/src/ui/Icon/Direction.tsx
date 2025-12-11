@@ -4,6 +4,7 @@ import * as React from 'react'
 import {View, ViewStyle} from 'react-native'
 
 import {logger} from '~/kernel/logger/logger'
+import {Airdrop} from '~/ui/Icon/Airdrop'
 import {DigitalAsset} from '~/ui/Icon/DigitalAsset'
 import {Governance} from '~/ui/Icon/Governance'
 import {Lock} from '~/ui/Icon/Lock'
@@ -33,7 +34,7 @@ export const Direction = ({
 
   // Determine icon and styles based on operation first, then fall back to direction
   const iconKey = getIconKey(transactionDirection, operation)
-  const iconStyles = styleMap(p)[iconKey]
+  const iconStyles = styleMap(p, transactionDirection)[iconKey]
   const IconComponent = iconMap[iconKey]
 
   if (!IconComponent) {
@@ -65,11 +66,12 @@ export const Direction = ({
 }
 
 /**
- * Determine icon key based on operation type or fall back to transaction direction
+ * Determine icon key based on operation type key (fixed, non-localized) or fall back to transaction direction
+ * Operation type keys come from getOperationTypeKey() and are camelCase (e.g., 'nightRedemption', 'smartContract')
  */
 const getIconKey = (
   direction: 'SENT' | 'RECEIVED' | 'SELF' | 'MULTI',
-  operation: string | null | undefined,
+  operationTypeKey: string | null | undefined,
 ):
   | 'SENT'
   | 'RECEIVED'
@@ -85,58 +87,46 @@ const getIconKey = (
   | 'VOTE_DELEGATION'
   | 'COLLATERAL_CREATION'
   | 'MINT'
-  | 'BURN' => {
-  if (!operation) {
+  | 'BURN'
+  | 'NIGHT_REDEMPTION' => {
+  if (!operationTypeKey) {
     return direction
   }
 
-  const opLower = operation.toLowerCase()
-
-  // Map operation strings to icon keys
-  if (opLower.includes('collateral creation')) {
-    return 'COLLATERAL_CREATION'
+  // Map operation type keys (fixed, non-localized camelCase) to icon keys
+  switch (operationTypeKey) {
+    case 'nightRedemption':
+      return 'NIGHT_REDEMPTION'
+    case 'withdrawal':
+      return 'WITHDRAWAL'
+    case 'burn':
+      return 'BURN'
+    case 'mint':
+      return 'MINT'
+    case 'swap':
+    case 'swapCreated':
+    case 'swapResolved':
+    case 'swapCancel':
+      return 'SWAP'
+    case 'smartContract':
+      return 'SMART_CONTRACT'
+    case 'stakeUndelegation':
+      return 'STAKE_UNDELEGATION'
+    case 'stakingDelegated':
+    case 'stakeDelegation':
+      return 'STAKE_DELEGATION'
+    case 'stakeDeregistration':
+      return 'STAKE_DEREGISTRATION'
+    case 'stakeRegistration':
+      return 'STAKE_REGISTRATION'
+    case 'voteDelegation':
+      return 'VOTE_DELEGATION'
+    case 'collateralCreation':
+      return 'COLLATERAL_CREATION'
+    default:
+      // Fall back to direction if operation type key is unknown
+      return direction
   }
-  if (opLower.includes('withdrawal')) {
-    return 'WITHDRAWAL'
-  }
-  if (opLower.includes('burn')) {
-    return 'BURN'
-  }
-  if (opLower.includes('mint')) {
-    return 'MINT'
-  }
-  if (
-    opLower.includes('swap') ||
-    opLower.includes('swap created') ||
-    opLower.includes('swap resolved') ||
-    opLower.includes('swap cancel')
-  ) {
-    return 'SWAP'
-  }
-  if (opLower.includes('smart contract')) {
-    return 'SMART_CONTRACT'
-  }
-  if (opLower.includes('stake undelegation')) {
-    return 'STAKE_UNDELEGATION'
-  }
-  if (opLower.includes('staking delegated')) {
-    return 'STAKE_DELEGATION'
-  }
-  if (opLower.includes('stake deregistration')) {
-    return 'STAKE_DEREGISTRATION'
-  }
-  if (opLower.includes('stake delegation')) {
-    return 'STAKE_DELEGATION'
-  }
-  if (opLower.includes('stake registration')) {
-    return 'STAKE_REGISTRATION'
-  }
-  if (opLower.includes('vote delegation')) {
-    return 'VOTE_DELEGATION'
-  }
-
-  // Fall back to direction if no operation match
-  return direction
 }
 
 const defaultSize = 36
@@ -156,7 +146,8 @@ const iconMap: Record<
   | 'VOTE_DELEGATION'
   | 'COLLATERAL_CREATION'
   | 'MINT'
-  | 'BURN',
+  | 'BURN'
+  | 'NIGHT_REDEMPTION',
   ({size, color}: {size: number; color: string}) => React.ReactNode
 > = {
   SENT: Send,
@@ -174,91 +165,84 @@ const iconMap: Record<
   COLLATERAL_CREATION: Lock,
   MINT: DigitalAsset,
   BURN: Send,
+  NIGHT_REDEMPTION: Airdrop,
+}
+
+/**
+ * Get direction-based colors for operation types
+ * Primary blue for SENT (spending), success green for RECEIVED (receiving)
+ */
+const getDirectionColors = (
+  color: ThemedPalette,
+  direction: 'SENT' | 'RECEIVED' | 'SELF' | 'MULTI',
+): {text: string; background: string; icon: string} => {
+  switch (direction) {
+    case 'SENT':
+      return {
+        text: color.el_primary_medium,
+        background: color.primary_100,
+        icon: color.el_primary_medium,
+      }
+    case 'RECEIVED':
+      return {
+        text: color.secondary_600,
+        background: color.secondary_100,
+        icon: color.secondary_600,
+      }
+    case 'SELF':
+    case 'MULTI':
+    default:
+      return {
+        text: color.gray_900,
+        background: color.gray_100,
+        icon: color.gray_900,
+      }
+  }
 }
 
 export const styleMap: (
   color: ThemedPalette,
+  direction: 'SENT' | 'RECEIVED' | 'SELF' | 'MULTI',
 ) => Record<
   ThemeStatus,
   {background: string; icon: string; text: string; size?: number}
-> = (color) => ({
-  SELF: {
-    text: color.gray_900,
-    background: color.gray_100,
-    icon: color.gray_900,
-  },
-  COLLATERAL_CREATION: {
-    text: color.gray_900,
-    background: color.gray_100,
-    icon: color.gray_900,
-  },
-  SENT: {
-    text: color.el_primary_medium,
-    background: color.primary_100,
-    icon: color.el_primary_medium,
-  },
-  RECEIVED: {
-    text: color.secondary_600,
-    background: color.secondary_100,
-    icon: color.secondary_600,
-  },
-  MULTI: {
-    text: color.gray_900,
-    background: color.gray_100,
-    icon: color.gray_900,
-    size: 50,
-  },
-  WITHDRAWAL: {
-    text: color.secondary_600,
-    background: color.secondary_100,
-    icon: color.secondary_600,
-  },
-  SWAP: {
-    text: color.el_primary_medium,
-    background: color.primary_100,
-    icon: color.el_primary_medium,
-  },
-  SMART_CONTRACT: {
-    text: color.el_primary_medium,
-    background: color.primary_100,
-    icon: color.el_primary_medium,
-  },
-  STAKE_REGISTRATION: {
-    text: color.secondary_600,
-    background: color.secondary_100,
-    icon: color.secondary_600,
-  },
-  STAKE_DEREGISTRATION: {
-    text: color.gray_900,
-    background: color.gray_100,
-    icon: color.gray_900,
-  },
-  STAKE_DELEGATION: {
-    text: color.secondary_600,
-    background: color.secondary_100,
-    icon: color.secondary_600,
-  },
-  STAKE_UNDELEGATION: {
-    text: color.gray_900,
-    background: color.gray_100,
-    icon: color.gray_900,
-  },
-  VOTE_DELEGATION: {
-    text: color.el_primary_medium,
-    background: color.primary_100,
-    icon: color.el_primary_medium,
-  },
-  MINT: {
-    text: color.secondary_600,
-    background: color.secondary_100,
-    icon: color.secondary_600,
-  },
-  BURN: {
-    text: color.el_primary_medium,
-    background: color.primary_100,
-    icon: color.el_primary_medium,
-  },
-})
+> = (color, direction) => {
+  // Get direction-based colors for operation types
+  const directionColors = getDirectionColors(color, direction)
+
+  return {
+    SELF: {
+      text: color.gray_900,
+      background: color.gray_100,
+      icon: color.gray_900,
+    },
+    COLLATERAL_CREATION: {
+      text: color.gray_900,
+      background: color.gray_100,
+      icon: color.gray_900,
+    },
+    SENT: directionColors,
+    RECEIVED: directionColors,
+    MULTI: {
+      text: color.gray_900,
+      background: color.gray_100,
+      icon: color.gray_900,
+      size: 50,
+    },
+    // All operation types now use direction-based colors
+    WITHDRAWAL: directionColors,
+    SWAP: directionColors,
+    SMART_CONTRACT: directionColors,
+    STAKE_REGISTRATION: directionColors,
+    STAKE_DEREGISTRATION: directionColors,
+    STAKE_DELEGATION: directionColors,
+    STAKE_UNDELEGATION: directionColors,
+    VOTE_DELEGATION: directionColors,
+    MINT: directionColors,
+    BURN: directionColors,
+    NIGHT_REDEMPTION: directionColors,
+  }
+}
 
 type ThemeStatus =
   | 'SENT'
@@ -276,3 +260,4 @@ type ThemeStatus =
   | 'COLLATERAL_CREATION'
   | 'MINT'
   | 'BURN'
+  | 'NIGHT_REDEMPTION'

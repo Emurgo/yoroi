@@ -1,7 +1,10 @@
-import {cip30ExtensionMaker} from '@yoroi/cardano-wallet'
-import {cip95ExtensionMaker, supportsCIP95} from '@yoroi/cardano-wallet'
-import {YoroiWallet} from '@yoroi/cardano-wallet'
-import {collateralConfig} from '@yoroi/cardano-wallet'
+import {
+  YoroiWallet,
+  cip30ExtensionMaker,
+  cip95ExtensionMaker,
+  collateralConfig,
+  supportsCIP95,
+} from '@yoroi/cardano-wallet'
 import {
   DappConnector,
   ResolverWallet,
@@ -197,7 +200,9 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
     getBalance: (tokenId) => cip30.getBalance(tokenId),
     getChangeAddress: () => cip30.getChangeAddress(),
     getRewardAddresses: () => cip30.getRewardAddresses(),
-    submitTx: async (cbor) => await cip30.submitTx(cbor),
+    submitTx: async (cbor) => {
+      return await cip30.submitTx(cbor)
+    },
     getCollateral: async (value) => await cip30.getCollateral(value),
     getCollateralInfo: () => {
       const collateralInfo = wallet.getCollateralInfo()
