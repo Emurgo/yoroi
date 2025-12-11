@@ -1,9 +1,11 @@
-import {cip30ExtensionMaker} from '@yoroi/cardano-wallet'
-import {cip30LedgerExtensionMaker} from '@yoroi/cardano-wallet'
-import {BaseLedgerError} from '@yoroi/cardano-wallet'
-import {YoroiWallet} from '@yoroi/cardano-wallet'
-import {isEmptyString} from '@yoroi/cardano-wallet'
-import {collateralConfig} from '@yoroi/cardano-wallet'
+import {
+  BaseLedgerError,
+  YoroiWallet,
+  cip30ExtensionMaker,
+  cip30LedgerExtensionMaker,
+  collateralConfig,
+  isEmptyString,
+} from '@yoroi/cardano-wallet'
 import {useAsyncStorage} from '@yoroi/common'
 import {DappConnection, DappConnector} from '@yoroi/dapp-connector'
 import {Branded} from '@yoroi/types'
@@ -69,6 +71,15 @@ export const useDappConnectorManager = () => {
   const handleSignTx = React.useCallback(
     ({cbor, manager}: {cbor: string; manager: DappConnector}) => {
       return new Promise<string>(async (resolve, reject) => {
+        logger.info(
+          'useDappConnectorManager::handleSignTx - dapp transaction request received',
+          {
+            cborLength: cbor?.length,
+            activeTabOrigin,
+            walletId: wallet.id,
+          },
+        )
+
         let shouldResolve = true
         const dapps = dappList?.dapps || []
         const dappsConnected = await manager.listAllConnections()
@@ -78,6 +89,15 @@ export const useDappConnectorManager = () => {
                 dapp.dappOrigin.includes(activeTabOrigin),
               )
             : null
+
+        logger.info(
+          'useDappConnectorManager::handleSignTx - dapp connection resolved',
+          {
+            hasMatchingConnection: !!matchingDappConnection,
+            dappOrigin: matchingDappConnection?.dappOrigin,
+            totalConnections: dappsConnected.length,
+          },
+        )
 
         if (matchingDappConnection?.dappOrigin != null) {
           const isDappRequestingCollateral =
@@ -105,7 +125,7 @@ export const useDappConnectorManager = () => {
 
         navigateToTxReview({
           cbor,
-          preventSubmit: true,
+          preventSubmit: false,
           context: 'dapp',
           createdBy:
             matchingDapp != null
@@ -117,7 +137,24 @@ export const useDappConnectorManager = () => {
               : undefined,
           onSuccessWithoutFeedback: (args) => {
             shouldResolve = false
+            logger.info(
+              'useDappConnectorManager::handleSignTx - transaction signed successfully',
+              {
+                hasRootKey: !!args?.rootKey,
+                hasTxId: !!args?.txId,
+                txId: args?.txId,
+                dappOrigin: matchingDappConnection?.dappOrigin,
+              },
+            )
+
             if (isEmptyString(args?.rootKey) || args?.rootKey == null) {
+              logger.error(
+                'useDappConnectorManager::handleSignTx - invalid state: missing rootKey',
+                {
+                  hasRootKey: !!args?.rootKey,
+                  hasTxId: !!args?.txId,
+                },
+              )
               reject(
                 new Error(
                   'useDappConnectorManager::handleSignTx: invalid state',
@@ -182,7 +219,7 @@ export const useDappConnectorManager = () => {
         navigateToTxReview({
           cbor,
           partial,
-          preventSubmit: true,
+          preventSubmit: false,
           context: 'dapp',
           createdBy:
             matchingDapp != null

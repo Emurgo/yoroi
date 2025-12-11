@@ -111,6 +111,8 @@ import {UtxoManager, makeUtxoManager} from './utxoManager/utxoManager'
 import {utxosMaker} from './utxoManager/utxos'
 import {CardanoMobileWrapped} from './wrappedCsl'
 
+const logger = getLogger()
+
 type WalletState = {
   id: string
   publicKeyHex: string
@@ -1031,10 +1033,20 @@ function createWalletObject(
   }
 
   const submitTransaction = async (base64SignedTx: TransactionCborBase64) => {
-    await legacyApi.submitTransaction(
-      base64SignedTx,
-      networkManager.legacyApiBaseUrl,
-    )
+    try {
+      await legacyApi.submitTransaction(
+        base64SignedTx,
+        networkManager.legacyApiBaseUrl,
+      )
+    } catch (error) {
+      logger.error('cardano-wallet.submitTransaction: API submission failed', {
+        error: error instanceof Error ? error.message : String(error),
+        errorStack: error instanceof Error ? error.stack : undefined,
+        apiBaseUrl: networkManager.legacyApiBaseUrl,
+        walletId: state.id,
+      })
+      throw error
+    }
   }
 
   const syncUtxos = async ({isForced = false}: {isForced?: boolean} = {}) => {

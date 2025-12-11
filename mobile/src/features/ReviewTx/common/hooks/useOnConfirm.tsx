@@ -522,6 +522,7 @@ const submitTx = async (
   const signedTxBase64 = Branded.asTransactionCborBase64(
     Buffer.from(signedTxBytes).toString('base64'),
   )
+
   try {
     await wallet.submitTransaction(signedTxBase64)
   } catch (submitError) {
@@ -530,6 +531,7 @@ const submitTx = async (
         submitError instanceof Error
           ? submitError.message
           : String(submitError),
+      errorStack: submitError instanceof Error ? submitError.stack : undefined,
       txId: signResult.txId,
       walletId: wallet.id,
     })
