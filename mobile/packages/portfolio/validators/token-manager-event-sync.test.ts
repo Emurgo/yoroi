@@ -5,7 +5,7 @@ import {isEventTokenManagerSync} from './token-manager-event-sync'
 describe('isEventTokenManagerSync', () => {
   it('should return true for valid TokenManagerSync event', () => {
     const data: Portfolio.Event.TokenManagerSync = {
-      ids: ['token.1', 'token.2'],
+      ids: ['token.1' as Portfolio.Token.Id, 'token.2' as Portfolio.Token.Id],
       on: Portfolio.Event.ManagerOn.Sync,
       sourceId: 'sourceId',
     }
@@ -15,7 +15,7 @@ describe('isEventTokenManagerSync', () => {
 
   it('should return false for invalid TokenManagerSync event', () => {
     const data = {
-      ids: ['token1', 'token2'],
+      ids: ['token1' as Portfolio.Token.Id, 'token2' as Portfolio.Token.Id],
       on: Portfolio.Event.ManagerOn.Hydrate,
       sourceId: 'sourceId',
     }
@@ -30,7 +30,7 @@ describe('isEventTokenManagerSync', () => {
 
   it('should return false for missing properties', () => {
     const data = {
-      ids: ['token1', 'token2'],
+      ids: ['token1' as Portfolio.Token.Id, 'token2' as Portfolio.Token.Id],
       on: Portfolio.Event.ManagerOn.Sync,
     }
     const result = isEventTokenManagerSync(data)

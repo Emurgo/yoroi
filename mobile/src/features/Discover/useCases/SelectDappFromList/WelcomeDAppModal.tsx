@@ -20,8 +20,25 @@ export const WelcomeDAppModal = ({disabled}: {disabled?: boolean}) => {
   const [showing, setShowing] = React.useState(false)
 
   React.useEffect(() => {
-    if (disabled || seen || showing || seen === undefined) return
+    // Only show modal when seen is explicitly false (not undefined, not true)
+    // Also wait for seen to be loaded (not undefined)
+    if (disabled) {
+      return
+    }
 
+    if (seen === undefined) {
+      return
+    }
+
+    if (seen === true) {
+      return
+    }
+
+    if (showing) {
+      return
+    }
+
+    setShowing(true)
     openModal({
       title: strings.discover.welcomeToYoroiDAppExplorer,
       content: (
@@ -41,8 +58,9 @@ export const WelcomeDAppModal = ({disabled}: {disabled?: boolean}) => {
       footer: (
         <Modal.Footer>
           <Button
-            onPress={() => {
-              setSeen(true)
+            onPress={async () => {
+              await setSeen(true)
+              setShowing(false)
               closeModal()
             }}
             title={strings.discover.next}
@@ -52,7 +70,6 @@ export const WelcomeDAppModal = ({disabled}: {disabled?: boolean}) => {
       height: 530 + insets.bottom,
       canDiscard: false,
     })
-    setShowing(true)
   }, [
     closeModal,
     disabled,

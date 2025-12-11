@@ -30,14 +30,20 @@ export const WalletNavigator = () => {
     [p],
   )
 
+  // Memoize headerTitle component to prevent recreation on every render
+  const headerTitle = React.useCallback(
+    ({children}: {children: React.ReactNode}) => (
+      <NetworkTag directChangeActive>{children}</NetworkTag>
+    ),
+    [],
+  )
+
   const stackOptions: StackNavigationOptions = React.useMemo(
     () => ({
       title: strings.global.walletSelectionScreenHeader,
-      headerTitle: ({children}) => (
-        <NetworkTag directChangeActive>{children}</NetworkTag>
-      ),
+      headerTitle,
     }),
-    [strings.global.walletSelectionScreenHeader],
+    [strings.global.walletSelectionScreenHeader, headerTitle],
   )
 
   return (

@@ -1,3 +1,4 @@
+import {getLogger} from '@yoroi/logger'
 import {Api, Portfolio} from '@yoroi/types'
 
 import {BigNumber} from 'bignumber.js'
@@ -27,7 +28,10 @@ export const toSecondaryTokenInfos = (
         tokenInfoWithCache as Api.ResponseWithCache<Portfolio.Token.Info>
 
       if (!parseSecondaryTokenInfoWithCacheRecord(castedTokenInfoWithCache)) {
-        console.warn('Failed to transform token info ', id)
+        getLogger().warn('Failed to transform token info', {
+          origin: 'portfolio',
+          tokenId: id,
+        })
         return acc
       }
 

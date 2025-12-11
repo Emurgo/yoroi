@@ -6,16 +6,16 @@ import {
   useVotingCertificate,
 } from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {useRemoteConfig} from '~/features/RemoteConfig/hooks/useRemoteConfig'
+import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
 import {LearnMoreLink} from '~/features/Staking/Governance/common/LearnMoreLink/LearnMoreLink'
 import {YoroiRecordLink} from '~/features/Staking/Governance/common/YoroiRecordLink/YoroiRecordLink'
 import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Space} from '~/ui/Space/Space'
 
@@ -70,10 +70,14 @@ export const ChangeVoteScreen = () => {
     })
   }
 
+  const yoroiDrepIdHex = React.useMemo(
+    () => getYoroiDrepIdHex(wallet.networkManager.network),
+    [wallet.networkManager.network],
+  )
+
   const handleDelegateToYoroi = async () => {
     if (isPending) return
     const stakingKey = wallet.getStakingKey()
-    const yoroiDrepIdHex = getYoroiDrepIdHex(wallet.networkManager.network)
 
     const options = {
       hash: yoroiDrepIdHex,
@@ -118,8 +122,7 @@ export const ChangeVoteScreen = () => {
   const voteHash =
     voteKind === 'delegate' && action != null ? action.hash : undefined
   const isDelegatingNotToYoroiDrep =
-    voteKind === 'delegate' &&
-    voteHash !== getYoroiDrepIdHex(wallet.networkManager.network)
+    voteKind === 'delegate' && voteHash !== yoroiDrepIdHex
 
   return (
     <ScrollView style={[a.flex_1, a.px_lg, ta.bg_color_max]}>

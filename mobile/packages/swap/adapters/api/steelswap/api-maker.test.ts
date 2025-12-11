@@ -1,5 +1,6 @@
 import {isLeft, isRight} from '@yoroi/common'
-import {Chain, Portfolio} from '@yoroi/types'
+import {primaryTokenId} from '@yoroi/portfolio'
+import {Address, Chain, Portfolio, TokenId} from '@yoroi/types'
 
 import {steelswapApiMaker} from './api-maker'
 import {
@@ -11,10 +12,10 @@ import {
 } from './types'
 
 const mockConfig = {
-  address: 'addr1test',
+  address: 'addr1test' as Address,
   network: Chain.Network.Mainnet as Chain.SupportedNetworks,
   primaryTokenInfo: {
-    id: '.' as const,
+    id: primaryTokenId,
     name: 'Cardano',
     ticker: 'ADA',
     decimals: 6,
@@ -258,9 +259,9 @@ describe('steelswapApiMaker', () => {
 
       const api = steelswapApiMaker(mockConfig)
       const result = await api.estimate({
-        tokenIn: '.' as const,
+        tokenIn: primaryTokenId,
         tokenOut:
-          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as const,
+          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as TokenId,
         amountIn: 2, // 2 ADA in decimal
         slippage: 0.5,
       })
@@ -289,8 +290,8 @@ describe('steelswapApiMaker', () => {
 
       const api = steelswapApiMaker(mockConfig)
       const result = await api.estimate({
-        tokenIn: '.' as const,
-        tokenOut: 'invalid.invalid' as const,
+        tokenIn: primaryTokenId,
+        tokenOut: 'invalid.invalid' as TokenId,
         amountIn: 1000000,
         slippage: 0.5,
       })
@@ -301,9 +302,9 @@ describe('steelswapApiMaker', () => {
     it('should reject limit estimates (wantedPrice)', async () => {
       const api = steelswapApiMaker(mockConfig)
       const result = await api.estimate({
-        tokenIn: '.' as const,
+        tokenIn: primaryTokenId,
         tokenOut:
-          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as const,
+          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as TokenId,
         amountIn: 2,
         slippage: 0.5,
         wantedPrice: 1.5, // Limit estimate - should be rejected
@@ -336,8 +337,8 @@ describe('steelswapApiMaker', () => {
 
       const api = steelswapApiMaker(mockConfig)
       const result = await api.estimate({
-        tokenIn: '.' as const,
-        tokenOut: '.' as const,
+        tokenIn: primaryTokenId,
+        tokenOut: primaryTokenId,
         amountIn: 1000000,
         slippage: 0.5,
       })
@@ -416,9 +417,9 @@ describe('steelswapApiMaker', () => {
 
       const api = steelswapApiMaker(mockConfig)
       const result = await api.create({
-        tokenIn: '.' as const,
+        tokenIn: primaryTokenId,
         tokenOut:
-          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as const,
+          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as TokenId,
         amountIn: 2, // 2 ADA in decimal
         slippage: 0.5,
         inputs: ['test-utxo'],
@@ -459,8 +460,8 @@ describe('steelswapApiMaker', () => {
 
       const api = steelswapApiMaker(mockConfig)
       const result = await api.create({
-        tokenIn: '.' as const,
-        tokenOut: '.' as const,
+        tokenIn: primaryTokenId,
+        tokenOut: primaryTokenId,
         amountIn: 2000000,
         slippage: 0.5,
         inputs: [],
@@ -493,8 +494,8 @@ describe('steelswapApiMaker', () => {
           aggregator: 'steelswap' as any,
           protocol: 'minswap-v2' as any,
           status: 'open',
-          tokenIn: '.' as const,
-          tokenOut: '.' as const,
+          tokenIn: primaryTokenId,
+          tokenOut: primaryTokenId,
           amountIn: 1000000,
           expectedAmountOut: 2000000,
           actualAmountOut: 2000000,

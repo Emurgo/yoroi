@@ -1,11 +1,11 @@
-import {Portfolio} from '@yoroi/types'
+import {Portfolio, TokenId} from '@yoroi/types'
 
 import {createUnknownTokenInfo} from './create-unknown-token-info'
 
 describe('createPrimaryTokenInfo', () => {
   it('should create secondary token info with additional properties', () => {
     const cardanoUnknownToken: Pick<Portfolio.Token.Info, 'name' | 'id'> = {
-      id: '14696a4676909f4e3cb1f2e60e2e08e5abed70caf5c02699be971139.6964',
+      id: '14696a4676909f4e3cb1f2e60e2e08e5abed70caf5c02699be971139.6964' as TokenId,
       name: 'id (unknown)',
     }
 

@@ -1,5 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+import type {ModernUtxo} from '@yoroi/tx'
 import {Portfolio} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {FlashList} from '@shopify/flash-list'
 import * as React from 'react'
@@ -7,13 +9,10 @@ import {ActivityIndicator, Text, TouchableOpacity, View} from 'react-native'
 
 import {usePortfolioTokenInfos} from '~/features/Portfolio/common/hooks/usePortfolioTokenInfos'
 import {MiniTokenAmountItem} from '~/features/Portfolio/ui/TokenAmountItem/MiniTokenAmountItem'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Space} from '~/ui/Space/Space'
 
-import {UtxoList} from './useUtxoList'
-
-export const UtxoItem = ({item}: {item: UtxoList[number]['utxos'][number]}) => {
+const UtxoItemComponent = ({item}: {item: ModernUtxo}) => {
   const {atoms: ta, palette: p} = useTheme()
   const {wallet} = useSelectedWallet()
   const {navigateToTxDetails} = useWalletNavigation()
@@ -31,9 +30,11 @@ export const UtxoItem = ({item}: {item: UtxoList[number]['utxos'][number]}) => {
 
   return (
     <View style={[a.flex, a.flex_1, a.p_sm]}>
-      <TouchableOpacity onPress={() => navigateToTxDetails(item.txHash)}>
-        <Text style={[ta.text_gray_max, a.body_2_md_regular]}>{utxoId}</Text>
-      </TouchableOpacity>
+      <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+        <TouchableOpacity onPress={() => navigateToTxDetails(item.txHash)}>
+          <Text style={[ta.text_gray_max, a.body_2_md_regular]}>{utxoId}</Text>
+        </TouchableOpacity>
+      </View>
 
       <FlashList
         data={Object.entries(item.balance)}
@@ -53,3 +54,14 @@ export const UtxoItem = ({item}: {item: UtxoList[number]['utxos'][number]}) => {
     </View>
   )
 }
+
+export const UtxoItem = React.memo(
+  UtxoItemComponent,
+  (prevProps, nextProps) => {
+    // Only re-render if UTXO identifier changes
+    return (
+      `${prevProps.item.txHash}#${prevProps.item.txIndex}` ===
+      `${nextProps.item.txHash}#${nextProps.item.txIndex}`
+    )
+  },
+)

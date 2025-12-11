@@ -1,3 +1,4 @@
+import {isEmptyString} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
@@ -6,7 +7,6 @@ import {TouchableOpacity, View} from 'react-native'
 import {Hr} from '~/ui/Hr/Hr'
 import {Icon} from '~/ui/Icon'
 import {Text} from '~/ui/Text/Text'
-import {isEmptyString} from '~/wallets/utils/string'
 
 type SettingsSectionProps = React.PropsWithChildren<{
   title?: string

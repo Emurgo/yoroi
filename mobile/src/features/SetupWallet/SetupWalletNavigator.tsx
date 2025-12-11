@@ -3,14 +3,13 @@ import {useTheme} from '@yoroi/theme'
 import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
 
+import {ScanCodeScreen} from '~/features/Scan/useCases/ScanCodeScreen'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {WalletInitRoutes} from '~/kernel/navigation/types'
 
 import {NetworkTag} from '../Settings/ui/shared/NetworkTag'
 import {PreparingWalletScreen} from './common/PreparingWalletScreen/PreparingWalletScreen'
-import {ImportReadOnlyWalletScreen} from './legacy/ImportReadOnlyWallet/ImportReadOnlyWalletScreen'
-import {SaveReadOnlyWalletScreen} from './legacy/SaveReadOnlyWallet/SaveReadOnlyWalletScreen'
 import {ChooseMnemonicTypeScreen} from './useCases/ChooseMnemonicType/ChooseMnemonicTypeScreen'
 import {ChooseSetupTypeScreen} from './useCases/ChooseSetupType/ChooseSetupTypeScreen'
 import {AboutRecoveryPhraseScreen} from './useCases/CreateWallet/AboutRecoveryPhraseScreen'
@@ -20,8 +19,12 @@ import {WalletDetailsScreen} from './useCases/CreateWallet/WalletDetailsScreen'
 import {CheckNanoXScreen} from './useCases/RestoreHwWallet/CheckNanoXScreen'
 import {ConnectNanoXScreen} from './useCases/RestoreHwWallet/ConnectNanoXScreen'
 import {SaveNanoXScreen} from './useCases/RestoreHwWallet/SaveNanoXScreen'
+import {RestoreReadOnlyWalletChooseTypeScreen} from './useCases/RestoreReadOnlyWallet/RestoreReadOnlyWalletChooseTypeScreen'
+import {RestoreReadOnlyWalletFromAddressesScreen} from './useCases/RestoreReadOnlyWallet/RestoreReadOnlyWalletFromAddressesScreen'
+import {RestoreReadOnlyWalletFromKeyScreen} from './useCases/RestoreReadOnlyWallet/RestoreReadOnlyWalletFromKeyScreen'
 import {RestoreWalletDetailsScreen} from './useCases/RestoreWallet/RestoreWalletDetailsScreen'
 import {RestoreWalletScreen} from './useCases/RestoreWallet/RestoreWalletScreen'
+import {RestoreWalletFromLinkScreen} from './useCases/RestoreWalletFromLink/RestoreWalletFromLinkScreen'
 
 const Stack = createStackNavigator<WalletInitRoutes>()
 export const SetupWalletNavigator = () => {
@@ -81,21 +84,6 @@ export const SetupWalletNavigator = () => {
         options={{title: strings.setupWallet.restoreWalletTitle}}
       />
 
-      <Stack.Screen
-        name="setup-wallet-import-read-only"
-        getComponent={() => ImportReadOnlyWalletScreen}
-        options={{
-          title: strings.setupWallet.importReadOnlyTitle,
-          headerTransparent: true,
-        }}
-      />
-
-      <Stack.Screen
-        name="setup-wallet-save-read-only"
-        getComponent={() => SaveReadOnlyWalletScreen}
-        options={{title: strings.setupWallet.saveReadOnlyWalletTitle}}
-      />
-
       <Stack.Screen //
         name="setup-wallet-check-nano-x"
         getComponent={() => CheckNanoXScreen}
@@ -138,6 +126,39 @@ export const SetupWalletNavigator = () => {
         name="setup-wallet-preparing-wallet"
         getComponent={() => PreparingWalletScreen}
         options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name="setup-wallet-restore-from-link"
+        getComponent={() => RestoreWalletFromLinkScreen}
+        options={{title: strings.setupWallet.restoreWalletTitle}}
+      />
+
+      <Stack.Screen
+        name="setup-wallet-restore-read-only-choose-type"
+        getComponent={() => RestoreReadOnlyWalletChooseTypeScreen}
+        options={{title: 'Restore Read-Only Wallet'}}
+      />
+
+      <Stack.Screen
+        name="setup-wallet-restore-read-only-from-key"
+        getComponent={() => RestoreReadOnlyWalletFromKeyScreen}
+        options={{title: 'Restore Read-Only Wallet'}}
+      />
+
+      <Stack.Screen
+        name="setup-wallet-restore-read-only-from-addresses"
+        getComponent={() => RestoreReadOnlyWalletFromAddressesScreen}
+        options={{title: 'Restore Read-Only Wallet'}}
+      />
+
+      <Stack.Screen
+        name="setup-wallet-scan-qr-code"
+        getComponent={() => ScanCodeScreen}
+        options={{
+          title: strings.setupWallet.scanQrCodeTitle,
+          headerShown: true,
+        }}
       />
     </Stack.Navigator>
   )

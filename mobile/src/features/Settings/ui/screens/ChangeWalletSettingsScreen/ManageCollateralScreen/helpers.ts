@@ -1,20 +1,26 @@
-import {App} from '@yoroi/types'
-
-import {YoroiWallet} from '~/wallets/cardano/types'
-import {collateralConfig} from '~/wallets/cardano/utxoManager/utxos'
-import {YoroiEntry} from '~/wallets/types/yoroi'
+import {YoroiWallet} from '@yoroi/cardano-wallet'
+import {asQuantity} from '@yoroi/cardano-wallet'
+import {collateralConfig} from '@yoroi/cardano-wallet'
+import {TransactionOutput} from '@yoroi/tx'
+import {App, Branded} from '@yoroi/types'
 
 const getCollateralAddress = (wallet: YoroiWallet) => {
-  const address = wallet.externalAddresses[0]
+  const address = wallet.externalAddresses()[0]
   if (!address) throw new App.Errors.InvalidState('No External Address')
   return address
 }
 
-export const createCollateralEntry = (wallet: YoroiWallet): YoroiEntry => {
+export const createCollateralEntry = (
+  wallet: YoroiWallet,
+  amount?: string,
+): TransactionOutput => {
+  const collateralAmount = amount
+    ? asQuantity(amount)
+    : collateralConfig.minLovelace
   return {
-    address: getCollateralAddress(wallet),
+    address: Branded.asAddress(getCollateralAddress(wallet)),
     amounts: {
-      [wallet.portfolioPrimaryTokenInfo.id]: collateralConfig.minLovelace,
+      [wallet.portfolioPrimaryTokenInfo.id]: collateralAmount,
     },
   }
 }

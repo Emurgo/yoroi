@@ -1,6 +1,6 @@
 import {cacheRecordMaker} from '@yoroi/common'
 import {createTokenManagerMock, tokenMocks} from '@yoroi/portfolio'
-import {Api, Claim, Portfolio} from '@yoroi/types'
+import {Api, Branded, Claim, Portfolio, TokenId} from '@yoroi/types'
 
 import {claimFaucetResponses} from './api-faucet.mocks'
 import {claimApiMockResponses} from './manager.mocks'
@@ -47,16 +47,16 @@ describe('asClaimToken', () => {
     const claimResponse = claimFaucetResponses.claimTokens.success.claimed
 
     tokenManagerMock.sync.mockResolvedValue(
-      new Map([
+      new Map<TokenId, any>([
         [
-          tokenMocks.nftCryptoKitty.info.id,
+          tokenMocks.nftCryptoKitty.info.id as TokenId,
           cacheRecordMaker(
             {expires: Date.now() + 3_600_000, hash: 'hash3'},
             tokenMocks.nftCryptoKitty.info,
           ),
         ],
         [
-          tokenMocks.rnftWhatever.info.id,
+          tokenMocks.rnftWhatever.info.id as TokenId,
           cacheRecordMaker(
             {expires: Date.now() + 3_600_000, hash: 'hash3'},
             tokenMocks.rnftWhatever.info,
@@ -78,7 +78,7 @@ describe('asClaimToken', () => {
         {info: tokenMocks.nftCryptoKitty.info, quantity: BigInt(44)},
         {info: tokenMocks.rnftWhatever.info, quantity: BigInt(410)},
       ],
-      txHash: 'tx_hash',
+      txHash: Branded.asTransactionHash('tx_hash'),
     })
   })
 
@@ -86,16 +86,16 @@ describe('asClaimToken', () => {
     const claimResponse = claimFaucetResponses.claimTokens.success.queued
 
     tokenManagerMock.sync.mockResolvedValue(
-      new Map([
+      new Map<TokenId, any>([
         [
-          tokenMocks.nftCryptoKitty.info.id,
+          tokenMocks.nftCryptoKitty.info.id as TokenId,
           cacheRecordMaker(
             {expires: Date.now() + 3_600_000, hash: 'hash3'},
             tokenMocks.nftCryptoKitty.info,
           ),
         ],
         [
-          tokenMocks.rnftWhatever.info.id,
+          tokenMocks.rnftWhatever.info.id as TokenId,
           cacheRecordMaker(
             {expires: Date.now() + 3_600_000, hash: 'hash3'},
             tokenMocks.rnftWhatever.info,
@@ -117,16 +117,16 @@ describe('asClaimToken', () => {
     const claimResponse = claimFaucetResponses.claimTokens.success.accepted
 
     tokenManagerMock.sync.mockResolvedValue(
-      new Map([
+      new Map<TokenId, any>([
         [
-          tokenMocks.nftCryptoKitty.info.id,
+          tokenMocks.nftCryptoKitty.info.id as TokenId,
           cacheRecordMaker(
             {expires: Date.now() + 3_600_000, hash: 'hash3'},
             tokenMocks.nftCryptoKitty.info,
           ),
         ],
         [
-          tokenMocks.rnftWhatever.info.id,
+          tokenMocks.rnftWhatever.info.id as TokenId,
           cacheRecordMaker(
             {expires: Date.now() + 3_600_000, hash: 'hash3'},
             tokenMocks.rnftWhatever.info,
@@ -156,7 +156,7 @@ describe('asClaimToken', () => {
     }
 
     tokenManagerMock.sync.mockResolvedValue(
-      new Map([
+      new Map<TokenId, any>([
         [
           tokenMocks.nftCryptoKitty.info.id,
           cacheRecordMaker(
@@ -171,7 +171,7 @@ describe('asClaimToken', () => {
             tokenMocks.rnftWhatever.info,
           ),
         ],
-        ['invalid.', undefined] as any,
+        ['invalid.' as TokenId, undefined] as any,
         ['dead.', {record: tokenMocks.rnftWhatever.info}],
       ]),
     )

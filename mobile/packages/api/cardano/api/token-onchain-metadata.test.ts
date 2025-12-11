@@ -1,4 +1,4 @@
-import {Api} from '@yoroi/types'
+import {Api, Branded} from '@yoroi/types'
 
 import {
   emptyOnChainMetadataRecord,
@@ -254,8 +254,12 @@ describe('getOnChainMetadatas', () => {
   it('should send a POST request to the correct URL with transformed asset ids', async () => {
     mockFetcher.mockResolvedValue({})
     const args: Api.Cardano.TokenId[] = [
-      '9d88eef1d822a708cad279fc7c79c3936733b236011544f8567f4842.3030',
-      '9d88eef1d822a708cad279fc7c79c3936733b236011544f8567f4842.3031',
+      Branded.asTokenId(
+        '9d88eef1d822a708cad279fc7c79c3936733b236011544f8567f4842.3030',
+      ),
+      Branded.asTokenId(
+        '9d88eef1d822a708cad279fc7c79c3936733b236011544f8567f4842.3031',
+      ),
     ]
     const getMetadata = getOnChainMetadatas('https://localhost', mockFetcher)
     await getMetadata(args)
@@ -284,8 +288,12 @@ describe('getOnChainMetadatas', () => {
     const getMetadata = getOnChainMetadatas('https://localhost', mockFetcher)
     await expect(
       getMetadata([
-        '1d88eef1d822a708cad279fc7c79c3936733b236011544f8567f4844.',
-        '1d88eef1d822a708cad279fc7c79c3936733b236011544f8567f4844.',
+        Branded.asTokenId(
+          '1d88eef1d822a708cad279fc7c79c3936733b236011544f8567f4844.',
+        ),
+        Branded.asTokenId(
+          '1d88eef1d822a708cad279fc7c79c3936733b236011544f8567f4844.',
+        ),
       ]),
     ).rejects.toThrow('Invalid asset metadatas')
   })
@@ -296,15 +304,33 @@ describe('getOnChainMetadatas', () => {
     const getMetadata = getOnChainMetadatas('https://localhost', mockFetcher)
 
     const result = await getMetadata([
-      '1d88eef1d822a708cad279fc7c79c3936733b236011544f8567f4844.',
-      '5449dbad479b09de066bdf7934799c8a5aa2b66cf4a11eb759aa76c6.6e66745632',
-      '5449dbad479b09de066bdf7934799c8a5aa2b66cf4a11eb759aa76c6.6e667457697468496d6167654172726179',
-      '775f356c756b70ca6b8e65feec417c7da295179eee6c4bfe9ff33176.6e6674457874726173416e644e6f56657273696f6e',
-      '9d88eef1d822a708cad279fc7c79c3936733b236011544f8567f4842.656d7074795265636f726473',
-      '9d88eef1d822a708cad279fc7c79c3936733b236011544f8567f4842.6674557375616c4d65746164617461',
-      '9d88eef1d822a708cad279fc7c79c3936733b236011544f8567f4842.6d616e795265636f726473',
-      '9d88eef1d822a708cad279fc7c79c3936733b236011544f8567f4842.6e6674557375616c4d65746164617461',
-      '9d88eef1d822a708cad279fc7c79c3936733b236011544f8567f4842.6e667457697468417574686f72416e64457874726173',
+      Branded.asTokenId(
+        '1d88eef1d822a708cad279fc7c79c3936733b236011544f8567f4844.',
+      ),
+      Branded.asTokenId(
+        '5449dbad479b09de066bdf7934799c8a5aa2b66cf4a11eb759aa76c6.6e66745632',
+      ),
+      Branded.asTokenId(
+        '5449dbad479b09de066bdf7934799c8a5aa2b66cf4a11eb759aa76c6.6e667457697468496d6167654172726179',
+      ),
+      Branded.asTokenId(
+        '775f356c756b70ca6b8e65feec417c7da295179eee6c4bfe9ff33176.6e6674457874726173416e644e6f56657273696f6e',
+      ),
+      Branded.asTokenId(
+        '9d88eef1d822a708cad279fc7c79c3936733b236011544f8567f4842.656d7074795265636f726473',
+      ),
+      Branded.asTokenId(
+        '9d88eef1d822a708cad279fc7c79c3936733b236011544f8567f4842.6674557375616c4d65746164617461',
+      ),
+      Branded.asTokenId(
+        '9d88eef1d822a708cad279fc7c79c3936733b236011544f8567f4842.6d616e795265636f726473',
+      ),
+      Branded.asTokenId(
+        '9d88eef1d822a708cad279fc7c79c3936733b236011544f8567f4842.6e6674557375616c4d65746164617461',
+      ),
+      Branded.asTokenId(
+        '9d88eef1d822a708cad279fc7c79c3936733b236011544f8567f4842.6e667457697468417574686f72416e64457874726173',
+      ),
     ])
 
     expect(result).toEqual({
@@ -449,10 +475,18 @@ describe('getOnChainMetadatas', () => {
     mockFetcher.mockResolvedValue(mockResponse)
     const getMetadata = getOnChainMetadatas('https://localhost', mockFetcher)
     const result = await getMetadata([
-      '9d88eef1d822a708cad279fc7c79c3936733b236011544f8567f4843.3030',
-      '9d88eef1d822a708cad279fc7c79c3936733b236011544f8567f4843.3032',
-      '9d88eef1d822a708cad279fc7c79c3936733b236011544f8567f4843.',
-      '9d88eef1d822a708cad279fc7c79c3936733b236011544f8567f4844.',
+      Branded.asTokenId(
+        '9d88eef1d822a708cad279fc7c79c3936733b236011544f8567f4843.3030',
+      ),
+      Branded.asTokenId(
+        '9d88eef1d822a708cad279fc7c79c3936733b236011544f8567f4843.3032',
+      ),
+      Branded.asTokenId(
+        '9d88eef1d822a708cad279fc7c79c3936733b236011544f8567f4843.',
+      ),
+      Branded.asTokenId(
+        '9d88eef1d822a708cad279fc7c79c3936733b236011544f8567f4844.',
+      ),
     ])
 
     expect(result).toEqual({
@@ -496,7 +530,9 @@ describe('getOnChainMetadatas', () => {
     mockFetcher.mockResolvedValue(mockResponse)
     const getMetadata = getOnChainMetadatas('https://localhost', mockFetcher)
     const result = await getMetadata([
-      '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8.776974684f6e6c7946745265636f726473',
+      Branded.asTokenId(
+        '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8.776974684f6e6c7946745265636f726473',
+      ),
     ])
     expect(result).toEqual({
       '4d99f2fcc2fd91aca97865516b8e77a8e6dc011a905b9960289833e8.776974684f6e6c7946745265636f726473':

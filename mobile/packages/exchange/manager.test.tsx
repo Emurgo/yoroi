@@ -249,7 +249,6 @@ describe('referralLink', () => {
     }
   })
 })
-
 describe('provider', () => {
   it('should get the suggested providers', () => {
     const baseUrl = 'https://checkout.banxa.com/?'
@@ -288,6 +287,27 @@ describe('provider', () => {
     const list = await manager.provider.list.byOrderType('sell')
 
     expect(list).toEqual([[providers.encryptus?.id, providers.encryptus]])
+  })
+
+  it('should handle error when getBaseUrl throws', async () => {
+    const api = {
+      getBaseUrl: jest.fn(() => Promise.reject(new Error('Network error'))),
+    } as unknown as Exchange.Api
+
+    const manager = exchangeManagerMaker({api})
+
+    await expect(
+      manager.referralLink.create({
+        providerId: 'banxa',
+        queries: {
+          orderType: 'sell',
+          fiatType: 'USD',
+          coinType: 'ADA',
+          walletAddress:
+            'addr1q9v8dvht2mv847gwarl7r4p49yzys8r7zlep7c8t2hqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqquvupf',
+        },
+      }),
+    ).rejects.toThrow()
   })
 })
 

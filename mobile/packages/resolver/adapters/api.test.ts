@@ -158,5 +158,65 @@ describe('resolverApiMaker', () => {
       const api = resolverApiMaker(mockApiConfig)
       expect(api).toBeDefined()
     })
+
+    it('should work with isMainnet = false', async () => {
+      const deps = {
+        unstoppableApi: {
+          getCryptoAddress: jest
+            .fn()
+            .mockReturnValue(jest.fn().mockResolvedValue('unstoppableAddress')),
+        },
+        handleApi: {
+          getCryptoAddress: jest
+            .fn()
+            .mockReturnValue(jest.fn().mockResolvedValue('handleAddress')),
+        },
+        cnsApi: {
+          getCryptoAddress: jest
+            .fn()
+            .mockReturnValue(jest.fn().mockResolvedValue('cnsAddress')),
+        },
+      }
+
+      const api = resolverApiMaker({...mockApiConfig, isMainnet: false}, deps)
+      const results = await api.getCardanoAddresses({resolve: domain})
+
+      expect(results).toHaveLength(3)
+      expect(deps.handleApi.getCryptoAddress).toHaveBeenCalledWith({
+        request: expect.any(Function),
+        isMainnet: false,
+      })
+      expect(deps.cnsApi.getCryptoAddress).toHaveBeenCalledWith(
+        expect.any(Function),
+        false,
+      )
+    })
+
+    it('should pass fetcherConfig to operations', async () => {
+      const handleFn = jest.fn().mockResolvedValue('handleAddress')
+      const cnsFn = jest.fn().mockResolvedValue('cnsAddress')
+      const unstoppableFn = jest.fn().mockResolvedValue('unstoppableAddress')
+
+      const deps = {
+        unstoppableApi: {
+          getCryptoAddress: jest.fn().mockReturnValue(unstoppableFn),
+        },
+        handleApi: {
+          getCryptoAddress: jest.fn().mockReturnValue(handleFn),
+        },
+        cnsApi: {
+          getCryptoAddress: jest.fn().mockReturnValue(cnsFn),
+        },
+      }
+
+      const api = resolverApiMaker(mockApiConfig, deps)
+      const fetcherConfig = {timeout: 5000}
+
+      await api.getCardanoAddresses({resolve: domain}, fetcherConfig)
+
+      expect(handleFn).toHaveBeenCalledWith(domain, fetcherConfig)
+      expect(cnsFn).toHaveBeenCalledWith(domain, fetcherConfig)
+      expect(unstoppableFn).toHaveBeenCalledWith(domain, fetcherConfig)
+    })
   })
 })

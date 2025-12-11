@@ -3,6 +3,8 @@ import {App} from '@yoroi/types'
 import {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {MMKV} from 'react-native-mmkv'
 
+import {logger} from '~/kernel/logger/logger'
+
 type Tree = {
   [key: string]: Tree | string | null
 }
@@ -69,15 +71,16 @@ export const debugStorage = async <
     node: Tree | string | null,
     prefix = '',
     isLast = true,
-  ) => {
+  ): string => {
+    let output = ''
     if (node === null) {
-      console.log(`${prefix}${isLast ? '└── ' : '├── '}null`)
-      return
+      output += `${prefix}${isLast ? '└── ' : '├── '}null\n`
+      return output
     }
 
     if (typeof node === 'string') {
-      console.log(`${prefix}${isLast ? '└── ' : '├── '}${node}`)
-      return
+      output += `${prefix}${isLast ? '└── ' : '├── '}${node}\n`
+      return output
     }
 
     const entries = Object.entries(node)
@@ -86,16 +89,15 @@ export const debugStorage = async <
       const newPrefix = `${prefix}${isLast ? '    ' : '│   '}`
 
       if (typeof value === 'string') {
-        console.log(`${prefix}${isLastEntry ? '└── ' : '├── '}${key}: ${value}`)
+        output += `${prefix}${isLastEntry ? '└── ' : '├── '}${key}: ${value}\n`
       } else {
-        console.log(`${prefix}${isLastEntry ? '└── ' : '├── '}${key}/`)
-        printTree(value, newPrefix, isLastEntry)
+        output += `${prefix}${isLastEntry ? '└── ' : '├── '}${key}/\n`
+        output += printTree(value, newPrefix, isLastEntry)
       }
     })
+    return output
   }
 
-  console.log('\nStorage Contents:')
-  console.log('================')
-  printTree(tree)
-  console.log('================\n')
+  const output = `\nStorage Contents:\n================\n${printTree(tree)}================\n`
+  logger.debug(output, {origin: 'debugStorage'})
 }

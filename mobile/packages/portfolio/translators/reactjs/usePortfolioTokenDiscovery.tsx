@@ -14,9 +14,9 @@ export function usePortfolioTokenDiscovery(
     network: Chain.SupportedNetworks
   },
   options?: UseSuspenseQueryOptions<
-    Portfolio.Token.Discovery,
+    Portfolio.Token.Discovery | undefined,
     Error,
-    Portfolio.Token.Discovery,
+    Portfolio.Token.Discovery | undefined,
     [Chain.SupportedNetworks, 'usePortfolioTokenDiscovery', Portfolio.Token.Id]
   >,
 ) {
@@ -26,7 +26,9 @@ export function usePortfolioTokenDiscovery(
     queryFn: async () => {
       const response = await getTokenDiscovery(id)
       if (isRight(response)) return response.value.data
-      throw new Error('usePortfolioTokenDiscovery')
+      // Return undefined instead of throwing - allows component to handle missing data gracefully
+      // This is expected for tokens that don't exist in the discovery API (e.g., newly minted tokens)
+      return undefined
     },
   })
 

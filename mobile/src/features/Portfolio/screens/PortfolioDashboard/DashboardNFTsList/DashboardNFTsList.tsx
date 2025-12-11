@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {
@@ -14,7 +15,6 @@ import placeholderDark from '~/assets/img/nft-placeholder-dark.png'
 import placeholderLight from '~/assets/img/nft-placeholder.png'
 import {useNavigateTo} from '~/features/Portfolio/common/hooks/useNavigateTo'
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
 import {MediaPreview} from '~/ui/MediaPreview/MediaPreview'

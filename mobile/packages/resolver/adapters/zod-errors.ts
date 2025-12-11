@@ -1,6 +1,6 @@
 import {ZodError} from 'zod'
 
-export function handleZodErrors(error: any) {
+export function handleZodErrors(error: unknown) {
   if (error instanceof ZodError) {
     const errorDetails = error.issues.map((e) => ({
       field: e.path.join('.'),

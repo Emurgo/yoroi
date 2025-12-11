@@ -7,20 +7,16 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {ReviewTxRoutes} from '~/kernel/navigation/types'
 import {Boundary} from '~/ui/Boundary/Boundary'
-import {Copiable} from '~/ui/Copiable/Copiable'
+import {ResultScreen} from '~/ui/ResultScreen/ResultScreen'
 
-import {useAuth} from '../Auth/context/AuthProvider'
 import {ReviewTxScreen} from './useCases/ReviewTxScreen/ReviewTxScreen'
-import {FailedTxScreen} from './useCases/ShowFailedTxScreen/FailedTxScreen'
 import {InfraestructureIssueScreen} from './useCases/ShowInfraestructureIssueScreen/InfraestructureIssueScreen'
-import {SubmittedTxScreen} from './useCases/ShowSubmittedTxScreen/SubmittedTxScreen'
 
 export const Stack = createStackNavigator<ReviewTxRoutes>()
 
 export const ReviewTxNavigator = () => {
   const {palette: p} = useTheme()
   const strings = useStrings()
-  const {isAuthDev} = useAuth()
 
   return (
     <Stack.Navigator
@@ -30,25 +26,19 @@ export const ReviewTxNavigator = () => {
     >
       <Stack.Screen
         name="review-tx"
-        options={({route}) => ({
+        options={{
           title: strings.txReview.title,
-          headerRight: () =>
-            route.params?.cbor != null && isAuthDev ? (
-              <Copiable text={route.params.cbor} />
-            ) : null,
-        })}
+        }}
         getComponent={() => ReviewTxScreenWrapper}
       />
 
       <Stack.Screen
-        name="review-tx-submitted-tx"
-        getComponent={() => SubmittedTxScreen}
-        options={{headerShown: false}}
-      />
-
-      <Stack.Screen
-        name="review-tx-failed-tx"
-        getComponent={() => FailedTxScreen}
+        name="result-screen"
+        component={
+          ResultScreen as unknown as React.ComponentType<
+            Record<string, unknown>
+          >
+        }
         options={{headerShown: false}}
       />
     </Stack.Navigator>

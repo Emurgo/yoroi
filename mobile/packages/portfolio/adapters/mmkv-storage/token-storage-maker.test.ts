@@ -40,10 +40,13 @@ describe('portfolioTokenStorageMaker', () => {
       [Portfolio.Token.Id, App.CacheRecord<Portfolio.Token.Info>]
     > = [
       [
-        nftCryptoKitty.id,
+        nftCryptoKitty.id as Portfolio.Token.Id,
         cacheRecordMaker({expires: 0, hash: ''}, nftCryptoKitty),
       ],
-      [primaryETH.id, cacheRecordMaker({expires: 0, hash: ''}, primaryETH)],
+      [
+        primaryETH.id as Portfolio.Token.Id,
+        cacheRecordMaker({expires: 0, hash: ''}, primaryETH),
+      ],
     ] as const
 
     token.infos.save(entries)
@@ -66,15 +69,21 @@ describe('portfolioTokenStorageMaker', () => {
       [Portfolio.Token.Id, App.CacheRecord<Portfolio.Token.Info>]
     > = [
       [
-        nftCryptoKitty.id,
+        nftCryptoKitty.id as Portfolio.Token.Id,
         cacheRecordMaker({expires: 0, hash: ''}, nftCryptoKitty),
       ],
-      [primaryETH.id, cacheRecordMaker({expires: 0, hash: ''}, primaryETH)],
+      [
+        primaryETH.id as Portfolio.Token.Id,
+        cacheRecordMaker({expires: 0, hash: ''}, primaryETH),
+      ],
     ] as const
 
     token.infos.save(entries)
 
-    const keys = [nftCryptoKitty.id, primaryETH.id]
+    const keys = [
+      nftCryptoKitty.id as Portfolio.Token.Id,
+      primaryETH.id as Portfolio.Token.Id,
+    ]
     const result = token.infos.read(keys)
 
     expect(result).toEqual(entries)

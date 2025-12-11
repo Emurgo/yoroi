@@ -1,5 +1,5 @@
+import {Logger} from '@yoroi/logger'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {App} from '@yoroi/types'
 
 import * as React from 'react'
 import {FlatList, TextProps, View} from 'react-native'
@@ -13,7 +13,7 @@ export const ListSystemLogsScreen = () => {
   const {atoms: ta} = useTheme()
 
   const renderLogEntry = React.useCallback(
-    ({item: entry}: {item: App.Logger.Entry}) => {
+    ({item: entry}: {item: Logger.Entry}) => {
       return (
         <View style={[a.pb_sm]}>
           <Label>
@@ -53,11 +53,11 @@ export const ListSystemLogsScreen = () => {
 }
 
 const LoggerLevelEmoji = {
-  [App.Logger.Level.Debug]: '🔍',
-  [App.Logger.Level.Log]: '📋',
-  [App.Logger.Level.Info]: 'ℹ️',
-  [App.Logger.Level.Warn]: '⚠️',
-  [App.Logger.Level.Error]: '❌',
+  [Logger.Level.Debug]: '🔍',
+  [Logger.Level.Log]: '📋',
+  [Logger.Level.Info]: 'ℹ️',
+  [Logger.Level.Warn]: '⚠️',
+  [Logger.Level.Error]: '❌',
 } as const
 
 const Label = ({style, children, ...props}: TextProps) => {

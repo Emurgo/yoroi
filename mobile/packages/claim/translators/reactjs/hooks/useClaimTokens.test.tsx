@@ -1,4 +1,4 @@
-import {Claim, Scan} from '@yoroi/types'
+import {Claim, Links} from '@yoroi/types'
 
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 import {act, renderHook, waitFor} from '@testing-library/react'
@@ -24,7 +24,7 @@ describe('useClaimTokens', () => {
     queryClient.clear()
   })
 
-  const scanClaimAction: Scan.ActionClaim = {
+  const cardanoClaimAction: Links.CardanoActionClaim = {
     action: 'claim',
     code: 'code',
     params: {},
@@ -52,7 +52,7 @@ describe('useClaimTokens', () => {
 
     // Trigger the claim action
     await act(async () => {
-      result.current.claimTokens(scanClaimAction)
+      result.current.claimTokens(cardanoClaimAction)
     })
 
     // Wait for the mutation to complete
@@ -61,7 +61,10 @@ describe('useClaimTokens', () => {
     })
 
     expect(claimManagerMock.claimTokens).toHaveBeenCalledTimes(1)
-    expect(claimManagerMock.claimTokens).toHaveBeenCalledWith(scanClaimAction)
+    expect(claimManagerMock.claimTokens).toHaveBeenCalledWith(
+      cardanoClaimAction,
+      expect.any(Object),
+    )
     expect(result.current.isError).toBe(false)
   })
 })

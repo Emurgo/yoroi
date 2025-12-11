@@ -1,11 +1,12 @@
+import {BaseLedgerError, cip30LedgerExtensionMaker} from '@yoroi/cardano-wallet'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
+
 import {Transaction} from '@emurgo/cross-csl-core'
 import {useMutation} from '@tanstack/react-query'
 import * as React from 'react'
 
 import {useConfirmHWConnectionModal} from '~/features/Discover/common/ConfirmHWConnectionModal'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {cip30LedgerExtensionMaker} from '~/wallets/cardano/cip30/cip30-ledger'
-import {BaseLedgerError} from '~/wallets/hw/hw'
+import {logger} from '~/kernel/logger/logger'
 
 export type SignTxWithHW = {
   cbor: string
@@ -26,17 +27,27 @@ export const useSignTxWithHW = () => {
         confirmHWConnection({
           onConfirm: async ({transportType, deviceInfo}) => {
             try {
-              const cip30 = cip30LedgerExtensionMaker(wallet, meta)
+              const cip30 = cip30LedgerExtensionMaker(wallet, meta, {
+                toLedgerSignRequest: wallet._dependencies.toLedgerSignRequest,
+              })
+
               const tx = await cip30.signTx(
                 options.cbor,
                 options.partial ?? false,
                 deviceInfo,
                 transportType === 'USB',
               )
+
               resolve(tx)
               if (options.onSuccess) options.onSuccess(tx)
               closeModal()
             } catch (error) {
+              logger.error('useSignTxWithHW: Failed to sign transaction', {
+                walletId: wallet?.id,
+                error: error instanceof Error ? error.message : String(error),
+                isBaseLedgerError: error instanceof BaseLedgerError,
+              })
+
               if (error instanceof BaseLedgerError) {
                 throw error
               }

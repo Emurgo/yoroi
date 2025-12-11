@@ -1,6 +1,7 @@
-import {usePortfolioTokenInfo} from '@yoroi/portfolio'
+import {isPrimaryToken, usePortfolioTokenInfo} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {App} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {Animated, NativeScrollEvent, NativeSyntheticEvent} from 'react-native'
@@ -12,8 +13,6 @@ import {
 } from '~/features/Portfolio/context/PortfolioProvider'
 import {TxFilter} from '~/features/Transactions/useCases/TxList/TxFilterProvider'
 import {TxList} from '~/features/Transactions/useCases/TxList/TxList'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {throwLoggedError} from '~/kernel/logger/helpers/throw-logged-error'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
@@ -39,7 +38,9 @@ export const PortfolioTokenDetailsScreen = () => {
     primaryTokenInfo: wallet.portfolioPrimaryTokenInfo,
   })
 
-  const HEADER_HEIGHT = 304
+  const shouldShowChart = tokenInfo && isPrimaryToken(tokenInfo)
+  // Approximate header height: base (~140) + chart section (~164) if shown
+  const HEADER_HEIGHT = shouldShowChart ? 304 : 140
 
   if (!tokenInfo)
     throwLoggedError(
@@ -54,15 +55,6 @@ export const PortfolioTokenDetailsScreen = () => {
   const renderTabs = React.useMemo(() => {
     return (
       <Tabs style={[a.justify_between, a.px_lg, a.gap_lg, ta.bg_color_max]}>
-        {features.portfolioPerformance && (
-          <Tab
-            style={[a.flex_1]}
-            active={detailsTab === PortfolioDetailsTab.Performance}
-            onPress={() => setDetailsTab(PortfolioDetailsTab.Performance)}
-            label={strings.portfolio.performance}
-          />
-        )}
-
         <Tab
           style={[a.flex_1]}
           active={detailsTab === PortfolioDetailsTab.Overview}
@@ -101,18 +93,16 @@ export const PortfolioTokenDetailsScreen = () => {
           onScroll={onScroll}
           ListHeaderComponent={
             <>
-              <Animated.View
-                style={[a.overflow_hidden, {height: HEADER_HEIGHT}]}
-              >
-                <Space.Height.md />
-
+              <Animated.View style={[a.overflow_hidden]}>
                 <PortfolioTokenBalance />
 
-                <Space.Height.md />
-
-                <PortfolioTokenChart />
-
-                <Space.Height.md />
+                {shouldShowChart && (
+                  <>
+                    <Space.Height.md />
+                    <PortfolioTokenChart />
+                    <Space.Height.md />
+                  </>
+                )}
               </Animated.View>
 
               <Animated.View>{renderTabs}</Animated.View>

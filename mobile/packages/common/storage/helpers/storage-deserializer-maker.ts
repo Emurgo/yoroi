@@ -19,13 +19,13 @@ export type StorageReviverMapping = {
  * @returns JSON object revived according to the mapping, string -> BigInt or BigNumber.
  */
 export const storageDeserializerMaker = (mapping: StorageReviverMapping) => {
-  const reviver = (key: string, value: any) => {
+  const reviver = (key: string, value: unknown) => {
     switch (mapping[key]) {
       case StorageReviverType.AsBigInt:
-        return value == null ? value : BigInt(value)
+        return value == null ? value : BigInt(String(value))
       case StorageReviverType.AsBigNumber:
       default:
-        return value === null ? value : new BigNumber(value)
+        return value === null ? value : new BigNumber(String(value))
     }
   }
 
@@ -47,7 +47,7 @@ export const storageDeserializerMaker = (mapping: StorageReviverMapping) => {
     try {
       const parsed = JSON.parse(jsonString, (key, value) => {
         if (key && mapping[key]) {
-          return reviver(key as any, value)
+          return reviver(key, value)
         }
         return value
       })

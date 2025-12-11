@@ -32,4 +32,5 @@ export const BannerIds = {
   TestAda: 234682356,
   GovernanceParticipation: 576512769,
   UtxoConsolidation: 76578456,
+  Airdrop: 987654321,
 } as const

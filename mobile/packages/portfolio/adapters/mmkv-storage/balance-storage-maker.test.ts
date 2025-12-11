@@ -32,7 +32,7 @@ describe('portfolioBalanceStorageMaker', () => {
     const storage = portfolioBalanceStorageMaker({
       balanceStorage,
       primaryBreakdownStorage,
-      primaryTokenId: tokenMocks.primaryETH.info.id,
+      primaryTokenId: tokenMocks.primaryETH.info.id as Portfolio.Token.Id,
     })
 
     expect(storage).toBeDefined()
@@ -43,7 +43,7 @@ describe('portfolioBalanceStorageMaker', () => {
     const {balances} = portfolioBalanceStorageMaker({
       balanceStorage,
       primaryBreakdownStorage,
-      primaryTokenId: tokenMocks.primaryETH.info.id,
+      primaryTokenId: tokenMocks.primaryETH.info.id as Portfolio.Token.Id,
     })
 
     balances.save(tokenBalanceMocks.storage.entries1)
@@ -61,12 +61,15 @@ describe('portfolioBalanceStorageMaker', () => {
     const {balances} = portfolioBalanceStorageMaker({
       balanceStorage,
       primaryBreakdownStorage,
-      primaryTokenId: tokenMocks.primaryETH.info.id,
+      primaryTokenId: tokenMocks.primaryETH.info.id as Portfolio.Token.Id,
     })
 
     balances.save(tokenBalanceMocks.storage.entries1)
 
-    const keys = [nftCryptoKitty.id, rnftWhatever.id]
+    const keys = [
+      nftCryptoKitty.id as Portfolio.Token.Id,
+      rnftWhatever.id as Portfolio.Token.Id,
+    ]
     const result = balances.read(keys)
 
     expect(result).toEqual([
@@ -83,7 +86,7 @@ describe('portfolioBalanceStorageMaker', () => {
     const {clear, balances, primaryBreakdown} = portfolioBalanceStorageMaker({
       balanceStorage,
       primaryBreakdownStorage,
-      primaryTokenId: tokenMocks.primaryETH.info.id,
+      primaryTokenId: tokenMocks.primaryETH.info.id as Portfolio.Token.Id,
     })
 
     balances.save(tokenBalanceMocks.storage.entries1)
@@ -114,7 +117,7 @@ describe('portfolioBalanceStorageMaker', () => {
     const {balances, primaryBreakdown} = portfolioBalanceStorageMaker({
       balanceStorage,
       primaryBreakdownStorage,
-      primaryTokenId: tokenMocks.primaryETH.info.id,
+      primaryTokenId: tokenMocks.primaryETH.info.id as Portfolio.Token.Id,
     })
 
     balances.save(tokenBalanceMocks.storage.entries1)
@@ -131,7 +134,7 @@ describe('portfolioBalanceStorageMaker', () => {
     const {balances, primaryBreakdown} = portfolioBalanceStorageMaker({
       balanceStorage,
       primaryBreakdownStorage,
-      primaryTokenId: tokenMocks.primaryETH.info.id,
+      primaryTokenId: tokenMocks.primaryETH.info.id as Portfolio.Token.Id,
     })
 
     balances.clear()

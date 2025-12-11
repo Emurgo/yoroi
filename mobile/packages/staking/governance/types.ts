@@ -1,8 +1,17 @@
-import {Balance} from '@yoroi/types'
+import {
+  AnchorHash,
+  AnchorUrl,
+  Balance,
+  DRepId,
+  EpochNumber,
+  GovernanceActionId,
+  SlotNumber,
+  TransactionHash,
+} from '@yoroi/types'
 
-export type Anchor = string | undefined // (a URL to a JSON payload of metadata) OR (a hash of the contents of the metadata URL)
-export type DRepId = string // The blake2b-224 hash digest of a serialized DRep credential is called the DRep ID.
-export type GovernanceActionId = string // Consists of the transaction hash that created it and the index within the transaction body that points to it
+export type Anchor = AnchorUrl | AnchorHash | undefined // (a URL to a JSON payload of metadata) OR (a hash of the contents of the metadata URL)
+export type {DRepId} // The blake2b-224 hash digest of a serialized DRep credential is called the DRep ID.
+export type {GovernanceActionId} // Consists of the transaction hash that created it and the index within the transaction body that points to it
 
 export type DRepRetirementCertificate = {
   drepId: DRepId
@@ -31,7 +40,7 @@ export type StakingKeyState = {
 }
 
 type DelegationBaseInfo = {
-  tx: string
-  epoch: number
-  slot: number
+  tx: TransactionHash
+  epoch: EpochNumber
+  slot: SlotNumber
 }

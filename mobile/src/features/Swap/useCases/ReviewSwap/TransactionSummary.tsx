@@ -2,6 +2,7 @@ import {parseNumberFromText} from '@yoroi/common'
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio, Swap} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import _ from 'lodash'
 import * as React from 'react'
@@ -15,7 +16,6 @@ import {
   undefinedToken,
 } from '~/features/Swap/common/constants'
 import {useSwapTokenActivity} from '~/features/Swap/common/useSwapTokenActivity'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Divider} from '~/ui/Divider/Divider'
@@ -226,7 +226,6 @@ export const TransactionSummary = ({
               </Text>
 
               <Text style={[a.body_2_md_regular, {color: p.gray_900}]}>
-                {' '}
                 {strings.swap.priceImpactDescription(priceImpactRisk)}
               </Text>
             </Text>

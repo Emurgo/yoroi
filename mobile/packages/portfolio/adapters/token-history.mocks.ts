@@ -1,4 +1,4 @@
-import {Api, Portfolio} from '@yoroi/types'
+import {Api, Branded, Portfolio} from '@yoroi/types'
 
 import {BigNumber} from 'bignumber.js'
 import {freeze} from 'immer'
@@ -69,7 +69,7 @@ const apiRequestTokenHistoryArgs: Readonly<{
   tokenId: Portfolio.Token.Id
   period: Portfolio.Token.HistoryPeriod
 }> = {
-  tokenId: 'ft.nameless',
+  tokenId: Branded.asTokenId('ft.nameless'),
   period: Portfolio.Token.HistoryPeriod.OneDay,
 }
 

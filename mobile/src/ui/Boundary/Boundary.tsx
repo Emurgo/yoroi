@@ -9,6 +9,8 @@ import {
 } from 'react-error-boundary'
 import {ActivityIndicator, StyleProp, View, ViewStyle} from 'react-native'
 
+import {logger} from '~/kernel/logger/logger'
+
 import {LoadingOverlay} from '../LoadingOverlay/LoadingOverlay'
 import {FullErrorFallback} from './FullErrorFallback'
 import {InlineErrorFallback} from './InlineErrorFallback'
@@ -85,7 +87,7 @@ const ErrorBoundary = ({
           resetBoundary.reset()
         } catch (error) {
           // Ignore errors during reset if QueryClient is not ready
-          console.warn('QueryClient reset failed:', error)
+          logger.warn('QueryClient reset failed', {error})
         }
         fallbackProps.resetErrorBoundary()
       },
@@ -121,7 +123,7 @@ export const ResetError = React.forwardRef<ResetErrorRef, ResetErrorProps>(
           resetBoundary.reset()
         } catch (error) {
           // Ignore errors during reset if QueryClient is not ready
-          console.warn('QueryClient reset failed:', error)
+          logger.warn('QueryClient reset failed', {error})
         }
         resetErrorBoundary()
       },

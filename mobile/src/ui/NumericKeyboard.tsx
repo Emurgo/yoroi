@@ -1,7 +1,7 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
-import {Text, TouchableHighlight, View, ViewProps} from 'react-native'
+import {Pressable, Text, View, ViewProps} from 'react-native'
 
 import {Backspace} from './Icon/Backspace'
 
@@ -46,11 +46,15 @@ type KeyboardKeyProps = {
   value: string
   onPress: (value: string) => void
 }
-const Key = ({value, onPress}: KeyboardKeyProps) => {
+const Key = React.memo(({value, onPress}: KeyboardKeyProps) => {
   const {palette: p, atoms: ta} = useTheme()
+  const handlePress = React.useCallback(() => {
+    onPress(value)
+  }, [onPress, value])
+
   return (
-    <TouchableHighlight
-      style={[
+    <Pressable
+      style={({pressed}) => [
         a.flex_1,
         a.align_center,
         a.justify_center,
@@ -59,9 +63,9 @@ const Key = ({value, onPress}: KeyboardKeyProps) => {
         a.border_r,
         ta.bg_color_max,
         {borderColor: p.el_gray_min},
+        pressed && {backgroundColor: p.bg_color_min},
       ]}
-      onPress={() => onPress(value)}
-      underlayColor={p.bg_color_min}
+      onPress={handlePress}
       testID={`pinKey${value}`}
     >
       <Text
@@ -73,11 +77,11 @@ const Key = ({value, onPress}: KeyboardKeyProps) => {
       >
         {value}
       </Text>
-    </TouchableHighlight>
+    </Pressable>
   )
-}
+})
 
-const EmptyKey = () => {
+const EmptyKey = React.memo(() => {
   const {palette: p, atoms: ta} = useTheme()
   return (
     <View
@@ -95,31 +99,37 @@ const EmptyKey = () => {
       testID="pinKeyEmpty"
     />
   )
-}
+})
 
-const BackspaceKey = ({onPress}: {onPress: (value: string) => void}) => {
-  const {palette: p, atoms: ta} = useTheme()
-  return (
-    <TouchableHighlight
-      style={[
-        a.flex_1,
-        a.align_center,
-        a.justify_center,
-        a.border_t,
-        a.border_l,
-        a.border_r,
-        ta.bg_color_max,
-        {borderColor: p.el_gray_min},
-        {backgroundColor: p.gray_300},
-      ]}
-      onPress={() => onPress('BACKSPACE')}
-      underlayColor={p.bg_color_min}
-      testID="pinKeyBACKSPACE"
-    >
-      <Backspace color={p.gray_max} />
-    </TouchableHighlight>
-  )
-}
+const BackspaceKey = React.memo(
+  ({onPress}: {onPress: (value: string) => void}) => {
+    const {palette: p, atoms: ta} = useTheme()
+    const handlePress = React.useCallback(() => {
+      onPress('BACKSPACE')
+    }, [onPress])
+
+    return (
+      <Pressable
+        style={({pressed}) => [
+          a.flex_1,
+          a.align_center,
+          a.justify_center,
+          a.border_t,
+          a.border_l,
+          a.border_r,
+          ta.bg_color_max,
+          {borderColor: p.el_gray_min},
+          {backgroundColor: p.gray_300},
+          pressed && {backgroundColor: p.bg_color_min},
+        ]}
+        onPress={handlePress}
+        testID="pinKeyBACKSPACE"
+      >
+        <Backspace color={p.gray_max} />
+      </Pressable>
+    )
+  },
+)
 
 const Row = (props: ViewProps) => {
   return <View {...props} style={[a.flex_row, a.flex_1]} />

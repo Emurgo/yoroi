@@ -5,9 +5,10 @@ import * as React from 'react'
 import {Linking, ScrollView, Text, View} from 'react-native'
 import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
+import {useBold} from '~/common/hooks/useBold'
 import {YoroiHelpLink} from '~/features/SetupWallet/common/constants'
-import {useBold} from '~/hooks/useBold'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {Button} from '~/ui/Button/Button'
 import {CardAboutPhrase} from '~/ui/CardAboutPhrase/CardAboutPhrase'
 import {LearnMoreButton} from '~/ui/LearnMoreButton/LearnMoreButton'
@@ -18,7 +19,7 @@ import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 export const AboutRecoveryPhraseScreen = () => {
   const bold = useBold({style: a.body_1_lg_medium})
   const strings = useStrings()
-  const navigation = useNavigation<any>()
+  const navigation = useNavigation<SetupWalletRouteNavigation>()
   const {atoms: ta} = useTheme()
 
   const handleOnLearMoreButtonPress = () => {

@@ -26,6 +26,7 @@ import {
   isLanguageCode,
   systemLanguageCode,
 } from '~/kernel/i18n/localization'
+import {logger} from '~/kernel/logger/logger'
 import {debugStorage} from '~/kernel/storage/debug-storage'
 
 export const rootMMKV = new MMKV({id: 'default.mmkv'})
@@ -81,8 +82,11 @@ export const themeStorageKeyManager = settingsStorageKeyMaker<ThemeConfig>({
 
 // Settings - Auth
 export const authStorageKey = 'auth'
-export const isAuthSetting = (data: any): data is 'os' | 'pin' | undefined =>
-  ['os', 'pin', undefined].includes(data)
+export const isAuthSetting = (
+  data: unknown,
+): data is 'os' | 'pin' | undefined => {
+  return data === 'os' || data === 'pin' || data === undefined
+}
 export const parseAuthSetting = (data: unknown) => {
   const parsed = parseSafe(data)
   return isAuthSetting(parsed) ? parsed : null
@@ -124,13 +128,6 @@ export const languageStorageKeyManager = settingsStorageKeyMaker<LanguageCode>({
     const parsed = parseSafe(data)
     return isLanguageCode(parsed) ? parsed : systemLanguageCode
   },
-})
-
-// Settings - Screen Capture
-export const screenCaptureStorageKey = 'screenCaptureEnabled'
-export const screenCaptureStorageKeyManager = settingsStorageKeyMaker<boolean>({
-  key: screenCaptureStorageKey,
-  parser: (data) => Boolean(parseBoolean(data)),
 })
 
 // Settings - Metrics
@@ -203,7 +200,7 @@ export const hasShownNetworkNoticeStorageKeyManager =
 
 // Debug storage
 const observableFunction = (v: unknown) => {
-  console.log(`key with value udpated -> `, v)
+  logger.debug('key with value updated', {value: v})
   return of(null)
 }
 appSettingsObservableStorage.observable.subscribe((v) => {

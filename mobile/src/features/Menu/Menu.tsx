@@ -1,4 +1,5 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {createStackNavigator} from '@react-navigation/stack'
 import * as Linking from 'expo-linking'
@@ -12,21 +13,24 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
+import {useHasRedeemableThaws} from '~/features/Airdrop/common/useHasRedeemableThaws'
 import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {usePrefetchStakingInfo} from '~/features/Dashboard/ui/shared/StakePoolInfos'
 import {useCanVote} from '~/features/RegisterCatalyst/common/hooks'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {NetworkTag} from '~/features/Settings/ui/shared/NetworkTag'
+import {useIsByronWallet} from '~/features/WalletManager/hooks/useIsByronWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {defaultStackNavigationOptions} from '~/kernel/navigation/common/helpers'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {MenuRoutes} from '~/kernel/navigation/types'
+import {Badge} from '~/ui/Badge/Badge'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 
 import {InsufficientFundsModal} from '../RegisterCatalyst/common/InsufficientFundsModal'
-import {NetworkTag} from '../Settings/ui/shared/NetworkTag'
 import {usePoolTransition} from '../Staking/Staking/PoolTransition/usePoolTransition'
 
 const MenuStack = createStackNavigator<MenuRoutes>()
@@ -58,6 +62,10 @@ export const Menu = () => {
   const navigateTo = useNavigateTo()
   const {isPoolRetiring} = usePoolTransition()
   const {isAuthDev} = useAuth()
+  const {config} = useRemoteConfig()
+  const isAirdropEnabled = config?.features?.midnightAirdrop?.enabled ?? false
+  const {hasRedeemableThaws} = useHasRedeemableThaws()
+  const isByronWallet = useIsByronWallet()
 
   return (
     <SafeAreaView edges={['left', 'right']} style={[ta.bg_color_max, a.flex_1]}>
@@ -68,16 +76,34 @@ export const Menu = () => {
           left={<Icon.Gear size={24} color={p.gray_600} />}
         />
 
-        <Staking
-          label={strings.menu.stakingCenter}
-          onPress={navigateTo.stakingCenter}
-          left={<Icon.TabStaking size={24} color={p.gray_600} />}
-          right={
-            isPoolRetiring ? (
-              <Icon.Warning size={24} color={p.sys_magenta_500} />
-            ) : null
-          }
-        />
+        {!isByronWallet && (
+          <Staking
+            label={strings.menu.stakingCenter}
+            onPress={navigateTo.stakingCenter}
+            left={<Icon.TabStaking size={24} color={p.gray_600} />}
+            right={
+              isPoolRetiring ? (
+                <Icon.Warning size={24} color={p.sys_magenta_500} />
+              ) : null
+            }
+          />
+        )}
+
+        {!isByronWallet && (
+          <Governance
+            label={strings.menu.governanceCentre}
+            onPress={navigateTo.governanceCentre}
+            left={<Icon.Governance size={24} color={p.gray_600} />}
+          />
+        )}
+
+        {!isByronWallet && (
+          <Catalyst
+            label={strings.menu.catalystVoting}
+            onPress={navigateTo.catalystVoting}
+            left={<Icon.Catalyst size={24} color={p.gray_600} />}
+          />
+        )}
 
         {isAuthDev && (
           <UtxoList
@@ -87,17 +113,25 @@ export const Menu = () => {
           />
         )}
 
-        <Governance
-          label={strings.menu.governanceCentre}
-          onPress={navigateTo.governanceCentre}
-          left={<Icon.Governance size={24} color={p.gray_600} />}
+        <MessageSigning
+          label={strings.menu.messageSigning}
+          onPress={navigateTo.messageSigning}
+          left={<Icon.Message size={24} color={p.gray_600} />}
         />
 
-        <Catalyst
-          label={strings.menu.catalystVoting}
-          onPress={navigateTo.catalystVoting}
-          left={<Icon.Catalyst size={24} color={p.gray_600} />}
-        />
+        {isAirdropEnabled && !isByronWallet && (
+          <Airdrop
+            label={strings.menu.airdrop}
+            onPress={navigateTo.airdrop}
+            left={<Icon.Airdrop size={24} color={p.gray_600} />}
+            right={
+              hasRedeemableThaws ? (
+                <Badge label={strings.airdrop.redeem} color={p.bg_gradient_4} />
+              ) : null
+            }
+          />
+        )}
+
         <KnowledgeBase //
           label={strings.menu.knowledgeBase}
           onPress={navigateTo.knowledgeBase}
@@ -174,11 +208,12 @@ const Item = ({
 
       <Space.Width.lg />
 
-      <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>{label}</Text>
+      <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+        <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>{label}</Text>
+        {right}
+      </View>
 
       <Space.Height.sm fill />
-
-      {right}
 
       <Space.Width.sm />
 
@@ -189,9 +224,11 @@ const Item = ({
 
 const Staking = Item
 const UtxoList = Item
+const MessageSigning = Item
 const Governance = Item
 const AppSettings = Item
 const KnowledgeBase = Item
+const Airdrop = Item
 const Catalyst = ({
   label,
   left,
@@ -248,6 +285,8 @@ const useNavigateTo = () => {
     navigateToStakingDashboard,
     navigateToCatalystVotingDashboard,
     navigateToUtxoList,
+    navigateToMessageSigning,
+    navigateToAirdrop,
   } = useWalletNavigation()
   const {wallet} = useSelectedWallet()
 
@@ -262,9 +301,11 @@ const useNavigateTo = () => {
       navigateToStakingDashboard()
     },
     utxoList: () => navigateToUtxoList(),
+    messageSigning: () => navigateToMessageSigning(),
     settings: () => navigateToSettings(),
     support: () => Linking.openURL(SUPPORT_TICKET_LINK),
     knowledgeBase: () => Linking.openURL(KNOWLEDGE_BASE_LINK),
     governanceCentre: () => navigateToGovernanceCentre(),
+    airdrop: () => navigateToAirdrop(),
   }
 }

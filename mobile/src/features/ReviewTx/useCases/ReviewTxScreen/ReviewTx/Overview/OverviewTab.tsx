@@ -1,12 +1,15 @@
+import {isByron} from '@yoroi/cardano-wallet'
+import {formatTokenWithText} from '@yoroi/cardano-wallet'
 import {
-  isBoolean,
-  parseSafe,
+  parseBoolean,
   useAsyncStorage,
   useMutationWithInvalidations,
 } from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {Balance} from '@yoroi/types'
+import {Balance, Branded} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
+import {useWalletManager} from '@yoroi/wallet-manager'
 
 import {CredKind} from '@emurgo/cross-csl-core'
 import {useQuery} from '@tanstack/react-query'
@@ -20,8 +23,9 @@ import {
   useWindowDimensions,
 } from 'react-native'
 
-import {TokenItem} from '~/features/ReviewTx/common/TokenItem'
-import {WalletBalance} from '~/features/ReviewTx/common/WalletBalance'
+import {Address} from '~/common/Address/Address'
+import {TokenItem} from '~/common/TokenItem/TokenItem'
+import {WalletBalance} from '~/common/WalletBalance/WalletBalance'
 import {Operations, useOperations} from '~/features/ReviewTx/common/operations'
 import {
   calculateSendsAndReceives,
@@ -33,11 +37,9 @@ import {
   FormattedOutputs,
   FormattedTx,
 } from '~/features/ReviewTx/common/types'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {Accordion} from '~/ui/Accordion/Accordion'
 import {Button} from '~/ui/Button/Button'
-import {Copiable} from '~/ui/Copiable/Copiable'
 import {Divider} from '~/ui/Divider/Divider'
 import {Icon} from '~/ui/Icon'
 import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
@@ -45,25 +47,29 @@ import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 import {WarningBanner} from '~/ui/WarningBanner/WarningBanner'
-import {formatTokenWithText} from '~/wallets/utils/format'
 
-import {Accordion} from '../../../../common/Accordion'
 import {OperationsNoticeIcon} from '../../../../illustrations/OperationsNoticeIcon'
 
 export const OverviewTab = ({
   tx,
   extraOperations,
   operationsNotice,
+  generalNotice,
   receiverCustomTitle,
   details,
   createdBy,
+  validationResult,
+  readOnly: _readOnly = false,
 }: {
   tx: FormattedTx
   extraOperations?: Array<React.ReactNode>
   operationsNotice?: React.ReactNode
+  generalNotice?: React.ReactNode
   receiverCustomTitle?: React.ReactNode
   details?: {title: string; component: React.ReactNode}
-  createdBy?: React.ReactNode
+  createdBy?: {logo?: string; url: string; name?: string}
+  validationResult?: {valid: boolean; errors: string[]; warnings: string[]}
+  readOnly?: boolean
 }) => {
   const {atoms: ta} = useTheme()
   const operations = useOperations(tx.certificates)
@@ -83,6 +89,9 @@ export const OverviewTab = ({
     [operations.components],
   )
 
+  const [externalPartiesExpanded, setExternalPartiesExpanded] =
+    React.useState(true)
+
   const externalPartiesSection = React.useMemo(() => {
     const groupedOutputs = groupOutputsByAddress(notOwnedOutputs)
     const uniqueAddresses = Array.from(groupedOutputs.keys())
@@ -101,6 +110,8 @@ export const OverviewTab = ({
           <Divider verticalSpace="lg" />
           <Accordion
             label={strings.txReview.overview.multiExternalPartiesSectionLabel}
+            expanded={externalPartiesExpanded}
+            onChange={setExternalPartiesExpanded}
           >
             <Space.Height.lg />
             <OneExternalPartySection
@@ -127,19 +138,249 @@ export const OverviewTab = ({
     }
 
     return null
-  }, [notOwnedOutputs, tx, receiverCustomTitle, strings])
+  }, [
+    notOwnedOutputs,
+    tx,
+    receiverCustomTitle,
+    strings,
+    externalPartiesExpanded,
+    setExternalPartiesExpanded,
+  ])
+
+  // Detect smart contract interactions
+  const contractInteractions = React.useMemo(() => {
+    const interactions: string[] = []
+    const outputsWithDatums = tx.outputs.filter((o) => o.datum != null)
+    const outputsWithScripts = tx.outputs.filter(
+      (o) => o.referenceScript != null,
+    )
+
+    if (outputsWithDatums.length > 0) {
+      interactions.push(
+        strings.txReview.overview.contractInteractionDatum(
+          outputsWithDatums.length,
+        ),
+      )
+    }
+
+    if (outputsWithScripts.length > 0) {
+      interactions.push(
+        strings.txReview.overview.contractInteractionScript(
+          outputsWithScripts.length,
+        ),
+      )
+    }
+
+    return interactions
+  }, [tx.outputs, strings])
+
+  // Collateral summary
+  const collateralSummary = React.useMemo(() => {
+    if (tx.totalCollateral) {
+      return formatTokenWithText(
+        tx.totalCollateral.quantity,
+        tx.totalCollateral.tokenInfo,
+      )
+    }
+    return null
+  }, [tx.totalCollateral])
+
+  // Signatures summary
+  const signaturesSummary = React.useMemo(() => {
+    const requiredCount = tx.requiredSigners?.length ?? 0
+    const witnessCount =
+      (tx.witnessSet?.vkeys.length ?? 0) +
+      (tx.witnessSet?.bootstraps.length ?? 0)
+
+    if (requiredCount > 0 || witnessCount > 0) {
+      if (requiredCount > 0 && witnessCount > 0) {
+        return `${witnessCount} of ${requiredCount} signed`
+      } else if (witnessCount > 0) {
+        return `${witnessCount} signature${witnessCount > 1 ? 's' : ''}`
+      } else if (requiredCount > 0) {
+        return `Requires ${requiredCount} signature${requiredCount > 1 ? 's' : ''}`
+      }
+    }
+    return null
+  }, [tx.requiredSigners, tx.witnessSet])
+
+  // Withdrawals summary
+  const withdrawalsSummary = React.useMemo(() => {
+    if (tx.withdrawals && tx.withdrawals.length > 0) {
+      const totalAmount = tx.withdrawals.reduce(
+        (sum, w) => sum + BigInt(w.amount),
+        0n,
+      )
+      return formatTokenWithText(
+        Branded.asBalanceQuantity(totalAmount.toString()),
+        tx.withdrawals[0]!.tokenInfo,
+      )
+    }
+    return null
+  }, [tx.withdrawals])
+
+  // Count all notices/banners
+  const noticesCount = React.useMemo(() => {
+    let count = 0
+    if (generalNotice != null) count++
+    if (
+      validationResult &&
+      !validationResult.valid &&
+      validationResult.errors.length > 0
+    )
+      count++
+    if (validationResult && validationResult.warnings.length > 0) count++
+    if (tx.chainInfo?.isChained) count++
+    if (contractInteractions.length > 0) count++
+    if (collateralSummary) count++
+    if (signaturesSummary) count++
+    if (withdrawalsSummary) count++
+    if (operationsComponentsDuplicated) count++
+    return count
+  }, [
+    generalNotice,
+    validationResult,
+    tx.chainInfo,
+    contractInteractions.length,
+    collateralSummary,
+    signaturesSummary,
+    withdrawalsSummary,
+    operationsComponentsDuplicated,
+  ])
+
+  const [noticesExpanded, setNoticesExpanded] = React.useState(true)
 
   return (
     <View style={[a.flex_1, a.px_lg, ta.bg_color_max]}>
       <Space.Height.lg />
 
-      {operationsComponentsDuplicated && (
+      {/* Notices Accordion */}
+      {noticesCount > 0 && (
         <>
-          <WarningBanner
-            title={strings.txReview.operations.warning.title}
-            content={strings.txReview.operations.warning.text}
-          />
+          <Accordion
+            label={`${strings.txReview.overview.notices} (${noticesCount})`}
+            expanded={noticesExpanded}
+            onChange={setNoticesExpanded}
+          >
+            <Space.Height.lg />
 
+            {/* General Notice */}
+            {generalNotice != null && (
+              <>
+                {generalNotice}
+                <Space.Height.lg />
+              </>
+            )}
+
+            {/* Validation Errors */}
+            {validationResult &&
+              !validationResult.valid &&
+              validationResult.errors.length > 0 && (
+                <>
+                  <WarningBanner
+                    title={strings.txReview.overview.validationErrorsTitle}
+                    content={
+                      <View>
+                        {validationResult.errors.map((error, index) => (
+                          <Text
+                            key={index}
+                            style={[
+                              a.body_2_md_regular,
+                              {color: ta.text_gray_max.color},
+                            ]}
+                          >
+                            • {error}
+                          </Text>
+                        ))}
+                      </View>
+                    }
+                  />
+                  <Space.Height.lg />
+                </>
+              )}
+
+            {/* Validation Warnings */}
+            {validationResult && validationResult.warnings.length > 0 && (
+              <>
+                <InfoBanner
+                  title={strings.txReview.overview.validationWarningsTitle}
+                  content={validationResult.warnings
+                    .map((w) => `• ${w}`)
+                    .join('\n')}
+                />
+                <Space.Height.lg />
+              </>
+            )}
+
+            {/* Transaction Chaining Info */}
+            {tx.chainInfo?.isChained && (
+              <>
+                <InfoBanner
+                  title={strings.txReview.overview.chainInfoTitle}
+                  content={
+                    tx.chainInfo.chainOrder != null
+                      ? `${strings.txReview.overview.chainInfoDescription}\n${strings.txReview.overview.chainOrderLabel}: ${tx.chainInfo.chainOrder + 1}`
+                      : strings.txReview.overview.chainInfoDescription
+                  }
+                />
+                <Space.Height.lg />
+              </>
+            )}
+
+            {/* Smart Contract Interactions */}
+            {contractInteractions.length > 0 && (
+              <>
+                <InfoBanner
+                  title={strings.txReview.overview.contractInteractionsTitle}
+                  content={contractInteractions.map((i) => `• ${i}`).join('\n')}
+                />
+                <Space.Height.lg />
+              </>
+            )}
+
+            {/* Collateral Summary */}
+            {collateralSummary && (
+              <>
+                <InfoBanner
+                  title={strings.txReview.overview.collateralSummary}
+                  content={`${strings.txReview.overview.collateralAtRisk}: ${collateralSummary}`}
+                />
+                <Space.Height.lg />
+              </>
+            )}
+
+            {/* Signatures Summary */}
+            {signaturesSummary && (
+              <>
+                <InfoBanner
+                  title={strings.txReview.overview.signaturesSummary}
+                  content={signaturesSummary}
+                />
+                <Space.Height.lg />
+              </>
+            )}
+
+            {/* Withdrawals Summary */}
+            {withdrawalsSummary && (
+              <>
+                <InfoBanner
+                  title={strings.txReview.overview.withdrawalsSummary}
+                  content={`${strings.txReview.overview.withdrawingRewards}: ${withdrawalsSummary}`}
+                />
+                <Space.Height.lg />
+              </>
+            )}
+
+            {operationsComponentsDuplicated && (
+              <>
+                <WarningBanner
+                  title={strings.txReview.operations.warning.title}
+                  content={strings.txReview.operations.warning.text}
+                />
+                <Space.Height.lg />
+              </>
+            )}
+          </Accordion>
           <Space.Height.lg />
         </>
       )}
@@ -164,6 +405,8 @@ export const OverviewTab = ({
       />
 
       <Details details={details} />
+
+      <Space.Height.lg />
     </View>
   )
 }
@@ -173,7 +416,7 @@ const WalletInfoSection = ({
   createdBy,
 }: {
   tx: FormattedTx
-  createdBy?: React.ReactNode
+  createdBy?: {logo?: string; url: string; name?: string}
 }) => {
   const {palette: p, atoms: ta} = useTheme()
   const strings = useStrings()
@@ -181,8 +424,12 @@ const WalletInfoSection = ({
   const {walletManager} = useWalletManager()
   const {openModal} = useModal()
   const {plate, seed} = walletManager.checksum(wallet.publicKeyHex)
-  const seedImage = new Blockies({seed}).asBase64()
+  const seedImage = Blockies({seed}).asBase64()
   const {height: windowHeight} = useWindowDimensions()
+  const isByronWallet = React.useMemo(
+    () => (meta ? isByron(meta.implementation) : false),
+    [meta],
+  )
 
   const handleShowWalletBalance = () => {
     openModal({
@@ -225,9 +472,13 @@ const WalletInfoSection = ({
 
       <Space.Height.sm />
 
-      {createdBy != null && (
+      {!isByronWallet && createdBy != null && createdBy.url && (
         <>
-          {createdBy}
+          <CreatedByInfoItem
+            logo={createdBy.logo}
+            url={createdBy.url}
+            name={createdBy.name}
+          />
 
           <Space.Height.sm />
         </>
@@ -270,30 +521,27 @@ const MyWalletSection = ({
 }) => {
   const strings = useStrings()
   const {palette: p} = useTheme()
+  const [expanded, setExpanded] = React.useState(true)
   const address =
     ownedOutputs[0]?.rewardAddress ?? ownedOutputs[0]?.address ?? '-'
 
   return (
-    <Accordion label={strings.txReview.overview.myWalletLabel}>
+    <Accordion
+      label={strings.txReview.overview.myWalletLabel}
+      expanded={expanded}
+      onChange={setExpanded}
+    >
       <Space.Height.lg />
 
-      <Copiable text={address}>
-        <Text
-          style={[a.flex_1, a.body_2_md_regular, {color: p.text_gray_medium}]}
-          numberOfLines={1}
-          ellipsizeMode="middle"
-        >
-          {address}
-        </Text>
-
-        {ownedOutputs[0]?.addressKind === CredKind.Script && (
-          <>
-            <Space.Width.xs />
-
+      <Address
+        address={address}
+        textStyle={[a.body_2_md_regular, {color: p.text_gray_medium}]}
+        rightAdornment={
+          ownedOutputs[0]?.addressKind === CredKind.Script ? (
             <Icon.DigitalAsset size={24} color={p.el_gray_medium} />
-          </>
-        )}
-      </Copiable>
+          ) : undefined
+        }
+      />
 
       <Space.Height.sm />
 
@@ -452,28 +700,16 @@ const OneExternalPartySection = ({
         </Text>
 
         {receiverCustomTitle ?? (
-          <Copiable text={address}>
-            <Text
-              style={[
-                a.flex_1,
-                a.body_2_md_regular,
-                ta.text_gray_medium,
-                {maxWidth: 260},
-              ]}
-              numberOfLines={1}
-              ellipsizeMode="middle"
-            >
-              {address}
-            </Text>
-
-            {output?.addressKind === CredKind.Script && (
-              <>
-                <Space.Width.xs />
-
+          <Address
+            address={address}
+            style={{maxWidth: 260}}
+            textStyle={[a.body_2_md_regular, ta.text_gray_medium]}
+            rightAdornment={
+              output?.addressKind === CredKind.Script ? (
                 <Icon.DigitalAsset size={24} color={ta.el_gray_medium.color} />
-              </>
-            )}
-          </Copiable>
+              ) : undefined
+            }
+          />
         )}
       </View>
 
@@ -590,23 +826,15 @@ const ExternalPartyItem = ({
     <View>
       <Space.Height.lg />
 
-      <Copiable text={address}>
-        <Text
-          style={[a.flex_1, a.body_2_md_regular, {color: p.text_gray_medium}]}
-          numberOfLines={1}
-          ellipsizeMode="middle"
-        >
-          {address}
-        </Text>
-
-        {output?.addressKind === CredKind.Script && (
-          <>
-            <Space.Width.xs />
-
+      <Address
+        address={address}
+        textStyle={[a.body_2_md_regular, {color: p.text_gray_medium}]}
+        rightAdornment={
+          output?.addressKind === CredKind.Script ? (
             <Icon.DigitalAsset size={24} color={p.el_gray_medium} />
-          </>
-        )}
-      </Copiable>
+          ) : undefined
+        }
+      />
 
       <Space.Height.sm />
 
@@ -685,6 +913,7 @@ const MultiExternalPartiesSection = ({
   outputs: FormattedOutputs
 }) => {
   const strings = useStrings()
+  const [expanded, setExpanded] = React.useState(true)
 
   return (
     <View>
@@ -692,6 +921,8 @@ const MultiExternalPartiesSection = ({
 
       <Accordion
         label={strings.txReview.overview.multiExternalPartiesSectionLabel}
+        expanded={expanded}
+        onChange={setExpanded}
       >
         <Space.Height.lg />
 
@@ -740,6 +971,8 @@ const OperationsSection = ({
   operationsNotice?: React.ReactNode
 }) => {
   const strings = useStrings()
+  const [expanded, setExpanded] = React.useState(true)
+
   if (extraOperations == null && operations.components?.length === 0)
     return null
 
@@ -754,9 +987,11 @@ const OperationsSection = ({
     <View>
       <Divider verticalSpace="lg" />
 
-      <Accordion label={strings.txReview.operationsLabel}>
-        <Space.Height.lg />
-
+      <Accordion
+        label={strings.txReview.operationsLabel}
+        expanded={expanded}
+        onChange={setExpanded}
+      >
         {operationsNotice != null && (
           <>
             <Space.Height.lg />
@@ -773,9 +1008,9 @@ const OperationsSection = ({
 
             return (
               <React.Fragment key={index}>
-                <Space.Height.sm />
-
                 {operation}
+
+                <Space.Height.sm />
               </React.Fragment>
             )
           },
@@ -796,6 +1031,7 @@ const OperationsSection = ({
 
 const OperationsModal = ({operations}: {operations: Operations}) => {
   const strings = useStrings()
+  const [expanded, setExpanded] = React.useState(true)
   const components = operations.components.map(({component}) => component)
 
   return (
@@ -805,7 +1041,11 @@ const OperationsModal = ({operations}: {operations: Operations}) => {
         content={strings.txReview.operations.warning.text}
       />
 
-      <Accordion label={strings.txReview.operationsLabel}>
+      <Accordion
+        label={strings.txReview.operationsLabel}
+        expanded={expanded}
+        onChange={setExpanded}
+      >
         <Space.Height.lg />
 
         {components.map((operation, index) => {
@@ -870,6 +1110,10 @@ export const CreatedByInfoItem = ({
 }) => {
   const {atoms: ta} = useTheme()
   const strings = useStrings()
+
+  if (!url) {
+    return null
+  }
 
   const displayText =
     name ?? url.replace(/^https?:\/\//, '').replace(/\/+$/, '')
@@ -946,8 +1190,8 @@ const useShowOperationsNotice = (operations: Operations) => {
     queryKey: ['useShowOperationsNotice'],
     queryFn: () =>
       storage.getItem(operationsNoticeShownKey).then((value) => {
-        const parsed = parseSafe(value)
-        return isBoolean(parsed) ? parsed : true
+        // parseBoolean handles both cases: if it's already a boolean, return it; if it's a string, parse it
+        return parseBoolean(value) ?? true
       }),
     placeholderData: false,
     staleTime: Infinity,

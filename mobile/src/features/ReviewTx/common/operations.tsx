@@ -1,5 +1,9 @@
+import {formatTokenWithText} from '@yoroi/cardano-wallet'
+import {Quantities, asQuantity} from '@yoroi/cardano-wallet'
+import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {useQuery} from '@tanstack/react-query'
 import * as React from 'react'
@@ -10,18 +14,47 @@ import {
   formatDrepHashToCIP129Format,
 } from '~/features/Staking/Governance/common/drep'
 import {usePoolInfo} from '~/features/Staking/hooks/usePoolInfo'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {Copiable} from '~/ui/Copiable/Copiable'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
-import {CardanoMobileWrapped} from '~/wallets/cardano/wrappedCsl'
-import {formatTokenWithText} from '~/wallets/utils/format'
-import {Quantities, asQuantity} from '~/wallets/utils/utils'
 
 import {PoolDetails} from './PoolDetails'
 import {generatePoolName} from './poolUtils'
 import {CertificateType, FormattedTx} from './types'
+
+// Helper function to extract hash and type from drep object
+// Handles both backend format ({addrKeyHash, type}) and expected format ({KeyHash} or {ScriptHash})
+function extractDrepHash(
+  drep: unknown,
+): {hash: string; type: 'key' | 'script'} | null {
+  if (typeof drep !== 'object' || drep === null) {
+    return null
+  }
+
+  // Handle backend format: {addrKeyHash: string, type: 'keyhash'|'scripthash'}
+  if ('addrKeyHash' in drep) {
+    const hash = (drep as {addrKeyHash: string}).addrKeyHash ?? ''
+    return {hash, type: 'key'}
+  }
+  if ('addrScriptHash' in drep) {
+    const hash = (drep as {addrScriptHash: string}).addrScriptHash ?? ''
+    return {hash, type: 'script'}
+  }
+
+  // Handle expected format: {KeyHash: string} or {ScriptHash: string}
+  if ('KeyHash' in drep) {
+    const hash = (drep as {KeyHash: string}).KeyHash ?? ''
+    return {hash, type: 'key'}
+  }
+  if ('ScriptHash' in drep) {
+    const hash = (drep as {ScriptHash: string}).ScriptHash ?? ''
+    return {hash, type: 'script'}
+  }
+
+  return null
+}
 
 export const StakeRegistrationOperation = ({
   fee,
@@ -127,29 +160,62 @@ export const StakeDelegationOperation = ({
     })
   }
 
-  const poolName = generatePoolName(poolInfo) ?? poolId
+  const poolName = generatePoolName(poolInfo)
 
   return (
-    <View style={[a.flex, a.flex_row, a.align_center, a.justify_between]}>
-      <Label
-        label={strings.txReview.operations.delegateStake}
-        showWarning={showWarning}
-        strike={strike}
-      />
+    <View>
+      <View style={[a.flex, a.flex_row, a.align_center, a.justify_between]}>
+        <Label
+          label={strings.txReview.operations.delegateStake}
+          showWarning={showWarning}
+          strike={strike}
+        />
 
-      <Space.Width.lg />
+        {poolName != null && (
+          <>
+            <Space.Width.lg />
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={handleShowPoolDetails}
+              style={{flex: 1}}
+            >
+              <Text
+                style={[
+                  a.body_2_md_regular,
+                  {color: p.text_primary_medium},
+                  strike && {textDecorationLine: 'line-through'},
+                ]}
+                numberOfLines={1}
+                ellipsizeMode="middle"
+              >
+                {poolName}
+              </Text>
+            </TouchableOpacity>
+          </>
+        )}
+      </View>
 
-      <TouchableOpacity activeOpacity={0.5} onPress={handleShowPoolDetails}>
-        <Text
-          style={[
-            a.body_2_md_regular,
-            {color: p.text_primary_medium},
-            strike && {textDecorationLine: 'line-through'},
-          ]}
+      <Space.Height.xs />
+
+      <Copiable text={poolId} style={{flex: 1}}>
+        <TouchableOpacity
+          activeOpacity={0.5}
+          onPress={handleShowPoolDetails}
+          style={{flex: 1}}
         >
-          {poolName}
-        </Text>
-      </TouchableOpacity>
+          <Text
+            style={[
+              a.body_2_md_regular,
+              {color: p.text_gray_medium},
+              strike && {textDecorationLine: 'line-through'},
+            ]}
+            numberOfLines={1}
+            ellipsizeMode="middle"
+          >
+            {poolId}
+          </Text>
+        </TouchableOpacity>
+      </Copiable>
     </View>
   )
 }
@@ -213,7 +279,7 @@ export const VoteDelegationOperation = ({
 
   return (
     <>
-      <View style={[a.flex, a.flex_row, a.align_center, a.justify_between]}>
+      <View style={[a.flex, a.flex_row, a.align_center]}>
         <Label
           label={strings.txReview.operations.delegateVotingToDRep}
           showWarning={showWarning}
@@ -222,20 +288,26 @@ export const VoteDelegationOperation = ({
 
         <Space.Width.lg />
 
-        <Text
-          style={[
-            a.body_2_md_regular,
-            {color: p.text_gray_medium},
-            strike && {textDecorationLine: 'line-through'},
-          ]}
-        >
-          {CIP129label}
-        </Text>
+        <Copiable text={CIP129label} style={{flex: 1}}>
+          <View style={{flex: 1}}>
+            <Text
+              style={[
+                a.body_2_md_regular,
+                {color: p.text_gray_medium},
+                strike && {textDecorationLine: 'line-through'},
+              ]}
+              numberOfLines={1}
+              ellipsizeMode="middle"
+            >
+              {CIP129label}
+            </Text>
+          </View>
+        </Copiable>
       </View>
 
       <Space.Height.sm />
 
-      <View style={[a.flex, a.flex_row, a.align_center, a.justify_between]}>
+      <View style={[a.flex, a.flex_row, a.align_center]}>
         <Label
           label={strings.txReview.operations.delegateVotingToDRepSpecified}
           showWarning={showWarning}
@@ -244,15 +316,21 @@ export const VoteDelegationOperation = ({
 
         <Space.Width.lg />
 
-        <Text
-          style={[
-            a.body_2_md_regular,
-            {color: p.text_gray_medium},
-            strike && {textDecorationLine: 'line-through'},
-          ]}
-        >
-          {CIP105label}
-        </Text>
+        <Copiable text={CIP105label} style={{flex: 1}}>
+          <View style={{flex: 1}}>
+            <Text
+              style={[
+                a.body_2_md_regular,
+                {color: p.text_gray_medium},
+                strike && {textDecorationLine: 'line-through'},
+              ]}
+              numberOfLines={1}
+              ellipsizeMode="middle"
+            >
+              {CIP105label}
+            </Text>
+          </View>
+        </Copiable>
       </View>
     </>
   )
@@ -555,7 +633,10 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
           }
 
         case CertificateType.StakeDelegation: {
-          const poolKeyHash = certificate.value.pool_keyhash ?? null
+          const poolKeyHash =
+            typeof certificate.value.pool_keyhash === 'string'
+              ? certificate.value.pool_keyhash
+              : null
           if (poolKeyHash == null) return acc
           return {
             components: [
@@ -580,7 +661,14 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
         case CertificateType.VoteDelegation: {
           const drep = certificate.value.drep
 
-          if (drep === 'AlwaysAbstain')
+          // Handle backend format: {type: "abstain"} or string format: "AlwaysAbstain"
+          if (
+            drep === 'AlwaysAbstain' ||
+            (typeof drep === 'object' &&
+              drep !== null &&
+              'type' in drep &&
+              (drep as {type: string}).type === 'abstain')
+          )
             return {
               components: [
                 ...acc.components,
@@ -598,7 +686,15 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
               ],
               totalFee: acc.totalFee,
             }
-          if (drep === 'AlwaysNoConfidence')
+          // Handle backend format: {type: "no_confidence"} or string format: "AlwaysNoConfidence"
+          if (
+            drep === 'AlwaysNoConfidence' ||
+            (typeof drep === 'object' &&
+              drep !== null &&
+              'type' in drep &&
+              ((drep as {type: string}).type === 'no_confidence' ||
+                (drep as {type: string}).type === 'noConfidence'))
+          )
             return {
               components: [
                 ...acc.components,
@@ -617,9 +713,32 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
               totalFee: acc.totalFee,
             }
 
-          const hash =
-            ('KeyHash' in drep ? drep.KeyHash : drep.ScriptHash) ?? ''
-          const type = 'KeyHash' in drep ? 'key' : 'script'
+          // Extract hash from drep object (handles both backend and expected formats)
+          const drepHash = extractDrepHash(drep)
+          if (drepHash != null) {
+            return {
+              components: [
+                ...acc.components,
+                {
+                  component: (
+                    <VoteDelegationOperation
+                      key={index}
+                      hash={drepHash.hash}
+                      type={drepHash.type}
+                      showWarning={isFirstElementDuplicated}
+                      strike={isNotFirstElementDuplicated}
+                    />
+                  ),
+                  duplicated: isNotFirstElementDuplicated,
+                  type: CertificateType.VoteDelegation,
+                },
+              ],
+              totalFee: acc.totalFee,
+            }
+          }
+
+          // If drep is null or doesn't match expected format, show generic VoteDelegation
+          // This handles cases where the backend doesn't provide drep data
           return {
             components: [
               ...acc.components,
@@ -627,8 +746,8 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
                 component: (
                   <VoteDelegationOperation
                     key={index}
-                    hash={hash}
-                    type={type}
+                    hash=""
+                    type="key"
                     showWarning={isFirstElementDuplicated}
                     strike={isNotFirstElementDuplicated}
                   />
@@ -799,6 +918,419 @@ export const useOperations = (certificates: FormattedTx['certificates']) => {
                 ),
                 duplicated: isNotFirstElementDuplicated,
                 type: CertificateType.CommitteeColdResign,
+              },
+            ],
+            totalFee: acc.totalFee,
+          }
+        }
+
+        case CertificateType.GenesisKeyDelegation: {
+          // Genesis key delegation - no specific operation component yet
+          // Return acc to skip for now, but don't throw error
+          return acc
+        }
+
+        case CertificateType.StakeAndVoteDelegation: {
+          // Combined certificate: show both stake delegation and vote delegation
+          // First try to show vote delegation if drep is available
+          const drep = certificate.value.drep
+          // Handle backend format: {type: "abstain"} or string format: "AlwaysAbstain"
+          if (
+            drep === 'AlwaysAbstain' ||
+            (typeof drep === 'object' &&
+              drep !== null &&
+              'type' in drep &&
+              (drep as {type: string}).type === 'abstain')
+          )
+            return {
+              components: [
+                ...acc.components,
+                {
+                  component: (
+                    <AbstainOperation
+                      key={index}
+                      showWarning={isFirstElementDuplicated}
+                      strike={isNotFirstElementDuplicated}
+                    />
+                  ),
+                  duplicated: isNotFirstElementDuplicated,
+                  type: CertificateType.VoteDelegation,
+                },
+              ],
+              totalFee: acc.totalFee,
+            }
+          // Handle backend format: {type: "no_confidence"} or string format: "AlwaysNoConfidence"
+          if (
+            drep === 'AlwaysNoConfidence' ||
+            (typeof drep === 'object' &&
+              drep !== null &&
+              'type' in drep &&
+              ((drep as {type: string}).type === 'no_confidence' ||
+                (drep as {type: string}).type === 'noConfidence'))
+          )
+            return {
+              components: [
+                ...acc.components,
+                {
+                  component: (
+                    <NoConfidenceOperation
+                      showWarning={isFirstElementDuplicated}
+                      key={index}
+                      strike={isNotFirstElementDuplicated}
+                    />
+                  ),
+                  duplicated: isNotFirstElementDuplicated,
+                  type: CertificateType.VoteDelegation,
+                },
+              ],
+              totalFee: acc.totalFee,
+            }
+
+          // Extract hash from drep object (handles both backend and expected formats)
+          const drepHash = extractDrepHash(drep)
+          if (drepHash != null) {
+            return {
+              components: [
+                ...acc.components,
+                {
+                  component: (
+                    <VoteDelegationOperation
+                      key={index}
+                      hash={drepHash.hash}
+                      type={drepHash.type}
+                      showWarning={isFirstElementDuplicated}
+                      strike={isNotFirstElementDuplicated}
+                    />
+                  ),
+                  duplicated: isNotFirstElementDuplicated,
+                  type: CertificateType.VoteDelegation,
+                },
+              ],
+              totalFee: acc.totalFee,
+            }
+          }
+
+          // If drep is null or doesn't match, fall back to showing vote delegation with empty hash
+          // or stake delegation if poolKeyHash is available
+          const poolKeyHash =
+            typeof certificate.value.pool_keyhash === 'string'
+              ? certificate.value.pool_keyhash
+              : null
+          if (poolKeyHash != null) {
+            return {
+              components: [
+                ...acc.components,
+                {
+                  component: (
+                    <StakeDelegationOperation
+                      key={index}
+                      poolId={poolKeyHash}
+                      showWarning={isFirstElementDuplicated}
+                      strike={isNotFirstElementDuplicated}
+                    />
+                  ),
+                  duplicated: isNotFirstElementDuplicated,
+                  type: CertificateType.StakeDelegation,
+                },
+              ],
+              totalFee: acc.totalFee,
+            }
+          }
+
+          // Show generic VoteDelegation if neither drep nor poolKeyHash is available
+          return {
+            components: [
+              ...acc.components,
+              {
+                component: (
+                  <VoteDelegationOperation
+                    key={index}
+                    hash=""
+                    type="key"
+                    showWarning={isFirstElementDuplicated}
+                    strike={isNotFirstElementDuplicated}
+                  />
+                ),
+                duplicated: isNotFirstElementDuplicated,
+                type: CertificateType.VoteDelegation,
+              },
+            ],
+            totalFee: acc.totalFee,
+          }
+        }
+
+        case CertificateType.StakeRegistrationAndDelegation: {
+          // Combined certificate: show stake delegation (more specific than registration)
+          const poolKeyHash =
+            typeof certificate.value.pool_keyhash === 'string'
+              ? certificate.value.pool_keyhash
+              : null
+          if (poolKeyHash == null) {
+            // If no poolKeyHash, show registration instead
+            const fee = asQuantity(wallet.protocolParams.keyDeposit)
+            return {
+              components: [
+                ...acc.components,
+                {
+                  component: (
+                    <StakeRegistrationOperation
+                      fee={fee}
+                      key={index}
+                      showWarning={isFirstElementDuplicated}
+                      strike={isNotFirstElementDuplicated}
+                    />
+                  ),
+                  duplicated: isNotFirstElementDuplicated,
+                  type: CertificateType.StakeRegistration,
+                },
+              ],
+              totalFee: Quantities.sum([fee, acc.totalFee]),
+            }
+          }
+          return {
+            components: [
+              ...acc.components,
+              {
+                component: (
+                  <StakeDelegationOperation
+                    key={index}
+                    poolId={poolKeyHash}
+                    showWarning={isFirstElementDuplicated}
+                    strike={isNotFirstElementDuplicated}
+                  />
+                ),
+                duplicated: isNotFirstElementDuplicated,
+                type: CertificateType.StakeDelegation,
+              },
+            ],
+            totalFee: acc.totalFee,
+          }
+        }
+
+        case CertificateType.StakeVoteRegistrationAndDelegation: {
+          // Combined certificate: prefer vote delegation, then stake delegation, then registration
+          const drep = certificate.value.drep
+          // Handle backend format: {type: "abstain"} or string format: "AlwaysAbstain"
+          if (
+            drep === 'AlwaysAbstain' ||
+            (typeof drep === 'object' &&
+              drep !== null &&
+              'type' in drep &&
+              (drep as {type: string}).type === 'abstain')
+          )
+            return {
+              components: [
+                ...acc.components,
+                {
+                  component: (
+                    <AbstainOperation
+                      key={index}
+                      showWarning={isFirstElementDuplicated}
+                      strike={isNotFirstElementDuplicated}
+                    />
+                  ),
+                  duplicated: isNotFirstElementDuplicated,
+                  type: CertificateType.VoteDelegation,
+                },
+              ],
+              totalFee: acc.totalFee,
+            }
+          // Handle backend format: {type: "no_confidence"} or string format: "AlwaysNoConfidence"
+          if (
+            drep === 'AlwaysNoConfidence' ||
+            (typeof drep === 'object' &&
+              drep !== null &&
+              'type' in drep &&
+              ((drep as {type: string}).type === 'no_confidence' ||
+                (drep as {type: string}).type === 'noConfidence'))
+          )
+            return {
+              components: [
+                ...acc.components,
+                {
+                  component: (
+                    <NoConfidenceOperation
+                      showWarning={isFirstElementDuplicated}
+                      key={index}
+                      strike={isNotFirstElementDuplicated}
+                    />
+                  ),
+                  duplicated: isNotFirstElementDuplicated,
+                  type: CertificateType.VoteDelegation,
+                },
+              ],
+              totalFee: acc.totalFee,
+            }
+
+          // Extract hash from drep object (handles both backend and expected formats)
+          const drepHash = extractDrepHash(drep)
+          if (drepHash != null) {
+            return {
+              components: [
+                ...acc.components,
+                {
+                  component: (
+                    <VoteDelegationOperation
+                      key={index}
+                      hash={drepHash.hash}
+                      type={drepHash.type}
+                      showWarning={isFirstElementDuplicated}
+                      strike={isNotFirstElementDuplicated}
+                    />
+                  ),
+                  duplicated: isNotFirstElementDuplicated,
+                  type: CertificateType.VoteDelegation,
+                },
+              ],
+              totalFee: acc.totalFee,
+            }
+          }
+
+          // Fall back to stake delegation
+          const poolKeyHash =
+            typeof certificate.value.pool_keyhash === 'string'
+              ? certificate.value.pool_keyhash
+              : null
+          if (poolKeyHash != null) {
+            return {
+              components: [
+                ...acc.components,
+                {
+                  component: (
+                    <StakeDelegationOperation
+                      key={index}
+                      poolId={poolKeyHash}
+                      showWarning={isFirstElementDuplicated}
+                      strike={isNotFirstElementDuplicated}
+                    />
+                  ),
+                  duplicated: isNotFirstElementDuplicated,
+                  type: CertificateType.StakeDelegation,
+                },
+              ],
+              totalFee: acc.totalFee,
+            }
+          }
+
+          // Fall back to vote delegation with empty hash if drep is null
+          // This ensures we show something even when drep data is missing
+          return {
+            components: [
+              ...acc.components,
+              {
+                component: (
+                  <VoteDelegationOperation
+                    key={index}
+                    hash=""
+                    type="key"
+                    showWarning={isFirstElementDuplicated}
+                    strike={isNotFirstElementDuplicated}
+                  />
+                ),
+                duplicated: isNotFirstElementDuplicated,
+                type: CertificateType.VoteDelegation,
+              },
+            ],
+            totalFee: acc.totalFee,
+          }
+        }
+
+        case CertificateType.VoteRegistrationAndDelegation: {
+          // Combined certificate: show vote delegation
+          const drep = certificate.value.drep
+
+          // Handle backend format: {type: "abstain"} or string format: "AlwaysAbstain"
+          if (
+            drep === 'AlwaysAbstain' ||
+            (typeof drep === 'object' &&
+              drep !== null &&
+              'type' in drep &&
+              (drep as {type: string}).type === 'abstain')
+          )
+            return {
+              components: [
+                ...acc.components,
+                {
+                  component: (
+                    <AbstainOperation
+                      key={index}
+                      showWarning={isFirstElementDuplicated}
+                      strike={isNotFirstElementDuplicated}
+                    />
+                  ),
+                  duplicated: isNotFirstElementDuplicated,
+                  type: CertificateType.VoteDelegation,
+                },
+              ],
+              totalFee: acc.totalFee,
+            }
+          // Handle backend format: {type: "no_confidence"} or string format: "AlwaysNoConfidence"
+          if (
+            drep === 'AlwaysNoConfidence' ||
+            (typeof drep === 'object' &&
+              drep !== null &&
+              'type' in drep &&
+              ((drep as {type: string}).type === 'no_confidence' ||
+                (drep as {type: string}).type === 'noConfidence'))
+          )
+            return {
+              components: [
+                ...acc.components,
+                {
+                  component: (
+                    <NoConfidenceOperation
+                      showWarning={isFirstElementDuplicated}
+                      key={index}
+                      strike={isNotFirstElementDuplicated}
+                    />
+                  ),
+                  duplicated: isNotFirstElementDuplicated,
+                  type: CertificateType.VoteDelegation,
+                },
+              ],
+              totalFee: acc.totalFee,
+            }
+
+          // Extract hash from drep object (handles both backend and expected formats)
+          const drepHash = extractDrepHash(drep)
+          if (drepHash != null) {
+            return {
+              components: [
+                ...acc.components,
+                {
+                  component: (
+                    <VoteDelegationOperation
+                      key={index}
+                      hash={drepHash.hash}
+                      type={drepHash.type}
+                      showWarning={isFirstElementDuplicated}
+                      strike={isNotFirstElementDuplicated}
+                    />
+                  ),
+                  duplicated: isNotFirstElementDuplicated,
+                  type: CertificateType.VoteDelegation,
+                },
+              ],
+              totalFee: acc.totalFee,
+            }
+          }
+
+          // If drep is null or doesn't match expected format, show generic VoteDelegation
+          return {
+            components: [
+              ...acc.components,
+              {
+                component: (
+                  <VoteDelegationOperation
+                    key={index}
+                    hash=""
+                    type="key"
+                    showWarning={isFirstElementDuplicated}
+                    strike={isNotFirstElementDuplicated}
+                  />
+                ),
+                duplicated: isNotFirstElementDuplicated,
+                type: CertificateType.VoteDelegation,
               },
             ],
             totalFee: acc.totalFee,

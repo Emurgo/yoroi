@@ -57,4 +57,12 @@ export const lightPalette: BasePalette = {
   bg_gradient_1: ['#C6F7ED', '#E4E8F7'],
   bg_gradient_2: ['#93F5E1', '#C6F7ED'],
   bg_gradient_3: ['#244ABF', '#4760FF'],
+  bg_gradient_4: [
+    '#17D1AA',
+    '#1ACBAF',
+    '#21B8BC',
+    '#2E9BD3',
+    '#3F71F1',
+    '#475FFF',
+  ],
 }

@@ -1,6 +1,6 @@
-import {UseMutationOptions, useMutation} from '@tanstack/react-query'
+import {useWalletManager} from '@yoroi/wallet-manager'
 
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
+import {UseMutationOptions, useMutation} from '@tanstack/react-query'
 
 export const useDisableAllEasyConfirmation = (
   options?: UseMutationOptions<void, Error>,

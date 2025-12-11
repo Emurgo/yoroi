@@ -1,4 +1,4 @@
-import {Numbers} from '@yoroi/types'
+import type {Numbers} from '@yoroi/types'
 
 import BigNumber from 'bignumber.js'
 

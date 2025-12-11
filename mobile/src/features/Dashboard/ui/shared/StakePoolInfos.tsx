@@ -1,23 +1,15 @@
+import {isByron} from '@yoroi/cardano-wallet'
+import {YoroiWallet} from '@yoroi/cardano-wallet'
+import {StakingInfo} from '@yoroi/staking'
 import {useTheme} from '@yoroi/theme'
-import {Balance, Wallet} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
-import {
-  UseQueryOptions,
-  UseSuspenseQueryOptions,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query'
-import BigNumber from 'bignumber.js'
+import {UseSuspenseQueryOptions, useQueryClient} from '@tanstack/react-query'
 import * as React from 'react'
 import {ActivityIndicator, View} from 'react-native'
 
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {ButtonProps} from '~/ui/Button/Button'
-import {YoroiWallet} from '~/wallets/cardano/types'
-import {StakingInfo} from '~/wallets/types/staking'
-import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
-import {Quantities} from '~/wallets/utils/utils'
 
 import {StakePoolInfo} from './StakePoolInfo'
 
@@ -45,12 +37,19 @@ export const StakePoolInfos = ({ctaProps}: {ctaProps?: ButtonProps}) => {
 
 export const usePrefetchStakingInfo = (wallet: YoroiWallet) => {
   const queryClient = useQueryClient()
+  const {meta} = useSelectedWallet()
+  const isByronWallet = React.useMemo(
+    () => (meta ? isByron(meta.implementation) : false),
+    [meta],
+  )
 
-  return () =>
+  return () => {
+    if (isByronWallet) return
     queryClient.prefetchQuery({
       queryKey: [wallet.id, 'useStakingInfo'],
       queryFn: () => wallet.getStakingInfo(),
     })
+  }
 }
 
 const useStakePoolIds = (
@@ -67,49 +66,5 @@ const useStakePoolIds = (
   return {
     ...query,
     stakePoolIds: stakingInfo?.status === 'staked' ? [stakingInfo.poolId] : [],
-  }
-}
-
-export const useStakingTx = (
-  {
-    wallet,
-    meta,
-    poolId,
-  }: {wallet: YoroiWallet; poolId?: string; meta: Wallet.Meta},
-  options: UseQueryOptions<
-    YoroiUnsignedTx,
-    Error,
-    YoroiUnsignedTx,
-    [string, 'stakingTx']
-  >,
-) => {
-  const query = useQuery({
-    ...options,
-    retry: false,
-    queryKey: [wallet.id, 'stakingTx'],
-    queryFn: async () => {
-      if (poolId == null) throw new Error('invalid state')
-      const accountStates = await wallet.fetchAccountState()
-      const accountState = accountStates[wallet.rewardAddressHex]
-      if (!accountState) throw new Error('Account state not found')
-
-      const stakingUtxos = await wallet.getAllUtxosForKey()
-      const amountToDelegate = Quantities.sum([
-        ...stakingUtxos.map((utxo) => utxo.amount as Balance.Quantity),
-        accountState.remainingAmount as Balance.Quantity,
-      ])
-
-      return wallet.createDelegationTx({
-        poolId,
-        delegatedAmount: new BigNumber(amountToDelegate),
-        addressMode: meta.addressMode,
-      })
-    },
-    enabled: poolId != null,
-  })
-
-  return {
-    ...query,
-    stakingTx: query.data,
   }
 }

@@ -1,4 +1,4 @@
-import {Portfolio, Swap} from '@yoroi/types'
+import {Branded, Portfolio, Swap} from '@yoroi/types'
 
 import {
   BuildSwapRequest,
@@ -31,7 +31,7 @@ export const transformersMaker = ({
     }
     // Steelswap uses hex-encoded format: policyId + hexName (no separator)
     // PolicyId is always 56 characters, rest is hexName
-    return `${tokenId.slice(0, 56)}.${tokenId.slice(56)}`
+    return Branded.asTokenId(`${tokenId.slice(0, 56)}.${tokenId.slice(56)}`)
   }
 
   const toTokenId = (tokenId: Portfolio.Token.Id): string => {
@@ -61,37 +61,45 @@ export const transformersMaker = ({
     tokens: {
       response: (res: TokensResponse): Array<Portfolio.Token.Info> =>
         res
-          .map(({ticker, name, policyId, policyName, decimals}) => {
-            const hexName = policyName || ''
-            const id = `${policyId}.${hexName}`
-
-            // Filter out primary token (it's already known)
-            // Check if policyId is 'lovelace' or if the constructed id matches primaryTokenInfo.id
-            const isPrimary =
-              policyId === 'lovelace' || id === primaryTokenInfo.id
-            if (isPrimary) return null
-
-            if (decimals === null || decimals === undefined) return null
-
-            return {
-              status: Portfolio.Token.Status.Valid,
-              id,
-              ticker: ticker ?? '',
-              name: name ?? ticker ?? '',
-              type: Portfolio.Token.Type.FT,
-              nature: Portfolio.Token.Nature.Secondary,
-              application: Portfolio.Token.Application.General,
-              fingerprint: '',
+          .map(
+            ({
+              ticker,
+              name,
+              policyId,
+              policyName,
               decimals,
-              description: '',
-              originalImage: '',
-              symbol: '',
-              reference: '',
-              tag: '',
-              website: '',
-            }
-          })
-          .filter((v): v is Portfolio.Token.Info => !!v),
+            }): Portfolio.Token.Info | null => {
+              const hexName = policyName || ''
+              const id = `${policyId}.${hexName}`
+
+              // Filter out primary token (it's already known)
+              // Check if policyId is 'lovelace' or if the constructed id matches primaryTokenInfo.id
+              const isPrimary =
+                policyId === 'lovelace' || id === primaryTokenInfo.id
+              if (isPrimary) return null
+
+              if (decimals === null || decimals === undefined) return null
+
+              return {
+                status: Portfolio.Token.Status.Valid,
+                id: id as Portfolio.Token.Id,
+                ticker: ticker ?? '',
+                name: name ?? ticker ?? '',
+                type: Portfolio.Token.Type.FT,
+                nature: Portfolio.Token.Nature.Secondary,
+                application: Portfolio.Token.Application.General,
+                fingerprint: '',
+                decimals,
+                description: '',
+                originalImage: '',
+                symbol: '',
+                reference: '',
+                tag: '',
+                website: '',
+              }
+            },
+          )
+          .filter((v): v is Portfolio.Token.Info => v !== null),
     },
 
     orders: {

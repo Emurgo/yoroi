@@ -10,7 +10,6 @@ import {Button} from '~/ui/Button/Button'
 import {Checkbox} from '~/ui/Checkbox/Checkbox'
 import {Space} from '~/ui/Space/Space'
 
-import {useNavigateTo} from '../../CatalystNavigator'
 import {
   Actions,
   Description,
@@ -18,6 +17,7 @@ import {
   Row,
   Stepper,
 } from '../../common/components'
+import {useNavigateTo} from '../../common/navigation'
 
 export const DisplayPin = () => {
   const strings = useStrings()

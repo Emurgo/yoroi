@@ -34,10 +34,10 @@ export const useAuthOsWithEasyConfirmation = (
         walletId,
         authenticationPrompt ?? defaultAuthenticationPrompt,
       ),
-    onError: (error, variables, context) => {
+    onError: (error, variables, context, mutation) => {
       logger.error('useAuthWithOs: Signing Tx with OS has failed', {error})
       alert(error)
-      options?.onError?.(error, variables, context)
+      options?.onError?.(error, variables, context, mutation)
     },
   })
 

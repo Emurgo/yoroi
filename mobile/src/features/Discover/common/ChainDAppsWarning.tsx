@@ -1,14 +1,14 @@
 import {useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
+import {useWalletManager} from '@yoroi/wallet-manager'
 
 import {useQuery} from '@tanstack/react-query'
 import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
 
@@ -73,8 +73,9 @@ const useAcceptedDAppsWarning = () => {
   const walletStorage = storage.join(`wallet/${wallet.id}/dAppsWarning/`)
   const queryKey = [wallet.id, 'dAppsWarning']
   const mutation = useMutationWithInvalidations({
-    mutationFn: (accepted: boolean) =>
-      walletStorage.setItem('accepted', accepted),
+    mutationFn: async (accepted: boolean) => {
+      await walletStorage.setItem('accepted', accepted)
+    },
     invalidateQueries: [queryKey],
   })
   return {...mutation, accept: mutation.mutate}

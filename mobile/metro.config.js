@@ -1,7 +1,5 @@
 const path = require('path')
-const {
-  getSentryExpoConfig
-} = require("@sentry/react-native/metro");
+const {getSentryExpoConfig} = require('@sentry/react-native/metro')
 
 const projectRoot = __dirname
 /** @type {import('expo/metro-config').MetroConfig} */
@@ -48,6 +46,13 @@ config.resolver.alias = {
   '@yoroi/theme': path.resolve(projectRoot, './packages/theme'),
   '@yoroi/transfer': path.resolve(projectRoot, './packages/transfer'),
   '@yoroi/types': path.resolve(projectRoot, './packages/types'),
+  '@yoroi/cardano-wallet': path.resolve(projectRoot, './packages/cardano-wallet'),
+  '@yoroi/wallet-manager': path.resolve(projectRoot, './packages/wallet-manager'),
+  '@yoroi/tx': path.resolve(projectRoot, './packages/tx'),
+  '@yoroi/p2p-communication': path.resolve(
+    projectRoot,
+    './packages/p2p-communication',
+  ),
 
   // ~ aliases
   '~/ui': path.resolve(projectRoot, './src/ui'),
@@ -68,5 +73,12 @@ config.resolver.assetExts.push('md')
 // -- transformer --
 config.transformer.unstable_allowRequireContext = true
 config.transformer.minifierConfig = {compress: {drop_console: true}}
+
+// Note: Buffer polyfill removed from Metro getPolyfills() because
+// @craftzdog/react-native-buffer depends on react-native-quick-base64 (native module)
+// which isn't initialized when polyfills run, causing "Global was not installed" errors.
+// Instead, we rely on:
+// 1. src/kernel/shims.ts - sets Buffer on global after modules load
+// 2. patches/int64-buffer+1.0.1.patch - adds fallback checks for global.Buffer
 
 module.exports = config

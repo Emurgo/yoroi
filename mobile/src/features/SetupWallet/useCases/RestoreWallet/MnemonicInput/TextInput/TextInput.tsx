@@ -1,4 +1,6 @@
+import {isEmptyString} from '@yoroi/cardano-wallet'
 import {isString} from '@yoroi/common'
+import {useDebouncedCallback} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
@@ -12,8 +14,6 @@ import {
   HelperText as HelperTextRNP,
   TextInput as RNPTextInput,
 } from 'react-native-paper'
-
-import {isEmptyString} from '~/wallets/utils/string'
 
 type TextInputProps = RNTextInputProps &
   Omit<React.ComponentProps<typeof RNPTextInput>, 'theme'> & {
@@ -29,18 +29,6 @@ type TextInputProps = RNTextInputProps &
     selectTextOnAutoFocus?: boolean
     isValidPhrase: boolean
   }
-
-const useDebounced = (cb: VoidFunction, v: unknown, d = 1_000) => {
-  const first = React.useRef(true)
-  React.useEffect(() => {
-    if (first.current) {
-      first.current = false
-      return
-    }
-    const t = setTimeout(cb, d)
-    return () => clearTimeout(t)
-  }, [cb, d, v])
-}
 
 export const TextInput = React.forwardRef(
   (props: TextInputProps, ref: React.ForwardedRef<RNTextInput>) => {
@@ -74,7 +62,11 @@ export const TextInput = React.forwardRef(
     const [errorTextEnabled, setErrorTextEnabled] = React.useState(errorOnMount)
     const [isValidWord, setIsValidWord] = React.useState(false)
 
-    useDebounced(() => setErrorTextEnabled(true), value, errorDelay)
+    useDebouncedCallback(
+      () => setErrorTextEnabled(true),
+      value,
+      errorDelay || 1000,
+    )
 
     const showError = errorTextEnabled && !isEmptyString(errorText)
     const showHelperComponent = helper != null && !isString(helper)

@@ -315,4 +315,8 @@ export const sendMessages = defineMessages({
     id: 'components.send.sendscreen.failedTxTitle',
     defaultMessage: '!!!Failed transaction',
   },
+  favoriteContacts: {
+    id: 'components.send.sendscreen.favoriteContacts',
+    defaultMessage: '!!!Favorite Contacts',
+  },
 })

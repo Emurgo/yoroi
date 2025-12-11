@@ -6,7 +6,7 @@ import {Dimensions, PanResponder, View} from 'react-native'
 import {Circle, G, Line, Rect, Text as SvgText} from 'react-native-svg'
 import {LineChart as SvgLineChart} from 'react-native-svg-charts'
 
-interface Props {
+type Props = {
   dataSources?: {
     label: string
     value: number
@@ -14,14 +14,14 @@ interface Props {
   onValueSelected: (value: number) => void
 }
 
-interface TooltipProps {
-  x: any
-  y: any
+type TooltipProps = {
+  x: (index: number) => number
+  y: (value: number) => number
   positionX: number
   valueList: number[]
   labelList: string[]
   dataSize: number
-  palette: any
+  palette: ReturnType<typeof useTheme>['palette']
 }
 
 const Tooltip = ({
@@ -37,7 +37,7 @@ const Tooltip = ({
     return null
   }
 
-  const price = valueList[positionX]
+  const price = valueList[positionX] ?? 0
 
   const minPrice = Math.min(...valueList)
 
@@ -71,7 +71,7 @@ const Tooltip = ({
 
   return (
     <G x={xPosition} key="tooltip">
-      <G x={x}>
+      <G x={0}>
         {/* Vertical line for tooltip */}
         <Line
           y1={centerY}
@@ -197,7 +197,10 @@ const TokenChartComponent = ({dataSources = [], onValueSelected}: Props) => {
           animate={true}
           animationDuration={500}
         >
-          {(props: any) => (
+          {(props: {
+            x: (index: number) => number
+            y: (value: number) => number
+          }) => (
             <Tooltip
               {...props}
               positionX={positionX}

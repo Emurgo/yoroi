@@ -1,6 +1,7 @@
+import {formatTimeSpan} from '@yoroi/cardano-wallet'
+import {PoolTransition} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import {PoolTransition} from '@emurgo/yoroi-lib'
 import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {Image, Text, View, ViewProps} from 'react-native'
@@ -11,7 +12,6 @@ import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
-import {formatTimeSpan} from '~/wallets/utils/timeUtils'
 
 const PoolTransitionModalContent = ({
   poolTransition,

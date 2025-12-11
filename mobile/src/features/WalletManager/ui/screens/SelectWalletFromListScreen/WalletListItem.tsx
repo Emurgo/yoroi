@@ -1,42 +1,55 @@
+import {isByron, isShelley} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
+import {
+  useAutomaticWalletOpener,
+  useSelectedNetwork,
+  useSyncWalletInfo,
+  useWalletManagerSelector,
+} from '@yoroi/wallet-manager'
 
 import {useFocusEffect} from '@react-navigation/native'
 import * as React from 'react'
-import {Alert, Animated, Text, TouchableOpacity, View} from 'react-native'
-import {Swipeable} from 'react-native-gesture-handler'
+import {Alert, Text, TouchableOpacity, View} from 'react-native'
+import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable'
+import Animated, {
+  SharedValue,
+  interpolate,
+  useAnimatedStyle,
+} from 'react-native-reanimated'
 
+import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {
   ChevronRightDarkIllustration,
   ChevronRightGrayIllustration,
 } from '~/features/SetupWallet/illustrations/ChevronRight'
-import {useAutomaticWalletOpener} from '~/features/WalletManager/context/AutomaticWalletOpeningProvider'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
-import {useSyncWalletInfo} from '~/features/WalletManager/hooks/useSyncWalletInfo'
 import {features} from '~/kernel/features'
 import {Icon} from '~/ui/Icon'
 import {Loading} from '~/ui/Loading/Loading'
 import {Space} from '~/ui/Space/Space'
-import {isByron, isShelley} from '~/wallets/cardano/utils'
 
 type Props = {
   walletMeta: Wallet.Meta
   onPress: (walletMeta: Wallet.Meta) => void
+  isLoading?: boolean
 }
 
-export const WalletListItem = ({walletMeta, onPress}: Props) => {
+export const WalletListItem = ({
+  walletMeta,
+  onPress,
+  isLoading = false,
+}: Props) => {
   const {palette: p, atoms: ta} = useTheme()
+  const {isAuthDev} = useAuth()
 
   const [isButtonPressed, setIsButtonPressed] = React.useState(false)
   const implementationName = React.useMemo(
     () => getImplementationName(walletMeta),
     [walletMeta],
   )
-  const {
-    selected: {meta},
-    walletManager,
-  } = useWalletManager()
+  // Use selectors to prevent re-renders when unrelated context values change
+  const meta = useWalletManagerSelector((ctx) => ctx.selected.meta)
+  const walletManager = useWalletManagerSelector((ctx) => ctx.walletManager)
   const {
     shouldOpen: shouldAutomaticWalletOpen,
     setShouldOpen: setShouldAutomaticWalletOpen,
@@ -46,7 +59,11 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
 
   const {network} = useSelectedNetwork()
   const syncWalletInfo = useSyncWalletInfo(walletMeta.id)
-  const hasSyncedLastSelectedNetwork = network === syncWalletInfo?.network
+  // If syncWalletInfo is null, wallet is not actively syncing - assume it's synced (show full opacity)
+  // Only show reduced opacity if syncWalletInfo exists and indicates not synced
+  const hasSyncedLastSelectedNetwork =
+    !syncWalletInfo || // No sync info = wallet not in sync queue = assume synced
+    (syncWalletInfo.status === 'done' && syncWalletInfo.network === network) // Explicitly synced on current network
 
   useFocusEffect(
     React.useCallback(() => {
@@ -68,11 +85,10 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
     ]),
   )
 
-  // NOTE: dev only - temporary to show Product
   const handleOnDeleteWallet = () => {
     Alert.alert(
       'Delete Wallet',
-      'Are you sure you want to delete this wallet?',
+      `Are you sure you want to delete "${walletMeta.name}"? This action cannot be undone.`,
       [
         {
           text: 'Cancel',
@@ -82,6 +98,9 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
           text: 'Delete',
           style: 'destructive',
           onPress: () => {
+            if (!walletManager) {
+              throw new Error('WalletManager not available')
+            }
             walletManager.removeWallet(walletMeta.id)
           },
         },
@@ -89,56 +108,32 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
     )
   }
 
-  const renderRightActions = (
-    progress: Animated.AnimatedInterpolation<string | number>,
-  ) => {
-    const translateX = progress.interpolate({
-      inputRange: [0, 1],
-      outputRange: [80, 0],
-    })
-
+  const renderRightActions = (progress: SharedValue<number>) => {
     return (
-      <Animated.View
-        style={[
-          a.justify_center,
-          a.align_center,
-          {transform: [{translateX}], width: 100},
-        ]}
-      >
-        <TouchableOpacity
-          style={[a.justify_center, a.align_center, a.px_md]}
-          onPress={handleOnDeleteWallet}
-        >
-          <Text
-            style={[
-              a.body_2_md_medium,
-              a.p_sm,
-              {backgroundColor: p.sys_magenta_100, color: p.sys_magenta_500},
-            ]}
-          >
-            DELETE
-          </Text>
-        </TouchableOpacity>
-      </Animated.View>
+      <RightActions
+        progress={progress}
+        onDelete={handleOnDeleteWallet}
+        palette={p}
+      />
     )
   }
 
   return (
-    <Swipeable
+    <ReanimatedSwipeable
       renderRightActions={(progress) => renderRightActions(progress)}
-      enabled={features.walletListSwipeableActions}
+      enabled={isAuthDev}
     >
       <View
         style={[a.flex_row, a.justify_between, a.align_center, a.flex_wrap]}
       >
         <TouchableOpacity
           activeOpacity={1}
-          disabled={!hasSyncedLastSelectedNetwork}
           onPress={() => onPress(walletMeta)}
           style={[
             a.flex_row,
             a.align_center,
-            !hasSyncedLastSelectedNetwork && {opacity: 0.5},
+            // Show reduced opacity if not synced yet, but still allow interaction
+            !hasSyncedLastSelectedNetwork && {opacity: 0.7},
           ]}
           onPressIn={() => setIsButtonPressed(true)}
           onPressOut={() => setIsButtonPressed(false)}
@@ -148,12 +143,14 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
           <Space.Width.md />
 
           <View style={[a.justify_between, a.flex_1]}>
-            <Text
-              style={[a.flex_1, a.body_1_lg_medium, ta.text_gray_medium]}
-              numberOfLines={1}
-            >
-              {walletMeta.name}
-            </Text>
+            <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+              <Text
+                style={[a.flex_1, a.body_1_lg_medium, ta.text_gray_max]}
+                numberOfLines={1}
+              >
+                {walletMeta.name}
+              </Text>
+            </View>
 
             <Text
               style={[ta.text_gray_low, {opacity: isButtonPressed ? 1 : 0.5}]}
@@ -162,9 +159,18 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
             </Text>
           </View>
 
+          {walletMeta.isReadOnly && (
+            <>
+              <Icon.EyeOn size={24} color={p.el_gray_min} />
+              <Space.Width.md />
+            </>
+          )}
+
           {features.walletListFeedback && (
             <>
-              {syncWalletInfo?.status === 'syncing' && <Loading />}
+              {(syncWalletInfo?.status === 'syncing' || isLoading) && (
+                <Loading />
+              )}
 
               <Space.Width.md />
 
@@ -177,7 +183,48 @@ export const WalletListItem = ({walletMeta, onPress}: Props) => {
           <Chevron pressed={isButtonPressed} />
         </TouchableOpacity>
       </View>
-    </Swipeable>
+    </ReanimatedSwipeable>
+  )
+}
+
+const RightActions = ({
+  progress,
+  onDelete,
+  palette,
+}: {
+  progress: SharedValue<number>
+  onDelete: () => void
+  palette: ReturnType<typeof useTheme>['palette']
+}) => {
+  const animatedStyle = useAnimatedStyle(() => {
+    const translateX = interpolate(progress.value, [0, 1], [80, 0])
+    return {
+      transform: [{translateX}],
+    }
+  })
+
+  return (
+    <Animated.View
+      style={[a.justify_center, a.align_center, {width: 100}, animatedStyle]}
+    >
+      <TouchableOpacity
+        style={[a.justify_center, a.align_center, a.px_md]}
+        onPress={onDelete}
+      >
+        <Text
+          style={[
+            a.body_2_md_medium,
+            a.p_sm,
+            {
+              backgroundColor: palette.sys_magenta_100,
+              color: palette.sys_magenta_500,
+            },
+          ]}
+        >
+          DELETE
+        </Text>
+      </TouchableOpacity>
+    </Animated.View>
   )
 }
 

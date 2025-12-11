@@ -1,3 +1,4 @@
+import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {createUnknownTokenInfo, isPrimaryToken} from '@yoroi/portfolio'
 import {Portfolio} from '@yoroi/types'
 
@@ -7,8 +8,6 @@ import {
   useQuery,
   useSuspenseQuery,
 } from '@tanstack/react-query'
-
-import {YoroiWallet} from '~/wallets/cardano/types'
 
 export const usePortfolioTokenInfos = (
   {
@@ -21,7 +20,7 @@ export const usePortfolioTokenInfos = (
     sourceId?: string
   },
   options: Omit<
-    UseQueryOptions<Map<`${string}.${string}`, Portfolio.Token.Info>, Error>,
+    UseQueryOptions<Map<Portfolio.Token.Id, Portfolio.Token.Info>, Error>,
     'queryKey' | 'queryFn'
   > = {},
 ) => {
@@ -34,7 +33,7 @@ export const usePortfolioTokenInfos = (
         secondaryTokenIds,
         sourceId,
       })
-      const result = new Map<`${string}.${string}`, Portfolio.Token.Info>([
+      const result = new Map<Portfolio.Token.Id, Portfolio.Token.Info>([
         [wallet.portfolioPrimaryTokenInfo.id, wallet.portfolioPrimaryTokenInfo],
       ])
       for (const [id, tokenInfo] of response) {
@@ -61,9 +60,9 @@ export const usePortfolioTokenInfosSuspense = (
     sourceId?: string
   },
   options?: UseSuspenseQueryOptions<
-    Map<`${string}.${string}`, Portfolio.Token.Info>,
+    Map<Portfolio.Token.Id, Portfolio.Token.Info>,
     Error,
-    Map<`${string}.${string}`, Portfolio.Token.Info>,
+    Map<Portfolio.Token.Id, Portfolio.Token.Info>,
     [string, string, ReadonlyArray<Portfolio.Token.Id>]
   >,
 ) => {
@@ -76,7 +75,7 @@ export const usePortfolioTokenInfosSuspense = (
         secondaryTokenIds,
         sourceId,
       })
-      const result = new Map<`${string}.${string}`, Portfolio.Token.Info>([
+      const result = new Map<Portfolio.Token.Id, Portfolio.Token.Info>([
         [wallet.portfolioPrimaryTokenInfo.id, wallet.portfolioPrimaryTokenInfo],
       ])
       for (const [id, tokenInfo] of response) {

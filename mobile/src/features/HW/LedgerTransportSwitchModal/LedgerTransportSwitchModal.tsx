@@ -1,3 +1,4 @@
+import {HARDWARE_WALLETS, useLedgerPermissions} from '@yoroi/cardano-wallet'
 import {atoms as a} from '@yoroi/theme'
 
 import * as React from 'react'
@@ -7,7 +8,6 @@ import DeviceInfo from 'react-native-device-info'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
-import {HARDWARE_WALLETS, useLedgerPermissions} from '~/wallets/hw/hw'
 
 type Props = {
   onSelectUSB: () => void

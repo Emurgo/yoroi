@@ -1,13 +1,15 @@
+import {isByron} from '@yoroi/cardano-wallet'
 import {time} from '@yoroi/common'
 import {useNotificationManager} from '@yoroi/notifications'
-import {Notifications} from '@yoroi/types'
+import {Branded, Notifications} from '@yoroi/types'
+import {useSelectedNetwork} from '@yoroi/wallet-manager'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
+import {useWalletEvent} from '@yoroi/wallet-manager'
 
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
+import {governanceQueryKeys, notificationQueryKeys} from '~/common/queries'
 import {BannerIds, showBanner} from '~/features/Notifications/common/banners'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
 import {minAdaForGovernanceBanner} from '~/kernel/constants'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
@@ -16,14 +18,16 @@ import {useGovernanceParticipation} from '../common/helpers'
 
 export const useGovernanceBanner = () => {
   const strings = useStrings()
-  const {wallet} = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
   const manager = useNotificationManager()
-  const {
-    selected: {network},
-  } = useWalletManager()
+  // Use selector hook instead of full context to prevent unnecessary re-renders
+  const {network} = useSelectedNetwork()
+
+  // Skip governance for Byron wallets
+  const isByronWallet = meta ? isByron(meta.implementation) : false
   const {isParticipating, isLoading} = useGovernanceParticipation()
 
-  const queryKey = ['governanceBanner', wallet?.id, network]
+  const queryKey = governanceQueryKeys.banner(wallet?.id, network)
   const queryClient = useQueryClient()
 
   useWalletEvent(wallet, 'utxos', () =>
@@ -32,13 +36,13 @@ export const useGovernanceBanner = () => {
 
   useQuery({
     queryKey: [...queryKey, isParticipating],
-    enabled: !isLoading,
+    enabled: !isLoading && !isByronWallet,
     staleTime: time.fiveMinutes,
     queryFn: async () => {
       const balance = wallet?.balanceManager.getPrimaryBalance()
-      const adaLovelace = BigInt(balance?.quantity ?? '0')
+      const adaLovelace = BigInt(balance?.quantity ?? Branded.ZERO_QUANTITY)
       const hasEnoughAda = adaLovelace > minAdaForGovernanceBanner
-      logger.info('Governance banner prerequisites ', {
+      logger.debug('Governance banner prerequisites ', {
         walletId: wallet?.id,
         isParticipating,
         balanceLovelace: adaLovelace.toString(),
@@ -50,7 +54,7 @@ export const useGovernanceBanner = () => {
       if (isParticipating) {
         await manager.events.remove(BannerIds.GovernanceParticipation)
         queryClient.invalidateQueries({
-          queryKey: ['receivedNotificationEvents'],
+          queryKey: notificationQueryKeys.events(),
         })
         return false
       }
@@ -58,7 +62,7 @@ export const useGovernanceBanner = () => {
       if (!hasEnoughAda) {
         await manager.events.remove(BannerIds.GovernanceParticipation)
         queryClient.invalidateQueries({
-          queryKey: ['receivedNotificationEvents'],
+          queryKey: notificationQueryKeys.events(),
         })
         return false
       }
