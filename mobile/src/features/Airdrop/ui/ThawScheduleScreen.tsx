@@ -1,4 +1,3 @@
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useWalletManager} from '@yoroi/wallet-manager'
 
@@ -15,6 +14,7 @@ import {useIntl} from 'react-intl'
 import {ScrollView, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useNavigateTo} from '~/features/ReviewTx/common/hooks/useNavigateTo'
 import {isInsufficientBalanceError} from '~/features/Staking/Governance/common/transactionErrorHandling'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
@@ -59,6 +59,7 @@ export const ThawScheduleScreen = () => {
   const {buildTransaction, submitTransaction} = useRedeemThaw()
   const {navigateToTxReview} = useWalletNavigation()
   const resultNavigation = useResultNavigation()
+  const navigateTo = useNavigateTo()
 
   const isReadOnly = meta?.isReadOnly ?? false
   const isWalletInitialized = !!walletManager.selected.wallet
@@ -130,20 +131,6 @@ export const ThawScheduleScreen = () => {
       // Build transaction via API to get CBOR
       const cbor = await buildTransaction(allocation.address)
 
-      // Parse CBOR to get transaction body for logging
-      const parsedTxBody = await CardanoMobileWrapped.cslScope((csl) => {
-        const tx = csl.Transaction.fromHex(cbor)
-        const jsonString = tx.toJson()
-        return JSON.parse(jsonString).body
-      })
-
-      logger.info('handleRedeem: Parsed transaction CBOR for review', {
-        destAddress: allocation.address,
-        transactionBody: parsedTxBody,
-        cborLength: cbor.length,
-        cborPreview: `${cbor.substring(0, 64)}...`,
-      })
-
       // Navigate to review transaction screen
       navigateToTxReview({
         cbor,
@@ -151,7 +138,9 @@ export const ThawScheduleScreen = () => {
         context: 'airdrop',
         onSuccessWithoutFeedback: async (args) => {
           if (!args?.signedTx) {
-            logger.error('handleRedeem: No signed transaction in callback')
+            logger.error('handleRedeem: No signed transaction in callback', {
+              destAddress: allocation.address,
+            })
             setIsRedeeming(false)
             throw new Error('Failed to sign transaction')
           }
@@ -163,8 +152,13 @@ export const ThawScheduleScreen = () => {
               signedTx: args.signedTx,
             })
             setIsRedeeming(false)
+            navigateTo.showSubmittedTxScreen('default')
           } catch (error) {
-            logger.error('handleRedeem: Failed to submit transaction', {error})
+            logger.error('handleRedeem: Failed to submit transaction', {
+              destAddress: allocation.address,
+              txId: args.txId,
+              error: error instanceof Error ? error.message : String(error),
+            })
             setIsRedeeming(false)
             throw error
           }
@@ -176,7 +170,11 @@ export const ThawScheduleScreen = () => {
           setIsRedeeming(false)
         },
         onErrorWithoutFeedback: (error) => {
-          logger.error('handleRedeem: Transaction signing failed', {error})
+          logger.error('handleRedeem: Transaction signing failed', {
+            destAddress: allocation.address,
+            error: error instanceof Error ? error.message : String(error),
+            errorStack: error instanceof Error ? error.stack : undefined,
+          })
           setIsRedeeming(false)
         },
       })

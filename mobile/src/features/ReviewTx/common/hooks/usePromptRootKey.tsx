@@ -5,6 +5,7 @@ import * as React from 'react'
 import {ConfirmRawTxWithOs} from '~/features/Swap/common/ConfirmRawTx/ConfirmRawTxWithOs'
 import {ConfirmRawTxWithPassword} from '~/features/Swap/common/ConfirmRawTx/ConfirmRawTxWithPassword'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {logger} from '~/kernel/logger/logger'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 
@@ -30,12 +31,20 @@ export const usePromptRootKey = () => {
         try {
           await onSuccess(rootKey)
         } catch (error) {
+          logger.error('usePromptRootKey: onSuccess callback failed', {
+            walletId: meta.id,
+            error: error instanceof Error ? error.message : String(error),
+          })
           closeModal()
           onError?.(error)
         }
       }
 
       const handleOnError = (error?: unknown) => {
+        logger.error('usePromptRootKey: Root key prompt error', {
+          walletId: meta.id,
+          error: error instanceof Error ? error.message : String(error),
+        })
         closeModal()
         onError?.(error)
       }
@@ -75,6 +84,7 @@ export const usePromptRootKey = () => {
     [
       closeModal,
       meta.isEasyConfirmationEnabled,
+      meta.id,
       openModal,
       strings.discover.confirmTx,
     ],
