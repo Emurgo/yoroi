@@ -20,19 +20,23 @@ export const useMutationWithInvalidations = <
 
   return useMutation<TData, TError, TVariables, TContext>({
     ...options,
-    onMutate: (variables, context) => {
+    onMutate: async (variables: TVariables, context: any) => {
       invalidateQueries?.forEach((key) =>
         queryClient.cancelQueries({queryKey: key}),
       )
-      return options?.onMutate?.(variables, context) as
-        | TContext
-        | Promise<TContext>
+      const userContext = await options?.onMutate?.(variables, context)
+      return (userContext ?? undefined) as TContext
     },
-    onSuccess: (data, variables, context, mutation) => {
+    onSuccess: (
+      data: TData,
+      variables: TVariables,
+      context: TContext,
+      mutation: any,
+    ) => {
       invalidateQueries?.forEach((key) =>
         queryClient.invalidateQueries({queryKey: key}),
       )
-      return options?.onSuccess?.(data, variables, context, mutation)
+      options?.onSuccess?.(data, variables, context, mutation)
     },
   })
 }

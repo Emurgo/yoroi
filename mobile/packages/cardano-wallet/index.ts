@@ -17,8 +17,8 @@ export type {
 export {deriveAccountFromRootKey, keyManager} from './key-manager/key-manager'
 
 // Account manager
-export type {AddressChain} from './account-manager/account-manager'
 export {createAddressGenerator} from './account-manager/account-manager'
+export type {AddressChain} from './account-manager/account-manager'
 export {deriveAddressFromXPub} from './account-manager/derive-address-from-xpub'
 export type {ReadOnlyAddressChain} from './account-manager/read-only-account-manager'
 
@@ -47,7 +47,7 @@ export {
   getTokenFingerprint,
 } from './utils/format'
 // Utils - utils (Amounts, Quantities, etc.)
-export {Amounts, asQuantity, Entries, Quantities, Utxos} from './utils/utils'
+export {Amounts, Entries, Quantities, Utxos, asQuantity} from './utils/utils'
 // Utils - timeUtils
 export {delay, formatTimeSpan} from './utils/timeUtils'
 // Utils - validators
@@ -77,8 +77,8 @@ export {
 export {encryptWithPassword, generatePrivateKeyForCatalyst} from './catalyst'
 export {encryptWithPassword as encryptWithPasswordFromCipher} from './catalyst/catalystCipher'
 
-// Wrapped CSL
-export {CardanoMobile, CardanoMobileWrapped} from './wrappedCsl'
+// Wrapped CSL (re-exported from common for backward compatibility)
+export {CardanoMobile, CardanoMobileWrapped} from '@yoroi/common'
 
 // Operations
 export * from './operations'

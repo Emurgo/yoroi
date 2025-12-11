@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/blockchains",
-  "version": "6.0.0",
+  "version": "7.0.0-beta",
   "description": "The blockchains package of Yoroi SDK",
   "keywords": [
     "yoroi",
@@ -88,6 +88,7 @@
     "@types/react-test-renderer": "19.0.0",
     "@yoroi/api": "file:../api",
     "@yoroi/common": "file:../common",
+    "@yoroi/logger": "file:../logger",
     "@yoroi/explorers": "file:../explorers",
     "@yoroi/portfolio": "file:../portfolio",
     "@yoroi/types": "file:../types",
@@ -112,10 +113,10 @@
   },
   "peerDependencies": {
     "@react-native-async-storage/async-storage": "2.1.2",
-    "@yoroi/api": "file:../api",
-    "@yoroi/common": "file:../common",
-    "@yoroi/explorers": "file:../explorers",
-    "@yoroi/portfolio": "file:../portfolio",
+    "@yoroi/api": "^7.0.0-beta",
+    "@yoroi/common": "^7.0.0-beta",
+    "@yoroi/explorers": "^7.0.0-beta",
+    "@yoroi/portfolio": "^7.0.0-beta",
     "@tanstack/react-query": "5.81.5",
     "axios": "1.10.0",
     "bignumber.js": "9.3.0",

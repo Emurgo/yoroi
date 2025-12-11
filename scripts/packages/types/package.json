@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/types",
-  "version": "6.2.1",
+  "version": "7.0.0-beta",
   "description": "The Yoroi Types package of Yoroi SDK",
   "keywords": [
     "yoroi",
@@ -93,7 +93,10 @@
     "react-test-renderer": "19.0.0",
     "release-it": "19.0.2",
     "typescript": "5.8.3",
-    "@yoroi/logger": "file:../logger"
+    "@yoroi/logger": "file:../logger",
+    "@yoroi/cardano-wallet": "file:../cardano-wallet",
+    "@yoroi/staking": "file:../staking",
+    "@yoroi/tx": "file:../tx"
   },
   "peerDependencies": {
     "@emurgo/yoroi-lib": "3.0.0-beta.1",

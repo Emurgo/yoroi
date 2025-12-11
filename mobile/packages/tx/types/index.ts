@@ -1,13 +1,12 @@
 import {
   Address,
+  Addressing,
   Balance,
   BalanceQuantity,
   DatumCbor,
   DatumHash,
-  KeyHash,
   TokenId,
-  TransactionHash,
-  UtxoId,
+  TxMetadata,
 } from '@yoroi/types'
 
 // Transaction types
@@ -26,7 +25,8 @@ export type AmountWithReceiver = {
   receiver: Address
   amount: BalanceQuantity
 }
-export type StakingKeyBalances = {[key: KeyHash]: BalanceQuantity}
+// Re-export from @yoroi/types for backward compatibility
+export type {StakingKeyBalances} from '@yoroi/types'
 
 export enum RegistrationStatus {
   DelegateOnly,
@@ -67,9 +67,8 @@ export type WithdrawalRequest = {
   shouldDeregister: boolean
 }
 
-export type CardanoAddressedUtxo = RemoteUnspentOutput & {
-  addressing: Addressing
-}
+// Re-export from @yoroi/types for backward compatibility
+export type {CardanoAddressedUtxo, RemoteUnspentOutput} from '@yoroi/types'
 
 export type Change = AddressingAddress & {
   amounts: Balance.Amounts
@@ -81,11 +80,8 @@ export type AddressingAddress = {
 }
 
 export type {Address}
-
-export type Addressing = {
-  path: number[]
-  startLevel: number
-}
+// Re-export from @yoroi/types for backward compatibility
+export type {Addressing} from '@yoroi/types'
 
 export type TxOutput = {
   address: Address
@@ -101,14 +97,7 @@ export type Datum =
       data: DatumCbor
     }
 
-// Modern UTXO format using Balance.Amounts
-export type RemoteUnspentOutput = {
-  receiver: Address
-  txHash: TransactionHash
-  txIndex: number
-  utxoId: UtxoId
-  balance: Balance.Amounts // Record<TokenId, Quantity> - modern format
-}
+// RemoteUnspentOutput is now imported from @yoroi/types above
 
 // @deprecated Use RemoteUnspentOutput.balance instead
 export type UtxoAsset = {
@@ -136,21 +125,8 @@ export type TxOptions = {
   metadata?: ReadonlyArray<TxMetadata>
 }
 
-/**
- * JSON-serializable value types for transaction metadata
- */
-export type MetadataDataValue =
-  | string
-  | number
-  | boolean
-  | null
-  | Array<MetadataDataValue>
-  | {[key: string]: MetadataDataValue}
-
-export type TxMetadata = {
-  label: string
-  data: MetadataDataValue
-}
+// Re-export from @yoroi/types for backward compatibility
+export type {MetadataDataValue, TxMetadata} from '@yoroi/types'
 
 export type CardanoHaskellConfig = {
   keyDeposit: string

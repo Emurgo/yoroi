@@ -1,7 +1,7 @@
 // API-related types for staking
-import {CertificateKind, DRepValue} from '@yoroi/tx'
+import {CertificateKind, DRepValue} from '@yoroi/types'
 
-// Re-export DRepValue from @yoroi/tx
+// Re-export DRepValue from @yoroi/types
 export type {DRepValue}
 
 export type RemoteCertificateMeta =

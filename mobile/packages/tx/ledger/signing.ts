@@ -1,6 +1,6 @@
 // Ledger signing functions
 // Functions for building signed transactions from Ledger signatures
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
+import {CardanoMobileWrapped} from '@yoroi/common'
 import {Address, PublicKeyHex} from '@yoroi/types'
 
 import {

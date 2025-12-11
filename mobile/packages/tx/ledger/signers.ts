@@ -1,6 +1,6 @@
 // Ledger signer utilities
 // Functions for determining required signers for transactions
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
+import {CardanoMobileWrapped} from '@yoroi/common'
 import {Address} from '@yoroi/types'
 
 import {Ed25519KeyHash, WasmModuleProxy} from '@emurgo/cross-csl-core'

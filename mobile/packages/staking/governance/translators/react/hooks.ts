@@ -67,11 +67,16 @@ type UpdateLatestGovernanceActionResult = UseMutationResult<
 
 export const useUpdateLatestGovernanceAction = (
   walletId: string,
-  options: UseMutationOptions<void, Error, GovernanceAction> = {},
+  options: UseMutationOptions<void, Error, GovernanceAction, unknown> = {},
 ): UpdateLatestGovernanceActionResult => {
   const {manager} = useGovernance()
-  const mutation = useMutationWithInvalidations({
-    ...options,
+  const mutation = useMutationWithInvalidations<
+    void,
+    Error,
+    GovernanceAction,
+    unknown
+  >({
+    ...(options as any),
     mutationFn: async (action: GovernanceAction) =>
       await manager.setLatestGovernanceAction(action),
     invalidateQueries: [
@@ -81,7 +86,7 @@ export const useUpdateLatestGovernanceAction = (
   return {
     ...mutation,
     updateLatestGovernanceAction: mutation.mutate,
-  }
+  } as UpdateLatestGovernanceActionResult
 }
 
 export const useDelegationCertificate = () => {
