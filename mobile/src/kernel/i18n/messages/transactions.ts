@@ -519,6 +519,10 @@ export const transactionsMessages = defineMessages({
     id: 'components.transactions.operation.smartContract',
     defaultMessage: '!!!Smart Contract',
   },
+  operationNightRedemption: {
+    id: 'components.transactions.operation.nightRedemption',
+    defaultMessage: '!!!NIGHT Redemption',
+  },
   operationCollateralCreation: {
     id: 'components.transactions.operation.collateralCreation',
     defaultMessage: '!!!Collateral Creation',

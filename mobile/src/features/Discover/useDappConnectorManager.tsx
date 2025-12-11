@@ -204,6 +204,7 @@ export const useDappConnectorManager = () => {
       navigateToDiscoverBrowserDapp,
       dappList?.dapps,
       navigation,
+      wallet.id,
     ],
   )
 

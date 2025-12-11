@@ -1,5 +1,9 @@
-import {Amounts, Quantities, asQuantity} from '@yoroi/cardano-wallet'
-import {collateralConfig} from '@yoroi/cardano-wallet'
+import {
+  Amounts,
+  Quantities,
+  asQuantity,
+  collateralConfig,
+} from '@yoroi/cardano-wallet'
 import {isArray, isString} from '@yoroi/common'
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {CertificateKind} from '@yoroi/tx'
@@ -313,6 +317,40 @@ export const getOperationDisplayText = (
     }
     if (direction === 'RECEIVED') {
       return strings.transactions.operation.swapResolved
+    }
+  }
+
+  // 4.5. Check for NIGHT redemption transactions
+  // Pattern: Smart contract interaction where NIGHT tokens are being spent/redeemed
+  // Redemption pattern: NIGHT tokens in inputs (being spent) + smart contract address present
+  const NIGHT_POLICY_ID =
+    '0691b2fecca1ac4f53cb6dfb00b7013e561d1f34403b957cbb5af1fa'
+  const NIGHT_TOKEN_NAME = '4e49474854'
+
+  const hasNightToken = (
+    assets?: Array<{policyId?: string; name?: string}>,
+  ) => {
+    if (!assets) return false
+    return assets.some(
+      (asset) =>
+        asset.policyId === NIGHT_POLICY_ID && asset.name === NIGHT_TOKEN_NAME,
+    )
+  }
+
+  const txInputs = inputs || walletTransaction.inputs || []
+
+  // Check if NIGHT tokens are being spent (present in inputs)
+  // This indicates redemption rather than just transfer
+  const hasNightInInputs = txInputs.some((input) => hasNightToken(input.assets))
+
+  if (hasNightInInputs) {
+    if (
+      hasSmartContract(
+        inputs || walletTransaction.inputs,
+        outputs || walletTransaction.outputs,
+      )
+    ) {
+      return strings.transactions.operation.nightRedemption
     }
   }
 

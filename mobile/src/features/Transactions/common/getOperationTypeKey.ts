@@ -1,5 +1,9 @@
-import {Amounts, Quantities, asQuantity} from '@yoroi/cardano-wallet'
-import {collateralConfig} from '@yoroi/cardano-wallet'
+import {
+  Amounts,
+  Quantities,
+  asQuantity,
+  collateralConfig,
+} from '@yoroi/cardano-wallet'
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {CertificateKind} from '@yoroi/tx'
 import {Balance, TransactionDirection, WalletTransaction} from '@yoroi/types'
@@ -176,6 +180,54 @@ export const getOperationTypeKey = (
     if (direction === 'MULTI') return 'swap'
     if (direction === 'SENT') return 'swapCreated'
     if (direction === 'RECEIVED') return 'swapResolved'
+  }
+
+  // 4.5. Check for NIGHT redemption transactions
+  // Pattern: Smart contract interaction where NIGHT tokens are being spent/redeemed
+  // NIGHT token: policyId '0691b2fecca1ac4f53cb6dfb00b7013e561d1f34403b957cbb5af1fa', name '4e49474854'
+  // Redemption pattern: NIGHT tokens in inputs (being spent) + smart contract address present
+  const NIGHT_POLICY_ID =
+    '0691b2fecca1ac4f53cb6dfb00b7013e561d1f34403b957cbb5af1fa'
+  const NIGHT_TOKEN_NAME = '4e49474854'
+
+  const hasNightToken = (
+    assets?: Array<{policyId?: string; name?: string}>,
+  ) => {
+    if (!assets) return false
+    return assets.some(
+      (asset) =>
+        asset.policyId === NIGHT_POLICY_ID && asset.name === NIGHT_TOKEN_NAME,
+    )
+  }
+
+  const txInputs = inputs || walletTransaction.inputs || []
+  const txOutputs = outputs || walletTransaction.outputs || []
+
+  // Check if NIGHT tokens are being spent (present in inputs)
+  // This indicates redemption rather than just transfer
+  const hasNightInInputs = txInputs.some((input) => hasNightToken(input.assets))
+
+  if (hasNightInInputs) {
+    // Collect all addresses involved in the transaction
+    const addresses: string[] = []
+    txInputs.forEach((input) => addresses.push(input.address))
+    txOutputs.forEach((output) => addresses.push(output.address))
+    // Also check collateral inputs if present
+    if (walletTransaction.collateralInputs) {
+      walletTransaction.collateralInputs.forEach((collateral) =>
+        addresses.push(collateral.address),
+      )
+    }
+
+    // Check if any address is a smart contract address
+    // Redemption transactions involve smart contract interactions
+    const hasContractAddress = addresses.some((address) =>
+      isContractAddress(address),
+    )
+
+    if (hasContractAddress) {
+      return 'nightRedemption'
+    }
   }
 
   // 5. Check for smart contracts

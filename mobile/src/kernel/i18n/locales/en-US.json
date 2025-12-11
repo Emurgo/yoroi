@@ -730,6 +730,7 @@
   "components.transactions.operation.swapResolved": "Swap Resolved",
   "components.transactions.operation.swapCancel": "Swap Cancel",
   "components.transactions.operation.smartContract": "Smart Contract",
+  "components.transactions.operation.nightRedemption": "NIGHT Redemption",
   "components.transactions.operation.collateralCreation": "Collateral Creation",
   "components.transactions.operation.mint": "Mint",
   "components.transactions.operation.burn": "Burn",
