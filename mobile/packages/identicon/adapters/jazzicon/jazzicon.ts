@@ -7,7 +7,7 @@ export const initialShapeCount = 3
 export const initialWobble = 30
 export const initialSize = 100
 
-interface JazziconOptions {
+type JazziconOptions = {
   seed: string
   shapeCount?: number
   wobble?: number
@@ -15,7 +15,7 @@ interface JazziconOptions {
   size?: number
 }
 
-interface JazziconInstance {
+type JazziconInstance = {
   asBase64(options?: {size: number}): string
 }
 

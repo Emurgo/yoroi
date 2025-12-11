@@ -4,12 +4,12 @@ import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
 
 import {DAPP_LOGO_BASE_URL} from './helpers'
 
-export interface DappListResponse {
+export type DappListResponse = {
   dapps: DappResponse[]
   filters: Record<string, string[]>
 }
 
-interface DappResponse {
+type DappResponse = {
   id: string
   name: string
   description: string

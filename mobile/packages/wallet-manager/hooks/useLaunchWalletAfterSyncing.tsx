@@ -1,6 +1,6 @@
 import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {time} from '@yoroi/common'
-import {getLogger} from '@yoroi/common'
+import {getLogger} from '@yoroi/logger'
 
 import * as React from 'react'
 

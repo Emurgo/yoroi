@@ -1,10 +1,6 @@
 import {collateralConfig} from '@yoroi/cardano-wallet'
-import {
-  createTypeGuardFromSchema,
-  getLogger,
-  isKeyOf,
-  isRecord,
-} from '@yoroi/common'
+import {createTypeGuardFromSchema, isKeyOf, isRecord} from '@yoroi/common'
+import {getLogger} from '@yoroi/logger'
 import {Chain} from '@yoroi/types'
 
 import {Address, TransactionUnspentOutput, Value} from '@emurgo/cross-csl-core'

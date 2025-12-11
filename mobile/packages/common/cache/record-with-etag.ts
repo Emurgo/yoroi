@@ -1,4 +1,4 @@
-import {Api} from '@yoroi/types'
+import type {Api} from '@yoroi/types'
 
 export const recordWithETag = <T>(
   value: T,

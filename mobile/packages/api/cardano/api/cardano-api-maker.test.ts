@@ -25,11 +25,6 @@ describe('cardanoApiMaker', () => {
     expect(cardanoApi).toBeDefined()
   })
 
-  it('should create API for Preview network', () => {
-    const cardanoApi = cardanoApiMaker({network: Chain.Network.Preview})
-    expect(cardanoApi).toBeDefined()
-  })
-
   it('should be frozen', () => {
     const cardanoApi = cardanoApiMaker({network: Chain.Network.Mainnet})
     expect(Object.isFrozen(cardanoApi)).toBe(true)

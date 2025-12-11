@@ -1,13 +1,12 @@
 import {API_ENDPOINTS} from '@yoroi/api'
-import {getLogger} from '@yoroi/common'
+import {getLogger} from '@yoroi/logger'
 import {
   DEFAULT_SATURATION_THRESHOLD,
   ExplorerPoolInfo,
   poolInfoApiMaker,
 } from '@yoroi/staking'
 import {Chain} from '@yoroi/types'
-import {useSelectedNetwork} from '@yoroi/wallet-manager'
-import {useSelectedWallet} from '@yoroi/wallet-manager'
+import {useSelectedNetwork, useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 import axios from 'axios'
@@ -98,7 +97,7 @@ export const usePoolList = (searchQuery?: string) => {
     if (wallet.networkManager.network === Chain.Network.Preprod) {
       return API_ENDPOINTS[Chain.Network.Preprod].root
     }
-    return API_ENDPOINTS[Chain.Network.Preview].root
+    return API_ENDPOINTS[Chain.Network.Mainnet].root
   }, [wallet.isMainnet, wallet.networkManager.network])
 
   // Normalize search query

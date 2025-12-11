@@ -6,7 +6,6 @@ describe('API_ENDPOINTS', () => {
   it('should have endpoints for all supported networks', () => {
     expect(API_ENDPOINTS[Chain.Network.Mainnet]).toBeDefined()
     expect(API_ENDPOINTS[Chain.Network.Preprod]).toBeDefined()
-    expect(API_ENDPOINTS[Chain.Network.Preview]).toBeDefined()
   })
 
   it('should have root and legacy endpoints for Mainnet', () => {
@@ -21,14 +20,6 @@ describe('API_ENDPOINTS', () => {
       'https://yoroi-backend-zero-preprod.emurgornd.com',
     )
     expect(preprod.legacy).toBe('https://preprod-backend.yoroiwallet.com')
-  })
-
-  it('should have root and legacy endpoints for Preview', () => {
-    const preview = API_ENDPOINTS[Chain.Network.Preview]
-    expect(preview.root).toBe(
-      'https://yoroi-backend-zero-preview.emurgornd.com',
-    )
-    expect(preview.legacy).toBe('https://preview-backend.emurgornd.com')
   })
 
   it('should be frozen (immutable)', () => {

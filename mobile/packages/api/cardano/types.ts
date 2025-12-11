@@ -41,7 +41,7 @@ export type EndpointPreference = {
 
 export type Addresses = Array<Address>
 
-export interface CardanoApiAdapter {
+export type CardanoApiAdapter = {
   getTipStatus(): Promise<TipStatusResponse>
 
   fetchNewTxHistory(
@@ -102,7 +102,7 @@ export type CardanoApiMaker = (config: {
   backendZeroUrl: string
 }) => CardanoApiAdapter
 
-export interface ManagedCardanoApi {
+export type ManagedCardanoApi = {
   getTipStatus(): Promise<TipStatusResponse>
 
   fetchNewTxHistory(

@@ -5,7 +5,7 @@
  * but log warnings if the format seems invalid. This ensures existing code
  * continues to work while providing type safety.
  */
-import {getLogger} from '@yoroi/common'
+import {getLogger} from '@yoroi/logger'
 
 import type {
   Address,

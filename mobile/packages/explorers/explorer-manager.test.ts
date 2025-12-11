@@ -37,22 +37,6 @@ describe('explorerManager', () => {
           stake: expect.any(Function),
         },
       },
-      [Chain.Network.Preview]: {
-        [Explorers.Explorer.Cardanoscan]: {
-          token: expect.any(Function),
-          address: expect.any(Function),
-          tx: expect.any(Function),
-          pool: expect.any(Function),
-          stake: expect.any(Function),
-        },
-        [Explorers.Explorer.Cexplorer]: {
-          token: expect.any(Function),
-          address: expect.any(Function),
-          tx: expect.any(Function),
-          pool: expect.any(Function),
-          stake: expect.any(Function),
-        },
-      },
     })
   })
 
@@ -124,40 +108,5 @@ describe('explorerManager', () => {
     expect(
       preprodExplorer[Explorers.Explorer.Cexplorer].stake('stakeAddress'),
     ).toBe('https://preprod.cexplorer.io/stake/stakeAddress')
-  })
-
-  it('should generate the correct URLs for Preview', () => {
-    const previewExplorer = explorerManager[Chain.Network.Preview]
-    expect(
-      previewExplorer[Explorers.Explorer.Cardanoscan].token('fingerprint'),
-    ).toBe('https://preview.cardanoscan.io/token/fingerprint')
-    expect(
-      previewExplorer[Explorers.Explorer.Cardanoscan].address('address'),
-    ).toBe('https://preview.cardanoscan.io/address/address')
-    expect(previewExplorer[Explorers.Explorer.Cardanoscan].tx('txHash')).toBe(
-      'https://preview.cardanoscan.io/transaction/txHash',
-    )
-    expect(previewExplorer[Explorers.Explorer.Cardanoscan].pool('poolId')).toBe(
-      'https://preview.cardanoscan.io/pool/poolId',
-    )
-    expect(
-      previewExplorer[Explorers.Explorer.Cardanoscan].stake('stakeAddress'),
-    ).toBe('https://preview.cardanoscan.io/stakeKey/stakeAddress')
-
-    expect(
-      previewExplorer[Explorers.Explorer.Cexplorer].token('fingerprint'),
-    ).toBe('https://preview.cexplorer.io/asset/fingerprint')
-    expect(
-      previewExplorer[Explorers.Explorer.Cexplorer].address('address'),
-    ).toBe('https://preview.cexplorer.io/address/address')
-    expect(previewExplorer[Explorers.Explorer.Cexplorer].tx('txHash')).toBe(
-      'https://preview.cexplorer.io/tx/txHash',
-    )
-    expect(previewExplorer[Explorers.Explorer.Cexplorer].pool('poolId')).toBe(
-      'https://preview.cexplorer.io/pool/poolId',
-    )
-    expect(
-      previewExplorer[Explorers.Explorer.Cexplorer].stake('stakeAddress'),
-    ).toBe('https://preview.cexplorer.io/stake/stakeAddress')
   })
 })

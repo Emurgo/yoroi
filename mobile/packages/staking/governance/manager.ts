@@ -1,4 +1,5 @@
-import {getLogger, isLeft} from '@yoroi/common'
+import {isLeft} from '@yoroi/common'
+import {getLogger} from '@yoroi/logger'
 import {App, Branded, Chain} from '@yoroi/types'
 
 import {CardanoTypes} from '../types'

@@ -32,6 +32,7 @@
       "@yoroi/claim": ["./packages/claim"],
       "@yoroi/common": ["./packages/common"],
       "@yoroi/dapp-connector": ["./packages/dapp-connector"],
+      "@yoroi/logger": ["./packages/logger"],
       "@yoroi/exchange": ["./packages/exchange"],
       "@yoroi/explorers": ["./packages/explorers"],
       "@yoroi/identicon": ["./packages/identicon"],

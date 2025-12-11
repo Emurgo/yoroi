@@ -1,4 +1,4 @@
-import {App} from '@yoroi/types'
+import type {App} from '@yoroi/types'
 
 import {freeze} from 'immer'
 import {Subject, Subscription} from 'rxjs'

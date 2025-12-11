@@ -12,9 +12,6 @@ export const getBackendZeroUrl = (legacyApiUrl: string): string => {
   if (legacyApiUrl.includes('preprod-backend.yoroiwallet.com')) {
     return API_ENDPOINTS[Chain.Network.Preprod].root
   }
-  if (legacyApiUrl.includes('preview-backend.emurgornd.com')) {
-    return API_ENDPOINTS[Chain.Network.Preview].root
-  }
   // Default to mainnet if can't determine
   return API_ENDPOINTS[Chain.Network.Mainnet].root
 }

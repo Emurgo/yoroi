@@ -1,10 +1,5 @@
-import {
-  FetchData,
-  getLogger,
-  isRight,
-  joinUrl,
-  tuplesIntoRecord,
-} from '@yoroi/common'
+import {FetchData, isRight, joinUrl, tuplesIntoRecord} from '@yoroi/common'
+import {getLogger} from '@yoroi/logger'
 
 import {poolTransitionGetInfo} from './adapters/api/pool-transition-api'
 import {

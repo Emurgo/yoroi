@@ -68,7 +68,7 @@ export type Pagination = {
   limit: number
 }
 
-export interface YoroiWallet {
+export type YoroiWallet = {
   id: string
   publicKeyHex: string
   protocolParams: Api.Cardano.ProtocolParams

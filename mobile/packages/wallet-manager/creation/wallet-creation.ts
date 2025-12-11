@@ -3,8 +3,8 @@ import {
   CardanoMobileWrapped,
   deriveAccountFromRootKey,
 } from '@yoroi/cardano-wallet'
-import {getLogger} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
+import {getLogger} from '@yoroi/logger'
 import {Chain, HW, Wallet} from '@yoroi/types'
 
 import {v4} from 'uuid'

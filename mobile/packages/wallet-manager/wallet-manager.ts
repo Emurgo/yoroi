@@ -9,8 +9,9 @@ import {
   validatePassword,
   validateWalletName,
 } from '@yoroi/cardano-wallet'
-import {getLogger, isHex, parseSafe, throwLoggedError} from '@yoroi/common'
+import {isHex, parseSafe} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
+import {getLogger, throwLoggedError} from '@yoroi/logger'
 import {Chain, HW, Network, Portfolio, Wallet} from '@yoroi/types'
 
 import {walletChecksum} from '@emurgo/cip4-js'

@@ -29,36 +29,9 @@ import {
   ApiUtxoDataAsset,
   ApiUtxoDataRequest,
 } from './api/cardano'
-import {
-  ApiErrorBadRequest,
-  ApiErrorConflict,
-  ApiErrorForbidden,
-  ApiErrorGone,
-  ApiErrorInvalidState,
-  ApiErrorNetwork,
-  ApiErrorNotFound,
-  ApiErrorResponseMalformed,
-  ApiErrorServerSide,
-  ApiErrorTooEarly,
-  ApiErrorTooManyRequests,
-  ApiErrorUnauthorized,
-  ApiErrorUnknown,
-  AppErrorInvalidState,
-  AppErrorLibraryFailed,
-  AppErrorWrongPassword,
-} from './errors'
 import {ApiResponse, ApiResponseError, ApiResponseSuccess} from './api/response'
 import {ApiHttpStatusCode} from './api/status-code'
 import {AppCacheInfo, AppCacheRecord, AppCacheRow} from './app/cache'
-import {
-  AppLoggerEntry,
-  AppLoggerLevel,
-  AppLoggerManager,
-  AppLoggerMessage,
-  AppLoggerMetadata,
-  AppLoggerTransporter,
-  AppLoggerTransporterOptions,
-} from './app/logger'
 import {AppMultiStorage, AppMultiStorageOptions} from './app/multi-storage'
 import {
   AppObservableMultiStorage,
@@ -83,8 +56,8 @@ import {
   BalanceToken,
 } from './balance/token'
 // Import validation functions for re-export
-import * as BrandedValidation from './branded/validation'
 import {ZERO_QUANTITY as ZERO_QUANTITY_CONST} from './branded/amount'
+import * as BrandedValidation from './branded/validation'
 import {
   CardanoAddress,
   CardanoMetadata,
@@ -104,22 +77,51 @@ import {
 } from './claim/api'
 import {ClaimInfo, ClaimManager, ClaimStatus} from './claim/claim'
 import {
+  ApiErrorBadRequest,
+  ApiErrorConflict,
+  ApiErrorForbidden,
+  ApiErrorGone,
+  ApiErrorInvalidState,
+  ApiErrorNetwork,
+  ApiErrorNotFound,
+  ApiErrorResponseMalformed,
+  ApiErrorServerSide,
+  ApiErrorTooEarly,
+  ApiErrorTooManyRequests,
+  ApiErrorUnauthorized,
+  ApiErrorUnknown,
+  AppErrorInvalidState,
+  AppErrorLibraryFailed,
+  AppErrorWrongPassword,
   ClaimApiErrorsAlreadyClaimed,
   ClaimApiErrorsExpired,
   ClaimApiErrorsInvalidRequest,
   ClaimApiErrorsNotFound,
   ClaimApiErrorsRateLimited,
   ClaimApiErrorsTooEarly,
+  ExchangeProviderNotFoundError,
+  ExchangeUnknownError,
+  ExchangeValidationError,
+  LinksErrorExtraParamsDenied,
+  LinksErrorForbiddenParamsProvided,
+  LinksErrorParamsValidationFailed,
+  LinksErrorRequiredParamsMissing,
+  LinksErrorSchemeNotImplemented,
+  LinksErrorUnsupportedAuthority,
+  LinksErrorUnsupportedVersion,
+  NumbersErrorInvalidAtomicValue,
+  ResolverErrorInvalidDomain,
+  ResolverErrorInvalidResponse,
+  ResolverErrorNotFound,
+  ResolverErrorUnsupportedTld,
+  ResolverErrorWrongBlockchain,
+  ScanErrorUnknown,
+  ScanErrorUnknownContent,
 } from './errors'
 import {ExchangeApi} from './exchange/api'
 import {ExchangeBlockchainCode} from './exchange/blockchain'
 import {ExchangeManagerOptions} from './exchange/build'
 import {ExchangeCoin} from './exchange/coin'
-import {
-  ExchangeProviderNotFoundError,
-  ExchangeUnknownError,
-  ExchangeValidationError,
-} from './errors'
 import {ExchangeFiat} from './exchange/fiat'
 import {ExchangeManager} from './exchange/manager'
 import {ExchangeOrderType} from './exchange/order-type'
@@ -154,15 +156,6 @@ import {
   ScanFeature,
 } from './links/cardano-actions'
 import {
-  LinksErrorExtraParamsDenied,
-  LinksErrorForbiddenParamsProvided,
-  LinksErrorParamsValidationFailed,
-  LinksErrorRequiredParamsMissing,
-  LinksErrorSchemeNotImplemented,
-  LinksErrorUnsupportedAuthority,
-  LinksErrorUnsupportedVersion,
-} from './errors'
-import {
   LinksBrowserLaunchDappUrlParams,
   LinksExchangeShowCreateResultParams,
   LinksPartnerInfoParams,
@@ -196,7 +189,6 @@ import {
   PushNotificationEvent,
 } from './notifications/manager'
 import {NumbersAtomicValue} from './numbers/atomic-value'
-import {NumbersErrorInvalidAtomicValue} from './errors'
 import {NumbersRatio} from './numbers/ratio'
 import {
   PortfolioTokenActivity,
@@ -267,18 +259,10 @@ import {
   ResolverApi,
   ResolverStrategy,
 } from './resolver/api'
-import {
-  ResolverErrorInvalidDomain,
-  ResolverErrorInvalidResponse,
-  ResolverErrorNotFound,
-  ResolverErrorUnsupportedTld,
-  ResolverErrorWrongBlockchain,
-} from './errors'
 import {ResolverManager} from './resolver/manager'
 import {ResolverNameServer} from './resolver/name-server'
 import {ResolverReceiver} from './resolver/receiver'
 import {ResolverStorage} from './resolver/storage'
-import {ScanErrorUnknown, ScanErrorUnknownContent} from './errors'
 import {SwapAggregator} from './swap/aggregator'
 import {
   SwapApi,
@@ -441,31 +425,31 @@ export namespace App {
     isSingleAddress?: boolean
   }
 
-  export interface Storage<
+  export type Storage<
     IsAsync extends boolean = true,
     K extends string = string,
-  > extends AppStorage<IsAsync, K> {}
+  > = AppStorage<IsAsync, K>
   export type StorageKeyManager<
     T = unknown,
     R = T,
     Key extends string = string,
   > = AppStorageKeyManager<T, R, Key>
   export type StorageFolderName = AppStorageFolderName
-  export interface MultiStorage<
+  export type MultiStorage<
     T,
     IsAsync extends boolean = true,
     K extends string = string,
-  > extends AppMultiStorage<T, IsAsync, K> {}
+  > = AppMultiStorage<T, IsAsync, K>
 
-  export interface ObservableStorage<
+  export type ObservableStorage<
     IsAsync extends boolean = true,
     K extends string = string,
-  > extends AppObservableStorage<IsAsync, K> {}
-  export interface ObservableMultiStorage<
+  > = AppObservableStorage<IsAsync, K>
+  export type ObservableMultiStorage<
     T,
     IsAsync extends boolean = true,
     K extends string = string,
-  > extends AppObservableMultiStorage<T, IsAsync, K> {}
+  > = AppObservableMultiStorage<T, IsAsync, K>
 
   export type MultiStorageOptions<
     T,
@@ -481,22 +465,10 @@ export namespace App {
   export type QueueTaskManager = AppQueueTaskManager
 
   export type CacheInfo = AppCacheInfo
-  export interface CacheRecord<T> extends AppCacheRecord<T> {}
-  export interface CacheRow<T, K extends string = string>
-    extends AppCacheRow<T, K> {}
+  export type CacheRecord<T> = AppCacheRecord<T>
+  export type CacheRow<T, K extends string = string> = AppCacheRow<T, K>
 
-  export interface Api extends AppApi {}
-
-  export namespace Logger {
-    export type Level = AppLoggerLevel
-    export const Level = AppLoggerLevel
-    export type Message = AppLoggerMessage
-    export type Metadata = AppLoggerMetadata
-    export type Transporter = AppLoggerTransporter
-    export type TransporterOptions = AppLoggerTransporterOptions
-    export type Entry = AppLoggerEntry
-    export type Manager = AppLoggerManager
-  }
+  export type Api = AppApi
 }
 
 export namespace Swap {
@@ -580,8 +552,8 @@ export type {
   TokenFingerprint,
   TokenId,
   TransactionCbor,
-  TransactionCborHex,
   TransactionCborBase64,
+  TransactionCborHex,
   TransactionHash,
   TransactionId,
   UtxoId,
@@ -638,12 +610,13 @@ export namespace Branded {
   export const asDatumCbor = BrandedValidation.asDatumCbor
   export const asTransactionCbor = BrandedValidation.asTransactionCbor
   export const asTransactionCborHex = BrandedValidation.asTransactionCborHex
-  export const asTransactionCborBase64 = BrandedValidation.asTransactionCborBase64
+  export const asTransactionCborBase64 =
+    BrandedValidation.asTransactionCborBase64
   export const asDRepId = BrandedValidation.asDRepId
   export const asGovernanceActionId = BrandedValidation.asGovernanceActionId
   export const asAnchorUrl = BrandedValidation.asAnchorUrl
   export const asAnchorHash = BrandedValidation.asAnchorHash
-  
+
   // Re-export constants
   export const ZERO_QUANTITY = ZERO_QUANTITY_CONST
 }
@@ -653,9 +626,9 @@ export {ZERO_QUANTITY} from './branded/amount'
 
 export namespace Links {
   export type YoroiModule = LinksYoroiModule
-  export interface UriConfig extends LinksUriConfig {}
-  export interface WebCardanoUriConfig extends LinksWebCardanoUriConfig {}
-  export interface YoroiUriConfig extends LinksYoroiUriConfig {}
+  export type UriConfig = LinksUriConfig
+  export type WebCardanoUriConfig = LinksWebCardanoUriConfig
+  export type YoroiUriConfig = LinksYoroiUriConfig
   export type PartnerInfoSchema = LinksPartnerInfoParams
   export type ExchangeShowCreateResultParams =
     LinksExchangeShowCreateResultParams
@@ -666,7 +639,7 @@ export namespace Links {
   export type YoroiActionInfo = LinksYoroiActionInfo
   export type YoroiAction = LinksYoroiAction
 
-  export interface Rules extends LinksUriRules {}
+  export type Rules = LinksUriRules
 
   export type Link<T extends LinksUriConfig> = LinksLink<T>
 
@@ -791,12 +764,12 @@ export namespace Api {
 
     export type FtMetadata = ApiFtMetadata
     export type FtMetadataRecord = ApiFtMetadataRecord
-    export interface FtRecords extends ApiFtRecords {}
+    export type FtRecords = ApiFtRecords
     export type TokenRegistryEntry = ApiTokenRegistryEntry
 
     export type NftMetadata = ApiNftMetadata
     export type NftMetadataRecord = ApiNftMetadataRecord
-    export interface NftRecords extends ApiNftRecords {}
+    export type NftRecords = ApiNftRecords
 
     export type MetadataFile = ApiMetadataFile
     export type TokenId = ApiTokenId
@@ -808,7 +781,7 @@ export namespace Api {
     export type UtxoDataAsset = ApiUtxoDataAsset
     export type UtxoData = ApiUtxoData
 
-    export interface Api {
+    export type Api = {
       getProtocolParams: () => Promise<ChainCardanoProtocolParams>
       getBestBlock: () => Promise<ChainCardanoBestBlock>
       getUtxoData: (request: UtxoDataRequest) => Promise<ApiUtxoData>
@@ -827,7 +800,7 @@ export namespace Numbers {
 }
 
 export namespace Resolver {
-  export interface Api extends ResolverApi {}
+  export type Api = ResolverApi
   export type Manager = ResolverManager
 
   export type NameServer = ResolverNameServer
@@ -1012,6 +985,7 @@ export namespace Wallet {
 export type {BaseAsset} from './wallet/transactions'
 
 // Re-export transaction types at top level for convenience
+export type {TransactionInfo} from './wallet/transactions'
 export {TRANSACTION_DIRECTION, TRANSACTION_STATUS, TRANSACTION_TYPE}
 export type {
   TransactionAssurance,
@@ -1024,7 +998,6 @@ export type {
   TxMetadataInfo,
   WalletTransaction,
 }
-export type {TransactionInfo} from './wallet/transactions'
 
 export namespace Exchange {
   export type BlockchainCode = ExchangeBlockchainCode
@@ -1036,7 +1009,7 @@ export namespace Exchange {
   export type Provider = ExchangeProvider
   export type ReferralUrlQueryStringParams =
     ExchangeReferralUrlQueryStringParams
-  export interface Api extends ExchangeApi {}
+  export type Api = ExchangeApi
   export namespace Errors {
     export class Validation extends ExchangeValidationError {
       constructor(message?: string) {
@@ -1127,7 +1100,5 @@ export namespace Claim {
 export * from './api/cardano'
 export * from './helpers/storage'
 export * from './helpers/types'
-// Export AppLoggerLevel directly to avoid circular dependency issues
-export {AppLoggerLevel} from './app/logger'
 // Export all errors from centralized location
 export * from './errors'

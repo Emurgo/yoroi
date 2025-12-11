@@ -29,13 +29,13 @@ type CommonTokenInfo = {
 
 type PrimaryTokenInfo = {
   id: TokenId // Primary token ID (typically '.')
-  nature: PortfolioTokenNature.Primary
-  type: PortfolioTokenType.FT
+  nature: typeof PortfolioTokenNature.Primary
+  type: typeof PortfolioTokenType.FT
 }
 
 type SecondaryTokenInfo = {
   id: PortfolioTokenId
-  nature: PortfolioTokenNature.Secondary
+  nature: typeof PortfolioTokenNature.Secondary
   type: PortfolioTokenType
 }
 

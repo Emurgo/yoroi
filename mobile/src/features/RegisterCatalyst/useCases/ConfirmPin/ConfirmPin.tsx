@@ -1,6 +1,8 @@
-import {generatePrivateKeyForCatalyst} from '@yoroi/cardano-wallet'
-import {encryptWithPassword} from '@yoroi/cardano-wallet'
-import {createVotingRegTxFromWallet} from '@yoroi/cardano-wallet'
+import {
+  createVotingRegTxFromWallet,
+  encryptWithPassword,
+  generatePrivateKeyForCatalyst,
+} from '@yoroi/cardano-wallet'
 import {useCatalyst} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
@@ -332,7 +334,7 @@ export const ConfirmPin = () => {
 
 type GenerateKeysInput = string
 
-interface GenerateKeysOutput {
+type GenerateKeysOutput = {
   catalystKeyHex: string
   votingKeyEncrypted: string
 }

@@ -1,4 +1,5 @@
-import {getLogger, isHex} from '@yoroi/common'
+import {isHex} from '@yoroi/common'
+import {getLogger} from '@yoroi/logger'
 import type {TransactionMetadata} from '@yoroi/tx'
 import {
   ModernUtxo,
@@ -235,7 +236,7 @@ export async function createSendTx({
         const current = BigInt(
           requiredAmounts[tokenIdBranded] ?? Branded.ZERO_QUANTITY,
         )
-        const needed = BigInt(quantity)
+        const needed = BigInt(quantity as string | number)
         requiredAmounts[tokenIdBranded] = (
           current + needed
         ).toString() as Balance.Quantity
@@ -369,14 +370,16 @@ export async function createSendTx({
         for (const utxo of selectedUtxos) {
           for (const [tokenId, quantity] of Object.entries(utxo.balance)) {
             totalInputAmounts[tokenId] =
-              (totalInputAmounts[tokenId] || BigInt(0)) + BigInt(quantity)
+              (totalInputAmounts[tokenId] || BigInt(0)) +
+              BigInt(quantity as string | number)
           }
         }
         const totalOutputAmounts: Record<string, bigint> = {}
         for (const entry of entries) {
           for (const [tokenId, quantity] of Object.entries(entry.amounts)) {
             totalOutputAmounts[tokenId] =
-              (totalOutputAmounts[tokenId] || BigInt(0)) + BigInt(quantity)
+              (totalOutputAmounts[tokenId] || BigInt(0)) +
+              BigInt(quantity as string | number)
           }
         }
         let hasNonAdaAssetsInChange = false
@@ -530,7 +533,7 @@ export async function createSendTx({
         entriesCount: entries.length,
         totalInputAda: selectedUtxos
           .reduce(
-            (sum, utxo) =>
+            (sum: bigint, utxo: ModernUtxo) =>
               sum +
               BigInt(utxo.balance[primaryTokenId] ?? Branded.ZERO_QUANTITY),
             BigInt(0),
@@ -563,7 +566,7 @@ export async function createSendTx({
         entriesCount: entries.length,
         totalInputAda: selectedUtxos
           .reduce(
-            (sum, utxo) =>
+            (sum: bigint, utxo: ModernUtxo) =>
               sum +
               BigInt(utxo.balance[primaryTokenId] ?? Branded.ZERO_QUANTITY),
             BigInt(0),
@@ -652,7 +655,8 @@ export async function createSendTx({
         for (const utxo of selectedUtxos) {
           for (const [tokenId, quantity] of Object.entries(utxo.balance)) {
             totalInputAmounts[tokenId] =
-              (totalInputAmounts[tokenId] || BigInt(0)) + BigInt(quantity)
+              (totalInputAmounts[tokenId] || BigInt(0)) +
+              BigInt(quantity as string | number)
           }
         }
 
@@ -661,7 +665,8 @@ export async function createSendTx({
         for (const entry of entries) {
           for (const [tokenId, quantity] of Object.entries(entry.amounts)) {
             totalOutputAmounts[tokenId] =
-              (totalOutputAmounts[tokenId] || BigInt(0)) + BigInt(quantity)
+              (totalOutputAmounts[tokenId] || BigInt(0)) +
+              BigInt(quantity as string | number)
           }
         }
 
@@ -922,11 +927,12 @@ export async function createSendTx({
       throw new Error('Transaction build failed: result is undefined')
     }
     return {cbor: result.cbor}
-  } catch (e) {
+  } catch (e: unknown) {
     if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) {
+      const err = e as Error
       getLogger().error('createSendTx: Transaction creation failed', {
-        errorType: e.constructor.name,
-        errorMessage: e.message,
+        errorType: err.constructor.name,
+        errorMessage: err.message,
         entriesCount: entries.length,
       })
       throw e

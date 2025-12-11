@@ -1,7 +1,7 @@
 import {Links} from '@yoroi/types'
 
 // CIP99 - v1
-export interface LinksCardanoClaimV1 extends Links.WebCardanoUriConfig {
+export type LinksCardanoClaimV1 = Links.WebCardanoUriConfig & {
   readonly scheme: 'web+cardano'
   readonly authority: 'claim'
   readonly version: 'v1'
@@ -16,7 +16,7 @@ export interface LinksCardanoClaimV1 extends Links.WebCardanoUriConfig {
 // CIP13 - initial version
 // @deprecated Use LinksCardanoPayV1 instead
 // LEGACY COMPATIBILITY: Kept for backward compatibility
-export interface LinksCardanoLegacyTransfer extends Links.WebCardanoUriConfig {
+export type LinksCardanoLegacyTransfer = Links.WebCardanoUriConfig & {
   readonly scheme: 'web+cardano'
   readonly authority: '' // is the wallet address
   readonly version: '' // unsupported
@@ -29,7 +29,7 @@ export interface LinksCardanoLegacyTransfer extends Links.WebCardanoUriConfig {
 }
 
 // CIP-158 Browse
-export interface LinksCardanoBrowseV1 extends Links.WebCardanoUriConfig {
+export type LinksCardanoBrowseV1 = Links.WebCardanoUriConfig & {
   readonly scheme: 'web+cardano'
   readonly authority: 'browse'
   readonly version: 'v1'
@@ -42,7 +42,7 @@ export interface LinksCardanoBrowseV1 extends Links.WebCardanoUriConfig {
 }
 
 // CIP-PR843 Pay (replaces legacy transfer)
-export interface LinksCardanoPayV1 extends Links.WebCardanoUriConfig {
+export type LinksCardanoPayV1 = Links.WebCardanoUriConfig & {
   readonly scheme: 'web+cardano'
   readonly authority: 'pay'
   readonly version: 'v1'
@@ -55,7 +55,7 @@ export interface LinksCardanoPayV1 extends Links.WebCardanoUriConfig {
 }
 
 // CIP-13 Payment
-export interface LinksCardanoPaymentV1 extends Links.WebCardanoUriConfig {
+export type LinksCardanoPaymentV1 = Links.WebCardanoUriConfig & {
   readonly scheme: 'web+cardano'
   readonly authority: 'payment'
   readonly version: 'v1'
@@ -68,7 +68,7 @@ export interface LinksCardanoPaymentV1 extends Links.WebCardanoUriConfig {
 }
 
 // CIP-13 Stake
-export interface LinksCardanoStakeV1 extends Links.WebCardanoUriConfig {
+export type LinksCardanoStakeV1 = Links.WebCardanoUriConfig & {
   readonly scheme: 'web+cardano'
   readonly authority: 'stake'
   readonly version: 'v1'
@@ -81,7 +81,7 @@ export interface LinksCardanoStakeV1 extends Links.WebCardanoUriConfig {
 }
 
 // DRep Delegation (similar to CIP-13 Stake but for governance)
-export interface LinksCardanoDrepV1 extends Links.WebCardanoUriConfig {
+export type LinksCardanoDrepV1 = Links.WebCardanoUriConfig & {
   readonly scheme: 'web+cardano'
   readonly authority: 'drep'
   readonly version: 'v1'
@@ -94,7 +94,7 @@ export interface LinksCardanoDrepV1 extends Links.WebCardanoUriConfig {
 }
 
 // CIP-107 Transaction
-export interface LinksCardanoTransactionV1 extends Links.WebCardanoUriConfig {
+export type LinksCardanoTransactionV1 = Links.WebCardanoUriConfig & {
   readonly scheme: 'web+cardano'
   readonly authority: 'transaction'
   readonly version: 'v1'
@@ -108,7 +108,7 @@ export interface LinksCardanoTransactionV1 extends Links.WebCardanoUriConfig {
 
 // CIP-107 Block
 // Note: Requires either 'hash' or 'height' (validated at runtime)
-export interface LinksCardanoBlockV1 extends Links.WebCardanoUriConfig {
+export type LinksCardanoBlockV1 = Links.WebCardanoUriConfig & {
   readonly scheme: 'web+cardano'
   readonly authority: 'block'
   readonly version: 'v1'
@@ -121,7 +121,7 @@ export interface LinksCardanoBlockV1 extends Links.WebCardanoUriConfig {
 }
 
 // CIP-134 Address
-export interface LinksCardanoAddressV1 extends Links.WebCardanoUriConfig {
+export type LinksCardanoAddressV1 = Links.WebCardanoUriConfig & {
   readonly scheme: 'web+cardano'
   readonly authority: 'address'
   readonly version: 'v1'
@@ -134,7 +134,7 @@ export interface LinksCardanoAddressV1 extends Links.WebCardanoUriConfig {
 }
 
 // P2P Connect (new, follows CIP-158 pattern)
-export interface LinksCardanoConnectV1 extends Links.WebCardanoUriConfig {
+export type LinksCardanoConnectV1 = Links.WebCardanoUriConfig & {
   readonly scheme: 'web+cardano'
   readonly authority: 'connect'
   readonly version: 'v1'
@@ -148,7 +148,7 @@ export interface LinksCardanoConnectV1 extends Links.WebCardanoUriConfig {
 
 // Wallet authority (new, follows CIP-158 pattern)
 // Allows restoring wallets from links/QR codes
-export interface LinksCardanoWalletV1 extends Links.WebCardanoUriConfig {
+export type LinksCardanoWalletV1 = Links.WebCardanoUriConfig & {
   readonly scheme: 'web+cardano'
   readonly authority: 'wallet'
   readonly version: 'v1'

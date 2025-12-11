@@ -7,7 +7,7 @@ const ELIGIBLE_KEY = 'eligible'
 const NOT_ELIGIBLE_KEY = 'not-eligible'
 const EXTERNAL_KEY = 'external'
 
-interface EligibleAddressInfo {
+type EligibleAddressInfo = {
   lastCheckDate: string // ISO date string
   nextThawDate: string | null // ISO date string of next upcoming thaw, or null if all thaws have started
 }

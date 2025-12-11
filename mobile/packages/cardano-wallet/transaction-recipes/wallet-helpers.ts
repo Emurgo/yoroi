@@ -1,4 +1,4 @@
-import {getLogger} from '@yoroi/common'
+import {getLogger} from '@yoroi/logger'
 import type {DRepValue} from '@yoroi/tx'
 import {TransactionOutput} from '@yoroi/tx'
 import {Branded, KeyHash, Network, PublicKeyHex, Wallet} from '@yoroi/types'

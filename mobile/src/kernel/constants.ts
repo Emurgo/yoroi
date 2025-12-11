@@ -1,6 +1,7 @@
+import {Logger} from '@yoroi/logger'
 import {configCurrencies} from '@yoroi/portfolio'
 import {ThemeName} from '@yoroi/theme'
-import {App, Portfolio} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 
 import Constants from 'expo-constants'
 import * as Device from 'expo-device'
@@ -57,11 +58,12 @@ export const banxaTestWallet = process.env.EXPO_PUBLIC_BANXA_TEST_WALLET
 
 // Logger
 export const sentryDsn = process.env.EXPO_PUBLIC_SENTRY_DSN
+
 const envLoggerFilter = process.env.EXPO_PUBLIC_LOGGER_FILTER
 export const loggerFilter = envLoggerFilter ? new RegExp(envLoggerFilter) : null
-export const loggerLevel: App.Logger.Level = isDev
-  ? App.Logger.Level.Info
-  : App.Logger.Level.Warn
+export const loggerLevel: Logger.Level = isDev
+  ? Logger.Level.Info
+  : Logger.Level.Warn
 
 // Themes
 export const supportedThemes: Readonly<Record<ThemeName, ThemeName>> = freeze({

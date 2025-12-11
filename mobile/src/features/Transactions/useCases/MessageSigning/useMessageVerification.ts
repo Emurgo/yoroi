@@ -13,7 +13,7 @@ import {
   verifyAddressFromPublicKey,
 } from './utils'
 
-export interface VerificationResult {
+export type VerificationResult = {
   isValid: boolean
   extractedMessage?: string
   extractedAddress?: string

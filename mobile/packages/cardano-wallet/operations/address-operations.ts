@@ -1,5 +1,5 @@
 import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
-import {getLogger, throwLoggedError} from '@yoroi/common'
+import {getLogger, throwLoggedError} from '@yoroi/logger'
 import {Address, App, Branded, Wallet} from '@yoroi/types'
 
 import * as CSL from '@emurgo/cross-csl-core'

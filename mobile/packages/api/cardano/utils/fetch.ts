@@ -1,4 +1,5 @@
-import {fetchData, getLogger, isRight} from '@yoroi/common'
+import {fetchData, isRight} from '@yoroi/common'
+import {getLogger} from '@yoroi/logger'
 
 import {Platform} from 'react-native'
 import DeviceInfo from 'react-native-device-info'

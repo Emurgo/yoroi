@@ -1,6 +1,6 @@
 import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
 import {isRecord} from '@yoroi/common'
-import {getLogger} from '@yoroi/common'
+import {getLogger} from '@yoroi/logger'
 import {
   AdaAppClosedError,
   DeprecatedAdaAppError,
@@ -47,24 +47,26 @@ type LedgerConnectionResponse = {
 }
 
 const isConnectionError = (e: unknown): e is Error => {
-  if (
-    !(
-      e instanceof Error ||
-      (isRecord(e) &&
-        typeof e.message === 'string' &&
-        typeof e.name === 'string')
+  if (e instanceof Error) {
+    const err = e
+    return (
+      err instanceof BleError ||
+      err.message.includes('was disconnected') ||
+      err.message.includes('DisconnectedDevice') ||
+      err.name.includes('DisconnectedDevice')
     )
-  )
-    return false
-  const error = e as {message: string; name: string}
-  if (
-    e instanceof BleError ||
-    error.message.includes('was disconnected') ||
-    error.message.includes('DisconnectedDevice') ||
-    error.name.includes('DisconnectedDevice') ||
-    error.message.includes('not found')
-  ) {
-    return true
+  }
+  if (isRecord(e)) {
+    const record = e as Record<string, unknown>
+    if (typeof record.message === 'string' && typeof record.name === 'string') {
+      const error = record as {message: string; name: string}
+      return (
+        error.message.includes('was disconnected') ||
+        error.message.includes('DisconnectedDevice') ||
+        error.name.includes('DisconnectedDevice') ||
+        error.message.includes('not found')
+      )
+    }
   }
 
   return false
@@ -73,11 +75,10 @@ const isConnectionError = (e: unknown): e is Error => {
 // note: e.statusCode === DeviceErrorCodes.ERR_CLA_NOT_SUPPORTED is more probably due
 // to user not having ADA app opened instead of having the wrong app opened
 const isUserError = (e: unknown): boolean => {
-  if (
-    isRecord(e) &&
-    e.code != null &&
-    e.code === DeviceStatusCodes.ERR_CLA_NOT_SUPPORTED
-  ) {
+  if (!isRecord(e)) return false
+  const record = e as Record<string, unknown>
+  const code = record.code as unknown
+  if (code === DeviceStatusCodes.ERR_CLA_NOT_SUPPORTED) {
     return true
   }
 
@@ -85,11 +86,10 @@ const isUserError = (e: unknown): boolean => {
 }
 
 const isRejectedError = (e: unknown): boolean => {
-  if (
-    isRecord(e) &&
-    e.code != null &&
-    e.code === DeviceStatusCodes.ERR_REJECTED_BY_USER
-  ) {
+  if (!isRecord(e)) return false
+  const record = e as Record<string, unknown>
+  const code = record.code as unknown
+  if (code === DeviceStatusCodes.ERR_REJECTED_BY_USER) {
     return true
   }
 

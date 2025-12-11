@@ -15,7 +15,7 @@ import {REDEMPTION_API_BASE_URL} from '../types'
 
 const getApiUrl = (path: string) => `${REDEMPTION_API_BASE_URL}${path}`
 
-interface ApiErrorResponse {
+type ApiErrorResponse = {
   type?: string
   info?: string
   message?: string

@@ -4,7 +4,7 @@
  */
 import type {CardanoWalletDependencies} from '@yoroi/cardano-wallet'
 import {makeCardanoWallet} from '@yoroi/cardano-wallet'
-import {getLogger} from '@yoroi/common'
+import {getLogger} from '@yoroi/logger'
 import {Chain, Network, Wallet} from '@yoroi/types'
 
 import {walletChecksum} from '@emurgo/cip4-js'

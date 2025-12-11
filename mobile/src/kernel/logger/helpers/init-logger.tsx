@@ -1,4 +1,4 @@
-import {setLogger} from '@yoroi/common'
+import {setLogger} from '@yoroi/logger'
 
 import {
   distribution,

@@ -20,12 +20,6 @@ export const GOVERNANCE_ENDPOINTS: Readonly<
     getDRepById:
       'https://yoroi-backend-zero-preprod-prod.emurgornd.com/dreps/{{DREP_ID}}/state',
   },
-  [Chain.Network.Preview]: {
-    getStakeKeyState:
-      'https://yoroi-backend-zero-preview.emurgornd.com/stakekeys/{{STAKE_KEY_HASH}}/state',
-    getDRepById:
-      'https://yoroi-backend-zero-preview.emurgornd.com/dreps/{{DREP_ID}}/state',
-  },
 } as const
 
 // Mainnet Yoroi DRep ID
@@ -50,7 +44,6 @@ export const getYoroiDrepIdHex = (network: Chain.SupportedNetworks): string => {
     case Chain.Network.Preprod:
       return GOVERNANCE_YOROI_DREP_ID_HEX_PREPROD
     default:
-      // Preview and other networks default to preprod
       return GOVERNANCE_YOROI_DREP_ID_HEX_PREPROD
   }
 }

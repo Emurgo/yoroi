@@ -1,7 +1,7 @@
 import {
   Address,
-  BalanceQuantity,
   Balance,
+  BalanceQuantity,
   DatumCbor,
   DatumHash,
   KeyHash,
@@ -18,7 +18,7 @@ import type {
   TransactionBody,
 } from '@emurgo/cross-csl-core'
 
-interface Bip44DerivationLevel {
+type Bip44DerivationLevel = {
   level: number
 }
 

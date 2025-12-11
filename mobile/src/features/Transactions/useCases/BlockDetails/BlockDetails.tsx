@@ -52,10 +52,6 @@ const getBlockExplorerUrl = (
       cardanoscan: 'https://preprod.cardanoscan.io',
       cexplorer: 'https://preprod.cexplorer.io',
     },
-    [Chain.Network.Preview]: {
-      cardanoscan: 'https://preview.cardanoscan.io',
-      cexplorer: 'https://preview.cexplorer.io',
-    },
   }
 
   const baseUrl = baseUrls[network][explorer]
