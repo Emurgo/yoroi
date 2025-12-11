@@ -24,7 +24,7 @@ export type TransactionStatus =
   | 'confirming'
   | 'confirmed'
 
-export interface PhaseConfigResponse {
+export type PhaseConfigResponse = {
   genesis_timestamp: number
   jitter_strata_count: number
   redemption_increment_period: number
@@ -32,7 +32,7 @@ export interface PhaseConfigResponse {
   redemption_initial_delay?: number // Optional, not always returned by API
 }
 
-export interface Thaw {
+export type Thaw = {
   amount: number
   queue_position?: number
   status: ThawStatus
@@ -40,41 +40,41 @@ export interface Thaw {
   transaction_id?: string
 }
 
-export interface ThawScheduleResponse {
+export type ThawScheduleResponse = {
   numberOfClaimedAllocations: number
   thaws: Thaw[]
 }
 
-export interface BuildTransactionRequest {
+export type BuildTransactionRequest = {
   change_address: string
   collateral_utxos: string[]
   funding_utxos: string[]
 }
 
-export interface BuildTransactionResponse {
+export type BuildTransactionResponse = {
   redeemed_amount: number
   require_thawing_extra_signature: boolean
   transaction: string
   transaction_id: string
 }
 
-export interface ThawTransactionRequest {
+export type ThawTransactionRequest = {
   transaction: string
   transaction_witness_set: string
 }
 
-export interface ThawTransactionResponse {
+export type ThawTransactionResponse = {
   estimated_submission_time: number
   transaction_id: string
 }
 
-export interface GetTransactionResponse {
+export type GetTransactionResponse = {
   redeemed_amount: number
   status: TransactionStatus
   transaction_id: string
 }
 
-export interface AddressAllocation {
+export type AddressAllocation = {
   address: string
   schedule: ThawScheduleResponse
   redeemableAmount: number

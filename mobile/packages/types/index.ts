@@ -93,8 +93,6 @@ import {
   AppErrorInvalidState,
   AppErrorLibraryFailed,
   AppErrorWrongPassword,
-} from './errors'
-import {
   ClaimApiErrorsAlreadyClaimed,
   ClaimApiErrorsExpired,
   ClaimApiErrorsInvalidRequest,
@@ -415,31 +413,31 @@ export namespace App {
     isSingleAddress?: boolean
   }
 
-  export interface Storage<
+  export type Storage<
     IsAsync extends boolean = true,
     K extends string = string,
-  > extends AppStorage<IsAsync, K> {}
+  > = AppStorage<IsAsync, K>
   export type StorageKeyManager<
     T = unknown,
     R = T,
     Key extends string = string,
   > = AppStorageKeyManager<T, R, Key>
   export type StorageFolderName = AppStorageFolderName
-  export interface MultiStorage<
+  export type MultiStorage<
     T,
     IsAsync extends boolean = true,
     K extends string = string,
-  > extends AppMultiStorage<T, IsAsync, K> {}
+  > = AppMultiStorage<T, IsAsync, K>
 
-  export interface ObservableStorage<
+  export type ObservableStorage<
     IsAsync extends boolean = true,
     K extends string = string,
-  > extends AppObservableStorage<IsAsync, K> {}
-  export interface ObservableMultiStorage<
+  > = AppObservableStorage<IsAsync, K>
+  export type ObservableMultiStorage<
     T,
     IsAsync extends boolean = true,
     K extends string = string,
-  > extends AppObservableMultiStorage<T, IsAsync, K> {}
+  > = AppObservableMultiStorage<T, IsAsync, K>
 
   export type MultiStorageOptions<
     T,
@@ -455,11 +453,10 @@ export namespace App {
   export type QueueTaskManager = AppQueueTaskManager
 
   export type CacheInfo = AppCacheInfo
-  export interface CacheRecord<T> extends AppCacheRecord<T> {}
-  export interface CacheRow<T, K extends string = string>
-    extends AppCacheRow<T, K> {}
+  export type CacheRecord<T> = AppCacheRecord<T>
+  export type CacheRow<T, K extends string = string> = AppCacheRow<T, K>
 
-  export interface Api extends AppApi {}
+  export type Api = AppApi
 }
 
 export namespace Swap {
@@ -613,9 +610,9 @@ export {ZERO_QUANTITY} from './branded/amount'
 
 export namespace Links {
   export type YoroiModule = LinksYoroiModule
-  export interface UriConfig extends LinksUriConfig {}
-  export interface WebCardanoUriConfig extends LinksWebCardanoUriConfig {}
-  export interface YoroiUriConfig extends LinksYoroiUriConfig {}
+  export type UriConfig = LinksUriConfig
+  export type WebCardanoUriConfig = LinksWebCardanoUriConfig
+  export type YoroiUriConfig = LinksYoroiUriConfig
   export type PartnerInfoSchema = LinksPartnerInfoParams
   export type ExchangeShowCreateResultParams =
     LinksExchangeShowCreateResultParams
@@ -626,7 +623,7 @@ export namespace Links {
   export type YoroiActionInfo = LinksYoroiActionInfo
   export type YoroiAction = LinksYoroiAction
 
-  export interface Rules extends LinksUriRules {}
+  export type Rules = LinksUriRules
 
   export type Link<T extends LinksUriConfig> = LinksLink<T>
 
@@ -751,12 +748,12 @@ export namespace Api {
 
     export type FtMetadata = ApiFtMetadata
     export type FtMetadataRecord = ApiFtMetadataRecord
-    export interface FtRecords extends ApiFtRecords {}
+    export type FtRecords = ApiFtRecords
     export type TokenRegistryEntry = ApiTokenRegistryEntry
 
     export type NftMetadata = ApiNftMetadata
     export type NftMetadataRecord = ApiNftMetadataRecord
-    export interface NftRecords extends ApiNftRecords {}
+    export type NftRecords = ApiNftRecords
 
     export type MetadataFile = ApiMetadataFile
     export type TokenId = ApiTokenId
@@ -768,7 +765,7 @@ export namespace Api {
     export type UtxoDataAsset = ApiUtxoDataAsset
     export type UtxoData = ApiUtxoData
 
-    export interface Api {
+    export type Api = {
       getProtocolParams: () => Promise<ChainCardanoProtocolParams>
       getBestBlock: () => Promise<ChainCardanoBestBlock>
       getUtxoData: (request: UtxoDataRequest) => Promise<ApiUtxoData>
@@ -787,7 +784,7 @@ export namespace Numbers {
 }
 
 export namespace Resolver {
-  export interface Api extends ResolverApi {}
+  export type Api = ResolverApi
   export type Manager = ResolverManager
 
   export type NameServer = ResolverNameServer
@@ -986,7 +983,7 @@ export namespace Exchange {
   export type Provider = ExchangeProvider
   export type ReferralUrlQueryStringParams =
     ExchangeReferralUrlQueryStringParams
-  export interface Api extends ExchangeApi {}
+  export type Api = ExchangeApi
   export namespace Errors {
     export class Validation extends ExchangeValidationError {
       constructor(message?: string) {

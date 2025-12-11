@@ -26,7 +26,7 @@ export type NotificationManagerMakerProps = {
   eventsLimit?: number
 }
 
-export interface BannerNotificationEvent extends NotificationEventBase {
+export type BannerNotificationEvent = NotificationEventBase & {
   trigger: typeof NotificationTrigger.Banner
   metadata: {
     title: string
@@ -35,7 +35,7 @@ export interface BannerNotificationEvent extends NotificationEventBase {
   }
 }
 
-export interface PushNotificationEvent extends NotificationEventBase {
+export type PushNotificationEvent = NotificationEventBase & {
   trigger: typeof NotificationTrigger.Push
   metadata: {
     title: string
@@ -44,8 +44,7 @@ export interface PushNotificationEvent extends NotificationEventBase {
   }
 }
 
-export interface NotificationTransactionReceivedEvent
-  extends NotificationEventBase {
+export type NotificationTransactionReceivedEvent = NotificationEventBase & {
   trigger: typeof NotificationTrigger.TransactionReceived
   metadata: {
     walletId: string
@@ -56,21 +55,21 @@ export interface NotificationTransactionReceivedEvent
   }
 }
 
-export interface NotificationRewardsUpdatedEvent extends NotificationEventBase {
+export type NotificationRewardsUpdatedEvent = NotificationEventBase & {
   trigger: typeof NotificationTrigger.RewardsUpdated
   metadata: {
     walletId: string
   }
 }
 
-export interface NotificationPrimaryTokenPriceChangedEvent
-  extends NotificationEventBase {
-  trigger: typeof NotificationTrigger.PrimaryTokenPriceChanged
-  metadata: {
-    previousPrice: number
-    nextPrice: number
+export type NotificationPrimaryTokenPriceChangedEvent =
+  NotificationEventBase & {
+    trigger: typeof NotificationTrigger.PrimaryTokenPriceChanged
+    metadata: {
+      previousPrice: number
+      nextPrice: number
+    }
   }
-}
 
 export type NotificationGroup = 'transaction-history' | 'portfolio' | 'push'
 
@@ -83,7 +82,7 @@ export type NotificationEvent =
 
 type NotificationEventId = number
 
-interface NotificationEventBase {
+type NotificationEventBase = {
   id: NotificationEventId
   date: string
   isRead: boolean

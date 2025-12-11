@@ -1,1 +1,1 @@
-export interface AppApi {}
+export type AppApi = {}

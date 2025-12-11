@@ -6,7 +6,7 @@ import {TouchableOpacity, View} from 'react-native'
 import {TokenChartInterval} from '~/features/Portfolio/common/hooks/useGetPortfolioTokenChart'
 import {Text} from '~/ui/Text/Text'
 
-interface Props {
+type Props = {
   timeInterval: TokenChartInterval
   onChange: (timeInterval: TokenChartInterval) => void
   disabled?: boolean

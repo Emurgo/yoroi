@@ -2,7 +2,7 @@
 import {colorSaturation} from './color-saturation'
 import {colorScheme} from './color-scheme'
 
-interface BlockiesInstance {
+type BlockiesInstance = {
   asBase64(options?: {
     size?: number
     scale?: number

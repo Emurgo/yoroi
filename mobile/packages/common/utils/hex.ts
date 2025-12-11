@@ -1,4 +1,4 @@
-export interface Hex {
+export type Hex = {
   readonly value: string
   readonly bytes: Uint8Array
   readonly utf8: string

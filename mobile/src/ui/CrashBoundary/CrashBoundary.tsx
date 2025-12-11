@@ -15,7 +15,7 @@ import {ExpandableItem} from './ExpandableItem'
 
 // TODO: Add error image
 // TODO: Add translations
-interface Props {
+type Props = {
   children: React.ReactNode
   debug?: boolean
   renderError?(error: Error | LocalizableError): React.ReactNode

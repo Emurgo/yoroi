@@ -9,7 +9,7 @@ import {
   UtxoDiffSincePointRequest,
 } from './models'
 
-export interface UtxoApiContract {
+export type UtxoApiContract = {
   getBestBlock(): Promise<BlockHash>
   getSafeBlock(): Promise<BlockHash>
   getTipStatusWithReference(

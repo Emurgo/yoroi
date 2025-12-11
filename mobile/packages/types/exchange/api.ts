@@ -2,7 +2,7 @@ import {AxiosRequestConfig} from 'axios'
 
 import {ExchangeProvider} from './provider'
 
-export interface ExchangeApi {
+export type ExchangeApi = {
   getBaseUrl(
     providerId: string,
     fetcherOptions?: AxiosRequestConfig,

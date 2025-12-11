@@ -117,7 +117,7 @@ export type ApiOnChainNftMetadataResult =
 
 export type ApiMetadataRecord = ApiFtMetadataRecord | ApiNftMetadataRecord
 
-export interface ApiNftRecords {
+export type ApiNftRecords = {
   [policyId: string]: {
     [assetName: string]: ApiNftMetadata // v1 key is utf8 `00` v2 key is hex `3030`
   }
@@ -127,7 +127,7 @@ export type ApiNftMetadataRecord = {
   metadata: ApiMetadataVersion & ApiNftRecords
 }
 
-export interface ApiFtRecords {
+export type ApiFtRecords = {
   [policyId: string]: {
     [assetName: string]: ApiFtMetadata // v1 key is utf8 `00` v2 key is hex `3030`
   }

@@ -46,7 +46,7 @@ export type LoggerEntry = {
   timestamp: number
 }
 
-export interface LoggerManager {
+export type LoggerManager = {
   level: LoggerLevel
   trail: LoggerEntry[]
   filter: RegExp | null

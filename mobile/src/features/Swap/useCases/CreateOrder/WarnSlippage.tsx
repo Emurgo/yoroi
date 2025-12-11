@@ -8,7 +8,7 @@ import {Button, ButtonType} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
 
-interface Props {
+type Props = {
   onConfirm: () => void
   slippage: number
   ticker: string

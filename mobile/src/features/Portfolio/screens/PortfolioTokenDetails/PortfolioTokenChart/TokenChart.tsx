@@ -6,7 +6,7 @@ import {Dimensions, PanResponder, View} from 'react-native'
 import {Circle, G, Line, Rect, Text as SvgText} from 'react-native-svg'
 import {LineChart as SvgLineChart} from 'react-native-svg-charts'
 
-interface Props {
+type Props = {
   dataSources?: {
     label: string
     value: number
@@ -14,7 +14,7 @@ interface Props {
   onValueSelected: (value: number) => void
 }
 
-interface TooltipProps {
+type TooltipProps = {
   x: (index: number) => number
   y: (value: number) => number
   positionX: number
