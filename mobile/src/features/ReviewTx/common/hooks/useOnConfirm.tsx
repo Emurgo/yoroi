@@ -370,107 +370,100 @@ export const useOnConfirm = ({
 
     promptRootKey({
       onSuccess: async (rootKey: string) => {
-        if (!preventSubmit) {
-          try {
-            // Check if all signatures are collected before submitting
-            if (multiparty || multisig) {
-              const signatureStatus = await checkAllSignatures(
-                cbor,
-                multiparty,
-                multisig,
-              )
+        try {
+          // Check if all signatures are collected (for multiparty/multisig)
+          if (multiparty || multisig) {
+            const signatureStatus = await checkAllSignatures(
+              cbor,
+              multiparty,
+              multisig,
+            )
 
-              if (!signatureStatus.isFullySigned) {
-                // Sign the transaction but don't submit yet
-                const result = await signTxOnly(cbor, rootKey, wallet, meta)
-                if (!result) {
-                  throw new Error('useOnConfirm:: not possible to sign tx')
-                }
-
-                // Export/share transaction for next signer
-                if (onExportTransaction) {
-                  await onExportTransaction(result.signedTxCbor)
-                } else {
-                  logger.warn(
-                    'useOnConfirm: Transaction not fully signed but no export handler provided',
-                    {
-                      requiredSignatures: signatureStatus.requiredSignatures,
-                      collectedSignatures: signatureStatus.collectedSignatures,
-                    },
-                  )
-                }
-
-                // Don't submit - transaction needs more signatures
-                return
+            if (!signatureStatus.isFullySigned) {
+              // Sign the transaction but don't submit yet (needs more signatures)
+              const result = await signTxOnly(cbor, rootKey, wallet, meta)
+              if (!result) {
+                throw new Error('useOnConfirm:: not possible to sign tx')
               }
-            }
 
-            // All signatures collected (or not multiparty/multisig) - proceed with submission
-            const result = await submitTx(cbor, rootKey, wallet, meta)
+              // Export/share transaction for next signer
+              if (onExportTransaction) {
+                await onExportTransaction(result.signedTxCbor)
+              } else {
+                logger.warn(
+                  'useOnConfirm: Transaction not fully signed but no export handler provided',
+                  {
+                    requiredSignatures: signatureStatus.requiredSignatures,
+                    collectedSignatures: signatureStatus.collectedSignatures,
+                  },
+                )
+              }
+
+              // Don't submit - transaction needs more signatures
+              // Note: Even if preventSubmit=false, we don't submit here because we need more signatures
+              return
+            }
+          }
+
+          // All signatures collected (or not multiparty/multisig)
+          if (preventSubmit) {
+            // Sign the transaction but don't submit to blockchain
+            const result = await signTx(cbor, rootKey, wallet, meta)
             if (!result) {
-              logger.error('useOnConfirm.onConfirm: submitTx returned null', {
+              logger.error('useOnConfirm.onConfirm: signTx returned null', {
                 walletId: wallet?.id,
               })
               throw new Error('useOnConfirm:: not possible to sign tx')
             }
 
-            // Add optimistic transaction if formattedTx is available
-            if (formattedTx && result.txId) {
-              try {
-                const currentMemo = memoContext.memo
-                const optimisticTx = createOptimisticTransactionFromFormattedTx(
-                  formattedTx,
-                  result.txId,
-                  currentMemo.trim().length > 0 ? currentMemo.trim() : null,
-                )
-                wallet.addOptimisticTransaction(optimisticTx)
-                logger.debug('useOnConfirm: Added optimistic transaction', {
-                  txId: result.txId,
-                  walletId: wallet.id,
-                })
-              } catch (optimisticError) {
-                logger.error(
-                  'useOnConfirm: Failed to add optimistic transaction',
-                  {
-                    error:
-                      optimisticError instanceof Error
-                        ? optimisticError.message
-                        : String(optimisticError),
-                    txId: result.txId,
-                    walletId: wallet.id,
-                  },
-                )
-                // Don't fail the submission if optimistic update fails
-              }
-            }
-
-            // txId and signedTx are already calculated in submitTx
             handleOnSuccess({
               rootKey,
               signedTx: result.signedTx,
               txId: result.txId,
             })
             return
-          } catch (e) {
-            logger.error('useOnConfirm.onConfirm: Error in submitTx', {
-              walletId: wallet?.id,
-              error: e instanceof Error ? e.message : String(e),
-            })
-            handleOnError(e)
-            return
           }
-        }
 
-        // For preventSubmit=true, sign the transaction but don't submit to blockchain
-        try {
-          const result = await signTx(cbor, rootKey, wallet, meta)
+          // Sign and submit the transaction
+          const result = await submitTx(cbor, rootKey, wallet, meta)
           if (!result) {
-            logger.error('useOnConfirm.onConfirm: signTx returned null', {
+            logger.error('useOnConfirm.onConfirm: submitTx returned null', {
               walletId: wallet?.id,
             })
             throw new Error('useOnConfirm:: not possible to sign tx')
           }
 
+          // Add optimistic transaction if formattedTx is available
+          if (formattedTx && result.txId) {
+            try {
+              const currentMemo = memoContext.memo
+              const optimisticTx = createOptimisticTransactionFromFormattedTx(
+                formattedTx,
+                result.txId,
+                currentMemo.trim().length > 0 ? currentMemo.trim() : null,
+              )
+              wallet.addOptimisticTransaction(optimisticTx)
+              logger.debug('useOnConfirm: Added optimistic transaction', {
+                txId: result.txId,
+                walletId: wallet.id,
+              })
+            } catch (optimisticError) {
+              logger.error(
+                'useOnConfirm: Failed to add optimistic transaction',
+                {
+                  error:
+                    optimisticError instanceof Error
+                      ? optimisticError.message
+                      : String(optimisticError),
+                  txId: result.txId,
+                  walletId: wallet.id,
+                },
+              )
+              // Don't fail the submission if optimistic update fails
+            }
+          }
+
+          // txId and signedTx are already calculated in submitTx
           handleOnSuccess({
             rootKey,
             signedTx: result.signedTx,
@@ -478,9 +471,12 @@ export const useOnConfirm = ({
           })
           return
         } catch (e) {
-          logger.error('useOnConfirm.onConfirm: Error in signTx', {
+          logger.error('useOnConfirm.onConfirm: Error in transaction flow', {
             walletId: wallet?.id,
             error: e instanceof Error ? e.message : String(e),
+            preventSubmit,
+            hasMultiparty: !!multiparty,
+            hasMultisig: !!multisig,
           })
           handleOnError(e)
           return
