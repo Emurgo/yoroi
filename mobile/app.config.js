@@ -8,10 +8,13 @@ const isProduction =
 const isPreview =
   process.env.EAS_BUILD_PROFILE === 'preview' ||
   process.env.EXPO_PUBLIC_BUILD_VARIANT === 'NIGHTLY'
+// Explicitly exclude production and preview builds to prevent dev bundle IDs in production
 const isDevelopment =
-  process.env.EAS_BUILD_PROFILE === 'development' ||
-  process.env.EXPO_PUBLIC_BUILD_VARIANT === 'DEV' ||
-  (!isProduction && !isPreview) // Default to dev for local builds
+  !isProduction &&
+  !isPreview &&
+  (process.env.EAS_BUILD_PROFILE === 'development' ||
+    process.env.EXPO_PUBLIC_BUILD_VARIANT === 'DEV' ||
+    true) // Default to dev for local builds when neither production nor preview
 
 module.exports = {
   expo: {
