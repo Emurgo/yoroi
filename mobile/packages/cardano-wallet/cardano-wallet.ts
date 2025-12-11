@@ -114,10 +114,13 @@ import {
   deriveRewardAddressFromAddress,
   deriveRewardAddressHex,
   getHexAddressingMap,
+  getStakeAddressMap,
 } from './utils'
 import {UtxoManager, makeUtxoManager} from './utxoManager/utxoManager'
 import {utxosMaker} from './utxoManager/utxos'
 import {CardanoMobileWrapped} from './wrappedCsl'
+
+const logger = getLogger()
 
 type WalletState = {
   id: string
@@ -948,6 +951,10 @@ function createWalletObject(
     }
 
     const addressingMap = await getHexAddressingMap(wallet)
+    const stakeAddressMap = getStakeAddressMap(
+      state.rewardAddressHex,
+      stakingAddressing,
+    )
     const payload = await CardanoMobileWrapped.cslScope(async (csl) => {
       return await state.dependencies.toLedgerSignRequest(
         csl,
@@ -955,7 +962,7 @@ function createWalletObject(
         networkManager.chainId,
         networkManager.protocolMagic,
         addressingMap,
-        addressingMap,
+        stakeAddressMap,
         modernUtxosToCardanoAddressedUtxos(getAddressedUtxos()),
         [],
         stakingAddressing,
@@ -1159,10 +1166,20 @@ function createWalletObject(
   }
 
   const submitTransaction = async (base64SignedTx: TransactionCborBase64) => {
-    await legacyApi.submitTransaction(
-      base64SignedTx,
-      networkManager.legacyApiBaseUrl,
-    )
+    try {
+      await legacyApi.submitTransaction(
+        base64SignedTx,
+        networkManager.legacyApiBaseUrl,
+      )
+    } catch (error) {
+      logger.error('cardano-wallet.submitTransaction: API submission failed', {
+        error: error instanceof Error ? error.message : String(error),
+        errorStack: error instanceof Error ? error.stack : undefined,
+        apiBaseUrl: networkManager.legacyApiBaseUrl,
+        walletId: state.id,
+      })
+      throw error
+    }
   }
 
   const syncUtxos = async ({isForced = false}: {isForced?: boolean} = {}) => {

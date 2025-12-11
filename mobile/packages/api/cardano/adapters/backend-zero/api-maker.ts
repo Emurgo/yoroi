@@ -1,3 +1,4 @@
+import {getLogger} from '@yoroi/common'
 import {
   RemoteCertificateMeta,
   StakePoolInfoRequest,
@@ -39,6 +40,8 @@ import {
   getWalletRegistrationDataFromContext,
   registerWallet,
 } from '../../utils/wallet-registration'
+
+const logger = getLogger()
 
 /**
  * Internal RawTransaction type - only used within API adapters
@@ -445,6 +448,11 @@ export const backendZeroApiMaker = ({
 
       if (!response.ok) {
         const errorText = await response.text()
+        logger.error('backendZeroApi.submitTransaction: HTTP request failed', {
+          status: response.status,
+          statusText: response.statusText,
+          errorText,
+        })
         throw new Error(`Transaction submission failed: ${errorText}`)
       }
 

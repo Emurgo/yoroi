@@ -238,6 +238,7 @@ export const redemptionApi = {
       'redemptionApi.buildTransaction: Received response from backend',
       {
         destAddress,
+        status: response.value.status,
         response: {
           redeemedAmount: response.value.data.redeemed_amount,
           requireThawingExtraSignature:
@@ -262,6 +263,17 @@ export const redemptionApi = {
     const url = getApiUrl(
       `/thaws/${encodeURIComponent(destAddress)}/transactions`,
     )
+
+    logger.info('redemptionApi.submitTransaction: Sending request to backend', {
+      url,
+      destAddress,
+      request: {
+        transactionLength: request.transaction.length,
+        transactionPreview: `${request.transaction.substring(0, 64)}...`,
+        witnessSetLength: request.transaction_witness_set.length,
+        witnessSetPreview: `${request.transaction_witness_set.substring(0, 64)}...`,
+      },
+    })
 
     const response = await fetchData<
       ThawTransactionResponse,
@@ -297,6 +309,17 @@ export const redemptionApi = {
         `Failed to submit transaction: ${errorMsg} (${response.error.status})`,
       )
     }
+
+    logger.info(
+      'redemptionApi.submitTransaction: Received response from backend',
+      {
+        destAddress,
+        status: response.value.status,
+        response: {
+          transactionId: response.value.data.transaction_id,
+        },
+      },
+    )
 
     return response.value.data
   },

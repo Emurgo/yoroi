@@ -2016,6 +2016,7 @@ export const useStrings = () => {
           swapResolved: f(transactionsMessages.operationSwapResolved),
           swapCancel: f(transactionsMessages.operationSwapCancel),
           smartContract: f(transactionsMessages.operationSmartContract),
+          nightRedemption: f(transactionsMessages.operationNightRedemption),
           collateralCreation: f(
             transactionsMessages.operationCollateralCreation,
           ),

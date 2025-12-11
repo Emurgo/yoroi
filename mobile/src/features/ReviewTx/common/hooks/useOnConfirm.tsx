@@ -1,7 +1,9 @@
-import {getTransactionSigners} from '@yoroi/cardano-wallet'
-import {YoroiWallet} from '@yoroi/cardano-wallet'
-import {createRawTxSigningKey} from '@yoroi/cardano-wallet'
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
+import {
+  CardanoMobileWrapped,
+  YoroiWallet,
+  createRawTxSigningKey,
+  getTransactionSigners,
+} from '@yoroi/cardano-wallet'
 import {calculateTxId} from '@yoroi/tx'
 import {Branded, Wallet} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
@@ -101,12 +103,33 @@ export const useOnConfirm = ({
     signedTx?: Transaction | ((csl: WasmModuleProxy) => Transaction)
     txId?: string
   }) => {
+    logger.info('useOnConfirm.handleOnSuccess: Starting success handler', {
+      hasArgs: !!args,
+      hasSignedTx: !!args?.signedTx,
+      hasTx: !!args?.tx,
+      hasTxId: !!args?.txId,
+      hasRootKey: !!args?.rootKey,
+      preventSubmit,
+      context,
+      argsKeys: args ? Object.keys(args) : [],
+    })
+
     try {
       closeModal()
 
       // Use signedTx if available, otherwise fall back to tx
       // If signedTx is a function, it will be called within a CSL scope when needed
       const signedTx = args?.signedTx ?? args?.tx
+
+      logger.info('useOnConfirm.handleOnSuccess: Resolved signedTx', {
+        hasSignedTx: !!signedTx,
+        signedTxType: typeof signedTx,
+        originalHasSignedTx: !!args?.signedTx,
+        originalHasTx: !!args?.tx,
+        txId: args?.txId,
+        preventSubmit,
+        context,
+      })
 
       // Re-read memo from context at the time of saving (in case it changed)
       const currentMemo = memoContext.memo
@@ -140,7 +163,11 @@ export const useOnConfirm = ({
                 'useOnConfirm: onSuccessWithoutFeedback callback failed',
                 {
                   error: error instanceof Error ? error.message : String(error),
+                  errorStack: error instanceof Error ? error.stack : undefined,
                   txId: args?.txId,
+                  hasSignedTx: !!signedTx,
+                  signedTxType: typeof signedTx,
+                  context,
                 },
               )
               // Don't block success flow - transaction was already submitted
@@ -266,6 +293,12 @@ export const useOnConfirm = ({
 
     // Block read-only wallets from signing transactions
     if (meta.isReadOnly) {
+      logger.error(
+        'useOnConfirm.onConfirm: Read-only wallet attempted to sign',
+        {
+          walletId: wallet?.id,
+        },
+      )
       handleOnError(new Error('Read-only wallets cannot sign transactions'))
       return
     }
@@ -287,6 +320,7 @@ export const useOnConfirm = ({
                 'hex',
               )
             })
+
             handleOnSuccess({tx, txId})
           },
           onError: handleOnError,
@@ -373,8 +407,12 @@ export const useOnConfirm = ({
 
             // All signatures collected (or not multiparty/multisig) - proceed with submission
             const result = await submitTx(cbor, rootKey, wallet, meta)
-            if (!result)
+            if (!result) {
+              logger.error('useOnConfirm.onConfirm: submitTx returned null', {
+                walletId: wallet?.id,
+              })
               throw new Error('useOnConfirm:: not possible to sign tx')
+            }
 
             // Add optimistic transaction if formattedTx is available
             if (formattedTx && result.txId) {
@@ -414,16 +452,39 @@ export const useOnConfirm = ({
             })
             return
           } catch (e) {
+            logger.error('useOnConfirm.onConfirm: Error in submitTx', {
+              walletId: wallet?.id,
+              error: e instanceof Error ? e.message : String(e),
+            })
             handleOnError(e)
             return
           }
         }
 
-        // For preventSubmit=true, calculate txId from unsigned CBOR
-        const txId = await CardanoMobileWrapped.cslScope(async (csl) => {
-          return await calculateTxId(csl, cbor, 'hex')
-        })
-        handleOnSuccess({rootKey, txId})
+        // For preventSubmit=true, sign the transaction but don't submit to blockchain
+        try {
+          const result = await signTx(cbor, rootKey, wallet, meta)
+          if (!result) {
+            logger.error('useOnConfirm.onConfirm: signTx returned null', {
+              walletId: wallet?.id,
+            })
+            throw new Error('useOnConfirm:: not possible to sign tx')
+          }
+
+          handleOnSuccess({
+            rootKey,
+            signedTx: result.signedTx,
+            txId: result.txId,
+          })
+          return
+        } catch (e) {
+          logger.error('useOnConfirm.onConfirm: Error in signTx', {
+            walletId: wallet?.id,
+            error: e instanceof Error ? e.message : String(e),
+          })
+          handleOnError(e)
+          return
+        }
       },
       onError: handleOnError,
       onClose,
@@ -433,7 +494,7 @@ export const useOnConfirm = ({
   return {onConfirm} as const
 }
 
-const submitTx = async (
+const signTx = async (
   cbor: string,
   rootKey: string,
   wallet: YoroiWallet,
@@ -444,42 +505,28 @@ const submitTx = async (
 } | null> => {
   const result = await CardanoMobileWrapped.cslScope(async (csl) => {
     const signers = await getTransactionSigners(cbor, wallet, meta)
+
     const keys = signers.map((signer) =>
       createRawTxSigningKey(rootKey, signer, csl),
     )
+
     const signedTxBytes = await wallet.signRawTx(cbor, keys)
     if (!signedTxBytes) {
-      logger.error('submitTx: Failed to sign transaction')
+      logger.error(
+        'signTx: Failed to sign transaction - signRawTx returned null',
+        {
+          walletId: wallet.id,
+        },
+      )
       return null
     }
 
-    // Calculate transaction ID from signed bytes (before submitting)
+    // Calculate transaction ID from signed bytes
     const txId = await calculateTxId(
       csl,
       Buffer.from(signedTxBytes).toString('hex'),
       'hex',
     )
-
-    // Submit the transaction (convert to base64 for API)
-    const signedTxBase64 = Branded.asTransactionCborBase64(
-      Buffer.from(signedTxBytes).toString('base64'),
-    )
-    try {
-      await wallet.submitTransaction(signedTxBase64)
-      logger.debug('submitTx: Transaction submitted successfully', {txId})
-    } catch (submitError) {
-      logger.error('submitTx: Failed to submit transaction', {
-        error:
-          submitError instanceof Error
-            ? submitError.message
-            : String(submitError),
-        errorStack:
-          submitError instanceof Error ? submitError.stack : undefined,
-        txId,
-        cborLength: cbor.length,
-      })
-      throw submitError
-    }
 
     return {signedTxBytes, txId}
   })
@@ -534,4 +581,51 @@ const signTxOnly = async (
   return {
     signedTxCbor: Buffer.from(result.signedTxBytes).toString('hex'),
   }
+}
+
+const submitTx = async (
+  cbor: string,
+  rootKey: string,
+  wallet: YoroiWallet,
+  meta: Wallet.Meta,
+): Promise<{
+  signedTx: (csl: WasmModuleProxy) => Transaction
+  txId: string
+} | null> => {
+  // First sign the transaction
+  const signResult = await signTx(cbor, rootKey, wallet, meta)
+  if (!signResult) {
+    logger.error('submitTx: signTx returned null', {
+      walletId: wallet.id,
+    })
+    return null
+  }
+
+  // Get signed transaction bytes for submission
+  const signedTxBytes = await CardanoMobileWrapped.cslScope(async (csl) => {
+    const tx = signResult.signedTx(csl)
+    return tx.toBytes()
+  })
+
+  // Submit the transaction (convert to base64 for API)
+  const signedTxBase64 = Branded.asTransactionCborBase64(
+    Buffer.from(signedTxBytes).toString('base64'),
+  )
+
+  try {
+    await wallet.submitTransaction(signedTxBase64)
+  } catch (submitError) {
+    logger.error('submitTx: Failed to submit transaction to blockchain', {
+      error:
+        submitError instanceof Error
+          ? submitError.message
+          : String(submitError),
+      errorStack: submitError instanceof Error ? submitError.stack : undefined,
+      txId: signResult.txId,
+      walletId: wallet.id,
+    })
+    throw submitError
+  }
+
+  return signResult
 }

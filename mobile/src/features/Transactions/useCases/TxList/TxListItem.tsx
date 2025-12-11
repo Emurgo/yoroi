@@ -31,6 +31,7 @@ import {Icon} from '~/ui/Icon'
 import {styleMap} from '~/ui/Icon/Direction'
 import {BalanceError} from '~/ui/PairedBalance/PairedBalance'
 
+import {getOperationTypeKey} from '../../common/getOperationTypeKey'
 import {getOperationDisplayText} from '../../common/operationDisplay'
 import {useTxFilter} from './TxFilterProvider'
 
@@ -56,18 +57,62 @@ const TxListItemComponent = ({transaction}: Props) => {
 
   const intl = useIntl()
 
-  // Get operation display text if available (using certificates from summary)
-  const operationText = React.useMemo(() => {
-    // Create a minimal WalletTransaction-like object with just the fields we need
-    const walletTransactionLike = {
-      id: transaction.id,
-      certificates: transaction.certificates,
-      withdrawals: transaction.withdrawals,
-      metadata: transaction.metadata,
-      inputs: transaction.inputs,
-      outputs: transaction.outputs,
-    } as WalletTransaction | undefined
-    return getOperationDisplayText(
+  // Get operation type key (fixed, non-localized) and display text
+  const walletTransactionLike = React.useMemo(
+    () =>
+      ({
+        id: transaction.id,
+        certificates: transaction.certificates,
+        withdrawals: transaction.withdrawals,
+        metadata: transaction.metadata,
+        inputs: transaction.inputs,
+        outputs: transaction.outputs,
+      }) as WalletTransaction | undefined,
+    [
+      transaction.id,
+      transaction.certificates,
+      transaction.withdrawals,
+      transaction.metadata,
+      transaction.inputs,
+      transaction.outputs,
+    ],
+  )
+
+  const operationTypeKey = React.useMemo(
+    () =>
+      getOperationTypeKey(
+        walletTransactionLike,
+        transaction.direction,
+        transaction.amount,
+        transaction.metadata,
+        transaction.inputs,
+        transaction.outputs,
+        transaction.delta,
+      ),
+    [
+      walletTransactionLike,
+      transaction.direction,
+      transaction.amount,
+      transaction.metadata,
+      transaction.inputs,
+      transaction.outputs,
+      transaction.delta,
+    ],
+  )
+
+  const operationText = React.useMemo(
+    () =>
+      getOperationDisplayText(
+        walletTransactionLike,
+        strings,
+        transaction.direction,
+        transaction.amount,
+        transaction.metadata,
+        transaction.inputs,
+        transaction.outputs,
+        transaction.delta,
+      ),
+    [
       walletTransactionLike,
       strings,
       transaction.direction,
@@ -76,19 +121,8 @@ const TxListItemComponent = ({transaction}: Props) => {
       transaction.inputs,
       transaction.outputs,
       transaction.delta,
-    )
-  }, [
-    transaction.id,
-    transaction.direction,
-    transaction.certificates,
-    transaction.withdrawals,
-    transaction.amount,
-    transaction.metadata,
-    transaction.inputs,
-    transaction.outputs,
-    transaction.delta,
-    strings,
-  ])
+    ],
+  )
 
   const showDetails = () =>
     navigation.navigate('tx-details', {id: transaction.id})
@@ -119,10 +153,10 @@ const TxListItemComponent = ({transaction}: Props) => {
     operationText ??
     strings.transactions.direction({direction: transaction.direction})
 
-  // Determine icon key for styling (matches icon selection logic)
+  // Determine icon key for styling - map operation type key to icon key
   const getIconKeyForStyle = (
     direction: 'SENT' | 'RECEIVED' | 'SELF' | 'MULTI',
-    operation: string | null | undefined,
+    operationTypeKey: string | null | undefined,
   ):
     | 'SENT'
     | 'RECEIVED'
@@ -138,62 +172,75 @@ const TxListItemComponent = ({transaction}: Props) => {
     | 'VOTE_DELEGATION'
     | 'COLLATERAL_CREATION'
     | 'MINT'
-    | 'BURN' => {
-    if (!operation) {
+    | 'BURN'
+    | 'NIGHT_REDEMPTION' => {
+    if (!operationTypeKey) {
       return direction
     }
 
-    const opLower = operation.toLowerCase()
-
-    if (opLower.includes('collateral creation')) {
-      return 'COLLATERAL_CREATION'
+    // Map operation type keys (fixed, non-localized) to icon keys
+    switch (operationTypeKey) {
+      case 'nightRedemption':
+        return 'NIGHT_REDEMPTION'
+      case 'withdrawal':
+        return 'WITHDRAWAL'
+      case 'burn':
+        return 'BURN'
+      case 'mint':
+        return 'MINT'
+      case 'swap':
+      case 'swapCreated':
+      case 'swapResolved':
+      case 'swapCancel':
+        return 'SWAP'
+      case 'smartContract':
+        return 'SMART_CONTRACT'
+      case 'stakeUndelegation':
+        return 'STAKE_UNDELEGATION'
+      case 'stakingDelegated':
+      case 'stakeDelegation':
+        return 'STAKE_DELEGATION'
+      case 'stakeDeregistration':
+        return 'STAKE_DEREGISTRATION'
+      case 'stakeRegistration':
+        return 'STAKE_REGISTRATION'
+      case 'voteDelegation':
+        return 'VOTE_DELEGATION'
+      case 'collateralCreation':
+        return 'COLLATERAL_CREATION'
+      default:
+        return direction
     }
-    if (opLower.includes('withdrawal')) {
-      return 'WITHDRAWAL'
-    }
-    if (opLower.includes('burn')) {
-      return 'BURN'
-    }
-    if (opLower.includes('mint')) {
-      return 'MINT'
-    }
-    if (
-      opLower.includes('swap') ||
-      opLower.includes('swap created') ||
-      opLower.includes('swap resolved') ||
-      opLower.includes('swap cancel')
-    ) {
-      return 'SWAP'
-    }
-    if (opLower.includes('smart contract')) {
-      return 'SMART_CONTRACT'
-    }
-    if (opLower.includes('stake undelegation')) {
-      return 'STAKE_UNDELEGATION'
-    }
-    if (opLower.includes('staking delegated')) {
-      return 'STAKE_DELEGATION'
-    }
-    if (opLower.includes('stake deregistration')) {
-      return 'STAKE_DEREGISTRATION'
-    }
-    if (opLower.includes('stake delegation')) {
-      return 'STAKE_DELEGATION'
-    }
-    if (opLower.includes('stake registration')) {
-      return 'STAKE_REGISTRATION'
-    }
-    if (opLower.includes('vote delegation')) {
-      return 'VOTE_DELEGATION'
-    }
-
-    return direction
   }
 
   const iconKeyForStyle = getIconKeyForStyle(
     transaction.direction,
-    operationText,
+    operationTypeKey,
   )
+
+  // Determine effective direction for color purposes
+  // For NIGHT redemption, use delta to determine if spending (SENT) or receiving (RECEIVED)
+  const effectiveDirectionForColor = React.useMemo(() => {
+    // For NIGHT redemption, check net delta to determine spending vs receiving
+    if (operationTypeKey === 'nightRedemption') {
+      const primaryTokenDelta = Amounts.getAmount(
+        transaction.delta,
+        wallet.portfolioPrimaryTokenInfo.id,
+      )
+      if (primaryTokenDelta) {
+        const deltaQuantity = new BigNumber(primaryTokenDelta.quantity)
+        // Negative delta = spending (SENT), positive delta = receiving (RECEIVED)
+        return deltaQuantity.isNegative() ? 'SENT' : 'RECEIVED'
+      }
+    }
+    // For other operations, use the original direction
+    return transaction.direction
+  }, [
+    operationTypeKey,
+    transaction.delta,
+    transaction.direction,
+    wallet.portfolioPrimaryTokenInfo.id,
+  ])
 
   return (
     <TouchableOpacity
@@ -205,8 +252,8 @@ const TxListItemComponent = ({transaction}: Props) => {
       <Left>
         <Icon.Direction
           size={25}
-          transactionDirection={transaction.direction}
-          operation={operationText}
+          transactionDirection={effectiveDirectionForColor}
+          operation={operationTypeKey}
         />
       </Left>
 
@@ -214,7 +261,10 @@ const TxListItemComponent = ({transaction}: Props) => {
         <Text
           style={[
             a.body_2_md_medium,
-            {color: styleMap(p)[iconKeyForStyle].text},
+            {
+              color: styleMap(p, effectiveDirectionForColor)[iconKeyForStyle]
+                .text,
+            },
           ]}
           testID="transactionDirection"
         >

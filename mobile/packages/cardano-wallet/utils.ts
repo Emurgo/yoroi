@@ -381,6 +381,26 @@ export const getHexAddressingMap = async (wallet: YoroiWallet) => {
   )
 }
 
+/**
+ * Builds a stake address map for hardware wallet signing.
+ * Includes the reward address mapped to its staking derivation path.
+ * This is required for withdrawals in ORDINARY_TRANSACTION mode,
+ * which must use KEY_PATH instead of KEY_HASH.
+ */
+export const getStakeAddressMap = (
+  rewardAddressHex: string | undefined,
+  stakingDerivationPath: number[] | undefined,
+): {[addressHex: string]: Array<number>} => {
+  const stakeAddressMap: {[addressHex: string]: Array<number>} = {}
+
+  // Add reward address if both reward address and staking derivation path are available
+  if (stakingDerivationPath && rewardAddressHex) {
+    stakeAddressMap[rewardAddressHex] = stakingDerivationPath
+  }
+
+  return stakeAddressMap
+}
+
 export const getAddressedUtxos = (wallet: YoroiWallet) => {
   // Use wallet.utxos to exclude collateral UTXO from transaction operations
   // Collateral should not be used in regular transactions
