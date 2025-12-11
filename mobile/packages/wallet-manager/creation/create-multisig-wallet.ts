@@ -7,10 +7,9 @@ import {
   buildStakingScript,
   deriveMultisigAccount,
 } from '@yoroi/cardano-wallet'
-import {getLogger} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
-import {Chain, Wallet} from '@yoroi/types'
-import {Bip32PublicKeyHex, ScriptCbor} from '@yoroi/types'
+import {getLogger} from '@yoroi/logger'
+import {Bip32PublicKeyHex, Chain, ScriptCbor, Wallet} from '@yoroi/types'
 
 import {v4} from 'uuid'
 

@@ -105,9 +105,5 @@ export const createMultisigWalletFactories = (
       networkManagers[Chain.Network.Preprod],
       dependencies,
     ),
-    [Chain.Network.Preview]: makeMultisigWalletFactory(
-      networkManagers[Chain.Network.Preview],
-      dependencies,
-    ),
   } as const)
 }

@@ -9,7 +9,7 @@ import {
   convertRawUtxosToModernUtxos,
   createSendTx,
 } from '@yoroi/cardano-wallet'
-import {getLogger} from '@yoroi/common'
+import {getLogger} from '@yoroi/logger'
 import {MetadataDataValue, ModernUtxo, TransactionOutput} from '@yoroi/tx'
 import type {Address} from '@yoroi/types'
 import {TransactionCborHex, Wallet} from '@yoroi/types'

@@ -39,16 +39,6 @@ export function createWalletFactories(
     'cardano-bip44',
     dependencies,
   )
-  const ShelleyWalletPreview = makeCardanoWallet(
-    networkManagers[Chain.Network.Preview],
-    'cardano-cip1852',
-    dependencies,
-  )
-  const ByronWalletPreview = makeCardanoWallet(
-    networkManagers[Chain.Network.Preview],
-    'cardano-bip44',
-    dependencies,
-  )
 
   // Create multisig wallet factories
   const multisigFactories = createMultisigWalletFactories(
@@ -66,11 +56,6 @@ export function createWalletFactories(
       'cardano-cip1852': ShelleyWalletTestnet,
       'cardano-bip44': ByronWalletTestnet,
       'cardano-multisig': multisigFactories[Chain.Network.Preprod],
-    },
-    [Chain.Network.Preview]: {
-      'cardano-cip1852': ShelleyWalletPreview,
-      'cardano-bip44': ByronWalletPreview,
-      'cardano-multisig': multisigFactories[Chain.Network.Preview],
     },
   } as const)
 }

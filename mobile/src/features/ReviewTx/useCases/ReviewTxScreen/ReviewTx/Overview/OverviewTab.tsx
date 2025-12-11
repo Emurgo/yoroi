@@ -1,12 +1,11 @@
-import {isByron} from '@yoroi/cardano-wallet'
-import {formatTokenWithText} from '@yoroi/cardano-wallet'
+import {formatTokenWithText, isByron} from '@yoroi/cardano-wallet'
 import {
-  getLogger,
   parseBoolean,
   useAsyncStorage,
   useMutationWithInvalidations,
 } from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
+import {getLogger} from '@yoroi/logger'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Balance, Branded} from '@yoroi/types'
 import {useSelectedWallet, useWalletManager} from '@yoroi/wallet-manager'

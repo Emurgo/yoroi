@@ -2,7 +2,7 @@
  * Multisig account manager
  * Manages addresses for script-based multisig wallets
  */
-import {getLogger} from '@yoroi/common'
+import {getLogger} from '@yoroi/logger'
 import {Address, ScriptCbor} from '@yoroi/types'
 
 import {freeze} from 'immer'

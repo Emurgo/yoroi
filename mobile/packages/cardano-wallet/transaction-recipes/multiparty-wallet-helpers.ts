@@ -2,7 +2,7 @@
  * Multiparty transaction helpers for wallet operations
  * Builds transactions using multiple wallets' UTXOs
  */
-import {getLogger} from '@yoroi/common'
+import {getLogger} from '@yoroi/logger'
 import {
   type MultipartyInputWallet,
   type MultipartyTransactionResult,
