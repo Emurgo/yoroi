@@ -18,7 +18,12 @@ import {assertHasAllSigners} from '../common/signatureUtils'
 import {CardanoWalletDependencies} from '../dependencies'
 import {signMessageWithLedger, signTxWithLedger} from '../hw/hw'
 import {YoroiWallet} from '../types'
-import {copyFromCSL, getAddressedUtxos, getHexAddressingMap} from '../utils'
+import {
+  copyFromCSL,
+  getAddressedUtxos,
+  getHexAddressingMap,
+  getStakeAddressMap,
+} from '../utils'
 import {CardanoMobile, CardanoMobileWrapped} from '../wrappedCsl'
 
 export type CIP30LedgerExtension = {
@@ -131,13 +136,17 @@ export const cip30LedgerExtensionMaker = (
             : undefined
 
         const addressingMap = await getHexAddressingMap(wallet)
+        const stakeAddressMap = getStakeAddressMap(
+          wallet.rewardAddressHex,
+          stakingSigningPath,
+        )
         const payload = await toLedgerSignRequest(
           csl,
           cbor,
           wallet.networkManager.chainId,
           wallet.networkManager.protocolMagic,
           addressingMap,
-          addressingMap,
+          stakeAddressMap,
           getAddressedUtxos(wallet),
           [],
           stakingSigningPath,

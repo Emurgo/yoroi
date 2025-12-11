@@ -106,6 +106,7 @@ import {
   deriveRewardAddressFromAddress,
   deriveRewardAddressHex,
   getHexAddressingMap,
+  getStakeAddressMap,
 } from './utils'
 import {UtxoManager, makeUtxoManager} from './utxoManager/utxoManager'
 import {utxosMaker} from './utxoManager/utxos'
@@ -824,6 +825,10 @@ function createWalletObject(
     }
 
     const addressingMap = await getHexAddressingMap(wallet)
+    const stakeAddressMap = getStakeAddressMap(
+      state.rewardAddressHex,
+      stakingAddressing,
+    )
     const payload = await CardanoMobileWrapped.cslScope(async (csl) => {
       return await state.dependencies.toLedgerSignRequest(
         csl,
@@ -831,7 +836,7 @@ function createWalletObject(
         networkManager.chainId,
         networkManager.protocolMagic,
         addressingMap,
-        addressingMap,
+        stakeAddressMap,
         modernUtxosToCardanoAddressedUtxos(getAddressedUtxos()),
         [],
         stakingAddressing,
