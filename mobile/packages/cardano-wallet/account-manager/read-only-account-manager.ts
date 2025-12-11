@@ -1,4 +1,5 @@
-import {getLogger, isHex, time} from '@yoroi/common'
+import {isHex, time} from '@yoroi/common'
+import {getLogger} from '@yoroi/logger'
 import {
   Address,
   App,
@@ -270,7 +271,7 @@ async function discoverUsedAddressesByStakingCredential({
     tx.inputs?.forEach((input: WalletTransaction['inputs'][number]) => {
       if (input.address) allAddresses.add(input.address)
     })
-    tx.outputs?.forEach((output) => {
+    tx.outputs?.forEach((output: WalletTransaction['outputs'][number]) => {
       if (output.address) allAddresses.add(output.address)
     })
   }
@@ -458,15 +459,14 @@ export const readOnlyAccountManagerMaker = async ({
       }
 
       // Check if discovery was run recently (within the last hour)
-      const lastDiscoveryTime = await storage
-        .getItem(discoveryStorageKey)
-        .then((data) => {
-          if (typeof data === 'number' && data > 0) {
-            return data as number
-          }
-          return 0
-        })
-        .catch(() => 0)
+      const data = await storage.getItem(discoveryStorageKey)
+      const lastDiscoveryTime = (() => {
+        const parsed = data ? Number(data) : 0
+        if (typeof parsed === 'number' && parsed > 0) {
+          return parsed
+        }
+        return 0
+      })()
 
       const now = Date.now()
       const timeSinceLastDiscovery = now - lastDiscoveryTime

@@ -1,4 +1,4 @@
-import {App} from '@yoroi/types'
+import type {App} from '@yoroi/types'
 
 import {MMKV} from 'react-native-mmkv'
 
@@ -170,7 +170,10 @@ export const mountMMKVMultiStorage = <T = unknown, K extends string = string>(
       if (typeof keyExtractor === 'function') {
         return [keyExtractor(item) as K, item]
       }
-      return [String(item[keyExtractor]) as K, item]
+      return [
+        String((item as Record<string, unknown>)[keyExtractor as string]) as K,
+        item,
+      ]
     })
     const entriesWithKeys = entries.filter(([key]) => key != null && key !== '')
     return multiSet(entriesWithKeys, serializer as (item: unknown) => string)

@@ -1,11 +1,11 @@
-import {App, AppLoggerLevel} from '@yoroi/types'
+import {LoggerLevel, LoggerManager} from './types'
 
 /**
  * No-op logger that does nothing
  * Used as default when no logger is provided
  */
-export const noOpLogger: App.Logger.Manager = {
-  level: AppLoggerLevel.Debug,
+export const noOpLogger: LoggerManager = {
+  level: LoggerLevel.Debug,
   trail: [],
   filter: null,
   debug: () => {},
@@ -22,13 +22,13 @@ export const noOpLogger: App.Logger.Manager = {
  * Module-level logger instance
  * Defaults to noOpLogger until initialized by the app
  */
-let sharedLogger: App.Logger.Manager = noOpLogger
+let sharedLogger: LoggerManager = noOpLogger
 
 /**
  * Set the shared logger instance
  * Called by the app during initialization
  */
-export const setLogger = (logger: App.Logger.Manager): void => {
+export const setLogger = (logger: LoggerManager): void => {
   sharedLogger = logger
 }
 
@@ -36,4 +36,4 @@ export const setLogger = (logger: App.Logger.Manager): void => {
  * Get the current logger instance
  * Returns the shared logger (initialized by app) or noOpLogger
  */
-export const getLogger = (): App.Logger.Manager => sharedLogger
+export const getLogger = (): LoggerManager => sharedLogger

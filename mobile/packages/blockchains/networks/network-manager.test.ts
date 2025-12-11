@@ -1,4 +1,3 @@
-import {getLogger} from '@yoroi/common'
 import {createTokenManagerMock} from '@yoroi/portfolio'
 import {Chain} from '@yoroi/types'
 
@@ -7,19 +6,22 @@ import {networkConfigs} from './network-configs'
 import {buildNetworkManagers} from './network-manager'
 
 // Mock the shared logger
-jest.mock('@yoroi/common', () => {
-  const actual = jest.requireActual('@yoroi/common')
-  const mockLogger = {
-    error: jest.fn(),
-    level: 'Debug' as const,
-    debug: jest.fn(),
-    log: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    enable: jest.fn(),
-    disable: jest.fn(),
-    addTransport: jest.fn(),
-  }
+const mockLogger = {
+  error: jest.fn(),
+  level: 'Debug' as const,
+  debug: jest.fn(),
+  log: jest.fn(),
+  info: jest.fn(),
+  warn: jest.fn(),
+  enable: jest.fn(),
+  disable: jest.fn(),
+  addTransport: jest.fn(),
+  trail: [],
+  filter: null,
+}
+
+jest.mock('@yoroi/logger', () => {
+  const actual = jest.requireActual('@yoroi/logger')
   return {
     ...actual,
     getLogger: jest.fn(() => mockLogger),
@@ -32,7 +34,6 @@ describe('buildNetworkManagers', () => {
     [Chain.Network.Preprod]: createTokenManagerMock(),
     [Chain.Network.Preview]: createTokenManagerMock(),
   }
-  const mockLogger = getLogger()
   const mockApiMaker = jest.fn().mockReturnValue({
     getProtocolParams: jest.fn().mockResolvedValue({}),
     getBestBlock: jest.fn().mockResolvedValue({}),

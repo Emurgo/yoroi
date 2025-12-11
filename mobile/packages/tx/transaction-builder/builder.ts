@@ -1,6 +1,6 @@
 // Functional Transaction Builder using CSL TransactionBuilder directly
 import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
-import {getLogger} from '@yoroi/common'
+import {getLogger} from '@yoroi/logger'
 import {primaryTokenId as defaultPrimaryTokenId} from '@yoroi/portfolio'
 import {
   Address,

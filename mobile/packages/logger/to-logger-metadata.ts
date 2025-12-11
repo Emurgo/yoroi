@@ -1,8 +1,6 @@
-import {App} from '@yoroi/types'
+import {LoggerMetadata} from './types'
 
-export function toLoggerMetadata(
-  metadata: App.Logger.Metadata,
-): App.Logger.Metadata {
+export function toLoggerMetadata(metadata: LoggerMetadata): LoggerMetadata {
   return Object.keys(metadata).reduce((acc, key) => {
     let value = metadata[key]
     if (value instanceof Error) value = value.toString()

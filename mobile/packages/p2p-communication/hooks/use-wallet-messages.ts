@@ -1,4 +1,4 @@
-import {getLogger} from '@yoroi/common'
+import {getLogger} from '@yoroi/logger'
 
 import {useCallback, useEffect, useState} from 'react'
 

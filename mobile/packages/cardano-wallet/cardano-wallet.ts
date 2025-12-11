@@ -8,7 +8,8 @@ import type {
 } from '@yoroi/api'
 import {AppApi} from '@yoroi/api'
 import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
-import {getLogger, isNonNullable, throwLoggedError} from '@yoroi/common'
+import {isNonNullable} from '@yoroi/common'
+import {getLogger, throwLoggedError} from '@yoroi/logger'
 import {StakePoolInfoRequest, StakingInfo, StakingStatus} from '@yoroi/staking'
 import type {Datum, ModernUtxo, UnsignedTransaction} from '@yoroi/tx'
 import {
@@ -40,7 +41,7 @@ import {walletChecksum} from '@emurgo/cip4-js'
 import * as CSL from '@emurgo/cross-csl-core'
 import {Buffer} from 'buffer'
 import {freeze} from 'immer'
-import {defaultMemoize} from 'reselect'
+import {lruMemoize} from 'reselect'
 
 import {
   AccountManager,
@@ -141,7 +142,7 @@ type WalletState = {
   >
 }
 
-const _getUtxos = defaultMemoize((utxos: RawUtxo[], collateralId: string) => {
+const _getUtxos = lruMemoize((utxos: RawUtxo[], collateralId: string) => {
   // If collateral ID is explicitly set, filter that UTXO out
   if (collateralId.length > 0) {
     return utxos.filter((utxo) => utxo.utxo_id !== collateralId)
@@ -161,13 +162,14 @@ const _getUtxos = defaultMemoize((utxos: RawUtxo[], collateralId: string) => {
   return utxos
 })
 
-const _isUsedAddressIndexSelector = defaultMemoize((perAddressTxs) =>
-  Object.fromEntries(
-    Object.entries(perAddressTxs).map(([address, txs]) => [
-      address,
-      (txs as Array<string>).length > 0,
-    ]),
-  ),
+const _isUsedAddressIndexSelector = lruMemoize(
+  (perAddressTxs: Record<string, Array<string>>) =>
+    Object.fromEntries(
+      Object.entries(perAddressTxs).map(([address, txs]) => [
+        address,
+        (txs as Array<string>).length > 0,
+      ]),
+    ),
 )
 
 export const makeCardanoWallet = (
@@ -588,22 +590,24 @@ function createWalletObject(
       const addressedUtxos = modernUtxosToCardanoAddressedUtxos(modernUtxos)
       // Filter synchronously by checking if address contains the staking key
       const stakingKeyHashHex = getStakingKey().hash().toHex()
-      return addressedUtxos.filter((utxo) => {
-        try {
-          return CardanoMobileWrapped.cslScope((csl) => {
-            const addr = csl.Address.fromBech32(utxo.receiver)
-            if (!addr) return false
-            const baseAddr = csl.BaseAddress.fromAddress(addr)
-            if (!baseAddr) return false
-            const stakeCred = baseAddr.stakeCred()
-            const keyHash = stakeCred.toKeyhash()
-            if (!keyHash) return false
-            return keyHash.toHex() === stakingKeyHashHex
-          })
-        } catch {
-          return false
-        }
-      })
+      return addressedUtxos.filter(
+        (utxo: CardanoTypes.CardanoAddressedUtxo) => {
+          try {
+            return CardanoMobileWrapped.cslScope((csl) => {
+              const addr = csl.Address.fromBech32(utxo.receiver)
+              if (!addr) return false
+              const baseAddr = csl.BaseAddress.fromAddress(addr)
+              if (!baseAddr) return false
+              const stakeCred = baseAddr.stakeCred()
+              const keyHash = stakeCred.toKeyhash()
+              if (!keyHash) return false
+              return keyHash.toHex() === stakingKeyHashHex
+            })
+          } catch {
+            return false
+          }
+        },
+      )
     }
     throwLoggedError(getLogger())('getAllUtxosForKey staking not supported')
     return []
@@ -874,9 +878,11 @@ function createWalletObject(
     const appAdaVersion = await getCardanoAppMajorVersion(hwDeviceInfo, useUSB)
 
     // Check for voting registration in metadata (label 61284 = CatalystLabels.DATA)
-    const hasVotingRegistration = unsignedTx.metadata?.some(
-      (meta) => String(meta.label) === '61284' || Number(meta.label) === 61284,
-    )
+    const hasVotingRegistration =
+      unsignedTx.metadata?.some(
+        (meta) =>
+          String(meta.label) === '61284' || Number(meta.label) === 61284,
+      ) ?? false
 
     if (
       !doesCardanoAppVersionSupportCIP36(appAdaVersion) &&
@@ -995,7 +1001,7 @@ function createWalletObject(
 
       // Extract datum data from outputs
       const datumDatas = unsignedTx.outputs
-        .map((output) => output.datum)
+        .map((output: UnsignedTransaction['outputs'][number]) => output.datum)
         .filter(isNonNullable)
         .filter(
           (datum: Datum): datum is Exclude<Datum, {hash: string}> =>

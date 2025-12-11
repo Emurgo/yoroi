@@ -29,36 +29,9 @@ import {
   ApiUtxoDataAsset,
   ApiUtxoDataRequest,
 } from './api/cardano'
-import {
-  ApiErrorBadRequest,
-  ApiErrorConflict,
-  ApiErrorForbidden,
-  ApiErrorGone,
-  ApiErrorInvalidState,
-  ApiErrorNetwork,
-  ApiErrorNotFound,
-  ApiErrorResponseMalformed,
-  ApiErrorServerSide,
-  ApiErrorTooEarly,
-  ApiErrorTooManyRequests,
-  ApiErrorUnauthorized,
-  ApiErrorUnknown,
-  AppErrorInvalidState,
-  AppErrorLibraryFailed,
-  AppErrorWrongPassword,
-} from './errors'
 import {ApiResponse, ApiResponseError, ApiResponseSuccess} from './api/response'
 import {ApiHttpStatusCode} from './api/status-code'
 import {AppCacheInfo, AppCacheRecord, AppCacheRow} from './app/cache'
-import {
-  AppLoggerEntry,
-  AppLoggerLevel,
-  AppLoggerManager,
-  AppLoggerMessage,
-  AppLoggerMetadata,
-  AppLoggerTransporter,
-  AppLoggerTransporterOptions,
-} from './app/logger'
 import {AppMultiStorage, AppMultiStorageOptions} from './app/multi-storage'
 import {
   AppObservableMultiStorage,
@@ -83,8 +56,8 @@ import {
   BalanceToken,
 } from './balance/token'
 // Import validation functions for re-export
-import * as BrandedValidation from './branded/validation'
 import {ZERO_QUANTITY as ZERO_QUANTITY_CONST} from './branded/amount'
+import * as BrandedValidation from './branded/validation'
 import {
   CardanoAddress,
   CardanoMetadata,
@@ -104,22 +77,53 @@ import {
 } from './claim/api'
 import {ClaimInfo, ClaimManager, ClaimStatus} from './claim/claim'
 import {
+  ApiErrorBadRequest,
+  ApiErrorConflict,
+  ApiErrorForbidden,
+  ApiErrorGone,
+  ApiErrorInvalidState,
+  ApiErrorNetwork,
+  ApiErrorNotFound,
+  ApiErrorResponseMalformed,
+  ApiErrorServerSide,
+  ApiErrorTooEarly,
+  ApiErrorTooManyRequests,
+  ApiErrorUnauthorized,
+  ApiErrorUnknown,
+  AppErrorInvalidState,
+  AppErrorLibraryFailed,
+  AppErrorWrongPassword,
+} from './errors'
+import {
   ClaimApiErrorsAlreadyClaimed,
   ClaimApiErrorsExpired,
   ClaimApiErrorsInvalidRequest,
   ClaimApiErrorsNotFound,
   ClaimApiErrorsRateLimited,
   ClaimApiErrorsTooEarly,
+  ExchangeProviderNotFoundError,
+  ExchangeUnknownError,
+  ExchangeValidationError,
+  LinksErrorExtraParamsDenied,
+  LinksErrorForbiddenParamsProvided,
+  LinksErrorParamsValidationFailed,
+  LinksErrorRequiredParamsMissing,
+  LinksErrorSchemeNotImplemented,
+  LinksErrorUnsupportedAuthority,
+  LinksErrorUnsupportedVersion,
+  NumbersErrorInvalidAtomicValue,
+  ResolverErrorInvalidDomain,
+  ResolverErrorInvalidResponse,
+  ResolverErrorNotFound,
+  ResolverErrorUnsupportedTld,
+  ResolverErrorWrongBlockchain,
+  ScanErrorUnknown,
+  ScanErrorUnknownContent,
 } from './errors'
 import {ExchangeApi} from './exchange/api'
 import {ExchangeBlockchainCode} from './exchange/blockchain'
 import {ExchangeManagerOptions} from './exchange/build'
 import {ExchangeCoin} from './exchange/coin'
-import {
-  ExchangeProviderNotFoundError,
-  ExchangeUnknownError,
-  ExchangeValidationError,
-} from './errors'
 import {ExchangeFiat} from './exchange/fiat'
 import {ExchangeManager} from './exchange/manager'
 import {ExchangeOrderType} from './exchange/order-type'
@@ -154,15 +158,6 @@ import {
   ScanFeature,
 } from './links/cardano-actions'
 import {
-  LinksErrorExtraParamsDenied,
-  LinksErrorForbiddenParamsProvided,
-  LinksErrorParamsValidationFailed,
-  LinksErrorRequiredParamsMissing,
-  LinksErrorSchemeNotImplemented,
-  LinksErrorUnsupportedAuthority,
-  LinksErrorUnsupportedVersion,
-} from './errors'
-import {
   LinksBrowserLaunchDappUrlParams,
   LinksExchangeShowCreateResultParams,
   LinksPartnerInfoParams,
@@ -196,7 +191,6 @@ import {
   PushNotificationEvent,
 } from './notifications/manager'
 import {NumbersAtomicValue} from './numbers/atomic-value'
-import {NumbersErrorInvalidAtomicValue} from './errors'
 import {NumbersRatio} from './numbers/ratio'
 import {
   PortfolioTokenActivity,
@@ -267,18 +261,10 @@ import {
   ResolverApi,
   ResolverStrategy,
 } from './resolver/api'
-import {
-  ResolverErrorInvalidDomain,
-  ResolverErrorInvalidResponse,
-  ResolverErrorNotFound,
-  ResolverErrorUnsupportedTld,
-  ResolverErrorWrongBlockchain,
-} from './errors'
 import {ResolverManager} from './resolver/manager'
 import {ResolverNameServer} from './resolver/name-server'
 import {ResolverReceiver} from './resolver/receiver'
 import {ResolverStorage} from './resolver/storage'
-import {ScanErrorUnknown, ScanErrorUnknownContent} from './errors'
 import {SwapAggregator} from './swap/aggregator'
 import {
   SwapApi,
@@ -474,17 +460,6 @@ export namespace App {
     extends AppCacheRow<T, K> {}
 
   export interface Api extends AppApi {}
-
-  export namespace Logger {
-    export type Level = AppLoggerLevel
-    export const Level = AppLoggerLevel
-    export type Message = AppLoggerMessage
-    export type Metadata = AppLoggerMetadata
-    export type Transporter = AppLoggerTransporter
-    export type TransporterOptions = AppLoggerTransporterOptions
-    export type Entry = AppLoggerEntry
-    export type Manager = AppLoggerManager
-  }
 }
 
 export namespace Swap {
@@ -567,8 +542,8 @@ export type {
   TokenFingerprint,
   TokenId,
   TransactionCbor,
-  TransactionCborHex,
   TransactionCborBase64,
+  TransactionCborHex,
   TransactionHash,
   TransactionId,
   UtxoId,
@@ -622,12 +597,13 @@ export namespace Branded {
   export const asDatumCbor = BrandedValidation.asDatumCbor
   export const asTransactionCbor = BrandedValidation.asTransactionCbor
   export const asTransactionCborHex = BrandedValidation.asTransactionCborHex
-  export const asTransactionCborBase64 = BrandedValidation.asTransactionCborBase64
+  export const asTransactionCborBase64 =
+    BrandedValidation.asTransactionCborBase64
   export const asDRepId = BrandedValidation.asDRepId
   export const asGovernanceActionId = BrandedValidation.asGovernanceActionId
   export const asAnchorUrl = BrandedValidation.asAnchorUrl
   export const asAnchorHash = BrandedValidation.asAnchorHash
-  
+
   // Re-export constants
   export const ZERO_QUANTITY = ZERO_QUANTITY_CONST
 }
@@ -986,6 +962,7 @@ export namespace Wallet {
 export type {BaseAsset} from './wallet/transactions'
 
 // Re-export transaction types at top level for convenience
+export type {TransactionInfo} from './wallet/transactions'
 export {TRANSACTION_DIRECTION, TRANSACTION_STATUS, TRANSACTION_TYPE}
 export type {
   TransactionAssurance,
@@ -998,7 +975,6 @@ export type {
   TxMetadataInfo,
   WalletTransaction,
 }
-export type {TransactionInfo} from './wallet/transactions'
 
 export namespace Exchange {
   export type BlockchainCode = ExchangeBlockchainCode
@@ -1101,7 +1077,5 @@ export namespace Claim {
 export * from './api/cardano'
 export * from './helpers/storage'
 export * from './helpers/types'
-// Export AppLoggerLevel directly to avoid circular dependency issues
-export {AppLoggerLevel} from './app/logger'
 // Export all errors from centralized location
 export * from './errors'

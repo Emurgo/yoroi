@@ -1,5 +1,6 @@
 import type {AccountStateResponse} from '@yoroi/api'
-import {getLogger, isHex} from '@yoroi/common'
+import {isHex} from '@yoroi/common'
+import {getLogger} from '@yoroi/logger'
 import {
   CertificateKind,
   DRepValue,

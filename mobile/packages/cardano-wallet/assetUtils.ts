@@ -1,5 +1,5 @@
 import {RawUtxo} from '@yoroi/api'
-import {getLogger} from '@yoroi/common'
+import {getLogger} from '@yoroi/logger'
 import {normalizeToAddress} from '@yoroi/tx'
 
 import {Address} from '@emurgo/cross-csl-core'

@@ -1,4 +1,4 @@
-import {getLogger} from '@yoroi/common'
+import {getLogger} from '@yoroi/logger'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'

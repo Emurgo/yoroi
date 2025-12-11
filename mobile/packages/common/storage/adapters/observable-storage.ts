@@ -1,4 +1,4 @@
-import {App} from '@yoroi/types'
+import type {App} from '@yoroi/types'
 
 import {observerMaker} from '../../observer/observer'
 import {intersection} from '../../utils/arrays'

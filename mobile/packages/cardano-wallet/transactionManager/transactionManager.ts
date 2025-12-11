@@ -1,6 +1,6 @@
 import {TipStatusResponse, TxHistoryRequest, WalletContext} from '@yoroi/api'
 import {PromiseAllLimited, isArray, parseSafe} from '@yoroi/common'
-import {getLogger} from '@yoroi/common'
+import {getLogger} from '@yoroi/logger'
 import {RemoteCertificateMeta} from '@yoroi/staking'
 import {CertificateKind as CertificateKindValue} from '@yoroi/tx'
 import {
@@ -15,7 +15,7 @@ import {
 
 import {fromPairs, mapValues, max} from 'lodash'
 import DeviceInfo from 'react-native-device-info'
-import {defaultMemoize} from 'reselect'
+import {lruMemoize} from 'reselect'
 
 import * as yoroiApi from '../api/api'
 import {ApiHistoryError} from '../errors'
@@ -86,11 +86,11 @@ export async function createTransactionManager(
   const subscriptions: Array<
     (transactions: TransactionManagerState['transactions']) => void
   > = []
-  const perAddressTxsSelectorMemoized = defaultMemoize(perAddressTxsSelector)
-  const perAddressCertificatesSelectorMemoized = defaultMemoize(
+  const perAddressTxsSelectorMemoized = lruMemoize(perAddressTxsSelector)
+  const perAddressCertificatesSelectorMemoized = lruMemoize(
     perAddressCertificatesSelector,
   )
-  const confirmationCountsSelectorMemoized = defaultMemoize(
+  const confirmationCountsSelectorMemoized = lruMemoize(
     confirmationCountsSelector,
   )
 
@@ -927,11 +927,10 @@ const parseTx = (
   if (!data) return
 
   const isTx = (data: unknown): data is WalletTransaction => {
-    const tx = data as WalletTransaction
+    if (!exists(data) || !isObject(data)) return false
+    const tx = data as Record<string, unknown>
 
     return (
-      exists(tx) &&
-      isObject(tx) &&
       isString(tx.id) &&
       isString(tx.status) &&
       isString(tx.lastUpdatedAt) &&

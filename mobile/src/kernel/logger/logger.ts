@@ -1,5 +1,5 @@
 import {numberReplacer} from '@yoroi/common'
-import {App} from '@yoroi/types'
+import {Logger} from '@yoroi/logger'
 
 import {freeze} from 'immer'
 
@@ -7,10 +7,10 @@ const TRAIL_LIMIT = 500
 
 type LoggerState = {
   enabled: boolean
-  trail: Array<App.Logger.Entry>
+  trail: Array<Logger.Entry>
   filter: RegExp | null
-  level: App.Logger.Level
-  transporters: App.Logger.Transporter[]
+  level: Logger.Level
+  transporters: Logger.Transporter[]
 }
 
 let loggerInstance: LoggerState | null = null
@@ -20,7 +20,7 @@ function createLoggerState(): LoggerState {
     enabled: false,
     trail: [],
     filter: null,
-    level: App.Logger.Level.Info,
+    level: Logger.Level.Info,
     transporters: [],
   }
 }
@@ -36,7 +36,7 @@ function transport({
   level,
   message,
   metadata,
-}: Pick<App.Logger.TransporterOptions, 'level' | 'message' | 'metadata'>) {
+}: Pick<Logger.TransporterOptions, 'level' | 'message' | 'metadata'>) {
   const state = getLoggerState()
   if (!state.enabled) return
   if (loggerHierarchy[level] > loggerHierarchy[state.level]) return
@@ -53,9 +53,9 @@ function transport({
   for (const transport of state.transporters) transport(entry)
 }
 
-function trailTransporter(options: App.Logger.TransporterOptions) {
+function trailTransporter(options: Logger.TransporterOptions) {
   const state = getLoggerState()
-  const newEntry: App.Logger.Entry = {
+  const newEntry: Logger.Entry = {
     ...options,
     message: options.message.toString(),
     id: `${Math.random().toString(36).slice(2)}`,
@@ -64,34 +64,34 @@ function trailTransporter(options: App.Logger.TransporterOptions) {
   state.trail = state.trail.slice(0, TRAIL_LIMIT)
 }
 
-function createLogger(): App.Logger.Manager {
+function createLogger(): Logger.Manager {
   return {
-    debug(message: string, metadata: App.Logger.Metadata = {}) {
-      const entry = {level: App.Logger.Level.Debug, message, metadata}
+    debug(message: string, metadata: Logger.Metadata = {}) {
+      const entry = {level: Logger.Level.Debug, message, metadata}
       transport(entry)
     },
 
-    log(message: string, metadata: App.Logger.Metadata = {}) {
-      const entry = {level: App.Logger.Level.Log, message, metadata}
+    log(message: string, metadata: Logger.Metadata = {}) {
+      const entry = {level: Logger.Level.Log, message, metadata}
       transport(entry)
     },
 
-    info(message: string, metadata: App.Logger.Metadata = {}) {
-      const entry = {level: App.Logger.Level.Info, message, metadata}
+    info(message: string, metadata: Logger.Metadata = {}) {
+      const entry = {level: Logger.Level.Info, message, metadata}
       transport(entry)
     },
 
-    warn(message: string, metadata: App.Logger.Metadata = {}) {
-      const entry = {level: App.Logger.Level.Warn, message, metadata}
+    warn(message: string, metadata: Logger.Metadata = {}) {
+      const entry = {level: Logger.Level.Warn, message, metadata}
       transport(entry)
     },
 
-    error(error: Error | string, metadata: App.Logger.Metadata = {}) {
-      const entry = {level: App.Logger.Level.Error, message: error, metadata}
+    error(error: Error | string, metadata: Logger.Metadata = {}) {
+      const entry = {level: Logger.Level.Error, message: error, metadata}
       transport(entry)
     },
 
-    addTransport(transport: App.Logger.Transporter) {
+    addTransport(transport: Logger.Transporter) {
       const state = getLoggerState()
       state.transporters.push(transport)
       return () => {
@@ -132,16 +132,16 @@ function createLogger(): App.Logger.Manager {
       return state.level
     },
 
-    set level(value: App.Logger.Level) {
+    set level(value: Logger.Level) {
       const state = getLoggerState()
       state.level = value
     },
   }
 }
 
-let loggerSingleton: App.Logger.Manager | null = null
+let loggerSingleton: Logger.Manager | null = null
 
-export function getLogger(): App.Logger.Manager {
+export function getLogger(): Logger.Manager {
   if (!loggerSingleton) {
     loggerSingleton = createLogger()
   }
@@ -151,9 +151,9 @@ export function getLogger(): App.Logger.Manager {
 export const logger = getLogger()
 
 const loggerHierarchy = freeze({
-  [App.Logger.Level.Debug]: 4,
-  [App.Logger.Level.Log]: 3,
-  [App.Logger.Level.Info]: 2,
-  [App.Logger.Level.Warn]: 1,
-  [App.Logger.Level.Error]: 0,
+  [Logger.Level.Debug]: 4,
+  [Logger.Level.Log]: 3,
+  [Logger.Level.Info]: 2,
+  [Logger.Level.Warn]: 1,
+  [Logger.Level.Error]: 0,
 })

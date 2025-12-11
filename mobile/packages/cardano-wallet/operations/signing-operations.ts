@@ -7,8 +7,7 @@ import {Wallet} from '@yoroi/types'
 import * as CSL from '@emurgo/cross-csl-core'
 import {Buffer} from 'buffer'
 
-import {CardanoMobile} from '../wrappedCsl'
-import {CardanoMobileWrapped} from '../wrappedCsl'
+import {CardanoMobile, CardanoMobileWrapped} from '../wrappedCsl'
 
 /**
  * Sign a transaction with a decrypted master key

@@ -14,10 +14,13 @@ export type PortfolioTokenActivity = Readonly<{
   // volume: PortfolioActivityRecord
 }>
 
-export enum PortfolioTokenActivityWindow {
-  OneDay = '24h',
-  OneWeek = '7d',
-  OneMonth = '30d',
-  OneYear = '1y',
-  All = 'all',
-}
+export const PortfolioTokenActivityWindow = {
+  OneDay: '24h',
+  OneWeek: '7d',
+  OneMonth: '30d',
+  OneYear: '1y',
+  All: 'all',
+} as const
+
+export type PortfolioTokenActivityWindow =
+  (typeof PortfolioTokenActivityWindow)[keyof typeof PortfolioTokenActivityWindow]

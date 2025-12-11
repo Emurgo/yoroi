@@ -26,15 +26,6 @@ describe('governance config', () => {
     })
   })
 
-  it('should have correct GOVERNANCE_ENDPOINTS for Preview', () => {
-    expect(GOVERNANCE_ENDPOINTS[Chain.Network.Preview]).toEqual({
-      getStakeKeyState:
-        'https://yoroi-backend-zero-preview.emurgornd.com/stakekeys/{{STAKE_KEY_HASH}}/state',
-      getDRepById:
-        'https://yoroi-backend-zero-preview.emurgornd.com/dreps/{{DREP_ID}}/state',
-    })
-  })
-
   it('should have correct GOVERNANCE_YOROI_DREP_ID_HEX (legacy)', () => {
     expect(GOVERNANCE_YOROI_DREP_ID_HEX).toBe(
       '0655f3a1c76788d839212adc459b188b84e680f30ae944c593fa18ae',
@@ -61,12 +52,6 @@ describe('governance config', () => {
 
   it('should return correct DRep ID for Preprod', () => {
     expect(getYoroiDrepIdHex(Chain.Network.Preprod)).toBe(
-      GOVERNANCE_YOROI_DREP_ID_HEX_PREPROD,
-    )
-  })
-
-  it('should default to preprod for Preview network', () => {
-    expect(getYoroiDrepIdHex(Chain.Network.Preview)).toBe(
       GOVERNANCE_YOROI_DREP_ID_HEX_PREPROD,
     )
   })

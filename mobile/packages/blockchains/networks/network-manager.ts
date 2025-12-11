@@ -1,9 +1,6 @@
-import {
-  getLogger,
-  mountMMKVStorage,
-  observableStorageMaker,
-} from '@yoroi/common'
+import {mountMMKVStorage, observableStorageMaker} from '@yoroi/common'
 import {explorerManager} from '@yoroi/explorers'
+import {getLogger} from '@yoroi/logger'
 import {Api, Chain, Network} from '@yoroi/types'
 
 import {freeze} from 'immer'

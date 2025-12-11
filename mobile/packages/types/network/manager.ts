@@ -10,9 +10,12 @@ import {ExplorersManager} from '../explorers/manager'
 import {PortfolioTokenInfo} from '../portfolio/info'
 import {PortfolioManagerToken} from '../portfolio/manager'
 
-export enum NetworkBlockchains {
-  Cardano = 'cardano',
-}
+export const NetworkBlockchains = {
+  Cardano: 'cardano',
+} as const
+
+export type NetworkBlockchains =
+  (typeof NetworkBlockchains)[keyof typeof NetworkBlockchains]
 
 type NetworkConfigCardano = {
   blockchain: NetworkBlockchains

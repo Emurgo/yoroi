@@ -1,4 +1,4 @@
-import {Api, App} from '@yoroi/types'
+import type {Api, App} from '@yoroi/types'
 
 import {isExpired} from './is-expired'
 import {recordWithETag} from './record-with-etag'
