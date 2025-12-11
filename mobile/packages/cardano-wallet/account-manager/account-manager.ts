@@ -1,5 +1,6 @@
 import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
-import {getLogger, parseSafe} from '@yoroi/common'
+import {parseSafe} from '@yoroi/common'
+import {getLogger} from '@yoroi/logger'
 import {
   Address,
   App,
@@ -10,7 +11,7 @@ import {
 } from '@yoroi/types'
 
 import _ from 'lodash'
-import {defaultMemoize} from 'reselect'
+import {lruMemoize} from 'reselect'
 
 import * as legacyApi from '../api/api'
 import {CardanoTypes} from '../types'
@@ -164,7 +165,7 @@ export function createAddressChain(
   let addresses: Address[] = initialAddresses ?? []
   let isInitialized = initialAddresses != null && initialAddresses.length > 0
   const subscriptions: Array<(addresses: Address[]) => unknown> = []
-  const addressToIdxSelector = defaultMemoize(_addressToIdxSelector)
+  const addressToIdxSelector = lruMemoize(_addressToIdxSelector)
   let currentLastUsedIndex = lastUsedIndex
   let currentLastUsedIndexVisual = lastUsedIndexVisual
 

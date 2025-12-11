@@ -114,6 +114,7 @@
     "immer": "10.1.1",
     "react": "19.0.0",
     "react-native": "0.79.5",
+    "reselect": "^5.1.1",
     "rxjs": "7.8.2",
     "zod": "3.25.17"
   },
@@ -125,4 +126,3 @@
     "registry": "https://registry.npmjs.org/"
   }
 }
-

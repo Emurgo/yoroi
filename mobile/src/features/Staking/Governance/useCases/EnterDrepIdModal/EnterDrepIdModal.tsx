@@ -29,7 +29,6 @@ export type Props = {
 const FIND_DREPS_LINKS: Record<Chain.SupportedNetworks, string> = {
   [Chain.Network.Preprod]: 'https://preprod.cexplorer.io/drep',
   [Chain.Network.Mainnet]: 'https://beta.cexplorer.io/drep',
-  [Chain.Network.Preview]: 'https://preview.cexplorer.io/drep',
 }
 
 export const HEIGHT_WITH_CARD = 660

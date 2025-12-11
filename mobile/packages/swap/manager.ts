@@ -1,4 +1,5 @@
-import {getLogger, isLeft, isRight} from '@yoroi/common'
+import {isLeft, isRight} from '@yoroi/common'
+import {getLogger} from '@yoroi/logger'
 import {Api, Portfolio, Swap} from '@yoroi/types'
 
 import {freeze} from 'immer'

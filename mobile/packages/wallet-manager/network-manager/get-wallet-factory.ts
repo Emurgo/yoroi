@@ -1,6 +1,6 @@
 import type {CardanoWalletDependencies} from '@yoroi/cardano-wallet'
 import {makeCardanoWallet} from '@yoroi/cardano-wallet'
-import {getLogger, throwLoggedError} from '@yoroi/common'
+import {getLogger, throwLoggedError} from '@yoroi/logger'
 import {Chain, Network, Wallet} from '@yoroi/types'
 
 import {freeze} from 'immer'
@@ -38,16 +38,6 @@ export function createWalletFactories(
     'cardano-bip44',
     dependencies,
   )
-  const ShelleyWalletPreview = makeCardanoWallet(
-    networkManagers[Chain.Network.Preview],
-    'cardano-cip1852',
-    dependencies,
-  )
-  const ByronWalletPreview = makeCardanoWallet(
-    networkManagers[Chain.Network.Preview],
-    'cardano-bip44',
-    dependencies,
-  )
 
   return freeze({
     [Chain.Network.Mainnet]: {
@@ -57,10 +47,6 @@ export function createWalletFactories(
     [Chain.Network.Preprod]: {
       'cardano-cip1852': ShelleyWalletTestnet,
       'cardano-bip44': ByronWalletTestnet,
-    },
-    [Chain.Network.Preview]: {
-      'cardano-cip1852': ShelleyWalletPreview,
-      'cardano-bip44': ByronWalletPreview,
     },
   } as const)
 }

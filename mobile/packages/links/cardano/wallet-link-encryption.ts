@@ -1,4 +1,5 @@
-import {Hex, getLogger, hex} from '@yoroi/common'
+import {Hex, hex} from '@yoroi/common'
+import {getLogger} from '@yoroi/logger'
 import {App} from '@yoroi/types'
 
 import {Buffer} from '@craftzdog/react-native-buffer'

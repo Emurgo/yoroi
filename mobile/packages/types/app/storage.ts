@@ -4,10 +4,10 @@ import {MaybePromise} from '../helpers/types'
 
 export type AppStorageFolderName = `${string}/`
 
-export interface AppStorage<
+export type AppStorage<
   IsAsync extends boolean = true,
   Key extends string = string,
-> {
+> = {
   join: (folderName: AppStorageFolderName) => AppStorage<IsAsync, Key>
   getItem: <T = unknown, K extends string = Key>(
     key: K,

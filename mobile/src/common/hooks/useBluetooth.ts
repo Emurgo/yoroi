@@ -8,7 +8,7 @@ import {logger} from '~/kernel/logger/logger'
 
 import {useBackgroundTimerControl} from '../providers/BackgroundTimerContext'
 
-export interface BluetoothDevice {
+export type BluetoothDevice = {
   id: string
   name: string | null
   rssi: number | null
@@ -16,7 +16,7 @@ export interface BluetoothDevice {
   device: Device
 }
 
-export interface BluetoothState {
+export type BluetoothState = {
   isScanning: boolean
   isConnected: boolean
   isEnabled: boolean
@@ -26,7 +26,7 @@ export interface BluetoothState {
   isRequestingPermissions: boolean
 }
 
-export interface UseBluetoothReturn {
+export type UseBluetoothReturn = {
   state: BluetoothState
 
   startScan: ({timeout}: {timeout?: number}) => Promise<void>

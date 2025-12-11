@@ -1,6 +1,7 @@
 import {RawUtxo, toAssetNameHex, toPolicyId} from '@yoroi/api'
 import {cardanoConfig} from '@yoroi/blockchains'
-import {getLogger, isHex} from '@yoroi/common'
+import {isHex} from '@yoroi/common'
+import {getLogger} from '@yoroi/logger'
 import {
   CIP30TransactionError,
   RemoteUnspentOutput,

@@ -1,6 +1,6 @@
 // TODO: Inject logger via dependency injection
 // For now, keeping kernel import - packages need refactoring to inject dependencies
-import {getLogger} from '@yoroi/common'
+import {getLogger} from '@yoroi/logger'
 import {App, HW, Wallet} from '@yoroi/types'
 
 export const withUSB = (meta: Wallet.Meta, deviceObj: HW.DeviceObj) => {

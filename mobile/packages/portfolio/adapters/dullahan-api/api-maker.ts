@@ -42,7 +42,7 @@ export const portfolioApiMaker = ({
   maxConcurrentRequests: number
   request?: FetchData
 }): Portfolio.Api.Api => {
-  const config = apiConfig[network]
+  const config = apiConfig[network]!
   return freeze(
     {
       async tokenDiscovery(id) {

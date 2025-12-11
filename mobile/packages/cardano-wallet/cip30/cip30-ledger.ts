@@ -138,7 +138,7 @@ export const cip30LedgerExtensionMaker = (
         const addressingMap = await getHexAddressingMap(wallet)
         const stakeAddressMap = getStakeAddressMap(
           wallet.rewardAddressHex,
-          stakingSigningPath,
+          stakingSigningPath as number[] | undefined,
         )
         const payload = await toLedgerSignRequest(
           csl,
@@ -149,7 +149,7 @@ export const cip30LedgerExtensionMaker = (
           stakeAddressMap,
           getAddressedUtxos(wallet),
           [],
-          stakingSigningPath,
+          stakingSigningPath as number[] | undefined,
         )
 
         const signedLedgerTx = await signTxWithLedger(

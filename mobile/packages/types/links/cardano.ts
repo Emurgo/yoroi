@@ -1,11 +1,11 @@
-export interface LinksUriRules {
+export type LinksUriRules = {
   readonly requiredParams: ReadonlyArray<string>
   readonly optionalParams: ReadonlyArray<string>
   readonly forbiddenParams: ReadonlyArray<string>
   readonly extraParams: 'include' | 'deny' | 'drop'
 }
 
-export interface LinksUriConfig {
+export type LinksUriConfig = {
   readonly rules: LinksUriRules
 
   readonly scheme?: string
@@ -14,7 +14,7 @@ export interface LinksUriConfig {
   readonly path?: string
 }
 
-export interface LinksWebCardanoUriConfig extends LinksUriConfig {
+export type LinksWebCardanoUriConfig = LinksUriConfig & {
   readonly scheme: 'web+cardano'
   readonly authority:
     | ''

@@ -1,4 +1,4 @@
-import {getLogger} from '@yoroi/common'
+import {getLogger} from '@yoroi/logger'
 import {Links} from '@yoroi/types'
 
 import {castDraft, freeze, produce} from 'immer'

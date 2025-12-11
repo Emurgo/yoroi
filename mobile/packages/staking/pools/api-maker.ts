@@ -2,10 +2,10 @@ import {
   FetchData,
   chunk,
   fetchData,
-  getLogger,
   mergeRecords,
   valueIntoRecord,
 } from '@yoroi/common'
+import {getLogger} from '@yoroi/logger'
 
 import {freeze} from 'immer'
 

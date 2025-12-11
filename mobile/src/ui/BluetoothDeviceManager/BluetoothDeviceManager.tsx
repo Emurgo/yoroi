@@ -7,7 +7,7 @@ import {BluetoothDevice, useBluetooth} from '~/common/hooks/useBluetooth'
 import {logger} from '~/kernel/logger/logger'
 import {Button, ButtonType} from '~/ui/Button/Button'
 
-interface BluetoothDeviceManagerProps {
+type BluetoothDeviceManagerProps = {
   onDeviceSelect?: (deviceId: string) => void
   showConnectionStatus?: boolean
 }
@@ -259,7 +259,7 @@ export const BluetoothDeviceManager: React.FC<BluetoothDeviceManagerProps> = ({
   )
 }
 
-interface DeviceCardProps {
+type DeviceCardProps = {
   device: BluetoothDevice
   index: number
   onConnect: (deviceId: string) => void

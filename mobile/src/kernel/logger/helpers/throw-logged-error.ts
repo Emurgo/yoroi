@@ -1,4 +1,4 @@
-import {throwLoggedError as tle} from '@yoroi/common'
+import {throwLoggedError as tle} from '@yoroi/logger'
 
 import {logger} from '~/kernel/logger/logger'
 

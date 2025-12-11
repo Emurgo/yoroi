@@ -1,6 +1,6 @@
 import {cardanoConfig} from '@yoroi/blockchains'
 import {isHex} from '@yoroi/common'
-import {getLogger} from '@yoroi/common'
+import {getLogger} from '@yoroi/logger'
 import {
   ModernUtxo,
   NoOutputsError,
@@ -104,13 +104,13 @@ export async function createUtxoConsolidationTx({
       const tokenIdBranded = Branded.asTokenId(tokenId)
       if (tokenIdBranded === primaryTokenId) {
         // Sum ADA separately
-        totalAdaFromConsolidation += BigInt(quantity)
+        totalAdaFromConsolidation += BigInt(quantity as string | number)
       } else {
         // Send all non-ADA tokens
         const current = BigInt(
           consolidatedAmounts[tokenIdBranded] ?? Branded.ZERO_QUANTITY,
         )
-        const toAdd = BigInt(quantity)
+        const toAdd = BigInt(quantity as string | number)
         consolidatedAmounts[tokenIdBranded] = (
           current + toAdd
         ).toString() as Balance.Quantity

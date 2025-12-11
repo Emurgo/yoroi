@@ -1,5 +1,5 @@
 import {YoroiWallet} from '@yoroi/cardano-wallet'
-import {getLogger, throwLoggedError} from '@yoroi/common'
+import {getLogger, throwLoggedError} from '@yoroi/logger'
 import {App, Chain, Wallet} from '@yoroi/types'
 
 import * as React from 'react'
@@ -38,9 +38,6 @@ export const WalletManagerProvider: React.FC<
       ),
       [Chain.Network.Preprod]: walletManager.getNetworkManager(
         Chain.Network.Preprod,
-      ),
-      [Chain.Network.Preview]: walletManager.getNetworkManager(
-        Chain.Network.Preview,
       ),
     }),
     [walletManager],

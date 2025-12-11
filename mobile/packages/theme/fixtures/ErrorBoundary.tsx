@@ -5,7 +5,7 @@ import {
 } from 'react-error-boundary'
 import {Text, View} from 'react-native'
 
-interface Props {
+type Props = {
   children: React.ReactNode
 }
 

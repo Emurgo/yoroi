@@ -34,7 +34,7 @@ import * as bech32 from 'bech32'
 
 import {Addressing, AddressingAddress, Bip44DerivationLevels} from '../types'
 
-export interface LedgerUnsignedTx {
+export type LedgerUnsignedTx = {
   senderUtxos: Array<{
     receiver: string
     txHash: string

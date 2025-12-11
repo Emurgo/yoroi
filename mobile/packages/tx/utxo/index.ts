@@ -44,7 +44,7 @@ import {
   UtxoDiffToBestBlock,
 } from './models'
 
-export interface UtxoStorage {
+export type UtxoStorage = {
   getUtxoAtSafePoint(): Promise<UtxoAtSafePoint | undefined>
   getUtxoDiffToBestBlock(): Promise<UtxoDiffToBestBlock[]>
   replaceUtxoAtSafePoint(utxos: Utxo[], safeBlockHash: string): Promise<void>

@@ -1,4 +1,4 @@
-import {App} from '@yoroi/types'
+import type {App} from '@yoroi/types'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
@@ -125,13 +125,16 @@ export const mountAsyncMultiStorage = <T = unknown>(
       if (typeof keyExtractor === 'function') {
         return [keyExtractor(item), item]
       }
-      return [String(item[keyExtractor]), item]
+      return [
+        String((item as Record<string, unknown>)[keyExtractor as string]),
+        item,
+      ]
     })
     const entriesWithKeys = entries.filter(([key]) => key != null && key !== '')
     return multiSet(entriesWithKeys, serializer as (item: unknown) => string)
   }
   const readAll = () =>
-    getAllKeysStorage<string>().then((keysToRead) =>
+    getAllKeysStorage<string>().then((keysToRead: ReadonlyArray<string>) =>
       multiGet<T | null>(keysToRead, deserializer),
     )
   const readMany = (keysToRead: ReadonlyArray<string>) =>
@@ -139,7 +142,7 @@ export const mountAsyncMultiStorage = <T = unknown>(
   const removeMany = (keysToRead: ReadonlyArray<string>) =>
     dataStorage.multiRemove(keysToRead)
   const getAllKeys = <K extends string = string>() =>
-    getAllKeysStorage<K>().then((keys) => keys)
+    getAllKeysStorage<K>().then((keys: ReadonlyArray<K>) => keys)
 
   return {
     getAllKeys,

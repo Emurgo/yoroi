@@ -18,10 +18,12 @@ export const convertNft = (options: {
   const {metadata, storageUrl, policyId, nameHex} = options
   const fingerprint = getAssetFingerprint(policyId, nameHex)
   const description = hasDescriptionProperty(metadata)
-    ? normalizeProperty(metadata.description)
+    ? normalizeProperty(
+        (metadata as {description: string | string[]}).description,
+      )
     : undefined
   const originalImage = hasImageProperty(metadata)
-    ? normalizeProperty(metadata.image)
+    ? normalizeProperty((metadata as {image: string | string[]}).image)
     : undefined
   const isIpfsImage = !!originalImage?.startsWith('ipfs://')
   const convertedImage = isIpfsImage
@@ -32,7 +34,7 @@ export const convertNft = (options: {
   const displayAssetName = domainNormalizer(policyId, toDisplayAssetName(id))
 
   const name = hasNameProperty(metadata)
-    ? normalizeProperty(metadata.name)
+    ? normalizeProperty((metadata as {name: string | string[]}).name)
     : displayAssetName
   const image = features.moderatingNftsEnabled
     ? `${storageUrl}/${fingerprint}.jpeg`
@@ -59,8 +61,18 @@ export const convertNft = (options: {
 }
 
 const normalizeProperty = (value: string | string[]): string => {
-  if (isArrayOfType(value, isString)) return value.join('')
-  return value
+  if (typeof value === 'string') {
+    return value
+  }
+  if (Array.isArray(value)) {
+    if (isArrayOfType(value, isString)) {
+      return value.join('')
+    }
+    // Fallback: join array elements even if type guard failed
+    return (value as string[]).join('')
+  }
+  // Should never reach here, but handle for type safety
+  return String(value)
 }
 
 export const getNftMainImageMediaType = (
@@ -84,7 +96,8 @@ export const getNftFilenameMediaType = (
 
   const files = originalMetadata.files ?? []
   const file = files.find(
-    (file) => file.src && normalizeProperty(file.src) === filename,
+    (file: {src?: string | string[]; mediaType?: string}) =>
+      file.src && normalizeProperty(file.src) === filename,
   )
   return file?.mediaType
 }
