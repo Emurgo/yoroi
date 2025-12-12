@@ -60,13 +60,13 @@ const getLedgerPermissions = () => {
 
 // Re-export from centralized error location
 export {
+  AdaAppClosedError,
   BaseLedgerError,
   BluetoothDisabledError,
+  DeprecatedAdaAppError,
   GeneralConnectionError,
   LedgerUserError,
   RejectedByUserError,
-  AdaAppClosedError,
-  DeprecatedAdaAppError,
 } from '@yoroi/types'
 
 export const HARDWARE_WALLETS = {
