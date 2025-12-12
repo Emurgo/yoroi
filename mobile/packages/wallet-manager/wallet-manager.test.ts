@@ -98,6 +98,8 @@ describe('walletManager', () => {
               }),
             remove: jest.fn().mockImplementation(async () => {
               walletStorage.delete('xpriv')
+              // Also remove from AsyncStorage for compatibility with test assertions
+              await AsyncStorage.removeItem(`/keystore/${id}-MASTER_PASSWORD`)
             }),
           },
           xpub: {
@@ -132,6 +134,8 @@ describe('walletManager', () => {
               .fn()
               .mockImplementation(async (accountVisual: number) => {
                 walletStorage.delete(`xpub-${accountVisual}`)
+                // Also remove from AsyncStorage for compatibility with test assertions
+                await AsyncStorage.removeItem(`/keystore/${id}/${accountVisual}`)
               }),
           },
           clear: jest.fn().mockImplementation(async () => {
