@@ -135,7 +135,9 @@ describe('walletManager', () => {
               .mockImplementation(async (accountVisual: number) => {
                 walletStorage.delete(`xpub-${accountVisual}`)
                 // Also remove from AsyncStorage for compatibility with test assertions
-                await AsyncStorage.removeItem(`/keystore/${id}/${accountVisual}`)
+                await AsyncStorage.removeItem(
+                  `/keystore/${id}/${accountVisual}`,
+                )
               }),
           },
           clear: jest.fn().mockImplementation(async () => {
