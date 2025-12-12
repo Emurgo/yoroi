@@ -9,8 +9,15 @@ import {
 } from '@react-navigation/native'
 import {StackNavigationProp} from '@react-navigation/stack'
 import {BigNumber} from 'bignumber.js'
+import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
-import {ScrollView, Text, TouchableOpacity, View} from 'react-native'
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Address} from '~/common/Address/Address'
@@ -333,15 +340,25 @@ export const AirdropDetailsScreen = () => {
         {/* Redeemable Now Card */}
         <TouchableOpacity
           activeOpacity={0.8}
-          style={[
-            a.p_lg,
-            a.rounded_sm,
-            {
-              backgroundColor:
-                currentlyRedeemableAmount > 0 ? p.bg_gradient_2[0] : p.gray_400,
-            },
-          ]}
+          style={[a.p_lg, a.rounded_sm, a.overflow_hidden]}
         >
+          {currentlyRedeemableAmount > 0 ? (
+            <LinearGradient
+              colors={p.bg_gradient_1}
+              start={{x: 1, y: 1}}
+              end={{x: 0, y: 0}}
+              style={[StyleSheet.absoluteFill]}
+            />
+          ) : (
+            <View
+              style={[
+                StyleSheet.absoluteFill,
+                a.border,
+                a.rounded_sm,
+                {borderColor: p.gray_100},
+              ]}
+            />
+          )}
           <View style={[a.flex_row, a.justify_between, a.align_center]}>
             <View style={[a.flex_row, a.align_center, a.gap_xs]}>
               <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>
@@ -385,14 +402,7 @@ export const AirdropDetailsScreen = () => {
           <TouchableOpacity
             onPress={handleOpenThawSchedule}
             activeOpacity={0.8}
-            style={[
-              a.p_lg,
-              a.rounded_sm,
-              {
-                borderWidth: 1,
-                borderColor: p.gray_200,
-              },
-            ]}
+            style={[a.p_lg, a.rounded_sm, a.border, {borderColor: p.gray_200}]}
           >
             <View style={[a.flex_row, a.justify_between, a.align_center]}>
               <View style={[a.flex_row, a.align_center, a.gap_xs]}>
