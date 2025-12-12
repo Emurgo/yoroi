@@ -3,6 +3,7 @@ import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {getLogger} from '@yoroi/logger'
 import {App, Chain, Network, Wallet} from '@yoroi/types'
 
+// @ts-expect-error - App-specific import, not available in package context
 import {KeychainManager} from '~/kernel/storage/Keychain'
 
 import {getWalletFactory} from '../network-manager/get-wallet-factory'

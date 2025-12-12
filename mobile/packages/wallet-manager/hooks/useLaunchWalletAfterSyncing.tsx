@@ -4,6 +4,7 @@ import {getLogger} from '@yoroi/logger'
 
 import * as React from 'react'
 
+// @ts-expect-error - App-specific import, not available in package context
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 
 import {useWalletManagerSelector} from '../context/WalletManagerProvider'

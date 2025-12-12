@@ -84,6 +84,7 @@
     "@yoroi/blockchains": "file:../blockchains",
     "@yoroi/identicon": "file:../identicon",
     "@yoroi/links": "file:../links",
+    "@yoroi/api": "file:../api",
     "axios-mock-adapter": "1.22.0",
     "babel-jest": "29.7.0",
     "commitlint": "17.0.2",

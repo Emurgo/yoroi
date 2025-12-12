@@ -25,6 +25,7 @@ import {v4} from 'uuid'
 // - makeWalletEncryptedStorage should be passed as a factory function
 // - Keychain should be passed as a dependency (currently using global)
 // - rootStorage is already in WalletManagerOptions, but some code still uses global
+// @ts-expect-error - App-specific import, not available in package context
 import {makeWalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
 
 // networkManagers is now passed via WalletManagerOptions, not imported from constants
