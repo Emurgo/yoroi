@@ -112,7 +112,7 @@ export function useLaunchWalletAfterSyncing({
         }
 
         // Start full sync in the background without waiting
-        wallet.sync({isForced: true}).catch((error) => {
+        wallet.sync({isForced: true}).catch((error: unknown) => {
           getLogger().error(
             'useLaunchWalletAfterSyncing: Error during background full sync',
             {error, walletId},

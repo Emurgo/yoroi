@@ -113,7 +113,6 @@ export {cip95ExtensionMaker, supportsCIP95} from './cip95/cip95'
 export type {CIP95Extension} from './cip95/cip95'
 
 // UtxoManager
-export {useCollateralInfo} from './utxoManager/useCollateralInfo'
 export {useSetCollateralId} from './utxoManager/useSetCollateralId'
 export {
   collateralConfig,

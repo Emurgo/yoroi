@@ -1,4 +1,5 @@
 import {
+  MutationFunctionContext,
   QueryKey,
   UseMutationOptions,
   useMutation,
@@ -20,7 +21,10 @@ export const useMutationWithInvalidations = <
 
   return useMutation<TData, TError, TVariables, TContext>({
     ...options,
-    onMutate: async (variables: TVariables, context: any) => {
+    onMutate: async (
+      variables: TVariables,
+      context: MutationFunctionContext,
+    ) => {
       invalidateQueries?.forEach((key) =>
         queryClient.cancelQueries({queryKey: key}),
       )
@@ -31,7 +35,7 @@ export const useMutationWithInvalidations = <
       data: TData,
       variables: TVariables,
       context: TContext,
-      mutation: any,
+      mutation: MutationFunctionContext,
     ) => {
       invalidateQueries?.forEach((key) =>
         queryClient.invalidateQueries({queryKey: key}),

@@ -1,4 +1,12 @@
 {
+  "exclude": [
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.mock.ts",
+    "**/mocks/**",
+    "**/__tests__/**",
+    "**/__fixtures__/**"
+  ],
   "compilerOptions": {
     "declaration": true,
     "baseUrl": ".",

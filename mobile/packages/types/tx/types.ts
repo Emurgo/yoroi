@@ -68,9 +68,13 @@ export type MetadataDataValue =
   | {[key: string]: MetadataDataValue}
 
 /**
- * Transaction metadata
+ * Transaction metadata (for transaction building)
+ * Note: This is different from Wallet.TxMetadata which is an array type
  */
-export type TxMetadata = {
+export type TransactionMetadata = {
   label: string
   data: MetadataDataValue
 }
+
+// Re-export as TxMetadata for backward compatibility
+export type {TransactionMetadata as TxMetadata}

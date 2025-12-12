@@ -10,7 +10,7 @@ export const useWalletEvent = (
   React.useEffect(() => {
     if (!wallet) return
 
-    const unsubWallet = wallet.subscribe((subscriptionEvent) => {
+    const unsubWallet = wallet.subscribe((subscriptionEvent: WalletEvent) => {
       if (subscriptionEvent.type !== event) return
       callback()
     })

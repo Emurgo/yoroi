@@ -76,7 +76,7 @@ export const useUpdateLatestGovernanceAction = (
     GovernanceAction,
     unknown
   >({
-    ...(options as any),
+    ...(options as UseMutationOptions<void, Error, GovernanceAction, unknown>),
     mutationFn: async (action: GovernanceAction) =>
       await manager.setLatestGovernanceAction(action),
     invalidateQueries: [

@@ -1,6 +1,6 @@
-import {useWallet} from '@yoroi/wallet-manager'
+import type {YoroiWallet} from '@yoroi/cardano-wallet'
 
-import {YoroiWallet} from '../types'
+import {useWallet} from './useWallet'
 
 export const useCollateralInfo = (wallet: YoroiWallet) => {
   useWallet(wallet, 'collateral-id')
