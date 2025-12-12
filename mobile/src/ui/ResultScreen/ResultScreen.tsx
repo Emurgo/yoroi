@@ -3,7 +3,6 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {useBlockGoBack} from '~/kernel/navigation/hooks/useBlockGoBack'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {FailedTxIcon} from '~/ui/FailedTxIcon/FailedTxIcon'
@@ -15,7 +14,6 @@ import {useResultScreenDefaults} from './ResultScreenContext'
 import {ResultScreenParams} from './types'
 
 export const ResultScreen = (props?: ResultScreenParams) => {
-  useBlockGoBack()
   const {palette: p, atoms: ta} = useTheme()
   const navParamsRaw = useUnsafeParams<
     ResultScreenParams | {route?: {params?: ResultScreenParams}}
@@ -70,8 +68,6 @@ export const ResultScreen = (props?: ResultScreenParams) => {
         a.justify_center,
       ]}
     >
-      <View style={{height: 144}} />
-
       {defaultIcon}
 
       <Space.Height.lg />

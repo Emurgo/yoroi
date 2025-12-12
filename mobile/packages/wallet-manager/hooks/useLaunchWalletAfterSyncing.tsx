@@ -97,7 +97,27 @@ export function useLaunchWalletAfterSyncing({
         // Do quick sync first to make wallet usable immediately
         await wallet.quickSync({isForced: true})
 
-        // Navigate immediately after quick sync
+        // Wait a bit for balance to be calculated after quickSync
+        // Balance calculation happens asynchronously after UTXO sync
+        await new Promise((resolve) => setTimeout(resolve, 500))
+
+        // Check if balance is available (hydrated)
+        // For new/empty wallets, balance might legitimately be zero, but we want to ensure
+        // balance manager has been updated with the synced data
+        let balanceCheckAttempts = 0
+        const maxBalanceCheckAttempts = 5
+        while (balanceCheckAttempts < maxBalanceCheckAttempts) {
+          const balance = wallet.primaryBalance()
+          // If balance manager is hydrated and has processed the sync, proceed
+          // We check if balance info is available (not just quantity)
+          if (balance && balance.info) {
+            break
+          }
+          balanceCheckAttempts++
+          await new Promise((resolve) => setTimeout(resolve, 300))
+        }
+
+        // Navigate after balance is available
         if (shouldNavigateAfterSync) {
           try {
             walletNavigation.resetToTxHistory()
