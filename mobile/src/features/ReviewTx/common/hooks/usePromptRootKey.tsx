@@ -1,3 +1,4 @@
+import {App} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
@@ -41,6 +42,17 @@ export const usePromptRootKey = () => {
       }
 
       const handleOnError = (error?: unknown) => {
+        // Don't call onError for wrong password errors - they're handled inline
+        if (error instanceof App.Errors.WrongPassword) {
+          logger.debug(
+            'usePromptRootKey: Wrong password error (handled inline)',
+            {
+              walletId: meta.id,
+            },
+          )
+          return
+        }
+
         logger.error('usePromptRootKey: Root key prompt error', {
           walletId: meta.id,
           error: error instanceof Error ? error.message : String(error),

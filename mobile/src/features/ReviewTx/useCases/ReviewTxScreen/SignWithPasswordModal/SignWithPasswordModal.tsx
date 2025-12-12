@@ -39,7 +39,19 @@ export const SignWithPasswordModal = ({
     submitTx,
     error: submitError,
     isPending: submitIsLoading,
-  } = useSubmitTx({wallet}, {onError})
+  } = useSubmitTx(
+    {
+      wallet,
+    },
+    {
+      onError: (error) => {
+        // Don't call onError for wrong password errors - show inline error instead
+        if (!(error instanceof App.Errors.WrongPassword)) {
+          onError?.(error)
+        }
+      },
+    },
+  )
   const strings = useStrings()
 
   const [spendingPassword, setSpendingPassword] = React.useState(
