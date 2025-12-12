@@ -21,12 +21,7 @@ import {freeze} from 'immer'
 import {BehaviorSubject, Observable, Subscription} from 'rxjs'
 import {v4} from 'uuid'
 
-// TODO: Storage dependencies need to be injected via WalletManagerOptions:
-// - makeWalletEncryptedStorage should be passed as a factory function
-// - Keychain should be passed as a dependency (currently using global)
-// - rootStorage is already in WalletManagerOptions, but some code still uses global
-// @ts-expect-error - App-specific import, not available in package context
-import {makeWalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
+// Storage dependencies are now injected via WalletManagerOptions.cardanoWalletDependencies
 
 // networkManagers is now passed via WalletManagerOptions, not imported from constants
 import {
@@ -190,6 +185,9 @@ export const makeWalletManager = (
     networkManagers,
     cardanoWalletDependencies,
   } = options
+
+  // Extract makeWalletEncryptedStorage from dependencies
+  const {makeWalletEncryptedStorage} = cardanoWalletDependencies
 
   // Initialize wallet factories with dependencies
   initializeWalletFactories(cardanoWalletDependencies, networkManagers)

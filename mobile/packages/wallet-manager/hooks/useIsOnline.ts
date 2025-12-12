@@ -2,15 +2,21 @@ import {YoroiWallet} from '@yoroi/cardano-wallet'
 
 import * as React from 'react'
 
-// @ts-expect-error - App-specific import, not available in package context
-import {useConnectionStatus} from '~/kernel/connection/ConnectionProvider'
-// @ts-expect-error - App-specific import, not available in package context
-import {ConnectionStatus} from '~/kernel/connection/types'
+/**
+ * Connection status type - should be provided by the app
+ */
+export type ConnectionStatus = 'online' | 'offline' | 'connecting'
 
-export const useIsOnline = (_wallet: YoroiWallet): boolean => {
-  const connectionStatus = useConnectionStatus()
-
+/**
+ * Hook to check if wallet is online
+ * @param wallet - The wallet instance (currently unused but kept for API compatibility)
+ * @param connectionStatus - Current connection status from the app
+ */
+export const useIsOnline = (
+  _wallet: YoroiWallet,
+  connectionStatus: ConnectionStatus,
+): boolean => {
   return React.useMemo(() => {
-    return connectionStatus === ConnectionStatus.Online
+    return connectionStatus === 'online'
   }, [connectionStatus])
 }

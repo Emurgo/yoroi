@@ -3,15 +3,18 @@ import {Branded, Chain} from '@yoroi/types'
 
 import {UseQueryOptions, useQuery} from '@tanstack/react-query'
 
-// @ts-expect-error - App-specific import, not available in package context
-import {persistPrefixKeyword} from '~/kernel/connection/ConnectionProvider'
-
 import {useSelectedNetwork} from './useSelectedNetwork'
 
 export const useBestBlock = ({
   options,
+  persistPrefixKeyword,
 }: {
   options?: UseQueryOptions<Chain.Cardano.BestBlock, Error>
+  /**
+   * Persist prefix keyword for query key - should be provided by the app
+   * This is used to namespace the query cache
+   */
+  persistPrefixKeyword: string
 }) => {
   const {networkManager, network} = useSelectedNetwork()
   const query = useQuery<Chain.Cardano.BestBlock, Error>({

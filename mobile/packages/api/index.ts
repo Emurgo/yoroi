@@ -14,6 +14,7 @@ import {getOnChainMetadatas} from './cardano/api/token-onchain-metadata'
 import {mockGetOnChainMetadatas} from './cardano/api/token-onchain-metadata.mocks'
 import {getTokenSupply} from './cardano/api/token-supply'
 import {getUtxoData} from './cardano/api/utxo-data'
+import {getBackendZeroUrl} from './cardano/utils/url-mapping'
 import {getTokenIdentity} from './cardano/translators/helpers/getTokenIdentity'
 import {asFingerprint} from './cardano/translators/transformers/asFingerprint'
 import {asSubject} from './cardano/translators/transformers/asSubject'
@@ -83,6 +84,7 @@ export const CardanoApi = {
 } as const
 
 export {API_ENDPOINTS}
+export {getBackendZeroUrl}
 
 // Cardano wallet API types and makers
 export {CardanoBackend, WalletContext, ManagedCardanoApi} from './cardano/types'

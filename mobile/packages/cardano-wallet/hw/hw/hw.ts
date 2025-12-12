@@ -2,8 +2,13 @@ import {UseMutationOptions, useMutation} from '@tanstack/react-query'
 import * as React from 'react'
 import {Permission, PermissionsAndroid, Platform} from 'react-native'
 
-// @ts-expect-error - App-specific import, not available in package context
-import {useBackgroundTimerControl} from '~/common/providers/BackgroundTimerContext'
+/**
+ * Background timer control functions - should be provided by the app
+ */
+export type BackgroundTimerControl = {
+  disable: () => void
+  enable: () => void
+}
 
 const requestLedgerPermissions = async () => {
   if (Platform.OS !== 'android') return Promise.resolve()
@@ -17,8 +22,12 @@ const requestLedgerPermissions = async () => {
 
 export const useLedgerPermissions = (
   options?: UseMutationOptions<void, Error>,
+  backgroundTimerControl?: BackgroundTimerControl,
 ) => {
-  const {disable, enable} = useBackgroundTimerControl()
+  const {disable, enable} = backgroundTimerControl ?? {
+    disable: () => {},
+    enable: () => {},
+  }
 
   const mutationFn = React.useCallback(async () => {
     // Disable background timer before requesting permissions (Android-specific)

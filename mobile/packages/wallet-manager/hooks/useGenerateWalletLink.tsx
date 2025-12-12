@@ -1,14 +1,18 @@
 // @ts-expect-error - Missing dependency, should be added to devDependencies
 import {linksCardanoModuleMaker} from '@yoroi/links'
+import type {WalletEncryptedStorage} from '@yoroi/cardano-wallet'
 
 import * as React from 'react'
 
-// @ts-expect-error - App-specific import, not available in package context
-import {makeWalletEncryptedStorage} from '~/kernel/storage/EncryptedStorage'
-
 import {useSelectedWallet} from './useSelectedWallet'
 
-export const useGenerateWalletLink = () => {
+/**
+ * Hook to generate wallet links
+ * @param makeWalletEncryptedStorage - Factory function to create encrypted storage for a wallet
+ */
+export const useGenerateWalletLink = (
+  makeWalletEncryptedStorage: (id: string) => WalletEncryptedStorage,
+) => {
   const {wallet, meta} = useSelectedWallet()
   const [generatedLink, setGeneratedLink] = React.useState<string | null>(null)
 
