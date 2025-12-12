@@ -117,7 +117,6 @@
     "@emurgo/cip4-js": "1.0.7",
     "@emurgo/cross-csl-core": "8.0.0-alpha.1",
     "@emurgo/cross-csl-nodejs": "8.0.0-alpha.1",
-    "@emurgo/yoroi-lib": "3.0.0-beta.1",
     "@react-native-async-storage/async-storage": "2.1.2",
     "@tanstack/react-query": "5.81.5",
     "@yoroi/api": "^7.0.0-beta",
