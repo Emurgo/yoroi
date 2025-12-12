@@ -1,4 +1,3 @@
-// @ts-expect-error - Missing dependency, should be added to devDependencies
 import {TipStatusResponse} from '@yoroi/api'
 import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {PromiseAllLimited} from '@yoroi/common'

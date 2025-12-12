@@ -1,9 +1,11 @@
 import {isEmptyString} from '@yoroi/cardano-wallet'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {useLaunchWalletAfterSyncing} from '@yoroi/wallet-manager'
-import {useSyncTemporarilyPaused} from '@yoroi/wallet-manager'
-import {useWalletManager} from '@yoroi/wallet-manager'
+import {
+  useLaunchWalletAfterSyncing,
+  useSyncTemporarilyPaused,
+  useWalletManager,
+} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {Text, View} from 'react-native'
@@ -38,6 +40,10 @@ export const PreparingWalletScreen = () => {
     isGlobalSyncPaused: isGlobalSyncPaused && isLoggedIn,
     walletId: isLoggedIn ? walletId : null,
     shouldNavigateAfterSync,
+    walletNavigation: {
+      resetToWalletSelection: walletNavigation.resetToWalletSelection,
+      resetToTxHistory: walletNavigation.resetToTxHistory,
+    },
   })
 
   // If user is not logged in, show message and wait for login

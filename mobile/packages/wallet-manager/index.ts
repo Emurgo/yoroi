@@ -1,7 +1,7 @@
 // Main exports for @yoroi/wallet-manager package
 
 // Core wallet manager factory
-export {WALLET_MANAGER_VERSION, makeWalletManager} from './wallet-manager'
+export {makeWalletManager, WALLET_MANAGER_VERSION} from './wallet-manager'
 export type {WalletManager} from './wallet-manager'
 
 // Types
@@ -39,9 +39,9 @@ export {
 } from './context/AutomaticWalletOpeningProvider'
 export {WalletManagerHydrationWrapper} from './context/WalletManagerHydrationWrapper'
 export {
-  WalletManagerProvider,
   useWalletManager,
   useWalletManagerSelector,
+  WalletManagerProvider,
 } from './context/WalletManagerProvider'
 
 // State
@@ -68,5 +68,5 @@ export * from './common/constants'
 export * from './common/validators/wallet-meta'
 
 // Mocks (for testing)
-// Mock exports removed - wallet.mock.ts is excluded from package build
-// export {walletMocks} from './wallet.mock'
+// Note: wallet.mock.ts is excluded from package build but exported for test/mock usage
+export {walletMocks} from './wallet.mock'
