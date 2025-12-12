@@ -1,12 +1,11 @@
 import {YoroiWallet} from '@yoroi/cardano-wallet'
-import {Amounts, Quantities} from '@yoroi/cardano-wallet'
-import {useTheme} from '@yoroi/theme'
-import {Notifications, Portfolio} from '@yoroi/types'
+import {Notifications} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
-import {View} from 'react-native'
 
+import {getOperationTypeKey} from '~/features/Transactions/common/getOperationTypeKey'
+import {getOperationDisplayText} from '~/features/Transactions/common/operationDisplay'
 import {walletTransactionToSummary} from '~/features/Transactions/common/transactionSummary'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Icon} from '~/ui/Icon'
@@ -34,43 +33,23 @@ export const getTransactionReceivedNotificationTitle = (
     wallet.portfolioPrimaryTokenInfo,
   )
 
-  const isIntraWallet = summary.direction === 'SELF'
-  const isReceived = summary.direction === 'RECEIVED'
-  const isSent = summary.direction === 'SENT'
+  // Use the same display text logic as transaction list item
+  const operationText = getOperationDisplayText(
+    rawTx,
+    strings,
+    summary.direction,
+    summary.amount,
+    rawTx.metadata,
+    rawTx.inputs,
+    rawTx.outputs,
+    summary.delta,
+  )
 
-  if (isIntraWallet) {
-    return strings.notifications.intraWalletTransactionSent
-  }
-
-  if (isReceived) {
-    const details = getTransactionSummaryDetails(summary, wallet)
-
-    return details.hasReceivedMultipleAssets
-      ? strings.notifications.multipleAssetsReceived
-      : `${formatAssets(
-          Quantities.format(
-            details.firstAssetAmountReceived,
-            details.firstReceivedAsset.denomination,
-          ),
-          details.firstReceivedAsset.name,
-        )} ${strings.notifications.received}`
-  }
-
-  if (isSent) {
-    const details = getTransactionSummaryDetails(summary, wallet)
-
-    return details.hasSentMultipleAssets
-      ? strings.notifications.multipleAssetsSent
-      : `${formatAssets(
-          Quantities.format(
-            details.firstAssetAmountSent,
-            details.firstSentAsset.denomination,
-          ),
-          details.firstSentAsset.name,
-        )} ${strings.notifications.sent}`
-  }
-
-  return ''
+  // Use operation text if available, otherwise fall back to direction
+  return (
+    operationText ??
+    strings.transactions.direction({direction: summary.direction})
+  )
 }
 
 export const getTransactionReceivedNotificationIcon = (
@@ -92,28 +71,24 @@ export const getTransactionReceivedNotificationIcon = (
     wallet.portfolioPrimaryTokenInfo,
   )
 
-  const isIntraWallet = summary.direction === 'SELF'
-  const isReceived = summary.direction === 'RECEIVED'
-  const isSent = summary.direction === 'SENT'
-  const isMultiSig = summary.direction === 'MULTI'
+  // Use the same operation type detection as transaction list item
+  const operationTypeKey = getOperationTypeKey(
+    rawTx,
+    summary.direction,
+    summary.amount,
+    rawTx.metadata,
+    rawTx.inputs,
+    rawTx.outputs,
+    summary.delta,
+  )
 
-  if (isIntraWallet) {
-    return <Icon.Direction transactionDirection="SELF" />
-  }
-
-  if (isReceived) {
-    return <Icon.Direction transactionDirection="RECEIVED" />
-  }
-
-  if (isSent) {
-    return <Icon.Direction transactionDirection="SENT" />
-  }
-
-  if (isMultiSig) {
-    return <Icon.Direction transactionDirection="MULTI" />
-  }
-
-  return null
+  // Use Icon.Direction with operation prop to get the correct icon (same as transaction list)
+  return (
+    <Icon.Direction
+      transactionDirection={summary.direction}
+      operation={operationTypeKey}
+    />
+  )
 }
 
 export const TransactionReceivedNotification = ({
@@ -135,122 +110,8 @@ export const TransactionReceivedNotification = ({
   )
 }
 const IconWrapper = ({event}: {event: Notifications.Event}) => {
-  const {palette: p} = useTheme()
   const {wallet} = useSelectedWallet()
 
-  return (
-    <View
-      style={[
-        {
-          width: 40,
-          height: 40,
-          borderRadius: 20,
-          alignItems: 'center',
-          justifyContent: 'center',
-        },
-        {backgroundColor: p.secondary_100},
-      ]}
-    >
-      {getTransactionReceivedNotificationIcon(event, wallet)}
-    </View>
-  )
-}
-
-const getTransactionSummaryDetails = (
-  summary: ReturnType<typeof walletTransactionToSummary>,
-  wallet: YoroiWallet,
-) => {
-  const primaryTokenInfo = wallet.portfolioPrimaryTokenInfo
-  const defaultId = primaryTokenInfo.id
-
-  // Convert delta to array of amounts and filter out zero amounts
-  const deltaAmounts = Amounts.toArray(summary.delta).filter(
-    ({quantity}) => !Quantities.isZero(quantity),
-  )
-
-  // Separate positive (received) and negative (sent) amounts
-  const positiveAmounts = deltaAmounts.filter(({quantity}) =>
-    Quantities.isGreaterThan(quantity, Quantities.zero),
-  )
-  const negativeAmounts = deltaAmounts.filter(({quantity}) =>
-    Quantities.isGreaterThan(Quantities.zero, quantity),
-  )
-
-  // Get non-default token IDs (excluding primary token)
-  const positiveIds = positiveAmounts
-    .filter(({tokenId}) => tokenId !== defaultId)
-    .map(({tokenId}) => tokenId)
-  const negativeIds = negativeAmounts
-    .filter(({tokenId}) => tokenId !== defaultId)
-    .map(({tokenId}) => tokenId)
-
-  // Get primary token delta
-  const ptDelta = Amounts.getAmount(summary.delta, defaultId).quantity
-
-  const hasReceivedMultipleAssets = positiveAmounts.length > 1
-  const hasSentMultipleAssets = negativeAmounts.length > 1
-
-  // Received side: prefer an actually received non-primary token; fallback to primary if none
-  const firstAssetIdReceived = positiveIds[0] ?? defaultId
-  const firstAssetAmountReceived =
-    positiveIds.length > 0
-      ? Amounts.getAmount(summary.delta, firstAssetIdReceived).quantity
-      : ptDelta
-  const firstReceivedAsset =
-    positiveIds.length > 0
-      ? resolveTokenInfo(firstAssetIdReceived, wallet, primaryTokenInfo)
-      : {name: primaryTokenInfo.name, denomination: primaryTokenInfo.decimals}
-
-  // Sent side: prefer an actually sent non-primary token; fallback to primary if none
-  const firstAssetIdSent = negativeIds[0] ?? defaultId
-  const firstAssetAmountSent =
-    negativeIds.length > 0
-      ? Quantities.negated(
-          Amounts.getAmount(summary.delta, firstAssetIdSent).quantity,
-        )
-      : Quantities.negated(ptDelta)
-
-  const firstSentAsset =
-    negativeIds.length > 0
-      ? resolveTokenInfo(firstAssetIdSent, wallet, primaryTokenInfo)
-      : {name: primaryTokenInfo.name, denomination: primaryTokenInfo.decimals}
-
-  return {
-    hasReceivedMultipleAssets,
-    hasSentMultipleAssets,
-    firstReceivedAsset,
-    firstSentAsset,
-    firstAssetAmountReceived,
-    firstAssetAmountSent,
-  }
-}
-
-const resolveTokenInfo = (
-  identifier: string,
-  wallet: YoroiWallet,
-  primaryTokenInfo: Portfolio.Token.Info,
-) => {
-  if (identifier === primaryTokenInfo.id) {
-    return {
-      name: primaryTokenInfo.name,
-      denomination: primaryTokenInfo.decimals,
-    }
-  }
-  const walletRecord = wallet
-    .balances()
-    .records.get(identifier as Portfolio.Token.Id)?.info
-  if (walletRecord != null) {
-    const pick = (...vals: Array<string | undefined>) =>
-      vals.find((v) => typeof v === 'string' && v.trim().length > 0) ??
-      identifier
-    const name = pick(walletRecord.ticker, walletRecord.name)
-    return {name, denomination: walletRecord.decimals}
-  }
-  // fallback: use identifier as name
-  return {name: identifier, denomination: 0}
-}
-
-const formatAssets = (quantity: string, name: string) => {
-  const truncatedName = name.length > 15 ? `${name.slice(0, 15)}...` : name
-  return `${quantity} ${truncatedName}`
+  // Icon.Direction already handles its own container styling with proper background colors
+  return getTransactionReceivedNotificationIcon(event, wallet)
 }

@@ -160,7 +160,7 @@ const iconMap: Record<
   STAKE_REGISTRATION: StakingKeyRegistered,
   STAKE_DEREGISTRATION: StakingKeyDeregistered,
   STAKE_DELEGATION: Staking,
-  STAKE_UNDELEGATION: StakingKeyDeregistered,
+  STAKE_UNDELEGATION: Staking,
   VOTE_DELEGATION: Governance,
   COLLATERAL_CREATION: Lock,
   MINT: DigitalAsset,
