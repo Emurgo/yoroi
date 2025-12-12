@@ -1,13 +1,17 @@
 import {RawUtxo} from '@yoroi/api'
-import {createSendTxFromWallet} from '@yoroi/cardano-wallet'
-import {Amounts, Quantities, asQuantity} from '@yoroi/cardano-wallet'
-import {useCollateralInfo} from '@yoroi/wallet-manager'
-import {useSetCollateralId} from '@yoroi/cardano-wallet'
-import {collateralConfig, utxosMaker} from '@yoroi/cardano-wallet'
+import {
+  Amounts,
+  Quantities,
+  asQuantity,
+  collateralConfig,
+  createSendTxFromWallet,
+  useSetCollateralId,
+  utxosMaker,
+} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {TransactionOutput} from '@yoroi/tx'
 import {Branded, Portfolio, UtxoId} from '@yoroi/types'
-import {useSelectedWallet} from '@yoroi/wallet-manager'
+import {useCollateralInfo, useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as CSL from '@emurgo/cross-csl-core'
 import {useMutation} from '@tanstack/react-query'
