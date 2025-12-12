@@ -29,9 +29,12 @@ const amounts = {
 }
 
 const entries1: [Portfolio.Token.Id, Portfolio.Token.Amount][] = [
-  [tokenInfoMocks.primaryETH.id, amounts.primaryETH],
-  [tokenInfoMocks.nftCryptoKitty.id, amounts.nftCryptoKitty],
-  [tokenInfoMocks.rnftWhatever.id, amounts.rnftWhatever],
+  [tokenInfoMocks.primaryETH.id as Portfolio.Token.Id, amounts.primaryETH],
+  [
+    tokenInfoMocks.nftCryptoKitty.id as Portfolio.Token.Id,
+    amounts.nftCryptoKitty,
+  ],
+  [tokenInfoMocks.rnftWhatever.id as Portfolio.Token.Id, amounts.rnftWhatever],
 ]
 
 export const amountMocks = freeze({

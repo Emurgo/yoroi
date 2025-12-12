@@ -10,7 +10,6 @@ import {
 import {TabPanel, TabPanels} from '~/ui/Tabs'
 
 import {Overview} from './Overview/Overview'
-import {Performance} from './Performance'
 
 export const PortfolioTokenInfo = () => {
   const {palette: p} = useTheme()
@@ -19,10 +18,6 @@ export const PortfolioTokenInfo = () => {
   return (
     <View style={[a.flex_1, {backgroundColor: p.bg_color_max}]}>
       <TabPanels>
-        <TabPanel active={detailsTab === PortfolioDetailsTab.Performance}>
-          <Performance />
-        </TabPanel>
-
         <TabPanel active={detailsTab === PortfolioDetailsTab.Overview}>
           <Overview />
         </TabPanel>

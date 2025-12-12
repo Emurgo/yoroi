@@ -7,7 +7,7 @@ import {
   type SafeAreaViewProps,
 } from 'react-native-safe-area-context'
 
-import {useIsKeyboardOpen} from '~/hooks/useIsKeyboardOpen'
+import {useIsKeyboardOpen} from '~/common/hooks/useIsKeyboardOpen'
 
 import {KeyboardAvoidingView} from '../KeyboardAvoidingView/KeyboardAvoidingView'
 import {useScrollViewContext} from '../ScrollView/context/ScrollViewContext'

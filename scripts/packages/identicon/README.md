@@ -29,7 +29,7 @@ yarn workspace <pkg> add @yoroi/identicon
 
 ```typescript
 const publicKey = 'BEDEAD'
-const blockie = new Blockies({seed: publicKey})
+const blockie = Blockies({seed: publicKey})
 const base64Image = blockie.asBase64({size: 44})
 
 // Use the base64Image string as needed, for example, setting it as the src of an img element
@@ -40,7 +40,7 @@ document.getElementById('identicon-image').src = base64Image
 
 ```typescript
 const publicKey = 'BEDEAD'
-const jazz = new Jazzicon({seed: publicKey})
+const jazz = Jazzicon({seed: publicKey})
 const base64Image = jazz.asBase64({size: 44})
 
 // Use the base64Image string as needed, for example, setting it as the src of an img element

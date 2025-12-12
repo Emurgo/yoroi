@@ -1,19 +1,24 @@
+import {Quantities, createWithdrawalTxFromWallet} from '@yoroi/cardano-wallet'
+import {getLogger} from '@yoroi/logger'
+import {useSelectedNetwork, useSelectedWallet} from '@yoroi/wallet-manager'
+
 import * as React from 'react'
 
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {UsePromiseOptionsWithoutPromise, usePromise} from '~/hooks/usePromise'
-import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
-import {Quantities} from '~/wallets/utils/utils'
+import {
+  UsePromiseOptionsWithoutPromise,
+  usePromise,
+} from '~/common/hooks/usePromise'
 
 import {useStakingInfo} from './useStakingInfo'
 
 export const useCreateWithdrawTx = (
   options?: UsePromiseOptionsWithoutPromise<
-    YoroiUnsignedTx,
+    {cbor: string},
     [{shouldDeregister: boolean}]
   >,
 ) => {
   const {wallet, meta} = useSelectedWallet()
+  const {networkManager} = useSelectedNetwork()
   const {stakingInfo} = useStakingInfo(wallet)
 
   const hasRewards =
@@ -22,12 +27,46 @@ export const useCreateWithdrawTx = (
 
   const createWithdrawalTxPromise = React.useCallback(
     async ({shouldDeregister}: {shouldDeregister: boolean}) => {
-      return await wallet.createWithdrawalTx({
+      const logger = getLogger()
+
+      logger.info('useCreateWithdrawTx: Creating withdrawal transaction', {
         shouldDeregister,
         addressMode: meta.addressMode,
+        rewardAddressHex: wallet.rewardAddressHex,
+        hasRewards,
+        stakingInfoStatus: stakingInfo?.status,
+        stakingInfoRewards:
+          stakingInfo?.status === 'staked' ? stakingInfo.rewards : undefined,
       })
+
+      try {
+        const result = await createWithdrawalTxFromWallet(wallet, {
+          shouldDeregister,
+          addressMode: meta.addressMode,
+          networkManager,
+        })
+
+        logger.info(
+          'useCreateWithdrawTx: Withdrawal transaction created successfully',
+          {
+            cborLength: result.cbor.length,
+          },
+        )
+
+        return result
+      } catch (error) {
+        logger.error(
+          'useCreateWithdrawTx: Failed to create withdrawal transaction',
+          {
+            error: error instanceof Error ? error.message : String(error),
+            errorStack: error instanceof Error ? error.stack : undefined,
+            shouldDeregister,
+          },
+        )
+        throw error
+      }
     },
-    [wallet, meta.addressMode],
+    [wallet, meta.addressMode, networkManager, hasRewards, stakingInfo],
   )
 
   const withdrawalTxPromise = usePromise({

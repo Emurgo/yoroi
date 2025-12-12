@@ -1,5 +1,14 @@
+import {getLogger} from '@yoroi/logger'
 import {isNameServer, isResolvableDomain} from '@yoroi/resolver'
-import {Chain, Links, Portfolio, Resolver, Transfer} from '@yoroi/types'
+import {
+  Address,
+  Branded,
+  Chain,
+  Links,
+  Portfolio,
+  Resolver,
+  Transfer,
+} from '@yoroi/types'
 
 import {castDraft, freeze, produce} from 'immer'
 
@@ -54,14 +63,15 @@ const targetsReducer = (state: TransferState, action: TargetAction) => {
           if (index === selectedTargetIndex) {
             const isDomain: boolean = isResolvableDomain(resolve)
             const as: Resolver.Receiver['as'] = isDomain ? 'domain' : 'address'
-            const address = isDomain ? '' : resolve
             target.receiver = {
               resolve,
               as,
               selectedNameServer: undefined,
               addressRecords: undefined,
             }
-            target.entry.address = address
+            target.entry.address = isDomain
+              ? ('' as Address)
+              : Branded.asAddress(resolve)
           }
         })
         break
@@ -78,7 +88,10 @@ const targetsReducer = (state: TransferState, action: TargetAction) => {
               const nameServer = keys.length === 1 ? keys[0] : undefined
               target.receiver.selectedNameServer = nameServer
               if (nameServer !== undefined) {
-                target.entry.address = addressRecords[nameServer] ?? ''
+                const addr = addressRecords[nameServer] ?? ''
+                target.entry.address = addr
+                  ? Branded.asAddress(addr)
+                  : ('' as Address)
               }
             } else {
               target.receiver.selectedNameServer = undefined
@@ -98,11 +111,13 @@ const targetsReducer = (state: TransferState, action: TargetAction) => {
             target.receiver.selectedNameServer = nameServer
 
             if (nameServer !== undefined) {
-              target.entry.address =
-                target.receiver.addressRecords?.[nameServer] ?? ''
+              const addr = target.receiver.addressRecords?.[nameServer] ?? ''
+              target.entry.address = addr
+                ? Branded.asAddress(addr)
+                : ('' as Address)
             } else {
               const isDomain = target.receiver.as === 'domain'
-              if (isDomain) target.entry.address = ''
+              if (isDomain) target.entry.address = '' as Address
             }
           }
         })
@@ -144,7 +159,7 @@ export const defaultTransferState: TransferState = freeze(
     allocated: new Map(),
 
     selectedTargetIndex: 0,
-    selectedTokenId: '.', // it's ok satisfying the type here, if ptId is dif it needs init by the client
+    selectedTokenId: '.' as Portfolio.Token.Id, // it's ok satisfying the type here, if ptId is dif it needs init by the client
     unsignedTx: undefined,
     memo: '',
 
@@ -159,7 +174,7 @@ export const defaultTransferState: TransferState = freeze(
           addressRecords: undefined,
         },
         entry: {
-          address: '',
+          address: '' as Address,
           amounts: {},
         },
       },
@@ -295,5 +310,7 @@ export enum TransferActionType {
 
 /* istanbul ignore next */
 function missingInit() {
-  console.error('[@yoroi/transfer] missing initialization')
+  getLogger().error('[@yoroi/transfer] missing initialization', {
+    origin: 'transfer',
+  })
 }

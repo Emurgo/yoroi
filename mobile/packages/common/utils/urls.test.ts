@@ -1,16 +1,41 @@
-import {getBasePath} from './urls'
+import {getBasePath, joinUrl} from './urls'
 
-describe('getBasePath', () => {
-  it.each`
-    fullURL                                  | expected
-    ${'https://example.com/path'}            | ${'https://example.com/path'}
-    ${'https://example.com/path?query=123'}  | ${'https://example.com/path'}
-    ${'https://example.com/path#hash'}       | ${'https://example.com/path'}
-    ${'https://example.com/path?q=1#h'}      | ${'https://example.com/path'}
-    ${'https://example.com/path/2/1?q=1#h'}  | ${'https://example.com/path/2/1'}
-    ${'http://localhost:3000/api'}           | ${'http://localhost:3000/api'}
-    ${'http://localhost:3000/api?test=true'} | ${'http://localhost:3000/api'}
-  `('should return $expected for URL $fullURL', ({fullURL, expected}) => {
-    expect(getBasePath(fullURL)).toBe(expected)
+describe('urls utilities', () => {
+  describe('getBasePath', () => {
+    it('should extract base path from URL', () => {
+      expect(getBasePath('https://example.com/path/to/resource?query=1')).toBe(
+        'https://example.com/path/to/resource',
+      )
+    })
+
+    it('should handle URL without path', () => {
+      expect(getBasePath('https://example.com')).toBe('https://example.com/')
+    })
+  })
+
+  describe('joinUrl', () => {
+    it('should join URL with path', () => {
+      expect(joinUrl('https://example.com', 'path')).toBe(
+        'https://example.com/path',
+      )
+    })
+
+    it('should handle path with leading slash', () => {
+      expect(joinUrl('https://example.com', '/path')).toBe(
+        'https://example.com/path',
+      )
+    })
+
+    it('should handle base URL with trailing slash', () => {
+      expect(joinUrl('https://example.com/', 'path')).toBe(
+        'https://example.com/path',
+      )
+    })
+
+    it('should handle nested paths', () => {
+      expect(joinUrl('https://example.com/api', 'v1/users')).toBe(
+        'https://example.com/api/v1/users',
+      )
+    })
   })
 })

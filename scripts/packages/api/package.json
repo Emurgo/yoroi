@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/api",
-  "version": "6.0.0",
+  "version": "7.0.0-beta",
   "description": "The API package of Yoroi SDK",
   "keywords": [
     "yoroi",
@@ -88,6 +88,10 @@
     "@types/jest": "29.5.12",
     "@types/react": "19.0.10",
     "@types/react-test-renderer": "19.0.0",
+    "@yoroi/common": "file:../common",
+    "@yoroi/logger": "file:../logger",
+    "@yoroi/staking": "file:../staking",
+    "@yoroi/tx": "file:../tx",
     "@yoroi/types": "file:../types",
     "axios-mock-adapter": "1.22.0",
     "babel-jest": "29.7.0",

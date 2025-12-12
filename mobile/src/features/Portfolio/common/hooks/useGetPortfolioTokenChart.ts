@@ -1,17 +1,17 @@
+import {delay} from '@yoroi/cardano-wallet'
 import {isRight, time} from '@yoroi/common'
 import {isPrimaryToken} from '@yoroi/portfolio'
 import {Portfolio} from '@yoroi/types'
+import {useSelectedNetwork} from '@yoroi/wallet-manager'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {UseQueryOptions, useQuery} from '@tanstack/react-query'
 
 import {fetchPtPriceActivity} from '~/features/Pairing/hooks/usePrimaryTokenActivity'
 import {useCurrencyPairing} from '~/features/Settings/context/CurrencyProvider'
-import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {defaultCurrency} from '~/kernel/constants'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {logger} from '~/kernel/logger/logger'
-import {delay} from '~/wallets/utils/timeUtils'
 
 import {priceChange} from '../helpers/priceChange'
 import {usePortfolioTokenDetailParams} from './useNavigateTo'
@@ -95,9 +95,8 @@ export const useGetPortfolioTokenChart = (
 ) => {
   const {disableNonPrimaryToken = false, ...queryOptions} = options
   const {id: tokenId} = usePortfolioTokenDetailParams()
-  const {
-    wallet: {balances},
-  } = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
+  const balances = wallet.balances()
   const {
     networkManager: {tokenManager},
   } = useSelectedNetwork()

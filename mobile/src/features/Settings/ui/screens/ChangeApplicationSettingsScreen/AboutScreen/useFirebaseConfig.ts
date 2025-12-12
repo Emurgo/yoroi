@@ -5,8 +5,8 @@ import * as Notifications from 'expo-notifications'
 import * as React from 'react'
 import {AppState} from 'react-native'
 
+import {settingsQueryKeys} from '~/common/queries'
 import {useAuth} from '~/features/Auth/context/AuthProvider'
-import {isNightly} from '~/kernel/constants'
 
 export const useFirebaseConfig = () => {
   const [hasPermission, setHasPermission] = React.useState(false)
@@ -53,8 +53,13 @@ export const useFirebaseConfig = () => {
     }
   }, [])
 
+  const queryKey = React.useMemo(
+    () => settingsQueryKeys.firebaseConfig(isAuthDev, hasPermission),
+    [isAuthDev, hasPermission],
+  )
+
   const {data} = useQuery({
-    queryKey: ['useFirebaseConfig', isAuthDev, hasPermission],
+    queryKey,
     queryFn: async () => {
       const [fcmToken, projectId] = await Promise.all([
         getFcmToken(),
@@ -67,7 +72,7 @@ export const useFirebaseConfig = () => {
         hasPermission,
       }
     },
-    enabled: isNightly || isAuthDev,
+    enabled: isAuthDev,
     staleTime: Infinity, // Config doesn't change during runtime
     retry: false,
   })

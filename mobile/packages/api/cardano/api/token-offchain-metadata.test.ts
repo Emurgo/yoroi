@@ -1,4 +1,7 @@
-import {ApiTokenRegistryEntry} from '@yoroi/types'
+import {Fetcher} from '@yoroi/common'
+import {ApiTokenRegistryEntry, Branded} from '@yoroi/types'
+
+import {AxiosRequestConfig} from 'axios'
 
 import {
   getOffChainMetadata,
@@ -28,7 +31,7 @@ describe('isTokenRegistryEntry', () => {
   })
 
   it('should return false for an invalid ApiTokenRegistryEntry (wrong type for fields)', () => {
-    const invalidEntry: any = {
+    const invalidEntry: unknown = {
       subject: 'someSubject',
       name: {
         signatures: 'shouldNotBeString',
@@ -41,7 +44,7 @@ describe('isTokenRegistryEntry', () => {
   })
 
   it('should return false for an invalid ApiTokenRegistryEntry (extra fields are ignored)', () => {
-    const invalidEntry: any = {
+    const invalidEntry: unknown = {
       name: {
         signatures: [{publicKey: 'somePublicKey', signature: 'someSignature'}],
         sequenceNumber: 1,
@@ -75,32 +78,35 @@ describe('getOffChainMetadata', () => {
   const baseUrl = 'http://localhost'
 
   it('should fetch metadata for multiple tokens', async () => {
-    const mockFetcher: any = jest.fn<Promise<ApiTokenRegistryEntry>, any[]>(
-      ({url}) => {
-        if (url.endsWith('token1')) {
-          return Promise.resolve({
-            subject: 'token1',
-            name: {signatures: [], sequenceNumber: 1, value: 'Token1'},
-          })
-        } else if (url.endsWith('token2')) {
-          return Promise.resolve({
-            subject: 'token2',
-            name: {signatures: [], sequenceNumber: 1, value: 'Token2'},
-          })
-        } else if (url.endsWith('token3')) {
-          return Promise.resolve(null)
-        } else {
-          return Promise.resolve({not: 'a valid response'} as any)
-        }
-      },
-    )
+    const mockFetcher: Fetcher = jest.fn(({url}: AxiosRequestConfig) => {
+      if (!url) {
+        return Promise.resolve(null)
+      }
+      if (url.endsWith('token1')) {
+        return Promise.resolve({
+          subject: 'token1',
+          name: {signatures: [], sequenceNumber: 1, value: 'Token1'},
+        })
+      } else if (url.endsWith('token2')) {
+        return Promise.resolve({
+          subject: 'token2',
+          name: {signatures: [], sequenceNumber: 1, value: 'Token2'},
+        })
+      } else if (url.endsWith('token3')) {
+        return Promise.resolve(null)
+      } else {
+        return Promise.resolve({
+          not: 'a valid response',
+        } as unknown as ApiTokenRegistryEntry)
+      }
+    }) as Fetcher
 
     const fetchMetadata = getOffChainMetadata(baseUrl, mockFetcher)
     const result = await fetchMetadata([
-      'token.1',
-      'token.2',
-      'token.3',
-      'token.4',
+      Branded.asTokenId('token.1'),
+      Branded.asTokenId('token.2'),
+      Branded.asTokenId('token.3'),
+      Branded.asTokenId('token.4'),
     ])
 
     expect(result).toEqual({
@@ -124,14 +130,12 @@ describe('getOffChainMetadata', () => {
   })
 
   it('should handle for failed fetches', async () => {
-    const mockFetcher: any = jest.fn<Promise<ApiTokenRegistryEntry>, any[]>(
-      () => {
-        return Promise.reject(new Error('Some error'))
-      },
-    )
+    const mockFetcher: Fetcher = jest.fn(() => {
+      return Promise.reject(new Error('Some error'))
+    }) as Fetcher
 
     const fetchMetadata = getOffChainMetadata(baseUrl, mockFetcher)
-    const result = await fetchMetadata(['token.1'])
+    const result = await fetchMetadata([Branded.asTokenId('token.1')])
 
     expect(result).toEqual({
       'token.1': {tokenRegistry: undefined, isValid: false},
@@ -139,14 +143,12 @@ describe('getOffChainMetadata', () => {
   })
 
   it('should handle for wrong metadata', async () => {
-    const mockFetcher: any = jest.fn<Promise<ApiTokenRegistryEntry>, any[]>(
-      () => {
-        return Promise.resolve(1 as any)
-      },
-    )
+    const mockFetcher: Fetcher = jest.fn(() => {
+      return Promise.resolve(1 as unknown as ApiTokenRegistryEntry)
+    }) as Fetcher
 
     const fetchMetadata = getOffChainMetadata(baseUrl, mockFetcher)
-    const result = await fetchMetadata(['token.1'])
+    const result = await fetchMetadata([Branded.asTokenId('token.1')])
 
     expect(result).toEqual({
       'token.1': {tokenRegistry: undefined, isValid: false},
@@ -159,21 +161,22 @@ describe('getOffChainMetadata', () => {
   })
 
   it('should handle a mix of successful and failed fetches', async () => {
-    const mockFetcher: any = jest.fn<Promise<ApiTokenRegistryEntry>, any[]>(
-      ({url}) => {
-        if (url.endsWith('token1')) {
-          return Promise.resolve({
-            subject: 'token1',
-            name: {signatures: [], sequenceNumber: 1, value: 'Token1'},
-          })
-        } else {
-          return Promise.reject(new Error('Some error'))
-        }
-      },
-    )
+    const mockFetcher: Fetcher = jest.fn(({url}: AxiosRequestConfig) => {
+      if (!url || url.endsWith('token1')) {
+        return Promise.resolve({
+          subject: 'token1',
+          name: {signatures: [], sequenceNumber: 1, value: 'Token1'},
+        })
+      } else {
+        return Promise.reject(new Error('Some error'))
+      }
+    }) as Fetcher
 
     const fetchMetadata = getOffChainMetadata(baseUrl, mockFetcher)
-    const result = await fetchMetadata(['token.1', 'token.2'])
+    const result = await fetchMetadata([
+      Branded.asTokenId('token.1'),
+      Branded.asTokenId('token.2'),
+    ])
 
     expect(result).toEqual({
       'token.1': {

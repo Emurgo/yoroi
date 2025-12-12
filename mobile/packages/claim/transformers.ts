@@ -1,6 +1,6 @@
 import {getApiError, toBigInt} from '@yoroi/common'
 import {isPrimaryToken, isTokenId} from '@yoroi/portfolio'
-import {Api, Claim, Portfolio} from '@yoroi/types'
+import {Api, Branded, Claim, Portfolio} from '@yoroi/types'
 
 import {claimApiErrors} from './errors'
 
@@ -53,7 +53,7 @@ export const asClaimToken = async (
     const claimed: Readonly<Claim.Info> = {
       status: 'done',
       amounts,
-      txHash: claimItemResponse.tx_hash,
+      txHash: Branded.asTransactionHash(claimItemResponse.tx_hash),
     }
     return claimed
   } else if (status === 'queued') {

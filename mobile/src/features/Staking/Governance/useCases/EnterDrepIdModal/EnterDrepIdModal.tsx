@@ -1,22 +1,21 @@
+import {CardanoMobile} from '@yoroi/cardano-wallet'
 import {isNonNullable} from '@yoroi/common'
+import {isAdaHandleDomain, useResolverDRepId} from '@yoroi/resolver'
 import {getYoroiDrepIdHex, parseDrepId, useIsValidDRepID} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
-import {Alert, Keyboard, Linking, Text, View} from 'react-native'
+import {Alert, Linking, Text, View} from 'react-native'
 
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useIsKeyboardOpen} from '~/hooks/useIsKeyboardOpen'
+import {YoroiDrepCard} from '~/features/Staking/Governance/common/YoroiDrepCard/YoroiDrepCard'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 import {TextInput} from '~/ui/TextInput/TextInput'
-import {CardanoMobile} from '~/wallets/wallets'
-
-import {YoroiDrepCard} from '../../common/YoroiDrepCard/YoroiDrepCard'
 
 export type Props = {
   onSubmit?: (options: {
@@ -24,63 +23,51 @@ export type Props = {
     hash: string
     CIP105: boolean
   }) => void
+  initialDrepId?: string
 }
 
 const FIND_DREPS_LINKS: Record<Chain.SupportedNetworks, string> = {
   [Chain.Network.Preprod]: 'https://preprod.cexplorer.io/drep',
   [Chain.Network.Mainnet]: 'https://beta.cexplorer.io/drep',
-  [Chain.Network.Preview]: 'https://preview.cexplorer.io/drep',
 }
 
 export const HEIGHT_WITH_CARD = 660
 export const HEIGHT_INPUT_FOCUSED = 400
 export const HEIGHT_WITHOUT_CARD = 350
 
-export const EnterDrepIdModal = ({onSubmit}: Props) => {
+const shortenDRepId = (id: string) => {
+  if (id.length > 20) {
+    return id.substring(0, 10) + '...' + id.substring(id.length - 10)
+  }
+  return id
+}
+
+export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
-  const [drepId, setDrepId] = React.useState('')
-  const [showCard, setShowCard] = React.useState(true)
   const {closeModal, setHeight} = useModal()
-  const {
-    wallet: {
-      networkManager: {network},
-    },
-  } = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
+  const network = wallet.networkManager.network
 
-  const {error, isFetched, isFetching} = useIsValidDRepID(drepId, {
-    retry: false,
-    enabled: drepId.length > 0,
-  })
+  const [showCard, setShowCard] = React.useState(true)
+  const [drepId, setDrepId] = React.useState(initialDrepId ?? '')
 
   const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined)
   const showCardRef = React.useRef(showCard)
   const isInputFocusedRef = React.useRef(false)
-  const shouldCloseAfterKeyboardDismissRef = React.useRef(false)
-  const isKeyboardOpen = useIsKeyboardOpen()
+
+  // Update drepId when initialDrepId changes
+  React.useEffect(() => {
+    if (initialDrepId !== undefined && initialDrepId !== null) {
+      setDrepId(initialDrepId)
+    }
+  }, [initialDrepId])
 
   React.useEffect(() => {
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current)
     }
   }, [])
-
-  const requestCloseModal = React.useCallback(() => {
-    if (isKeyboardOpen) {
-      shouldCloseAfterKeyboardDismissRef.current = true
-      Keyboard.dismiss()
-      return
-    }
-
-    closeModal()
-  }, [closeModal, isKeyboardOpen])
-
-  React.useEffect(() => {
-    if (!isKeyboardOpen && shouldCloseAfterKeyboardDismissRef.current) {
-      shouldCloseAfterKeyboardDismissRef.current = false
-      closeModal()
-    }
-  }, [closeModal, isKeyboardOpen])
 
   const handleDrepIdChange = React.useCallback(
     (text: string) => {
@@ -130,11 +117,74 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
     }
   }, [setHeight])
 
-  const handleOnPress = () => {
+  // Trim whitespace from input, ensure drepId is always a string
+  const trimmedDrepId = (drepId ?? '').trim()
+
+  // Check if input is an ADA handle
+  const isHandle = isAdaHandleDomain(trimmedDrepId)
+
+  // Resolve ADA handle to DRep ID
+  const {
+    drepInfo,
+    isLoading: isResolvingHandle,
+    error: handleResolutionError,
+  } = useResolverDRepId({
+    resolve: trimmedDrepId,
+    isMainnet: wallet.isMainnet,
+    enabled: isHandle,
+  })
+
+  // Use the resolved DRep ID or the direct input
+  // For handles, use cip_129 (bech32 format) for validation since parseDrepId expects bech32 format
+  const resolvedDrepId = React.useMemo(() => {
+    if (isHandle && drepInfo?.cip_129) {
+      return drepInfo.cip_129
+    }
+    return trimmedDrepId
+  }, [isHandle, drepInfo, trimmedDrepId])
+
+  const {error, isFetched, isFetching} = useIsValidDRepID(resolvedDrepId, {
+    retry: false,
+    enabled: resolvedDrepId.length > 0 && !isResolvingHandle,
+  })
+
+  const noDrepForHandle =
+    isHandle &&
+    !isResolvingHandle &&
+    drepInfo === null &&
+    !handleResolutionError
+  const displayError = noDrepForHandle
+    ? 'This ADA handle does not have a DRep associated with it'
+    : handleResolutionError?.message || error?.message
+  const isLoading = isResolvingHandle || isFetching
+  const isSubmitDisabled =
+    isNonNullable(error) ||
+    drepId.length === 0 ||
+    !isFetched ||
+    isLoading ||
+    (isHandle && drepInfo === null)
+
+  const handleSubmit = () => {
     try {
-      const {hash, type} = parseDrepId(drepId, CardanoMobile)
-      onSubmit?.({hash, type, CIP105: !error && drepId.length === 56})
-      requestCloseModal()
+      let hash: string
+      let type: 'key' | 'script'
+
+      if (isHandle && drepInfo) {
+        hash = drepInfo.hex
+        type = drepInfo.cred === 'key' ? 'key' : 'script'
+      } else {
+        const parsed = parseDrepId(resolvedDrepId, CardanoMobile)
+        hash = parsed.hash
+        type = parsed.type
+      }
+
+      // CIP105 flag indicates if user entered deprecated CIP-105 format (58-char hex starting with 22/23)
+      // For handles, this should be false since user didn't enter CIP-105 format directly
+      const isCIP105Format =
+        !isHandle && !error && /^(22|23)[0-9a-fA-F]{56}$/.test(trimmedDrepId)
+
+      onSubmit?.({hash, type, CIP105: isCIP105Format})
+      closeModal()
     } catch (e) {
       Alert.alert(strings.global.error, strings.staking.invalidDRepId)
     }
@@ -150,7 +200,7 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
       type: 'key',
       CIP105: false,
     })
-    requestCloseModal()
+    closeModal()
   }
 
   return (
@@ -170,7 +220,7 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
         onBlur={handleInputBlur}
         multiline
         errorDelay={1000}
-        errorText={error?.message}
+        errorText={displayError}
         label={strings.staking.drepID}
         numberOfLines={2}
         focusable
@@ -184,6 +234,25 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
           minHeight: 70,
         }}
       />
+
+      {isHandle && drepInfo && (
+        <>
+          <Space.Height.sm />
+
+          <View style={[a.flex_row, a.justify_between, a.px_lg]}>
+            <Text style={[a.body_3_sm_regular, ta.text_gray_max]}>
+              {strings.staking.resolvedDrepId}
+            </Text>
+
+            <Text
+              style={[a.body_3_sm_regular, ta.text_gray_medium]}
+              numberOfLines={1}
+            >
+              {shortenDRepId(drepInfo.cip_129)}
+            </Text>
+          </View>
+        </>
+      )}
 
       {showCard && (
         <>
@@ -225,17 +294,12 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
         </>
       )}
 
-      <Space.Height.lg />
+      <Space.Height.sm fill />
 
       <Button
         title={strings.staking.confirm}
-        disabled={
-          isNonNullable(error) ||
-          drepId.length === 0 ||
-          !isFetched ||
-          isFetching
-        }
-        onPress={handleOnPress}
+        disabled={isSubmitDisabled}
+        onPress={handleSubmit}
       />
     </Modal.Content>
   )

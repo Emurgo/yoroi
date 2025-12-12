@@ -6,7 +6,7 @@ describe('Jazzicon', () => {
 
   it('should generate a unique identicon SVG for a given seed', () => {
     const seed = 'abcdef1234567890'
-    const jazz = new Jazzicon({seed})
+    const jazz = Jazzicon({seed})
     const svg = jazz.asBase64({size: 100})
 
     expect(svg).toBe(icon)
@@ -18,7 +18,7 @@ describe('Jazzicon', () => {
   it('should throw an error if the seed is invalid', () => {
     const invalidSeed = 'invalidseed'
 
-    expect(() => new Jazzicon({seed: invalidSeed})).toThrow(
+    expect(() => Jazzicon({seed: invalidSeed})).toThrow(
       'Seed must be a valid hexadecimal string.',
     )
   })
@@ -26,16 +26,15 @@ describe('Jazzicon', () => {
   it('should throw an error if there are insufficient base colors', () => {
     const invalidShapeCount = 10
 
-    expect(
-      () =>
-        new Jazzicon({seed: 'abcdef1234567890', shapeCount: invalidShapeCount}),
+    expect(() =>
+      Jazzicon({seed: 'abcdef1234567890', shapeCount: invalidShapeCount}),
     ).toThrow('Insufficient colors, shape count too high.')
   })
 
   it('should throw an error if the seed is too short', () => {
     const shortSeed = 'abc'
 
-    expect(() => new Jazzicon({seed: shortSeed})).toThrow(
+    expect(() => Jazzicon({seed: shortSeed})).toThrow(
       'Seed must be at least 10 characters long.',
     )
   })

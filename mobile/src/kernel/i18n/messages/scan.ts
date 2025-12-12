@@ -169,4 +169,36 @@ export const scanMessages = defineMessages({
     id: 'scan.linksErrorSchemeNotImplemented.help',
     defaultMessage: '!!!This scheme is not implemented',
   },
+  transactionTitle: {
+    id: 'scan.transactionTitle',
+    defaultMessage: '!!!Transaction',
+  },
+  blockTitle: {
+    id: 'scan.blockTitle',
+    defaultMessage: '!!!Block',
+  },
+  addressTitle: {
+    id: 'scan.addressTitle',
+    defaultMessage: '!!!Address',
+  },
+  stakePoolTitle: {
+    id: 'scan.stakePoolTitle',
+    defaultMessage: '!!!Stake Pool',
+  },
+  p2pConnectTitle: {
+    id: 'scan.p2pConnectTitle',
+    defaultMessage: '!!!P2P Connection',
+  },
+  p2pConnectionTitle: {
+    id: 'scan.p2pConnectionTitle',
+    defaultMessage: '!!!P2P Connection',
+  },
+  cancel: {
+    id: 'scan.cancel',
+    defaultMessage: '!!!Cancel',
+  },
+  transactionNotFound: {
+    id: 'scan.transactionNotFound',
+    defaultMessage: '!!!Transaction not found in wallet history.',
+  },
 })

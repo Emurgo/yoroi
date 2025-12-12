@@ -4,10 +4,12 @@ import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {BrowserRoutes} from '~/kernel/navigation/types'
+
 import {BrowseDappScreen} from './useCases/BrowseDapp/BrowseDappScreen'
 import {SearchDappInBrowserScreen} from './useCases/SearchDappInBrowser/SearchDappInBrowserScreen'
 
-const Tab = createStackNavigator<any>()
+const Tab = createStackNavigator<BrowserRoutes>()
 
 export const BrowserNavigator = () => {
   const {palette: p} = useTheme()

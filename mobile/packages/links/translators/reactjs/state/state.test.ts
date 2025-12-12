@@ -22,7 +22,10 @@ describe('linksReducer', () => {
 
     const newState = linksReducer(defaultLinksState, action)
 
-    expect(newState.action).toEqual(action.action)
+    expect(newState.pendingAction).toEqual({
+      source: 'yoroi',
+      action: action.action,
+    })
   })
 
   it('should handle ActionFinished', () => {
@@ -33,7 +36,7 @@ describe('linksReducer', () => {
     const newState = linksReducer(defaultLinksState, action)
 
     // Assert the expected changes in the state
-    expect(newState.action).toBeNull()
+    expect(newState.pendingAction).toBeNull()
   })
 
   it('should handle AthorizationsChanged', () => {

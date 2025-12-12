@@ -1,4 +1,4 @@
-import {Chain} from '@yoroi/types'
+import {Branded, Chain} from '@yoroi/types'
 
 import {GovernanceManager} from './manager'
 
@@ -17,7 +17,12 @@ export const managerMock: GovernanceManager = {
   validateDRepID: () => Promise.reject(new Error('Mock not implemented')),
   getStakingKeyState: () =>
     Promise.resolve({
-      drepDelegation: {action: 'no-confidence', tx: 'txId', slot: 1, epoch: 1},
+      drepDelegation: {
+        action: 'no-confidence',
+        tx: Branded.asTransactionHash('txId'),
+        slot: Branded.asSlotNumber(1),
+        epoch: Branded.asEpochNumber(1),
+      },
     }),
   createDelegationCertificate: () => mockCertificate,
   createLedgerDelegationPayload: () =>

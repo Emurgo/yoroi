@@ -1,3 +1,5 @@
+import {Branded} from '@yoroi/types'
+
 import {QueryClient} from '@tanstack/react-query'
 import {act, renderHook} from '@testing-library/react'
 
@@ -45,7 +47,7 @@ describe('ClaimProvider', () => {
 
     act(() => {
       result.current.claimInfoChanged({
-        txHash: 'txHash',
+        txHash: Branded.asTransactionHash('txHash'),
         status: 'processing',
         amounts: [],
       })

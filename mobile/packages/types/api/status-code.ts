@@ -1,16 +1,19 @@
-export enum ApiHttpStatusCode {
-  Ok = 200,
-  Created = 201,
-  Accepted = 202,
-  NotModified = 304,
-  BadRequest = 400,
-  Unauthorized = 401,
-  Forbidden = 403,
-  NotFound = 404,
-  MethodNotAllowed = 405,
-  ContentNotAcceptable = 406,
-  TooEarly = 425,
-  TooManyRequests = 429,
-  InternalServerError = 500,
-  ServiceUnavailable = 503,
-}
+export const ApiHttpStatusCode = {
+  Ok: 200,
+  Created: 201,
+  Accepted: 202,
+  NotModified: 304,
+  BadRequest: 400,
+  Unauthorized: 401,
+  Forbidden: 403,
+  NotFound: 404,
+  MethodNotAllowed: 405,
+  ContentNotAcceptable: 406,
+  TooEarly: 425,
+  TooManyRequests: 429,
+  InternalServerError: 500,
+  ServiceUnavailable: 503,
+} as const
+
+export type ApiHttpStatusCode =
+  (typeof ApiHttpStatusCode)[keyof typeof ApiHttpStatusCode]

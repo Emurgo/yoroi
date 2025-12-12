@@ -1,95 +1,51 @@
-import {isNumber} from '@yoroi/common'
 import {App} from '@yoroi/types'
 
 import * as React from 'react'
 
 import {logger} from '~/kernel/logger/logger'
-import {
-  initInstallationId,
-  storageCurrentVersion,
-} from '~/kernel/storage/storages'
 
-import {to4_9_0} from './4_9_0'
-import {to4_26_0} from './4_26_0'
-import {to4_28_0} from './4_28_0'
-import {to6_0_0} from './6_0_0'
-import {ErrorMigrationVersion} from './errors'
+import {runMigrations, validateMigrationRegistry} from './runner'
 
-const keyStorageVersion = 'storageVersion'
-
-export const storageVersionMaker = (storage: App.Storage) => {
-  return {
-    save(storageVersion: number) {
-      // should save the last version always after migration, can't be higher than currentVersion
-      if (storageVersion > storageCurrentVersion)
-        throw new ErrorMigrationVersion()
-      return storage.setItem(keyStorageVersion, storageVersion)
-    },
-    async read() {
-      return storage
-        .getItem(keyStorageVersion)
-        .then((version) =>
-          isNumber(version) ? version : storageCurrentVersion,
-        )
-    },
-    async newInstallation() {
-      return storage.setItem(keyStorageVersion, storageCurrentVersion)
-    },
-    async remove() {
-      return storage.removeItem(keyStorageVersion)
-    },
-    key: keyStorageVersion,
-    current: storageCurrentVersion,
-  }
-}
-
+/**
+ * React hook wrapper for migrations
+ * Uses the new functional migration runner internally
+ * Maintains backward compatibility with existing code
+ */
 export const useMigrations = (storage: App.Storage) => {
   const [done, setDone] = React.useState(false)
 
   React.useEffect(() => {
-    const storageVersion = storageVersionMaker(storage)
-
-    const runMigrations = async () => {
-      const currentVersion = await storageVersion.read()
-      logger.info('useMigrations: Current version', {currentVersion})
-
-      if (currentVersion !== storageVersion.current) {
-        if (currentVersion < 1) {
-          await to4_9_0(storage)
-          await storageVersion.save(1)
-          logger.info('useMigrations: Storages migrated to version 1')
-        }
-
-        if (currentVersion < 2) {
-          await to4_26_0(storage)
-          await storageVersion.save(2)
-          logger.info('useMigrations: Storages migrated to version 2')
-        }
-
-        if (currentVersion < 3) {
-          await to4_28_0(storage)
-          await storageVersion.save(3)
-          logger.info('useMigrations: Storages migrated to version 3')
-        }
-
-        if (currentVersion < 4) {
-          await to6_0_0(storage)
-          await storageVersion.save(4)
-          logger.info('useMigrations: Storages migrated to version 4')
-        }
-      } else {
-        logger.info('useMigrations: No migrations needed')
-      }
-
-      const savedVersion = await storageVersion.read()
-      if (savedVersion != storageVersion.current)
-        throw new ErrorMigrationVersion()
-
-      initInstallationId()
-      setDone(true)
+    // Validate migration registry on first run
+    if (!validateMigrationRegistry()) {
+      logger.error('useMigrations: Migration registry validation failed')
+      // Continue anyway - migrations will fail gracefully
     }
 
-    runMigrations()
+    const executeMigrations = async () => {
+      try {
+        const results = await runMigrations(storage)
+        const failed = results.filter((r) => !r.success)
+
+        if (failed.length > 0) {
+          logger.error('useMigrations: Some migrations failed', {
+            failed: failed.map((f) => ({
+              version: f.version,
+              name: f.name,
+              error: f.error.message,
+            })),
+          })
+          // Don't set done if migrations failed
+          return
+        }
+
+        setDone(true)
+      } catch (error) {
+        logger.error('useMigrations: Migration execution failed', {error})
+        // Don't set done on error
+      }
+    }
+
+    executeMigrations()
   }, [storage])
 
   return done

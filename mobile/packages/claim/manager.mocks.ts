@@ -1,5 +1,5 @@
 import {tokenMocks} from '@yoroi/portfolio'
-import {Claim} from '@yoroi/types'
+import {Branded, Claim} from '@yoroi/types'
 
 const claimTokensResponse = {
   accepted: {
@@ -52,7 +52,9 @@ const claimTokensResponse = {
         quantity: 410n,
       },
     ],
-    txHash: '3a27ac29f4218a4503ed241a19e59291835b38ccdb1f1f71ae4dc889d7dbfeb4',
+    txHash: Branded.asTransactionHash(
+      '3a27ac29f4218a4503ed241a19e59291835b38ccdb1f1f71ae4dc889d7dbfeb4',
+    ),
   },
 } as const
 
@@ -86,13 +88,13 @@ export const claimApiMockFetchers = {
 
 const claimManagerError: Claim.Manager = {
   claimTokens: claimTokensApi.error,
-  address: 'address',
+  address: Branded.asAddress('address'),
   primaryTokenInfo: tokenMocks.primaryETH.info,
 } as const
 
 const claimManagerSuccessProcessing: Claim.Manager = {
   claimTokens: claimTokensApi.success.processing as () => Promise<Claim.Info>,
-  address: 'address',
+  address: Branded.asAddress('address'),
   primaryTokenInfo: tokenMocks.primaryETH.info,
 } as const
 

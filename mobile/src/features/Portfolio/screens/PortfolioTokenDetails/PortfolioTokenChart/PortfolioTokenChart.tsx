@@ -9,7 +9,6 @@ import {
 } from '~/features/Portfolio/common/hooks/useGetPortfolioTokenChart'
 
 import {ChartPlaceholder} from './ChartPlaceholder'
-import {PortfolioTokenChartSkeleton} from './PortfolioTokenChartSkeleton'
 import {TokenChart} from './TokenChart'
 import {TokenChartToolbar} from './TokenChartToolBar'
 import {TokenPerformance} from './TokenPerformance'
@@ -34,7 +33,11 @@ export const PortfolioTokenChart = () => {
   return (
     <View style={[a.flex_1, a.flex_col]}>
       {isFetching ? (
-        <PortfolioTokenChartSkeleton />
+        <View style={[a.flex_col]}>
+          <View style={{height: 24}} />
+
+          <ChartPlaceholder />
+        </View>
       ) : (
         <>
           <TokenPerformance

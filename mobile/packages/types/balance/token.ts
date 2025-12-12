@@ -1,10 +1,18 @@
+import {
+  AssetName,
+  BalanceQuantity,
+  PolicyId,
+  TokenFingerprint,
+  TokenId,
+} from '../branded'
+
 type BalanceTokenInfo<Meta = BalanceCardanoMetadatas> = {
   kind: 'ft' | 'nft'
 
-  id: string
-  fingerprint: string // fingerprint is temporary since we can't use it as id for now
-  group: string // for cardano policy id
-  name: string // for cardano asset name
+  id: TokenId
+  fingerprint: TokenFingerprint // fingerprint is temporary since we can't use it as id for now
+  group: PolicyId // for cardano policy id
+  name: AssetName // for cardano asset name
 
   description: string | undefined
   image: string | undefined // link to image
@@ -57,8 +65,8 @@ type BalanceTokenPrice = {
 }
 
 type BalanceTokenSupply = {
-  total: string // total circulating supply of the token, without decimals.
-  circulating: string | null // if set the circulating supply of the token, if null the amount in circulation is unknown.
+  total: BalanceQuantity // total circulating supply of the token, without decimals.
+  circulating: BalanceQuantity | null // if set the circulating supply of the token, if null the amount in circulation is unknown.
 }
 
 type BalanceTokenStatus = 'verified' | 'unverified' | 'scam' | 'outdated'
@@ -70,13 +78,13 @@ export type BalanceToken = {
   status: BalanceTokenStatus
 }
 
-export type BalanceQuantity = `${number}`
+export type {BalanceQuantity}
 
 export type BalanceAmounts = {
-  [tokenId: string]: BalanceQuantity
+  [tokenId: TokenId]: BalanceQuantity
 }
 
 export type BalanceAmount = {
-  tokenId: string
+  tokenId: TokenId
   quantity: BalanceQuantity
 }

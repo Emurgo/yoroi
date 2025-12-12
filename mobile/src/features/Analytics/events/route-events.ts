@@ -44,36 +44,8 @@ export const routeToEvent: RouteToEventMap = {
   'choose-biometric-login': AnalyticsEventEnum.OnboardingBiometricsPageViewed,
   'dark-theme-announcement': AnalyticsEventEnum.OnboardingThemePageViewed,
   'enable-login-with-pin': AnalyticsEventEnum.OnboardingPinCodePageViewed,
-  'review-tx-submitted-tx': {
+  'result-screen': {
     event: AnalyticsEventEnum.TransactionResultsPopupViewed,
     properties: {status: 'Success'},
-  },
-  'review-tx-failed-tx': {
-    event: AnalyticsEventEnum.TransactionResultsPopupViewed,
-    properties: {status: 'Failure'},
-  },
-  'send-submitted-tx': {
-    event: AnalyticsEventEnum.TransactionResultsPopupViewed,
-    properties: {status: 'Success'},
-  },
-  'send-failed-tx': {
-    event: AnalyticsEventEnum.TransactionResultsPopupViewed,
-    properties: {status: 'Failure'},
-  },
-  'staking-submitted-tx': {
-    event: AnalyticsEventEnum.TransactionResultsPopupViewed,
-    properties: {status: 'Success'},
-  },
-  'staking-failed-tx': {
-    event: AnalyticsEventEnum.TransactionResultsPopupViewed,
-    properties: {status: 'Failure'},
-  },
-  'staking-gov-submitted-tx': {
-    event: AnalyticsEventEnum.TransactionResultsPopupViewed,
-    properties: {status: 'Success'},
-  },
-  'staking-gov-failed-tx': {
-    event: AnalyticsEventEnum.TransactionResultsPopupViewed,
-    properties: {status: 'Failure'},
   },
 }

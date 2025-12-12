@@ -1,3 +1,5 @@
+import {Portfolio} from '../index'
+
 export type ApiMetadataFile = {
   name?: string
   mediaType: string
@@ -37,7 +39,7 @@ export type ApiMetadataVersion = {
   version?: string
 }
 
-export type ApiTokenId = `${string}.${string}`
+export type ApiTokenId = Portfolio.Token.Id
 
 export type ApiFutureTokenRecords = {
   [tokenId: string]: ApiFutureToken
@@ -115,7 +117,7 @@ export type ApiOnChainNftMetadataResult =
 
 export type ApiMetadataRecord = ApiFtMetadataRecord | ApiNftMetadataRecord
 
-export interface ApiNftRecords {
+export type ApiNftRecords = {
   [policyId: string]: {
     [assetName: string]: ApiNftMetadata // v1 key is utf8 `00` v2 key is hex `3030`
   }
@@ -125,7 +127,7 @@ export type ApiNftMetadataRecord = {
   metadata: ApiMetadataVersion & ApiNftRecords
 }
 
-export interface ApiFtRecords {
+export type ApiFtRecords = {
   [policyId: string]: {
     [assetName: string]: ApiFtMetadata // v1 key is utf8 `00` v2 key is hex `3030`
   }

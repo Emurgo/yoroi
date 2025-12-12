@@ -1,11 +1,9 @@
 import {invalid} from '@yoroi/common'
-import {Claim, Scan} from '@yoroi/types'
-
-import {castDraft, produce} from 'immer'
+import {Claim, Links} from '@yoroi/types'
 
 export type ClaimActions = Readonly<{
   claimInfoChanged: (claimInfo: Claim.Info) => void
-  scanActionClaimChanged: (scanActionClaim: Scan.ActionClaim) => void
+  scanActionClaimChanged: (scanActionClaim: Links.CardanoActionClaim) => void
   reset: () => void
 }>
 
@@ -24,25 +22,31 @@ export const claimReducer = (
   state: ClaimState,
   action: ClaimAction,
 ): ClaimState => {
-  return produce(state, (draft) => {
-    switch (action.type) {
-      case ClaimActionType.ClaimInfoChanged:
-        draft.claimInfo = castDraft(action.claimInfo)
-        break
-      case ClaimActionType.ScanActionClaimChanged:
-        draft.scanActionClaim = action.scanActionClaim
-        break
-      case ClaimActionType.Reset:
-        draft.claimInfo = undefined
-        draft.scanActionClaim = undefined
-        break
-    }
-  })
+  switch (action.type) {
+    case ClaimActionType.ClaimInfoChanged:
+      return {
+        ...state,
+        claimInfo: action.claimInfo,
+      }
+    case ClaimActionType.ScanActionClaimChanged:
+      return {
+        ...state,
+        scanActionClaim: action.scanActionClaim,
+      }
+    case ClaimActionType.Reset:
+      return {
+        ...state,
+        claimInfo: undefined,
+        scanActionClaim: undefined,
+      }
+    default:
+      return state
+  }
 }
 
 export type ClaimState = Readonly<{
   claimInfo: Claim.Info | undefined
-  scanActionClaim: Scan.ActionClaim | undefined
+  scanActionClaim: Links.CardanoActionClaim | undefined
 }>
 
 export type ClaimActionInfoChanged = {
@@ -52,7 +56,7 @@ export type ClaimActionInfoChanged = {
 
 export type ClaimActionScanActionClaimChanged = {
   type: ClaimActionType.ScanActionClaimChanged
-  scanActionClaim: Scan.ActionClaim
+  scanActionClaim: Links.CardanoActionClaim
 }
 
 export type ClaimActionReset = {

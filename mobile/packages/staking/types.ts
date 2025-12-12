@@ -1,25 +1,49 @@
-import {Api as AppApi} from '@yoroi/types'
-
-import {WalletChecksum as WalletChecksumType} from '@emurgo/cip4-js'
-import * as CoreTypes from '@emurgo/cross-csl-core'
 import {
   Addressing as AddressingType,
+  Api as AppApi,
+  Balance,
   CardanoAddressedUtxo as CardanoAddressedUtxoType,
-  MultiTokenValue as MultiTokenValueType,
   SignedTx as SignedTxType,
   StakingKeyBalances as StakingKeyBalancesType,
   TokenEntry as TokenEntryType,
   TxMetadata as TxMetadataType,
   UnsignedTx as UnsignedTxType,
-} from '@emurgo/yoroi-lib'
+} from '@yoroi/types'
+
+import {WalletChecksum as WalletChecksumType} from '@emurgo/cip4-js'
+import * as CoreTypes from '@emurgo/cross-csl-core'
 import {AxiosRequestConfig} from 'axios'
+
+/**
+ * Staking info (UI state)
+ */
+export type StakingInfo =
+  | {status: 'not-registered'}
+  | {status: 'registered'}
+  | {
+      status: 'staked'
+      poolId: string
+      amount: Balance.Quantity
+      rewards: Balance.Quantity
+    }
+
+/**
+ * Staking status (delegation state)
+ */
+export type StakingStatus =
+  | {isRegistered: false}
+  | {isRegistered: true}
+  | {
+      isRegistered: true
+      poolKeyHash: string
+    }
 
 export namespace CardanoTypes {
   export type TxMetadata = TxMetadataType
   export type CardanoAddressedUtxo = CardanoAddressedUtxoType
   export type SignedTx = SignedTxType
   export type UnsignedTx = UnsignedTxType
-  export type MultiTokenValue = MultiTokenValueType
+  export type MultiTokenValue = Balance.Amounts
   export type StakingKeyBalances = StakingKeyBalancesType
   export type WalletChecksum = WalletChecksumType
 
@@ -159,7 +183,7 @@ export namespace Catalyst {
     proposers_rewards: number
     fund_id: number
     challenge_url: string
-    highlights: any
+    highlights: unknown
   }
 
   export type CatalystApiFundNext = {

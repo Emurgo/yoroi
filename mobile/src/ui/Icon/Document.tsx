@@ -5,7 +5,7 @@ import {IconProps} from './type'
 
 export const Document = ({size = 40, color = 'black'}: IconProps) => (
   <Svg width={size} height={size} viewBox="0 0 24 24">
-    <G transform="scale(1.25) translateX(-3px) translateY(-3px)">
+    <G transform="scale(1.25) translate(-3, -3)">
       <Rect
         id="document"
         stroke={color}

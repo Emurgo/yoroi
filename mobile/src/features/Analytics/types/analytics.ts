@@ -3,7 +3,7 @@ export type CaptureDataFn = (
   properties?: Record<string, string | number | boolean | null | string[]>,
 ) => void
 
-export interface AnalyticsProvider {
+export type AnalyticsProvider = {
   navigate: (to: string) => void
   capture: CaptureDataFn
   install: (campaign: string, source: string) => void

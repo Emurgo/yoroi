@@ -1,5 +1,5 @@
 import {tokenBalanceMocks} from '@yoroi/portfolio'
-import {Transfer} from '@yoroi/types'
+import {Address, Transfer} from '@yoroi/types'
 
 import {targetGetAllocatedToOthers} from './target-get-allocated-to-others'
 
@@ -14,7 +14,7 @@ describe('TransferAllocatedToOtherTargets', () => {
           addressRecords: undefined,
         },
         entry: {
-          address: '',
+          address: '' as Address,
           amounts: {
             [tokenBalanceMocks.ftNoTicker.info.id]: {
               ...tokenBalanceMocks.ftNoTicker,
@@ -31,7 +31,7 @@ describe('TransferAllocatedToOtherTargets', () => {
           selectedNameServer: undefined,
         },
         entry: {
-          address: 'address2',
+          address: 'address2' as Address as Address,
           amounts: {
             [tokenBalanceMocks.ftNoTicker.info.id]: {
               ...tokenBalanceMocks.ftNoTicker,
@@ -48,7 +48,7 @@ describe('TransferAllocatedToOtherTargets', () => {
           selectedNameServer: undefined,
         },
         entry: {
-          address: 'address2',
+          address: 'address2' as Address as Address,
           amounts: {
             [tokenBalanceMocks.ftNoTicker.info.id]: {
               ...tokenBalanceMocks.ftNoTicker,

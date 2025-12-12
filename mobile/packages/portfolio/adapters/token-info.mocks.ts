@@ -1,5 +1,5 @@
 import {cacheRecordMaker} from '@yoroi/common'
-import {Api, App, Portfolio} from '@yoroi/types'
+import {Api, App, Branded, Portfolio} from '@yoroi/types'
 
 import {freeze} from 'immer'
 
@@ -34,7 +34,9 @@ const nftCryptoKitty: Portfolio.Token.Info = {
   reference: '0xabcdef1234567890.cryptokitty1234',
   website: 'https://www.cryptokitties.co',
   originalImage: 'https://cdn.example.com/ck-original1234.png',
-  id: '14696a4676909f4e3cb1f2e60e2e08e5abed70caf5c02699be971139.43554259',
+  id: Branded.asTokenId(
+    '14696a4676909f4e3cb1f2e60e2e08e5abed70caf5c02699be971139.43554259',
+  ),
   fingerprint: 'asset1s7nlt45cc82upqewvjtgu7g97l7eg483c6wu75',
   nature: Portfolio.Token.Nature.Secondary,
   type: Portfolio.Token.Type.NFT,
@@ -52,7 +54,9 @@ const rnftWhatever: Portfolio.Token.Info = {
   reference: 'transactionId#1',
   website: 'https://www.whaha.co',
   originalImage: 'https://cdn.whatha.com/ck-original1234.png',
-  id: '14696a4676909f4e3cb1f2e60e2e08e5abed70caf5c02699be971139.3031',
+  id: Branded.asTokenId(
+    '14696a4676909f4e3cb1f2e60e2e08e5abed70caf5c02699be971139.3031',
+  ),
   fingerprint: 'asset1s7nlt45cc82upqewvjtgu7g97l7eg483c6wu75',
   nature: Portfolio.Token.Nature.Secondary,
   type: Portfolio.Token.Type.NFT,
@@ -70,7 +74,9 @@ const ftNoTicker: Portfolio.Token.Info = {
   reference: 'transactionId#1',
   website: 'https://www.whaha.co',
   originalImage: 'https://cdn.whatha.com/ck-original1234.png',
-  id: '14696a4676909f4e3cb1f2e60e2e08e5abed70caf5c02699be971139.3032',
+  id: Branded.asTokenId(
+    '14696a4676909f4e3cb1f2e60e2e08e5abed70caf5c02699be971139.3032',
+  ),
   fingerprint: 'asset1s7nlt45cc82upqewvjtgu7g97l7eg483c6wu75',
   nature: Portfolio.Token.Nature.Secondary,
   type: Portfolio.Token.Type.FT,
@@ -88,7 +94,9 @@ const ftNameless: Portfolio.Token.Info = {
   reference: 'transactionId#1',
   website: 'https://www.whaha.co',
   originalImage: 'https://cdn.whatha.com/ck-original1234.png',
-  id: '14696a4676909f4e3cb1f2e60e2e08e5abed70caf5c02699be971139.3033',
+  id: Branded.asTokenId(
+    '14696a4676909f4e3cb1f2e60e2e08e5abed70caf5c02699be971139.3033',
+  ),
   fingerprint: 'asset1s7nlt45cc82upqewvjtgu7g97l7eg483c6wu75',
   nature: Portfolio.Token.Nature.Secondary,
   type: Portfolio.Token.Type.FT,
@@ -98,19 +106,37 @@ const ftNameless: Portfolio.Token.Info = {
 // NOTE: If you marked a record as not modified 304, remember to add to the intiial state
 // otherwise the tests will throw cuz it will be expected the record to exist in the cache
 const apiResponseTokenInfos: Portfolio.Api.TokenInfosResponse = {
-  [nftCryptoKitty.id]: [Api.HttpStatusCode.Ok, nftCryptoKitty, 'hash2-1', 3600],
-  [rnftWhatever.id]: [Api.HttpStatusCode.NotModified, 3600],
-  [ftNoTicker.id]: [Api.HttpStatusCode.Ok, ftNoTicker, 'hash4-1', 3600],
-  [ftNameless.id]: [Api.HttpStatusCode.Ok, ftNameless, 'hash5', 3600],
+  [nftCryptoKitty.id as Portfolio.Token.Id]: [
+    Api.HttpStatusCode.Ok,
+    nftCryptoKitty,
+    'hash2-1',
+    3600,
+  ],
+  [rnftWhatever.id as Portfolio.Token.Id]: [
+    Api.HttpStatusCode.NotModified,
+    3600,
+  ],
+  [ftNoTicker.id as Portfolio.Token.Id]: [
+    Api.HttpStatusCode.Ok,
+    ftNoTicker,
+    'hash4-1',
+    3600,
+  ],
+  [ftNameless.id as Portfolio.Token.Id]: [
+    Api.HttpStatusCode.Ok,
+    ftNameless,
+    'hash5',
+    3600,
+  ],
 }
 
 const apiRequestTokenInfos: ReadonlyArray<
   Api.RequestWithCache<Portfolio.Token.Id>
 > = [
-  [nftCryptoKitty.id, 'hash2'],
-  [rnftWhatever.id, 'hash3'],
-  [ftNoTicker.id, 'hash4'],
-  [ftNameless.id, 'hash5'],
+  [nftCryptoKitty.id as Portfolio.Token.Id, 'hash2'],
+  [rnftWhatever.id as Portfolio.Token.Id, 'hash3'],
+  [ftNoTicker.id as Portfolio.Token.Id, 'hash4'],
+  [ftNameless.id as Portfolio.Token.Id, 'hash5'],
 ]
 
 const storage: {

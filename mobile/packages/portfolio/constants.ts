@@ -1,8 +1,8 @@
-import {Portfolio} from '@yoroi/types'
+import {Portfolio, TokenId} from '@yoroi/types'
 
 import {freeze} from 'immer'
 
-export const primaryTokenId = '.'
+export const primaryTokenId: TokenId = '.' as TokenId
 
 export const configCurrencies: Readonly<Portfolio.Currency.ConfigBySymbol> =
   freeze(

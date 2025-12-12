@@ -16,10 +16,10 @@ export const cardanoApiMaker = ({
   request?: Fetcher
 }): Readonly<Api.Cardano.Api> => {
   const baseUrl = API_ENDPOINTS[network].root
-  const legacyBaseUrl = API_ENDPOINTS[network].legacy
   const getProtocolParams = getProtocolParamsWrapper(baseUrl, request)
   const getBestBlock = getBestBlockWrapper(baseUrl, request)
-  const getUtxoData = getUtxoDataWapper(legacyBaseUrl, request)
+  // Migrated to backend-zero: uses baseUrl instead of legacyBaseUrl
+  const getUtxoData = getUtxoDataWapper(baseUrl, request)
 
   return freeze({
     getProtocolParams,

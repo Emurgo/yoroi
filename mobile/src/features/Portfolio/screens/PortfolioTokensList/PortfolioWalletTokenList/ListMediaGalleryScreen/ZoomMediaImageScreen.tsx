@@ -1,4 +1,6 @@
+import {isEmptyString} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {useWindowDimensions} from 'react-native'
@@ -9,12 +11,10 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated'
 
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useParams} from '~/kernel/navigation/hooks/useParams'
 import {NftRoutes} from '~/kernel/navigation/types'
 import {FadeIn} from '~/ui/FadeIn/FadeIn'
 import {MediaPreview} from '~/ui/MediaPreview/MediaPreview'
-import {isEmptyString} from '~/wallets/utils/string'
 
 type Params = NftRoutes['nft-details']
 
@@ -29,7 +29,7 @@ export const ZoomMediaImageScreen = () => {
   const dimensions = useWindowDimensions()
 
   // reading from the getter, there is no need to subscribe to changes
-  const [amount] = React.useState(wallet.balances.records.get(id))
+  const [amount] = React.useState(wallet.balances().records.get(id))
 
   // Shared values for animations
   const scale = useSharedValue(1)
@@ -46,7 +46,7 @@ export const ZoomMediaImageScreen = () => {
       // Store the current scale when gesture starts
       lastScale.current = scale.value
     })
-    .onUpdate((event: any) => {
+    .onUpdate((event: {scale: number}) => {
       // Apply the pinch scale
       const newScale = lastScale.current * event.scale
       scale.value = Math.max(1, Math.min(3, newScale)) // Clamp between 1 and 3
@@ -66,7 +66,7 @@ export const ZoomMediaImageScreen = () => {
       lastTranslateX.current = translateX.value
       lastTranslateY.current = translateY.value
     })
-    .onUpdate((event: any) => {
+    .onUpdate((event: {translationX: number; translationY: number}) => {
       // Only allow panning when zoomed in
       if (scale.value > 1) {
         translateX.value = lastTranslateX.current + event.translationX

@@ -4,10 +4,10 @@ const seed =
   'b04dc22991594170974bbbb5908cc50b48f236d680a9ebfe6c1d00f52f8f4813341943eb66dec48cfe7f3be5beec705b91300a07641e668ff19dfa2fbeccbfba'
 
 describe('Blockies', () => {
-  let blockie: Blockies
+  let blockie: ReturnType<typeof Blockies>
 
   beforeEach(() => {
-    blockie = new Blockies({seed})
+    blockie = Blockies({seed})
   })
 
   it('should generate a base64 image with defaults', () => {
@@ -24,7 +24,7 @@ describe('Blockies', () => {
   })
 
   it('should generate a base64 image tiny seed', () => {
-    blockie = new Blockies({seed: '0'})
+    blockie = Blockies({seed: '0'})
     const base64Image = blockie.asBase64()
     expect(base64Image).toMatch(/^data:image\/svg\+xml;base64,/)
   })

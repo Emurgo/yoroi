@@ -4,7 +4,7 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {useRemoteConfig} from '~/features/RemoteConfig/hooks/useRemoteConfig'
+import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
 import {GovernanceStatusCard} from '~/features/Staking/Governance/common/GovernanceStatusCard/GovernanceStatusCard'
 import {LearnMoreLink} from '~/features/Staking/Governance/common/LearnMoreLink/LearnMoreLink'
 import {OtherDrepCard} from '~/features/Staking/Governance/common/OtherDrepCard/OtherDrepCard'

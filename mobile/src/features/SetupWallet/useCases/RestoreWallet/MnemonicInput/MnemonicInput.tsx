@@ -1,3 +1,5 @@
+import {isEmptyString} from '@yoroi/cardano-wallet'
+import {useDebouncedCallback} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {wordlists} from 'bip39'
@@ -17,7 +19,6 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {Alert} from '~/ui/AlertIllustration/AlertIllustration'
 import {Check2} from '~/ui/Check2Illustration/Check2Illustration'
 import {Space} from '~/ui/Space/Space'
-import {isEmptyString} from '~/wallets/utils/string'
 
 import {MnemonicWordInputRef} from '../RestoreWalletScreen'
 import {TextInput} from './TextInput/TextInput'
@@ -37,6 +38,7 @@ export const MnemonicInput = ({
   scrollViewRef,
   onError,
   onClearError,
+  focusedIndex,
 }: {
   length: number
   isValidPhrase: boolean
@@ -54,6 +56,7 @@ export const MnemonicInput = ({
   scrollViewRef: React.RefObject<ScrollView | null>
   onError: (index: number) => void
   onClearError: (index: number) => void
+  focusedIndex: number
 }) => {
   const strings = useStrings()
   const {palette: p, atoms: ta} = useTheme()
@@ -84,6 +87,7 @@ export const MnemonicInput = ({
         onError={onError}
         onClearError={onClearError}
         scrollViewRef={scrollViewRef}
+        focusedIndex={focusedIndex}
       />
 
       <Space.Height.lg />
@@ -157,7 +161,9 @@ type MnemonicWordsInputProps = {
   onFocus: (index: number) => void
   onError: (index: number) => void
   onClearError: (index: number) => void
+  focusedIndex: number
 }
+
 const MnemonicWordsInput = ({
   mnemonicSelectedWords,
   mnenonicRefs,
@@ -170,11 +176,60 @@ const MnemonicWordsInput = ({
   onFocus,
   onError,
   onClearError,
+  focusedIndex,
 }: MnemonicWordsInputProps) => {
   const rowHeightRef = React.useRef<number | null>(null)
   const {atoms: ta} = useTheme()
 
   useAutoFocus(mnenonicRefs[0])
+
+  const handleSelect = React.useCallback(
+    (index: number) => (word: string) => {
+      onSelect(index, word)
+    },
+    [onSelect],
+  )
+
+  const handleFocus = React.useCallback(
+    (index: number) => () => {
+      if (rowHeightRef.current == null) return
+      const columnNumber = index % 3
+      const rowNumber = (index - columnNumber) / 3
+      scrollViewRef?.current?.scrollTo({
+        y: rowNumber * rowHeightRef.current,
+      })
+
+      onFocus(index)
+    },
+    [onFocus, scrollViewRef],
+  )
+
+  const handleKeyPress = React.useCallback(
+    (index: number) => (currentWord: string) => {
+      if (
+        mnenonicRefs[index]?.current &&
+        isEmptyString(currentWord) &&
+        index > 0
+      ) {
+        mnenonicRefs[index - 1]?.current?.focus()
+      }
+    },
+    [mnenonicRefs],
+  )
+
+  const handleError = React.useCallback(
+    (index: number) => () => {
+      onError(index)
+    },
+    [onError],
+  )
+
+  const handleClearError = React.useCallback(
+    (index: number) => () => {
+      onClearError(index)
+    },
+    [onClearError],
+  )
 
   return (
     <View
@@ -183,6 +238,7 @@ const MnemonicWordsInput = ({
     >
       {mnemonicSelectedWords.map((word, index) => {
         const error = inputErrorsIndexes.includes(index)
+        const isFocused = focusedIndex === index
 
         return (
           <View
@@ -207,34 +263,16 @@ const MnemonicWordsInput = ({
             <MnemonicWordInput
               selectedWord={word}
               index={index}
-              suggestedWords={suggestedWords}
+              isFocused={isFocused}
+              suggestedWords={isFocused ? suggestedWords : []}
               setSuggestedWords={setSuggestedWords}
               ref={mnenonicRefs[index]}
-              onSelect={(word: string) => {
-                onSelect(index, word)
-              }}
-              onFocus={() => {
-                if (rowHeightRef.current == null) return
-                const columnNumber = index % 3
-                const rowNumber = (index - columnNumber) / 3
-                scrollViewRef?.current?.scrollTo({
-                  y: rowNumber * rowHeightRef.current,
-                })
-
-                onFocus(index)
-              }}
+              onSelect={handleSelect(index)}
+              onFocus={handleFocus(index)}
               isValidPhrase={isValidPhrase}
-              onKeyPress={(currentWord: string) => {
-                if (
-                  mnenonicRefs[index]?.current &&
-                  isEmptyString(currentWord) &&
-                  index > 0
-                ) {
-                  mnenonicRefs[index - 1]?.current?.focus()
-                }
-              }}
-              onError={() => onError(index)}
-              onClearError={() => onClearError(index)}
+              onKeyPress={handleKeyPress(index)}
+              onError={handleError(index)}
+              onClearError={handleClearError(index)}
               error={error}
             />
           </View>
@@ -264,6 +302,7 @@ type MnemonicWordInputProps = {
   isValidPhrase: boolean
   selectedWord: string
   index: number
+  isFocused: boolean
   suggestedWords: Array<string>
   setSuggestedWords: (suggestedWord: Array<string>) => void
   onError: (error: string) => void
@@ -271,7 +310,7 @@ type MnemonicWordInputProps = {
   error: boolean
 }
 
-const MnemonicWordInput = React.forwardRef<
+const MnemonicWordInputComponent = React.forwardRef<
   MnemonicWordInputRef,
   MnemonicWordInputProps
 >(
@@ -282,6 +321,7 @@ const MnemonicWordInput = React.forwardRef<
       isValidPhrase = false,
       onKeyPress,
       selectedWord,
+      isFocused,
       suggestedWords,
       setSuggestedWords,
       onError,
@@ -294,6 +334,24 @@ const MnemonicWordInput = React.forwardRef<
     const [word, setWord] = React.useState(selectedWord)
     const {isDark, palette: p} = useTheme()
 
+    // Sync local state with prop changes
+    React.useEffect(() => {
+      setWord(selectedWord)
+    }, [selectedWord])
+
+    // Update suggestions when this input becomes focused
+    React.useEffect(() => {
+      if (isValidPhrase) return // Don't update suggestions when phrase is verified
+      if (isFocused) {
+        if (!isEmptyString(word)) {
+          const matches = getMatchingWords(normalizeText(word))
+          setSuggestedWords(matches)
+        } else {
+          setSuggestedWords([])
+        }
+      }
+    }, [isFocused, word, setSuggestedWords, isValidPhrase])
+
     React.useImperativeHandle(
       ref,
       () => ({
@@ -304,26 +362,37 @@ const MnemonicWordInput = React.forwardRef<
     )
 
     const handleOnSubmitEditing = React.useCallback(() => {
+      // If there's a suggested word, use it
       if (!isEmptyString(suggestedWords[0])) {
-        onSelect(normalizeText(suggestedWords[0] ?? ''))
-      }
-    }, [suggestedWords, onSelect])
-
-    const handleOnChangeText = React.useCallback(
-      (text: string) => {
-        if (text.endsWith(' ')) {
-          text = text.trimEnd()
-          setWord(normalizeText(text))
-          handleOnSubmitEditing()
-        } else {
-          setWord(normalizeText(text))
+        const selectedWord = normalizeText(suggestedWords[0] ?? '')
+        setWord(selectedWord)
+        onSelect(selectedWord)
+      } else if (!isEmptyString(word)) {
+        // If no suggestion but word exists, check if it's a valid word
+        const normalizedWord = normalizeText(word)
+        const matches = getMatchingWords(normalizedWord)
+        // If it's an exact match (only one match and it's the same), select it
+        if (matches.length === 1 && matches[0] === normalizedWord) {
+          setWord(normalizedWord)
+          onSelect(normalizedWord)
         }
+      }
+    }, [suggestedWords, word, onSelect])
 
-        if (!isEmptyString(text)) {
-          const suggestedWords = getMatchingWords(text)
-          setSuggestedWords(suggestedWords)
+    // Debounced word matching - only update if this input is focused
+    useDebouncedCallback(
+      React.useCallback(() => {
+        if (isValidPhrase) {
+          setSuggestedWords([])
+          return
+        }
+        if (!isFocused) return // Only update suggestions for focused input
 
-          if (suggestedWords.length <= 0) {
+        if (!isEmptyString(word)) {
+          const matches = getMatchingWords(word)
+          setSuggestedWords(matches)
+
+          if (matches.length <= 0) {
             onError('error')
           } else {
             onClearError()
@@ -332,16 +401,60 @@ const MnemonicWordInput = React.forwardRef<
           setSuggestedWords([])
           onClearError()
         }
+      }, [
+        word,
+        setSuggestedWords,
+        onError,
+        onClearError,
+        isFocused,
+        isValidPhrase,
+      ]),
+      word,
+      100, // 100ms debounce
+      false, // Don't skip first render
+    )
+
+    const handleOnChangeText = React.useCallback(
+      (text: string) => {
+        if (text.endsWith(' ')) {
+          // Space pressed - try to complete the word
+          text = text.trimEnd()
+          const normalized = normalizeText(text)
+          setWord(normalized)
+          handleOnSubmitEditing()
+        } else {
+          // Regular typing - only update local state
+          const normalized = normalizeText(text)
+          setWord(normalized)
+        }
+
+        // Clear suggestions immediately if empty
+        if (isEmptyString(text)) {
+          if (isFocused) {
+            setSuggestedWords([])
+          }
+          onClearError()
+          onSelect('')
+        }
       },
-      [onClearError, onError, handleOnSubmitEditing, setSuggestedWords],
+      [
+        onClearError,
+        handleOnSubmitEditing,
+        setSuggestedWords,
+        onSelect,
+        isFocused,
+      ],
     )
 
     const handleOnBlur = React.useCallback(() => {
-      if (word !== selectedWord) {
+      // If word changed and doesn't match selectedWord, try to submit it
+      if (word !== selectedWord && !isEmptyString(word)) {
         handleOnSubmitEditing()
+      } else if (isEmptyString(word) && !isEmptyString(selectedWord)) {
+        // If field was cleared, notify parent
+        onSelect('')
       }
-      setSuggestedWords([])
-    }, [handleOnSubmitEditing, selectedWord, setSuggestedWords, word])
+    }, [handleOnSubmitEditing, selectedWord, word, onSelect])
 
     return (
       <TextInput
@@ -399,15 +512,34 @@ const MnemonicWordInput = React.forwardRef<
   },
 )
 
+// Memoize component to prevent unnecessary re-renders
+export const MnemonicWordInput = React.memo(
+  MnemonicWordInputComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.selectedWord === nextProps.selectedWord &&
+      prevProps.error === nextProps.error &&
+      prevProps.isValidPhrase === nextProps.isValidPhrase &&
+      prevProps.isFocused === nextProps.isFocused &&
+      prevProps.suggestedWords === nextProps.suggestedWords
+    )
+  },
+)
+
 const normalizeText = (text: string) => {
   const NON_LOWERCASE_LETTERS = /[^a-z]+/g
 
   return text.trim().toLowerCase().replace(NON_LOWERCASE_LETTERS, '')
 }
-const getMatchingWords = (targetWord: string) =>
-  (wordlists.EN as Array<string>).filter((word) =>
-    word.startsWith(normalizeText(targetWord)),
-  )
+
+// Pre-compute normalized wordlist once at module level for faster lookups
+const normalizedWordlist = (wordlists.EN as Array<string>).map(normalizeText)
+
+// Optimized word matching function (uses pre-normalized wordlist)
+const getMatchingWords = (targetWord: string) => {
+  const normalized = normalizeText(targetWord)
+  return normalizedWordlist.filter((word) => word.startsWith(normalized))
+}
 
 const useAutoFocus = (
   ref: React.RefObject<MnemonicWordInputRef | null> | undefined,

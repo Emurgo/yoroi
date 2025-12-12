@@ -47,9 +47,12 @@ describe('LinksProvider', () => {
       })
     })
 
-    expect(result.current.action).toEqual({
-      info: mocks.exchangeActionInfo,
-      isTrusted: false,
+    expect(result.current.pendingAction).toEqual({
+      source: 'yoroi',
+      action: {
+        info: mocks.exchangeActionInfo,
+        isTrusted: false,
+      },
     })
   })
 
@@ -66,6 +69,6 @@ describe('LinksProvider', () => {
       result.current.actionFinished()
     })
 
-    expect(result.current.action).toBeNull()
+    expect(result.current.pendingAction).toBeNull()
   })
 })

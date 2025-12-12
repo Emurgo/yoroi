@@ -73,6 +73,7 @@ export type BasePalette = {
   bg_gradient_1: Gradient
   bg_gradient_2: Gradient
   bg_gradient_3: Gradient
+  bg_gradient_4: Gradient
 }
 
 export type ThemedPalette = BasePalette & {

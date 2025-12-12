@@ -1,2 +1,2 @@
-export class AddressErrorWrongNetwork extends Error {}
-export class AddressErrorInvalid extends Error {}
+// Re-export from centralized error location
+export {AddressErrorWrongNetwork, AddressErrorInvalid} from '@yoroi/types'

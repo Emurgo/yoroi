@@ -1,5 +1,7 @@
 import {Abstain} from './Abstain'
 import {Ada} from './Ada'
+import {AdaHandle} from './AdaHandle'
+import {Airdrop} from './Airdrop'
 import {Analytics} from './Analytics'
 import {AngleDown} from './AngleDown'
 import {AngleUp} from './AngleUp'
@@ -156,6 +158,8 @@ export * from './type'
 export const Icon = {
   Abstain,
   Ada,
+  AdaHandle,
+  Airdrop,
   Exchange,
   Analytics,
   Assets,

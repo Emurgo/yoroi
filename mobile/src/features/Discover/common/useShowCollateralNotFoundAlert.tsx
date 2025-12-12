@@ -1,6 +1,6 @@
-import {Alert} from 'react-native'
+import {YoroiWallet} from '@yoroi/cardano-wallet'
 
-import {YoroiWallet} from '~/wallets/cardano/types'
+import {Alert} from 'react-native'
 
 export const useShowCollateralNotFoundAlert = ({
   wallet,

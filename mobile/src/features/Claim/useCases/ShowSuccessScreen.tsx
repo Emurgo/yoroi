@@ -1,7 +1,9 @@
+import {isEmptyString} from '@yoroi/cardano-wallet'
 import {useClaim} from '@yoroi/claim'
 import {sortTokenAmountsByInfo} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {App, Claim, Portfolio} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {
@@ -12,19 +14,15 @@ import {
   TextProps,
   TouchableOpacity,
   View,
-  ViewProps,
 } from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {Button} from '~/ui/Button/Button'
 import {ClaimSuccessIllustration} from '~/ui/ClaimSuccessIllustration/ClaimSuccessIllustration'
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {Icon} from '~/ui/Icon'
+import {ResultScreen} from '~/ui/ResultScreen/ResultScreen'
 import {Space} from '~/ui/Space/Space'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
-import {isEmptyString} from '~/wallets/utils/string'
 
 import {useDialogs} from '../common/useDialogs'
 import {useNavigateTo} from '../common/useNavigateTo'
@@ -33,7 +31,6 @@ export const ShowSuccessScreen = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const {claimInfo} = useClaim()
-  const {palette: p} = useTheme()
 
   if (!claimInfo)
     throw new App.Errors.InvalidState(
@@ -43,47 +40,31 @@ export const ShowSuccessScreen = () => {
   const {status, txHash, amounts} = claimInfo
 
   return (
-    <SafeAreaView
-      edges={['top', 'left', 'right']}
-      style={[a.flex_1, {backgroundColor: p.bg_color_max}]}
-    >
-      <View style={[a.flex_1]}>
-        <Header>
-          <ClaimSuccessIllustration zoom={0.65} />
-
+    <ResultScreen
+      type="success"
+      context="claim"
+      icon={<ClaimSuccessIllustration zoom={0.65} />}
+      customContent={
+        <>
           <Status status={status} />
-        </Header>
-
-        <Space.Height.lg />
-
-        <AmountList amounts={amounts} />
-      </View>
-
-      <Actions>
-        <Space.Height.lg />
-
-        {!isEmptyString(txHash) && txHash && (
-          <>
-            <TxHash txHash={txHash} />
-
-            <Space.Height.lg />
-          </>
-        )}
-
-        <Button onPress={navigateTo.back} title={strings.global.ok} />
-
-        <Space.Height.lg />
-      </Actions>
-    </SafeAreaView>
+          <Space.Height.lg />
+          <AmountList amounts={amounts} />
+          {!isEmptyString(txHash) && txHash && (
+            <>
+              <Space.Height.lg />
+              <TxHash txHash={txHash} />
+            </>
+          )}
+        </>
+      }
+      primaryAction={{
+        title: strings.global.ok,
+        onPress: navigateTo.back,
+      }}
+    />
   )
 }
 
-const Actions = ({style, ...props}: ViewProps) => (
-  <View style={[style, a.px_lg]} {...props} />
-)
-const Header = ({style, ...props}: ViewProps) => {
-  return <View style={[a.align_center, a.px_lg, style]} {...props} />
-}
 const Status = ({
   status,
   style,

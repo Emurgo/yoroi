@@ -20,4 +20,32 @@ describe('detectTheme', () => {
     const result = detectTheme(colorScheme)
     expect(result).toBe('default-dark')
   })
+
+  it('should return "default-dark" when next theme is "default-dark"', () => {
+    const colorScheme = 'light'
+    const nextTheme = 'default-dark'
+    const result = detectTheme(colorScheme, nextTheme)
+    expect(result).toBe('default-dark')
+  })
+
+  it('should return "default-light" when next theme is "default-light"', () => {
+    const colorScheme = 'dark'
+    const nextTheme = 'default-light'
+    const result = detectTheme(colorScheme, nextTheme)
+    expect(result).toBe('default-light')
+  })
+
+  it('should handle null colorScheme in system mode', () => {
+    const colorScheme = null
+    const nextTheme = 'system'
+    const result = detectTheme(colorScheme, nextTheme)
+    expect(result).toBe('default-light')
+  })
+
+  it('should handle undefined colorScheme in system mode', () => {
+    const colorScheme = undefined
+    const nextTheme = 'system'
+    const result = detectTheme(colorScheme, nextTheme)
+    expect(result).toBe('default-light')
+  })
 })

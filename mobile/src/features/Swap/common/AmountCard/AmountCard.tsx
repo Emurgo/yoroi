@@ -1,6 +1,9 @@
+import {formatTokenWithText} from '@yoroi/cardano-wallet'
 import {atomicToDecimal, parseNumberFromText} from '@yoroi/common'
 import {isPrimaryToken, isPrimaryTokenInfo} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {Branded} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {Platform, Pressable, Text, TextInput, View} from 'react-native'
@@ -9,13 +12,11 @@ import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfol
 import {useNavigateTo} from '~/features/Swap/common/navigation'
 import {useSwap} from '~/features/Swap/common/useSwap'
 import {useSwapTokenActivity} from '~/features/Swap/common/useSwapTokenActivity'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {PairedBalance} from '~/ui/PairedBalance/PairedBalance'
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
-import {formatTokenWithText} from '~/wallets/utils/format'
 
 export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
   const {atoms: ta, palette: p} = useTheme()
@@ -195,7 +196,7 @@ export const AmountCard = ({direction}: {direction: 'in' | 'out'}) => {
             <PairedBalance
               amount={{
                 info,
-                quantity: BigInt(quantity || '0'),
+                quantity: BigInt(quantity ?? Branded.ZERO_QUANTITY),
               }}
               textStyle={a.body_2_md_regular}
               tokenActivity={tokenActivity}

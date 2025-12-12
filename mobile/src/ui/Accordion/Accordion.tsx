@@ -6,7 +6,7 @@ import {Text, TouchableOpacity, View, type ViewProps} from 'react-native'
 
 import {Icon} from '../Icon'
 
-interface AccordionProps extends ViewProps {
+type AccordionProps = ViewProps & {
   /** Label for header of the accordion */
   label: ReactNode
   /** State of the accordion: true === show content */

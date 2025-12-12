@@ -26,7 +26,7 @@ const asyncBehaviorMaker = <T>({
   otherErrors?: {[error: string]: typeof error}
   data: T
   timeout?: number
-  emptyRepresentation: any
+  emptyRepresentation: T
 }) =>
   freeze({
     delayed: (..._args: never) => delayed<T>({data, timeout}),

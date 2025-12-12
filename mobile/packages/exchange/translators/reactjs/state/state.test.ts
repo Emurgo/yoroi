@@ -1,3 +1,5 @@
+import {isError} from '@yoroi/common'
+
 import {
   ExchangeAction,
   ExchangeActionType,
@@ -13,7 +15,8 @@ describe('State Actions', () => {
       exchangeReducer(exchangeDefaultState, action)
 
       fail('it should crash before')
-    } catch (e: any) {
+    } catch (e: unknown) {
+      if (!isError(e)) throw e
       expect(e.message).toEqual('ExchangeFormReducer invalid action')
     }
   })

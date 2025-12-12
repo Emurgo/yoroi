@@ -1,16 +1,23 @@
-import {Balance} from '@yoroi/types'
+import {primaryTokenId} from '@yoroi/portfolio'
+import {
+  AssetName,
+  Balance,
+  PolicyId,
+  TokenFingerprint,
+  TokenId,
+} from '@yoroi/types'
 
 import {filterBySearch} from './filterBySearch'
 
 describe('filterBySearch', () => {
   const fakeToken1: Balance.TokenInfo = {
-    id: '.',
+    id: primaryTokenId,
     kind: 'ft',
-    name: 'TADANAME',
+    name: 'TADANAME' as AssetName,
     description: 'Cardano',
-    fingerprint: '',
+    fingerprint: '' as TokenFingerprint,
     image: '',
-    group: '',
+    group: '' as PolicyId,
     icon: '',
     ticker: '',
     decimals: 6,
@@ -20,14 +27,16 @@ describe('filterBySearch', () => {
 
   const fakeToken2: Balance.TokenInfo = {
     kind: 'ft',
-    id: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950',
-    fingerprint: 'asset1nvcwnq60jnm27efjm87xnhqt6alsv024tdyxjm',
-    name: '',
+    id: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950' as TokenId,
+    fingerprint:
+      'asset1nvcwnq60jnm27efjm87xnhqt6alsv024tdyxjm' as TokenFingerprint,
+    name: '' as AssetName,
     description: '',
     decimals: 0,
     ticker: 'TADATICKER',
     icon: '',
-    group: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d',
+    group:
+      '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d' as PolicyId,
     image: '',
     symbol: undefined,
     metadatas: {},

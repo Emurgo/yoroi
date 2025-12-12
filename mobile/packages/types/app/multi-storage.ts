@@ -1,11 +1,11 @@
 import {MaybePromise} from '../helpers/types'
 import {AppStorage, AppStorageFolderName} from './storage'
 
-export interface AppMultiStorage<
+export type AppMultiStorage<
   T,
   IsAsync extends boolean = true,
   K extends string = string,
-> {
+> = {
   getAllKeys: () => MaybePromise<ReadonlyArray<K>, IsAsync>
   clear: () => MaybePromise<void, IsAsync>
   saveMany: (data: ReadonlyArray<NonNullable<T>>) => MaybePromise<void, IsAsync>

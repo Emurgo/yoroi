@@ -1,6 +1,5 @@
-import {Portfolio} from '@yoroi/types'
-
-import {RawUtxo} from '~/wallets/types/other'
+import {RawUtxo} from '@yoroi/api'
+import {Branded, Portfolio} from '@yoroi/types'
 
 export function toBalanceManagerSyncArgs(
   rawUtxos: RawUtxo[],
@@ -14,7 +13,9 @@ export function toBalanceManagerSyncArgs(
   for (const utxo of rawUtxos) {
     primaryTokenBalance += BigInt(utxo.amount)
     for (const record of utxo.assets) {
-      const tokenId: Portfolio.Token.Id = `${record.policyId}.${record.name}`
+      const tokenId: Portfolio.Token.Id = Branded.asTokenId(
+        `${record.policyId}.${record.name}`,
+      )
       const quantity =
         (secondaries.get(tokenId)?.quantity ?? 0n) + BigInt(record.amount)
       secondaries.set(tokenId, {

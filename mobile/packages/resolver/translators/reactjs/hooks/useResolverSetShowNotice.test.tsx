@@ -1,4 +1,5 @@
-import {act, renderHook, waitFor} from '@testing-library/react'
+import {act, renderHook} from '@testing-library/react'
+import {waitFor} from '@testing-library/react-native'
 
 import {wrapperManagerFixture} from '../../../fixtures/manager-wrapper'
 import {resolverManagerMocks} from '../../manager.mocks'
@@ -24,7 +25,10 @@ describe('useResolverSetShowNotice', () => {
     await waitFor(() => expect(result.current.isPending).toBe(false))
 
     expect(mockResolverManager.showNotice.save).toHaveBeenCalledTimes(1)
-    expect(mockResolverManager.showNotice.save).toHaveBeenCalledWith(true)
+    expect(mockResolverManager.showNotice.save).toHaveBeenCalledWith(
+      true,
+      expect.any(Object),
+    )
     expect(result.current.isError).toBe(false)
   })
 
@@ -49,7 +53,10 @@ describe('useResolverSetShowNotice', () => {
     await waitFor(() => expect(result.current.isError).toBe(true))
 
     expect(mockResolverManager.showNotice.save).toHaveBeenCalledTimes(1)
-    expect(mockResolverManager.showNotice.save).toHaveBeenCalledWith(true)
+    expect(mockResolverManager.showNotice.save).toHaveBeenCalledWith(
+      true,
+      expect.any(Object),
+    )
     expect(result.current.error).toBe(testError)
   })
 })

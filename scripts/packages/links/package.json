@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/links",
-  "version": "6.0.0",
+  "version": "7.0.0-beta",
   "description": "The package for managing links of Yoroi SDK",
   "keywords": [
     "yoroi",
@@ -95,6 +95,7 @@
     "@types/react": "19.0.10",
     "@types/react-test-renderer": "19.0.0",
     "@yoroi/common": "file:../common",
+    "@yoroi/logger": "file:../logger",
     "@yoroi/types": "file:../types",
     "axios-mock-adapter": "1.22.0",
     "babel-jest": "29.7.0",
@@ -118,7 +119,7 @@
   "peerDependencies": {
     "@react-native-async-storage/async-storage": "2.1.2",
     "@tanstack/react-query": "5.81.5",
-    "@yoroi/common": "file:../common",
+    "@yoroi/common": "^7.0.0-beta",
     "react-native-mmkv": "3.2.0",
     "axios": "1.10.0",
     "bignumber.js": "9.3.0",

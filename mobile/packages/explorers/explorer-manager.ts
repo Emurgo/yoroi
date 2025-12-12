@@ -10,59 +10,45 @@ export const explorerManager: Readonly<
 > = freeze({
   [Chain.Network.Mainnet]: {
     [Explorers.Explorer.Cardanoscan]: {
-      token: (fingerprint) => `https://cardanoscan.io/token/${fingerprint}`,
-      address: (address) => `https://cardanoscan.io/address/${address}`,
-      tx: (txHash) => `https://cardanoscan.io/transaction/${txHash}`,
-      pool: (poolId) => `https://cardanoscan.io/pool/${poolId}`,
-      stake: (stakeAddress) =>
+      token: (fingerprint: string) =>
+        `https://cardanoscan.io/token/${fingerprint}`,
+      address: (address: string) => `https://cardanoscan.io/address/${address}`,
+      tx: (txHash: string) => `https://cardanoscan.io/transaction/${txHash}`,
+      pool: (poolId: string) => `https://cardanoscan.io/pool/${poolId}`,
+      stake: (stakeAddress: string) =>
         `https://cardanoscan.io/stakeKey/${stakeAddress}`,
     },
     [Explorers.Explorer.Cexplorer]: {
-      token: (fingerprint) => `https://cexplorer.io/asset/${fingerprint}`,
-      address: (address) => `https://cexplorer.io/address/${address}`,
-      tx: (txHash) => `https://cexplorer.io/tx/${txHash}`,
-      pool: (poolId) => `https://cexplorer.io/pool/${poolId}`,
-      stake: (stakeAddress) => `https://cexplorer.io/stake/${stakeAddress}`,
+      token: (fingerprint: string) =>
+        `https://cexplorer.io/asset/${fingerprint}`,
+      address: (address: string) => `https://cexplorer.io/address/${address}`,
+      tx: (txHash: string) => `https://cexplorer.io/tx/${txHash}`,
+      pool: (poolId: string) => `https://cexplorer.io/pool/${poolId}`,
+      stake: (stakeAddress: string) =>
+        `https://cexplorer.io/stake/${stakeAddress}`,
     },
   },
   [Chain.Network.Preprod]: {
     [Explorers.Explorer.Cardanoscan]: {
-      token: (fingerprint) =>
+      token: (fingerprint: string) =>
         `https://preprod.cardanoscan.io/token/${fingerprint}`,
-      address: (address) => `https://preprod.cardanoscan.io/address/${address}`,
-      tx: (txHash) => `https://preprod.cardanoscan.io/transaction/${txHash}`,
-      pool: (poolId) => `https://preprod.cardanoscan.io/pool/${poolId}`,
-      stake: (stakeAddress) =>
+      address: (address: string) =>
+        `https://preprod.cardanoscan.io/address/${address}`,
+      tx: (txHash: string) =>
+        `https://preprod.cardanoscan.io/transaction/${txHash}`,
+      pool: (poolId: string) => `https://preprod.cardanoscan.io/pool/${poolId}`,
+      stake: (stakeAddress: string) =>
         `https://preprod.cardanoscan.io/stakeKey/${stakeAddress}`,
     },
     [Explorers.Explorer.Cexplorer]: {
-      token: (fingerprint) =>
+      token: (fingerprint: string) =>
         `https://preprod.cexplorer.io/asset/${fingerprint}`,
-      address: (address) => `https://preprod.cexplorer.io/address/${address}`,
-      tx: (txHash) => `https://preprod.cexplorer.io/tx/${txHash}`,
-      pool: (poolId) => `https://preprod.cexplorer.io/pool/${poolId}`,
-      stake: (stakeAddress) =>
+      address: (address: string) =>
+        `https://preprod.cexplorer.io/address/${address}`,
+      tx: (txHash: string) => `https://preprod.cexplorer.io/tx/${txHash}`,
+      pool: (poolId: string) => `https://preprod.cexplorer.io/pool/${poolId}`,
+      stake: (stakeAddress: string) =>
         `https://preprod.cexplorer.io/stake/${stakeAddress}`,
-    },
-  },
-  [Chain.Network.Preview]: {
-    [Explorers.Explorer.Cardanoscan]: {
-      token: (fingerprint) =>
-        `https://preview.cardanoscan.io/token/${fingerprint}`,
-      address: (address) => `https://preview.cardanoscan.io/address/${address}`,
-      tx: (txHash) => `https://preview.cardanoscan.io/transaction/${txHash}`,
-      pool: (poolId) => `https://preview.cardanoscan.io/pool/${poolId}`,
-      stake: (stakeAddress) =>
-        `https://preview.cardanoscan.io/stakeKey/${stakeAddress}`,
-    },
-    [Explorers.Explorer.Cexplorer]: {
-      token: (fingerprint) =>
-        `https://preview.cexplorer.io/asset/${fingerprint}`,
-      address: (address) => `https://preview.cexplorer.io/address/${address}`,
-      tx: (txHash) => `https://preview.cexplorer.io/tx/${txHash}`,
-      pool: (poolId) => `https://preview.cexplorer.io/pool/${poolId}`,
-      stake: (stakeAddress) =>
-        `https://preview.cexplorer.io/stake/${stakeAddress}`,
     },
   },
 })

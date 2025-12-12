@@ -62,7 +62,7 @@ export type TokensResponse = {
   total: number
   page: number
   limit: number
-  search_after?: any[]
+  search_after?: unknown[]
 }
 
 export type TokensRequest = {

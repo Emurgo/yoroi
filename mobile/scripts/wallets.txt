@@ -1,0 +1,12 @@
+# Test Wallets for Yoroi Mobile
+# These are test mnemonics used for development and testing
+# DO NOT use these for real funds!
+
+# Wallet 1 - 15 words with mnemonics
+abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon address
+
+# Wallet 2 - Full wallet with rootKey (full URL format)
+web+cardano://wallet/v1?type=full&rootKey=209df668a9c5814f5bed1f63e16bea5ea9ac0f3b7bcbb0968f0f5fe12fd50758a22b7a2e63feed3eed11d3705c1a97482027e559f5a502d98e78aa3cd48bb8fdaf78183208b44d230bd756ca594121f6d3a239bb557f5ed554e424fca7b3ff2e&encryption=plain&name=Wallet+2&implementation=cardano-cip1852&addressMode=multiple&accountVisual=0
+
+# Wallet 3 - Readonly wallet with accountPubKey (full URL format)
+web+cardano://wallet/v1?type=readonly&accountPubKey=1885959acb75f5e051f45ac2680393b88bc1cb5344b5b5cc0a37e4d51610985977541a941cf16bb72a4edfb840a271f3da1a2eec1f2ca5ff398e0928d007e51a&encryption=plain&name=Wallet+3&implementation=cardano-cip1852&addressMode=multiple&accountVisual=0

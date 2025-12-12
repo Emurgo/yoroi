@@ -1,6 +1,6 @@
 import {Numbers} from '@yoroi/types'
 
-import {parseNumberFromText} from './parse-number-from-text'
+import {asQuantity, parseNumberFromText} from './parse-number-from-text'
 
 describe('parseNumberFromText', () => {
   const englishFormat: Numbers.Locale = {
@@ -206,7 +206,6 @@ describe('parseNumberFromText', () => {
   it('should throw error for invalid quantity in asQuantity', () => {
     // This test covers the error case in asQuantity function
     // We need to test the asQuantity function directly since sanitization prevents invalid input
-    const {asQuantity} = require('./parse-number-from-text')
     expect(() => {
       asQuantity('invalid')
     }).toThrow('Invalid quantity')
@@ -399,6 +398,50 @@ describe('parseNumberFromText', () => {
         numericValue: 55,
         quantity: '55000000',
       })
+    })
+
+    it('should handle formattedValue with trailing separator', () => {
+      const result = parseNumberFromText({
+        text: '123.',
+        denomination: 6,
+        format: englishFormat,
+      })
+      expect(result.formattedValue).toBe('123')
+    })
+
+    it('should handle formattedValue without format when dec is empty', () => {
+      const result = parseNumberFromText({
+        text: '123.',
+        denomination: 6,
+      })
+      expect(result.formattedValue).toBeUndefined()
+    })
+
+    it('should handle formattedValue without format when dec has value', () => {
+      const result = parseNumberFromText({
+        text: '123.45',
+        denomination: 6,
+      })
+      expect(result.formattedValue).toBeUndefined()
+    })
+
+    it('should handle int being undefined in dec === "" branch', () => {
+      const result = parseNumberFromText({
+        text: '.',
+        denomination: 6,
+        format: englishFormat,
+      })
+      expect(result.numericValue).toBe(0)
+    })
+
+    it('should handle dec being undefined', () => {
+      // This tests the optional chaining in dec?.slice(0, precision)
+      const result = parseNumberFromText({
+        text: '123.',
+        denomination: 6,
+        format: englishFormat,
+      })
+      expect(result.sanitizedInput).toBe('123.')
     })
   })
 })

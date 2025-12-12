@@ -1,11 +1,16 @@
 import {GovernanceManager, StakingKeyState} from '@yoroi/staking'
-import {Chain} from '@yoroi/types'
+import {Branded, Chain, DRepId, TransactionHash} from '@yoroi/types'
 
 const governanceManager: GovernanceManager = {
   network: Chain.Network.Mainnet,
   getStakingKeyState: () => {
     return Promise.resolve({
-      drepDelegation: {action: 'no-confidence', tx: 'txId', slot: 1, epoch: 1},
+      drepDelegation: {
+        action: 'no-confidence',
+        tx: 'txId' as TransactionHash,
+        slot: Branded.asSlotNumber(1),
+        epoch: Branded.asEpochNumber(1),
+      },
     })
   },
   convertHexKeyHashToBech32Format: () => {
@@ -40,28 +45,28 @@ const governanceManager: GovernanceManager = {
 const votedAbstainStakeKeyState: StakingKeyState = {
   drepDelegation: {
     action: 'abstain',
-    tx: 'txId',
-    slot: 1,
-    epoch: 1,
+    tx: 'txId' as TransactionHash,
+    slot: Branded.asSlotNumber(1),
+    epoch: Branded.asEpochNumber(1),
   },
 }
 
 const votedNoConfidenceStakeKeyState: StakingKeyState = {
   drepDelegation: {
     action: 'no-confidence',
-    tx: 'txId',
-    slot: 1,
-    epoch: 1,
+    tx: 'txId' as TransactionHash,
+    slot: Branded.asSlotNumber(1),
+    epoch: Branded.asEpochNumber(1),
   },
 }
 
 const votedDrepStakeKeyState: StakingKeyState = {
   drepDelegation: {
     action: 'drep',
-    tx: 'txId',
-    slot: 1,
-    epoch: 1,
-    hash: 'drepId',
+    tx: 'txId' as TransactionHash,
+    slot: Branded.asSlotNumber(1),
+    epoch: Branded.asEpochNumber(1),
+    hash: 'drepId' as DRepId,
     type: 'key',
   },
 }

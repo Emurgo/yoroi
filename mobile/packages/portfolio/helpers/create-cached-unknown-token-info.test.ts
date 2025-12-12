@@ -1,9 +1,11 @@
+import {TokenId} from '@yoroi/types'
+
 import {createCachedUnknownTokenInfo} from './create-cached-unknown-token-info'
 import {createUnknownTokenInfo} from './create-unknown-token-info'
 
 describe('createCachedUnknownTokenInfo', () => {
   it('should create a cached unknown token info', () => {
-    const id = 'token.6964'
+    const id = 'token.6964' as TokenId
     const expectedName = 'id (unknown)'
     const expectedUnknownTokenInfo = {
       record: createUnknownTokenInfo({id, name: expectedName}),

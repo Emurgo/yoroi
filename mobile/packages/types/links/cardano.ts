@@ -1,11 +1,11 @@
-export interface LinksUriRules {
+export type LinksUriRules = {
   readonly requiredParams: ReadonlyArray<string>
   readonly optionalParams: ReadonlyArray<string>
   readonly forbiddenParams: ReadonlyArray<string>
   readonly extraParams: 'include' | 'deny' | 'drop'
 }
 
-export interface LinksUriConfig {
+export type LinksUriConfig = {
   readonly rules: LinksUriRules
 
   readonly scheme?: string
@@ -14,13 +14,26 @@ export interface LinksUriConfig {
   readonly path?: string
 }
 
-export interface LinksWebCardanoUriConfig extends LinksUriConfig {
+export type LinksWebCardanoUriConfig = LinksUriConfig & {
   readonly scheme: 'web+cardano'
-  readonly authority: '' | 'transfer' | 'claim'
+  readonly authority:
+    | ''
+    | 'transfer'
+    | 'claim'
+    | 'browse'
+    | 'pay'
+    | 'payment'
+    | 'stake'
+    | 'drep'
+    | 'transaction'
+    | 'block'
+    | 'address'
+    | 'connect'
+    | 'wallet'
   readonly version: 'v1' | ''
 }
 
-export type LinksParams = Readonly<Record<string, any>>
+export type LinksParams = Readonly<Record<string, unknown>>
 
 export type LinksLink<T extends LinksUriConfig> = Readonly<{
   config: T

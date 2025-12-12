@@ -15,7 +15,14 @@ export const responseTokenDiscoveryMocks = asyncBehavior.maker<
     tag: 'right',
     value: {status: 200, data: tokenMocks.nftCryptoKitty.discovery},
   },
-  emptyRepresentation: null,
+  emptyRepresentation: {
+    tag: 'left',
+    error: {
+      status: 404,
+      message: 'Not found',
+      responseData: null,
+    },
+  },
 })
 
 export const responseTokenInfosMocks = asyncBehavior.maker<
@@ -25,7 +32,14 @@ export const responseTokenInfosMocks = asyncBehavior.maker<
     tag: 'right',
     value: {status: 200, data: tokenMocks.apiResponse.tokenInfos},
   },
-  emptyRepresentation: null,
+  emptyRepresentation: {
+    tag: 'left',
+    error: {
+      status: 404,
+      message: 'Not found',
+      responseData: null,
+    },
+  },
 })
 
 export const responseTokenInfoMocks = asyncBehavior.maker<
@@ -35,7 +49,14 @@ export const responseTokenInfoMocks = asyncBehavior.maker<
     tag: 'right',
     value: {status: 200, data: tokenMocks.nftCryptoKitty.info},
   },
-  emptyRepresentation: null,
+  emptyRepresentation: {
+    tag: 'left',
+    error: {
+      status: 404,
+      message: 'Not found',
+      responseData: null,
+    },
+  },
 })
 
 export const responseTokenTraits = asyncBehavior.maker<
@@ -45,7 +66,14 @@ export const responseTokenTraits = asyncBehavior.maker<
     tag: 'right',
     value: {status: 200, data: tokenTraitsMocks.nftCryptoKitty},
   },
-  emptyRepresentation: null,
+  emptyRepresentation: {
+    tag: 'left',
+    error: {
+      status: 404,
+      message: 'Not found',
+      responseData: null,
+    },
+  },
 })
 
 export const responseTokenActivity = asyncBehavior.maker<
@@ -58,7 +86,14 @@ export const responseTokenActivity = asyncBehavior.maker<
       data: tokenActivityMocks.api.responseDataOnly,
     },
   },
-  emptyRepresentation: null,
+  emptyRepresentation: {
+    tag: 'left',
+    error: {
+      status: 404,
+      message: 'Not found',
+      responseData: null,
+    },
+  },
 })
 
 export const responseTokenHistory = asyncBehavior.maker<
@@ -71,12 +106,19 @@ export const responseTokenHistory = asyncBehavior.maker<
       data: tokenHistoryMocks.api.responseDataOnly,
     },
   },
-  emptyRepresentation: null,
+  emptyRepresentation: {
+    tag: 'left',
+    error: {
+      status: 404,
+      message: 'Not found',
+      responseData: null,
+    },
+  },
 })
 
 export const responseTokenImageInvalidate = asyncBehavior.maker<undefined>({
   data: undefined,
-  emptyRepresentation: null,
+  emptyRepresentation: undefined,
 })
 
 const success: Portfolio.Api.Api = {

@@ -31,81 +31,79 @@ export type DappConnectorManager = {
   readonly walletId: string
 }
 
+export type DappConnector = DappConnectorManager
+
 export const dappConnectorMaker = (
   storage: Storage,
   wallet: ResolverWallet,
 ): DappConnector => {
-  return new DappConnector(storage, wallet)
-}
-
-export class DappConnector implements DappConnectorManager {
-  network: Chain.SupportedNetworks
-  walletId: string
-  constructor(
-    private storage: Storage,
-    private wallet: ResolverWallet,
-  ) {
-    this.network = wallet.network
-    this.walletId = wallet.id
-  }
-
-  async listAllConnections() {
-    return this.storage.read()
-  }
-
-  async removeConnection(options: {walletId?: string; dappOrigin: string}) {
-    const walletId = options.walletId ?? this.wallet.id
-    return this.storage.remove({
-      walletId,
-      dappOrigin: options.dappOrigin,
-      network: this.wallet.network,
-    })
-  }
-
-  async removeConnections(
-    options: Array<{walletId?: string; dappOrigin: string}>,
-  ) {
-    for (const o of options) {
-      await this.removeConnection(o)
-    }
-  }
-
-  async addConnection(options: {
-    dappOrigin: string
+  const removeConnection = async (options: {
     walletId?: string
-    network?: Chain.Network
-  }) {
-    const walletId = options.walletId ?? this.wallet.id
-    const network = options.network ?? this.wallet.network
-    return this.storage.save({
+    dappOrigin: string
+  }) => {
+    const walletId = options.walletId ?? wallet.id
+    return storage.remove({
       walletId,
       dappOrigin: options.dappOrigin,
-      network,
+      network: wallet.network,
     })
   }
 
-  getWalletConnectorScript(props: {
-    iconUrl: string
-    apiVersion: string
-    walletName: string
-    sessionId: string
-  }) {
-    return connectWallet({...props, supportedExtensions})
-  }
+  return {
+    network: wallet.network,
+    walletId: wallet.id,
 
-  async handleEvent(
-    eventData: string,
-    trustedUrl: string,
-    sendMessage: (id: string, result: unknown, error?: Error) => void,
-  ) {
-    return await resolverHandleEvent(
-      eventData,
-      trustedUrl,
-      this.wallet,
-      sendMessage,
-      this.storage,
-      supportedExtensions,
-    )
+    async listAllConnections() {
+      return storage.read()
+    },
+
+    removeConnection,
+
+    async removeConnections(
+      options: Array<{walletId?: string; dappOrigin: string}>,
+    ) {
+      for (const o of options) {
+        await removeConnection(o)
+      }
+    },
+
+    async addConnection(options: {
+      dappOrigin: string
+      walletId?: string
+      network?: Chain.Network
+    }) {
+      const walletId = options.walletId ?? wallet.id
+      const network = options.network ?? wallet.network
+      return storage.save({
+        walletId,
+        dappOrigin: options.dappOrigin,
+        network,
+      })
+    },
+
+    getWalletConnectorScript(props: {
+      iconUrl: string
+      apiVersion: string
+      walletName: string
+      sessionId: string
+    }) {
+      return connectWallet({...props, supportedExtensions})
+    },
+
+    async handleEvent(
+      eventData: string,
+      trustedUrl: string,
+      sendMessage: (id: string, result: unknown, error?: Error) => void,
+    ) {
+      return await resolverHandleEvent(
+        eventData,
+        trustedUrl,
+        wallet,
+        sendMessage,
+        storage,
+        supportedExtensions,
+      )
+    },
   }
 }
 

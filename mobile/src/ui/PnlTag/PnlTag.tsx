@@ -5,7 +5,7 @@ import {Text, View, type ViewProps} from 'react-native'
 
 import {Icon} from '~/ui/Icon'
 
-interface Props extends ViewProps {
+type Props = ViewProps & {
   variant?: 'danger' | 'success' | 'neutral'
   withIcon?: boolean
 }

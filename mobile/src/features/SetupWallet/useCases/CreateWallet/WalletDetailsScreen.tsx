@@ -1,8 +1,17 @@
+import {isEmptyString} from '@yoroi/cardano-wallet'
+import {
+  getWalletNameError,
+  validatePassword,
+  validateWalletName,
+} from '@yoroi/cardano-wallet'
 import {useAsyncStorage} from '@yoroi/common'
 import {Blockies} from '@yoroi/identicon'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Api, Wallet} from '@yoroi/types'
+import {useCreateWalletMnemonic} from '@yoroi/wallet-manager'
+import {useWalletManager} from '@yoroi/wallet-manager'
+import {parseWalletMeta} from '@yoroi/wallet-manager'
 
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
@@ -16,21 +25,18 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native'
-import {ViewProps} from 'react-native-svg/lib/typescript/fabric/utils'
 
+import {useBold} from '~/common/hooks/useBold'
 import {useAnalyticsTracking} from '~/features/Analytics/hooks/useAnalyticsTracking'
 import {AnalyticsEventEnum} from '~/features/Analytics/types/analytics-event-enum'
 import {YoroiHelpLink} from '~/features/SetupWallet/common/constants'
-import {parseWalletMeta} from '~/features/WalletManager/common/validators/wallet-meta'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import {useCreateWalletMnemonic} from '~/features/WalletManager/hooks/useCreateWalletMnemonic'
-import {useBold} from '~/hooks/useBold'
 import {requiredPasswordLength} from '~/kernel/constants'
 import {showErrorDialog} from '~/kernel/dialogs'
 import {debugWalletInfo, features} from '~/kernel/features'
 import {errorMessages} from '~/kernel/i18n/messages/global'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
+import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {Button} from '~/ui/Button/Button'
 import {CardAboutPhrase} from '~/ui/CardAboutPhrase/CardAboutPhrase'
 import {Icon} from '~/ui/Icon'
@@ -42,12 +48,6 @@ import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
 import {TextInput} from '~/ui/TextInput/TextInput'
-import {isEmptyString} from '~/wallets/utils/string'
-import {
-  getWalletNameError,
-  validatePassword,
-  validateWalletName,
-} from '~/wallets/utils/validators'
 
 const useSizeModal = () => {
   const heightScreen = useWindowDimensions().height
@@ -75,7 +75,7 @@ const useSizeModal = () => {
 // when restoring, later will be part of the onboarding
 const addressMode: Wallet.AddressMode = 'single'
 export const WalletDetailsScreen = () => {
-  const navigation = useNavigation<any>()
+  const navigation = useNavigation<SetupWalletRouteNavigation>()
   const strings = useStrings()
   const {atoms: ta} = useTheme()
   const bold = useBold({style: a.body_1_lg_medium})
@@ -350,7 +350,7 @@ export const WalletDetailsScreen = () => {
           style={[a.flex_row, a.align_center, a.justify_center, a.align_center]}
         >
           <Icon.WalletAvatar
-            image={new Blockies({seed}).asBase64()}
+            image={Blockies({seed}).asBase64()}
             style={{width: 24, height: 24}}
             size={24}
           />
@@ -375,7 +375,7 @@ export const WalletDetailsScreen = () => {
         </View>
       </ScrollView>
 
-      <Actions style={[a.px_lg]}>
+      <SafeArea.Footer>
         <Button
           title={strings.setupWallet.next}
           onPress={() => handleCreateWallet()}
@@ -386,7 +386,7 @@ export const WalletDetailsScreen = () => {
           }
           testID="walletFormContinueButton"
         />
-      </Actions>
+      </SafeArea.Footer>
     </SafeArea>
   )
 }
@@ -398,8 +398,4 @@ const Info = ({onPress}: {onPress: () => void}) => {
       <InfoIcon size={24} color={isDark ? p.white_static : p.black_static} />
     </TouchableOpacity>
   )
-}
-
-const Actions = ({style, ...props}: ViewProps) => {
-  return <View style={style} {...props} />
 }

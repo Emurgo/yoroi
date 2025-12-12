@@ -1,7 +1,6 @@
 import {App, Wallet} from '@yoroi/types'
-
-import {useReceiveAddresses} from '~/features/WalletManager/hooks/useReceiveAddresses'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {useReceiveAddresses} from '@yoroi/wallet-manager'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 type ReceiveAddressesStatus = {
   used: string[]
@@ -20,7 +19,7 @@ export const useReceiveAddressesStatus = (
 
   const addressesStatus = receiveAddresses.reduce(
     (addresses, address) => {
-      if (wallet.isUsedAddressIndex[address]) {
+      if (wallet.isUsedAddressIndex()[address]) {
         addresses.used = [...addresses.used, address]
       } else {
         addresses.unused = [...addresses.unused, address]
@@ -32,7 +31,7 @@ export const useReceiveAddressesStatus = (
       'next' | 'canIncrease'
     >,
   )
-  const info = wallet.receiveAddressInfo
+  const info = wallet.receiveAddressInfo()
   const limitUnused = addressesStatus.unused.slice(
     0,
     info.lastUsedIndexVisual + 1,

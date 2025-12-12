@@ -1,0 +1,18 @@
+diff --git a/node_modules/int64-buffer/int64-buffer.js b/node_modules/int64-buffer/int64-buffer.js
+index c713150..465da05 100644
+--- a/node_modules/int64-buffer/int64-buffer.js
++++ b/node_modules/int64-buffer/int64-buffer.js
+@@ -11,6 +11,13 @@ var Uint64BE, Int64BE, Uint64LE, Int64LE;
+ 
+   var UNDEFINED = "undefined";
+   var BUFFER = (UNDEFINED !== typeof Buffer) && Buffer;
++  // Support React Native Buffer polyfill - check global/globalThis if Buffer not in scope
++  if (!BUFFER && typeof global !== UNDEFINED && global.Buffer) {
++    BUFFER = global.Buffer;
++  }
++  if (!BUFFER && typeof globalThis !== UNDEFINED && globalThis.Buffer) {
++    BUFFER = globalThis.Buffer;
++  }
+   var UINT8ARRAY = (UNDEFINED !== typeof Uint8Array) && Uint8Array;
+   var ARRAYBUFFER = (UNDEFINED !== typeof ArrayBuffer) && ArrayBuffer;
+   var ZERO = [0, 0, 0, 0, 0, 0, 0, 0];

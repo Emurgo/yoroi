@@ -1,23 +1,32 @@
+import {
+  BaseLedgerError,
+  YoroiWallet,
+  cip30ExtensionMaker,
+  cip30LedgerExtensionMaker,
+  collateralConfig,
+  isEmptyString,
+} from '@yoroi/cardano-wallet'
 import {useAsyncStorage} from '@yoroi/common'
 import {DappConnection, DappConnector} from '@yoroi/dapp-connector'
+import {Branded} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {Transaction} from '@emurgo/cross-csl-core'
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {getTxIdFromArgs} from '~/features/ReviewTx/common/utils/getTxId'
+import {CollateralInfoModal} from '~/features/Settings/ui/screens/ChangeWalletSettingsScreen/ManageCollateralScreen/CollateralInfoModal'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
-import {removeRouteFromNavigationState} from '~/kernel/navigation/common/helpers'
+import {
+  type NavigationLike,
+  removeRouteFromNavigationState,
+} from '~/kernel/navigation/common/helpers'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
-import {cip30LedgerExtensionMaker} from '~/wallets/cardano/cip30/cip30-ledger'
-import {YoroiWallet} from '~/wallets/cardano/types'
-import {collateralConfig} from '~/wallets/cardano/utxoManager/utxos'
-import {BaseLedgerError} from '~/wallets/hw/hw'
-import {isEmptyString} from '~/wallets/utils/string'
+import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
 
 import {usePromptRootKey} from '../ReviewTx/common/hooks/usePromptRootKey'
-import {CreatedByInfoItem} from '../ReviewTx/useCases/ReviewTxScreen/ReviewTx/Overview/OverviewTab'
 import {useBrowser} from './common/BrowserProvider'
 import {useConfirmHWConnectionModal} from './common/ConfirmHWConnectionModal'
 import {userRejectedError} from './common/errors'
@@ -25,6 +34,17 @@ import {createDappConnector} from './common/helpers'
 import {useConfirmConnection} from './common/useConfirmConnection'
 import {useDappList} from './common/useDappList'
 import {useShowCollateralNotFoundAlert} from './common/useShowCollateralNotFoundAlert'
+
+// Collateral creation notice component for operations section
+const CollateralCreationNotice = () => {
+  const strings = useStrings()
+  return (
+    <InfoBanner
+      title={strings.discover.collateralCreationTitle}
+      content={strings.discover.collateralCreationDescription}
+    />
+  )
+}
 
 export const useDappConnectorManager = () => {
   const appStorage = useAsyncStorage()
@@ -34,6 +54,7 @@ export const useDappConnectorManager = () => {
   const {wallet, meta} = useSelectedWallet()
   const {tabs, tabActiveIndex} = useBrowser()
   const dappCollateralRequestUtils = useDappCollateralRequestUtils(wallet)
+  const strings = useStrings()
 
   const activeTab = tabs[tabActiveIndex]
   const activeTabUrl = activeTab?.url ?? ''
@@ -50,6 +71,15 @@ export const useDappConnectorManager = () => {
   const handleSignTx = React.useCallback(
     ({cbor, manager}: {cbor: string; manager: DappConnector}) => {
       return new Promise<string>(async (resolve, reject) => {
+        logger.info(
+          'useDappConnectorManager::handleSignTx - dapp transaction request received',
+          {
+            cborLength: cbor?.length,
+            activeTabOrigin,
+            walletId: wallet.id,
+          },
+        )
+
         let shouldResolve = true
         const dapps = dappList?.dapps || []
         const dappsConnected = await manager.listAllConnections()
@@ -59,6 +89,15 @@ export const useDappConnectorManager = () => {
                 dapp.dappOrigin.includes(activeTabOrigin),
               )
             : null
+
+        logger.info(
+          'useDappConnectorManager::handleSignTx - dapp connection resolved',
+          {
+            hasMatchingConnection: !!matchingDappConnection,
+            dappOrigin: matchingDappConnection?.dappOrigin,
+            totalConnections: dappsConnected.length,
+          },
+        )
 
         if (matchingDappConnection?.dappOrigin != null) {
           const isDappRequestingCollateral =
@@ -86,18 +125,36 @@ export const useDappConnectorManager = () => {
 
         navigateToTxReview({
           cbor,
-          preventSubmit: true,
+          preventSubmit: false,
           context: 'dapp',
-          createdBy: matchingDapp != null && (
-            <CreatedByInfoItem
-              logo={matchingDapp.logo}
-              url={matchingDapp.uri}
-              name={matchingDapp.name}
-            />
-          ),
+          createdBy:
+            matchingDapp != null
+              ? {
+                  logo: matchingDapp.logo,
+                  url: matchingDapp.uri,
+                  name: matchingDapp.name,
+                }
+              : undefined,
           onSuccessWithoutFeedback: (args) => {
             shouldResolve = false
+            logger.info(
+              'useDappConnectorManager::handleSignTx - transaction signed successfully',
+              {
+                hasRootKey: !!args?.rootKey,
+                hasTxId: !!args?.txId,
+                txId: args?.txId,
+                dappOrigin: matchingDappConnection?.dappOrigin,
+              },
+            )
+
             if (isEmptyString(args?.rootKey) || args?.rootKey == null) {
+              logger.error(
+                'useDappConnectorManager::handleSignTx - invalid state: missing rootKey',
+                {
+                  hasRootKey: !!args?.rootKey,
+                  hasTxId: !!args?.txId,
+                },
+              )
               reject(
                 new Error(
                   'useDappConnectorManager::handleSignTx: invalid state',
@@ -112,9 +169,13 @@ export const useDappConnectorManager = () => {
             // Use setTimeout to ensure navigation completes before removing the route
             // Increase maxDepth to ensure we traverse up to WalletNavigator where review-tx-routes is located
             setTimeout(() => {
-              removeRouteFromNavigationState(navigation, 'review-tx-routes', {
-                maxDepth: 5,
-              })
+              removeRouteFromNavigationState(
+                navigation as NavigationLike,
+                'review-tx-routes',
+                {
+                  maxDepth: 5,
+                },
+              )
             }, 100)
           },
           onCancel: () => {
@@ -143,6 +204,7 @@ export const useDappConnectorManager = () => {
       navigateToDiscoverBrowserDapp,
       dappList?.dapps,
       navigation,
+      wallet.id,
     ],
   )
 
@@ -158,15 +220,16 @@ export const useDappConnectorManager = () => {
         navigateToTxReview({
           cbor,
           partial,
-          preventSubmit: true,
+          preventSubmit: false,
           context: 'dapp',
-          createdBy: matchingDapp != null && (
-            <CreatedByInfoItem
-              logo={matchingDapp.logo}
-              url={matchingDapp.uri}
-              name={matchingDapp.name}
-            />
-          ),
+          createdBy:
+            matchingDapp != null
+              ? {
+                  logo: matchingDapp.logo,
+                  url: matchingDapp.uri,
+                  name: matchingDapp.name,
+                }
+              : undefined,
           onSuccessWithoutFeedback: (args) => {
             shouldResolve = false
             if (!args?.tx) {
@@ -183,9 +246,13 @@ export const useDappConnectorManager = () => {
             // Use setTimeout to ensure navigation completes before removing the route
             // Increase maxDepth to ensure we traverse up to WalletNavigator where review-tx-routes is located
             setTimeout(() => {
-              removeRouteFromNavigationState(navigation, 'review-tx-routes', {
-                maxDepth: 5,
-              })
+              removeRouteFromNavigationState(
+                navigation as NavigationLike,
+                'review-tx-routes',
+                {
+                  maxDepth: 5,
+                },
+              )
             }, 100)
           },
           onErrorWithoutFeedback: (error) => {
@@ -218,7 +285,7 @@ export const useDappConnectorManager = () => {
   )
 
   const handleSendReorganisationTx = React.useCallback(
-    async ({manager}: {manager: DappConnector}) => {
+    async ({manager, value}: {manager: DappConnector; value?: string}) => {
       const dappsConnected = await manager.listAllConnections()
       const matchingDappConnection =
         activeTabOrigin != null
@@ -233,15 +300,131 @@ export const useDappConnectorManager = () => {
           return
         }
 
+        // Track that this dapp requested collateral
         dappCollateralRequestUtils.addCollateralRequestedDappsId(
           matchingDappConnection.dappOrigin,
         )
-        dappCollateralRequestUtils.showCollateralNotFoundAlert()
 
-        resolve()
+        // Build the reorganisation transaction
+        const cip30 = cip30ExtensionMaker(wallet, meta, {
+          createCollateralEntry: wallet._dependencies.createCollateralEntry,
+        })
+        cip30
+          .buildReorganisationTx(value)
+          .then((cbor) => {
+            // Navigate to review screen for the collateral transaction
+            navigateToTxReview({
+              cbor,
+              context: 'dapp',
+              memo: strings.discover.collateralCreationTitle,
+              createdBy:
+                activeTabUrl && matchingDappConnection.dappOrigin
+                  ? {
+                      logo: undefined,
+                      url: activeTabUrl,
+                      name: matchingDappConnection.dappOrigin,
+                    }
+                  : undefined,
+              details: {
+                title: strings.manageCollateral.collateralInfoModalLabel,
+                component: <CollateralInfoModal />,
+              },
+              generalNotice: <CollateralCreationNotice />,
+              onSuccessWithoutFeedback: async (args) => {
+                // Transaction was submitted successfully
+                // Set collateral ID immediately to prevent duplicate reorganization transactions
+                // The collateral UTXO will be at index 0 (first output of the reorganization transaction)
+                try {
+                  // Use utility function to safely extract txId
+                  // Pass unsigned CBOR as fallback (safe - body hash is same for signed/unsigned)
+                  const txId = await getTxIdFromArgs(args, cbor)
+
+                  if (txId) {
+                    // Set collateral ID to txId:0 (assuming collateral UTXO is at output index 0)
+                    // This prevents duplicate reorganization transactions while waiting for confirmation
+                    const collateralId = Branded.asUtxoId(`${txId}:0`)
+                    wallet.setCollateralId(collateralId)
+                    logger.info(
+                      'useDappConnectorManager::handleSendReorganisationTx - collateral ID set',
+                      {txId, collateralId},
+                    )
+                  } else {
+                    logger.warn(
+                      'useDappConnectorManager::handleSendReorganisationTx - no txId available to set collateral ID',
+                      {
+                        hasTxId: !!args?.txId,
+                        hasSignedTx: !!args?.signedTx,
+                        hasTx: !!args?.tx,
+                        hasCbor: !!cbor,
+                      },
+                    )
+                  }
+                } catch (error) {
+                  logger.error(
+                    'useDappConnectorManager::handleSendReorganisationTx - failed to set collateral ID',
+                    {
+                      error:
+                        error instanceof Error ? error.message : String(error),
+                      errorStack:
+                        error instanceof Error ? error.stack : undefined,
+                      hasTxId: !!args?.txId,
+                      hasSignedTx: !!args?.signedTx,
+                      hasTx: !!args?.tx,
+                      hasCbor: !!cbor,
+                    },
+                  )
+                  // Don't block the flow if setting collateral ID fails
+                }
+                resolve()
+                navigateToDiscoverBrowserDapp()
+                // Remove review-tx-routes from navigation stack
+                setTimeout(() => {
+                  removeRouteFromNavigationState(
+                    navigation as NavigationLike,
+                    'review-tx-routes',
+                    {
+                      maxDepth: 5,
+                    },
+                  )
+                }, 100)
+              },
+              onCancel: () => {
+                reject(userRejectedError())
+              },
+              onClose: () => {
+                reject(userRejectedError())
+              },
+              onErrorWithoutFeedback: (error) => {
+                logger.error(
+                  'useDappConnectorManager::handleSendReorganisationTx',
+                  {
+                    error,
+                  },
+                )
+                reject(error)
+              },
+            })
+          })
+          .catch((error) => {
+            logger.error(
+              'useDappConnectorManager::handleSendReorganisationTx - failed to build transaction',
+              {error},
+            )
+            reject(error)
+          })
       })
     },
-    [activeTabOrigin, dappCollateralRequestUtils],
+    [
+      activeTabOrigin,
+      activeTabUrl,
+      dappCollateralRequestUtils,
+      navigateToTxReview,
+      navigateToDiscoverBrowserDapp,
+      navigation,
+      wallet,
+      meta,
+      strings,
+    ],
   )
 
   return React.useMemo(
@@ -280,7 +463,12 @@ const useSignData = () => {
       return new Promise<string>((resolve, reject) => {
         let shouldResolveOnClose = true
         const title = strings.discover.signData
-        const summary = `${strings.discover.signMessage}: ${Buffer.from(payload, 'hex').toString('utf-8')}`
+        const decodedMessage = Buffer.from(payload, 'hex').toString('utf-8')
+        const messagePreview =
+          decodedMessage.length > 50
+            ? `${decodedMessage.slice(0, 50)}...`
+            : decodedMessage
+        const summary = `${strings.discover.signMessage}: ${messagePreview}`
         try {
           promptRootKey({
             title,
@@ -315,7 +503,9 @@ const useSignDataWithHW = () => {
           confirmHWConnection({
             onConfirm: async ({transportType, deviceInfo}) => {
               try {
-                const cip30 = cip30LedgerExtensionMaker(wallet, meta)
+                const cip30 = cip30LedgerExtensionMaker(wallet, meta, {
+                  toLedgerSignRequest: wallet._dependencies.toLedgerSignRequest,
+                })
                 const result = await cip30.signData(
                   address,
                   payload,

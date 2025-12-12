@@ -1,4 +1,12 @@
-import {Portfolio, Swap} from '@yoroi/types'
+import {primaryTokenId} from '@yoroi/portfolio'
+import {
+  Amount,
+  PolicyId,
+  Portfolio,
+  Swap,
+  TokenId,
+  TransactionHash,
+} from '@yoroi/types'
 
 import {
   CancelRequest,
@@ -18,9 +26,9 @@ const ordersResponse: OrdersHistoryResponse = {
     {
       dex: 'sundaeswap-v1',
       aggregator: null,
-      fromToken: '.',
+      fromToken: primaryTokenId,
       toToken:
-        '4cb48d60d1f7823d1307c61b9ecf472ff78cf22d1ccc5786d59461f8.4144414d4f4f4e',
+        '4cb48d60d1f7823d1307c61b9ecf472ff78cf22d1ccc5786d59461f8.4144414d4f4f4e' as TokenId,
       fromAmount: '0.000036',
       toAmount: '10',
       paidAmount: '0.000036',
@@ -37,7 +45,7 @@ const ordersResponse: OrdersHistoryResponse = {
       beneficiary:
         'addr1q9r502tqdksvqmhs3lwlxx5f5cz0c92cftqqludl3r0urtk0ppwv8x4ylafdu84xqmh9sx4vrk4czekksv884xmvanwql6sl74',
       txHash:
-        '29f51a2a9e46ced05f03abc9b419ae57164dc056534121f041d69e307b9722f8',
+        '29f51a2a9e46ced05f03abc9b419ae57164dc056534121f041d69e307b9722f8' as TransactionHash,
       outputIdx: 0,
       deposit: '2.000000',
       status: 'matched',
@@ -53,9 +61,9 @@ const ordersResponse: OrdersHistoryResponse = {
     {
       dex: 'minswap-v2',
       aggregator: null,
-      fromToken: '.',
+      fromToken: primaryTokenId,
       toToken:
-        '49e423161ef818adc475c783571cb479d5f15ad52a01a240eacc0d3b.434f434b',
+        '49e423161ef818adc475c783571cb479d5f15ad52a01a240eacc0d3b.434f434b' as TokenId,
       fromAmount: '0.008137',
       toAmount: '1',
       paidAmount: '0.000000',
@@ -72,7 +80,7 @@ const ordersResponse: OrdersHistoryResponse = {
       beneficiary:
         'addr1q9r502tqdksvqmhs3lwlxx5f5cz0c92cftqqludl3r0urtk0ppwv8x4ylafdu84xqmh9sx4vrk4czekksv884xmvanwql6sl74',
       txHash:
-        '475ffb1f1820eee1790729d86ced473e9f7724ddcd7bf59b477e3293415f16bf',
+        '475ffb1f1820eee1790729d86ced473e9f7724ddcd7bf59b477e3293415f16bf' as TransactionHash,
       outputIdx: 0,
       deposit: '2.000000',
       status: 'canceled',
@@ -97,7 +105,8 @@ const tokensResponse: TokensResponse = [
   {
     ticker: 'PTC',
     name: 'Pocket Change',
-    policyId: '007394e3117755fbb0558b93c54ce3bc6c85770920044ade143dc742',
+    policyId:
+      '007394e3117755fbb0558b93c54ce3bc6c85770920044ade143dc742' as PolicyId as PolicyId,
     hexName: '505443',
     decimals: 0,
     verified: false,
@@ -105,7 +114,8 @@ const tokensResponse: TokensResponse = [
   {
     ticker: 'BTN',
     name: 'BTN',
-    policyId: '016be5325fd988fea98ad422fcfd53e5352cacfced5c106a932a35a4',
+    policyId:
+      '016be5325fd988fea98ad422fcfd53e5352cacfced5c106a932a35a4' as PolicyId as PolicyId,
     hexName: '42544e',
     decimals: 6,
     verified: true,
@@ -115,14 +125,15 @@ const tokensResponse: TokensResponse = [
     ticker: 'NONE',
     name: 'NONE',
     hexName: '4e4f4e45',
-    policyId: '016be5325fd988fea98ad422fcfd53e5352cacfced5c106a932a35a5',
+    policyId:
+      '016be5325fd988fea98ad422fcfd53e5352cacfced5c106a932a35a5' as PolicyId as PolicyId,
     verified: true,
     decimals: null,
   },
 ]
 
 export const primaryTokenInfo: Portfolio.Token.Info = {
-  id: '.',
+  id: primaryTokenId,
   type: Portfolio.Token.Type.FT,
   nature: Portfolio.Token.Nature.Primary,
   decimals: 6,
@@ -150,10 +161,11 @@ const ordersResult: Array<Swap.Order> = [
     placedAt: 1722503907000,
     protocol: 'sundaeswap-v1',
     status: 'matched',
-    tokenIn: '.',
+    tokenIn: primaryTokenId,
     tokenOut:
-      '4cb48d60d1f7823d1307c61b9ecf472ff78cf22d1ccc5786d59461f8.4144414d4f4f4e',
-    txHash: '29f51a2a9e46ced05f03abc9b419ae57164dc056534121f041d69e307b9722f8',
+      '4cb48d60d1f7823d1307c61b9ecf472ff78cf22d1ccc5786d59461f8.4144414d4f4f4e' as TokenId,
+    txHash:
+      '29f51a2a9e46ced05f03abc9b419ae57164dc056534121f041d69e307b9722f8' as TransactionHash,
     updateTxHash:
       '8d3b20bafb8378366f819f506da327a43e94d6948c002bac00a9b1de401bc571',
   },
@@ -166,10 +178,11 @@ const ordersResult: Array<Swap.Order> = [
     placedAt: 1737538157000,
     protocol: 'minswap-v2',
     status: 'canceled',
-    tokenIn: '.',
+    tokenIn: primaryTokenId,
     tokenOut:
-      '49e423161ef818adc475c783571cb479d5f15ad52a01a240eacc0d3b.434f434b',
-    txHash: '475ffb1f1820eee1790729d86ced473e9f7724ddcd7bf59b477e3293415f16bf',
+      '49e423161ef818adc475c783571cb479d5f15ad52a01a240eacc0d3b.434f434b' as TokenId,
+    txHash:
+      '475ffb1f1820eee1790729d86ced473e9f7724ddcd7bf59b477e3293415f16bf' as TransactionHash,
     updateTxHash:
       '475ffb1f1820eee1790729d86ced473e9f7724ddcd7bf59b477e3293415f16bf',
     lastUpdate: undefined,
@@ -183,7 +196,7 @@ const tokensResult: Array<Portfolio.Token.Info> = [
     decimals: 0,
     description: '',
     fingerprint: '',
-    id: '007394e3117755fbb0558b93c54ce3bc6c85770920044ade143dc742.505443',
+    id: '007394e3117755fbb0558b93c54ce3bc6c85770920044ade143dc742.505443' as TokenId,
     name: 'Pocket Change',
     nature: Portfolio.Token.Nature.Secondary,
     originalImage: '',
@@ -200,7 +213,7 @@ const tokensResult: Array<Portfolio.Token.Info> = [
     decimals: 6,
     description: '',
     fingerprint: '',
-    id: '016be5325fd988fea98ad422fcfd53e5352cacfced5c106a932a35a4.42544e',
+    id: '016be5325fd988fea98ad422fcfd53e5352cacfced5c106a932a35a4.42544e' as TokenId,
     name: 'BTN',
     nature: Portfolio.Token.Nature.Secondary,
     originalImage: '',
@@ -228,10 +241,10 @@ const cancelInput: Array<Swap.CancelRequest> = [
       protocol: 'sundaeswap-v1',
       status: 'matched',
       tokenIn:
-        'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
-      tokenOut: '.',
+        'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950' as TokenId,
+      tokenOut: primaryTokenId,
       txHash:
-        '8751fbef1ebec0d2da9218a69493ef36070012ce24fdbc44ec6df519377b92bf',
+        '8751fbef1ebec0d2da9218a69493ef36070012ce24fdbc44ec6df519377b92bf' as TransactionHash,
       updateTxHash:
         '92bd050ec1da6d25abf6265a6f8318a79a3068459254a79427088407c4241b37',
     },
@@ -248,10 +261,10 @@ const cancelInput: Array<Swap.CancelRequest> = [
       protocol: 'sundaeswap-v1',
       status: 'matched',
       tokenIn:
-        'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
-      tokenOut: '.',
+        'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950' as TokenId,
+      tokenOut: primaryTokenId,
       txHash:
-        '8751fbef1ebec0d2da9218a69493ef36070012ce24fdbc44ec6df519377b92bf',
+        '8751fbef1ebec0d2da9218a69493ef36070012ce24fdbc44ec6df519377b92bf' as TransactionHash,
       updateTxHash:
         '92bd050ec1da6d25abf6265a6f8318a79a3068459254a79427088407c4241b37',
     },
@@ -274,26 +287,28 @@ const cancelResult: Swap.CancelResponse = {
 
 const quoteLimitInput: Swap.EstimateRequest = {
   slippage: 0.01,
-  tokenIn: '.',
+  tokenIn: primaryTokenId,
   amountOut: 1,
-  tokenOut: 'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+  tokenOut:
+    'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950' as TokenId,
   protocol: 'minswap-v1',
 }
 
 const quoteLimitRequest: LimitQuoteRequest = {
-  buy_amount: '0',
+  buy_amount: '0' as Amount as Amount,
   buy_token: quoteLimitInput.tokenOut,
   order_contract: 'minswap-v1',
   numbers_have_decimals: true,
-  sell_amount: '0',
+  sell_amount: '0' as Amount as Amount,
   sell_token: quoteLimitInput.tokenIn,
   partner: 'somePartnerId',
 }
 
 const quoteInput: Swap.EstimateRequest = {
   slippage: 0.01,
-  tokenIn: '.',
-  tokenOut: 'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
+  tokenIn: primaryTokenId,
+  tokenOut:
+    'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950' as TokenId,
   amountIn: 10,
   protocol: 'minswap-v1',
   blockedProtocols: ['wingriders-v1'],
@@ -352,7 +367,7 @@ const quoteResponse: QuoteResponse = {
       batcher_fee: '2.000000',
       expected_output: '1130',
       source_id:
-        '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.3513ef4f9724b1bdbedd1f606ed93368f0442b236f3ff201bb28532cdf2a53a9',
+        '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.3513ef4f9724b1bdbedd1f606ed93368f0442b236f3ff201bb28532cdf2a53a9' as TokenId,
       initial_price: 0.04252918925670425,
       final_price: 0.041994,
       price_impact: 1.258404559451805,
@@ -384,7 +399,7 @@ const quoteNoOutResponse: QuoteResponse = {
       batcher_fee: '2.000000',
       expected_output: '1130',
       source_id:
-        '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.3513ef4f9724b1bdbedd1f606ed93368f0442b236f3ff201bb28532cdf2a53a9',
+        '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.3513ef4f9724b1bdbedd1f606ed93368f0442b236f3ff201bb28532cdf2a53a9' as TokenId,
       initial_price: 0.04252918925670425,
       final_price: 0.041994,
       price_impact: 1.258404559451805,
@@ -459,8 +474,8 @@ const quoteNoOutResult: Swap.EstimateResponse = {
 const createLimitInput: Array<Swap.CreateRequest> = [
   {
     tokenOut:
-      'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354',
-    tokenIn: '.',
+      'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354' as TokenId,
+    tokenIn: primaryTokenId,
     wantedPrice: 1,
     amountIn: 1,
     protocol: 'minswap-v1',
@@ -468,19 +483,19 @@ const createLimitInput: Array<Swap.CreateRequest> = [
   // NOTE: missing data
   {
     tokenOut:
-      'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354',
-    tokenIn: '.',
+      'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354' as TokenId,
+    tokenIn: primaryTokenId,
     amountIn: 1,
   },
 ]
 
 const createLimitRequest = (address: string): LimitOrderRequest => ({
   sell_token: '.',
-  sell_amount: '1',
+  sell_amount: '1' as Amount as Amount,
   user_address: address,
   buy_token:
     'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354',
-  buy_amount: '1',
+  buy_amount: '1' as Amount as Amount,
   order_contract: 'minswap-v1',
   numbers_have_decimals: true,
   partner: 'somePartnerId',
@@ -490,14 +505,14 @@ const createLimitRequest = (address: string): LimitOrderRequest => ({
 const createInput: Array<Swap.CreateRequest> = [
   {
     tokenOut:
-      'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354',
-    tokenIn: '.',
+      'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354' as TokenId,
+    tokenIn: primaryTokenId,
     amountIn: 1,
   },
   {
     tokenOut:
-      'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354',
-    tokenIn: '.',
+      'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354' as TokenId,
+    tokenIn: primaryTokenId,
     amountIn: 1,
     protocol: 'minswap-v1',
     slippage: 2,
@@ -526,7 +541,7 @@ const createLimitResponse: CreateOrderResponse = {
         batcher_fee: '2.000000',
         expected_output: '1130',
         source_id:
-          '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.3513ef4f9724b1bdbedd1f606ed93368f0442b236f3ff201bb28532cdf2a53a9',
+          '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.3513ef4f9724b1bdbedd1f606ed93368f0442b236f3ff201bb28532cdf2a53a9' as TokenId,
         initial_price: 0.04252918925670425,
         final_price: 0.041994,
         price_impact: 1.258404559451805,
@@ -577,7 +592,7 @@ const createLimitResult: Swap.CreateResponse = {
 const createRequest = (address: string): Array<CreateOrderRequest> => [
   {
     sell_token: '.',
-    sell_amount: '1',
+    sell_amount: '1' as Amount as Amount,
     user_address: address,
     buy_token:
       'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354',
@@ -588,7 +603,7 @@ const createRequest = (address: string): Array<CreateOrderRequest> => [
   },
   {
     sell_token: '.',
-    sell_amount: '1',
+    sell_amount: '1' as Amount as Amount,
     user_address: address,
     buy_token:
       'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354',
@@ -642,7 +657,7 @@ const createResponse: CreateOrderResponse = {
         batcher_fee: '2.000000',
         expected_output: '1130',
         source_id:
-          '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.3513ef4f9724b1bdbedd1f606ed93368f0442b236f3ff201bb28532cdf2a53a9',
+          '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.3513ef4f9724b1bdbedd1f606ed93368f0442b236f3ff201bb28532cdf2a53a9' as TokenId,
         initial_price: 0.04252918925670425,
         final_price: 0.041994,
         price_impact: 1.258404559451805,
