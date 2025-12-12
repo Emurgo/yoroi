@@ -4,6 +4,7 @@ import {useNavigation} from '@react-navigation/native'
 import {StackNavigationProp} from '@react-navigation/stack'
 import {useQueryClient} from '@tanstack/react-query'
 import {BigNumber} from 'bignumber.js'
+import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {
@@ -12,6 +13,7 @@ import {
   Pressable,
   RefreshControl,
   ScrollView,
+  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -390,15 +392,15 @@ const AddressCard = ({
       ]}
     >
       {({pressed}) => (
-        <View
-          style={[
-            a.flex_row,
-            {
-              backgroundColor:
-                pressed || hasRedeemable ? p.bg_gradient_1[0] : 'transparent',
-            },
-          ]}
-        >
+        <View style={[a.flex_row]}>
+          {(pressed || hasRedeemable) && (
+            <LinearGradient
+              colors={pressed ? p.bg_gradient_2 : p.bg_gradient_1}
+              start={{x: 1, y: 1}}
+              end={{x: 0, y: 0}}
+              style={[StyleSheet.absoluteFill]}
+            />
+          )}
           <View style={[a.flex_1, a.p_lg]}>
             {/* Header row */}
             <View style={[a.flex_row, a.justify_between, a.align_center]}>
