@@ -6,7 +6,7 @@ export type DatumType = 'hash' | 'inline' | 'embedded'
 /**
  * Datum hash - only hash is stored on-chain
  */
-export type DatumHash = {
+export type DatumHashObject = {
   type: 'hash'
   hash: string
 }
@@ -30,7 +30,7 @@ export type EmbeddedDatum = {
 /**
  * Enhanced Datum type supporting all three formats
  */
-export type Datum = DatumHash | InlineDatum | EmbeddedDatum
+export type Datum = DatumHashObject | InlineDatum | EmbeddedDatum
 
 /**
  * Datum information extracted from UTXO or transaction
