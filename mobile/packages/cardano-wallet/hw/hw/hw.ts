@@ -2,6 +2,7 @@ import {UseMutationOptions, useMutation} from '@tanstack/react-query'
 import * as React from 'react'
 import {Permission, PermissionsAndroid, Platform} from 'react-native'
 
+// @ts-expect-error - App-specific import, not available in package context
 import {useBackgroundTimerControl} from '~/common/providers/BackgroundTimerContext'
 
 const requestLedgerPermissions = async () => {
