@@ -68,4 +68,5 @@ export * from './common/constants'
 export * from './common/validators/wallet-meta'
 
 // Mocks (for testing)
-export {walletMocks} from './wallet.mock'
+// Mock exports removed - wallet.mock.ts is excluded from package build
+// export {walletMocks} from './wallet.mock'
