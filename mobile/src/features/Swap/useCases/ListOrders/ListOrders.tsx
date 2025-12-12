@@ -406,6 +406,7 @@ const OrderCancellation = ({
         </Modal.Footer>
       ),
       height: 400,
+      canDiscard: true,
     })
   }
 

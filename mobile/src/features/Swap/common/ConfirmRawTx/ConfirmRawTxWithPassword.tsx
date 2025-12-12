@@ -1,3 +1,4 @@
+import {App} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import React, {useState} from 'react'
@@ -56,6 +57,12 @@ const PasswordInput = ({
       setLoading(false)
     } catch (e: unknown) {
       setLoading(false)
+      // Don't call onError for wrong password errors - show inline error instead
+      if (e instanceof App.Errors.WrongPassword) {
+        setError(e)
+        return
+      }
+
       if (onError) {
         onError()
         return
