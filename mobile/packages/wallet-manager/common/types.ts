@@ -8,9 +8,14 @@ import {App, Chain, HW, Network, Portfolio} from '@yoroi/types'
 
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 
-// TODO: KeychainManager should be injected, not imported from kernel
-// For now, keeping the import but it should come from dependencies
-import {KeychainManager} from '~/kernel/storage/Keychain'
+/**
+ * KeychainManager interface for managing wallet keys in secure storage
+ * This should be provided by the app via WalletManagerOptions
+ */
+export type KeychainManager = {
+  removeWalletKey: (walletId: string) => Promise<void>
+  setWalletKey: (walletId: string, key: string) => Promise<void>
+}
 
 export type NetworkTokenManagers = Readonly<
   Record<Chain.SupportedNetworks, Portfolio.Manager.Token>

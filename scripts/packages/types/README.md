@@ -19,7 +19,6 @@ yarn add @yoroi/types
 - Node.js >= 22.12.0
 - TypeScript >= 5.3.3
 - Peer Dependencies:
-  - @emurgo/yoroi-lib >= 2.0.0
   - axios >= 1.9.0
   - bignumber.js >= 9.3.0
   - rxjs >= 7.8.2

@@ -1,13 +1,14 @@
 import {
   Addressing as AddressingType,
+  Api as AppApi,
+  Balance,
   CardanoAddressedUtxo as CardanoAddressedUtxoType,
   SignedTx as SignedTxType,
   StakingKeyBalances as StakingKeyBalancesType,
   TokenEntry as TokenEntryType,
   TxMetadata as TxMetadataType,
   UnsignedTx as UnsignedTxType,
-} from '@yoroi/tx'
-import {Api as AppApi, Balance} from '@yoroi/types'
+} from '@yoroi/types'
 
 import {WalletChecksum as WalletChecksumType} from '@emurgo/cip4-js'
 import * as CoreTypes from '@emurgo/cross-csl-core'

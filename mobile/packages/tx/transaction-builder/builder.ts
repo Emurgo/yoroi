@@ -1,5 +1,5 @@
 // Functional Transaction Builder using CSL TransactionBuilder directly
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
+import {CardanoMobileWrapped} from '@yoroi/common'
 import {getLogger} from '@yoroi/logger'
 import {primaryTokenId as defaultPrimaryTokenId} from '@yoroi/portfolio'
 import {
@@ -24,14 +24,13 @@ import type {
 import {Buffer} from 'buffer'
 
 import {NoOutputsError, NotEnoughMoneyToSendError} from '../errors'
-import {CardanoHaskellConfig, Datum} from '../types'
+import {CardanoHaskellConfig, Datum, TransactionMetadata} from '../types'
 import {normalizeToAddress} from '../utils/addresses'
 import {ModernUtxo} from '../utxo/models'
 import {createCertificateFromData} from './certificates'
 import type {
   TransactionCertificate,
   TransactionInput,
-  TransactionMetadata,
   TransactionOptions,
   TransactionOutput,
   TransactionReferenceInput,

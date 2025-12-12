@@ -13,7 +13,7 @@ import {Datum} from '../types'
  * JSON-serializable value types for transaction metadata
  * Re-exported from types/index to avoid duplication
  */
-import type {MetadataDataValue} from '../types'
+import type {MetadataDataValue, TransactionMetadata} from '../types'
 import {ModernUtxo} from '../utxo/models'
 
 export type TransactionOutput = {
@@ -157,11 +157,6 @@ export type TransactionReferenceInput = {
 }
 
 export type {MetadataDataValue}
-
-export type TransactionMetadata = {
-  label: string
-  data: MetadataDataValue
-}
 
 export type TransactionOptions = {
   changeAddress?: Address

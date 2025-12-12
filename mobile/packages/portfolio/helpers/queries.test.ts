@@ -1,6 +1,6 @@
-import {primaryTokenId} from '@yoroi/portfolio'
 import {Portfolio, TokenId} from '@yoroi/types'
 
+import {primaryTokenId} from '../constants'
 import {queryTokenInfo} from './queries'
 
 describe('queryTokenInfo', () => {

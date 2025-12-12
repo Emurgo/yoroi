@@ -7,7 +7,7 @@ import {TokenInfoSchema} from './token-info'
 export const TokenAmountSchema = z.object({
   info: TokenInfoSchema,
   quantity: z.bigint(),
-})
+}) as z.ZodType<Portfolio.Token.Amount>
 
 export const isTokenAmount = (
   data: unknown,

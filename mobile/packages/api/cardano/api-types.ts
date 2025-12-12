@@ -1,5 +1,3 @@
-import {RemoteAccountState} from '@yoroi/staking'
-import {RemoteCertificateMeta} from '@yoroi/staking'
 import {
   Address,
   Amount,
@@ -8,6 +6,8 @@ import {
   EpochNumber,
   PolicyId,
   Portfolio,
+  RemoteAccountState,
+  RemoteCertificateMeta,
   SlotNumber,
   TransactionHash,
   UtxoId,

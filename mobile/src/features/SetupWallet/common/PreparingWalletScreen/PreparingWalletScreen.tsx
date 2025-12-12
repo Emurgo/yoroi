@@ -1,9 +1,11 @@
 import {isEmptyString} from '@yoroi/cardano-wallet'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {useLaunchWalletAfterSyncing} from '@yoroi/wallet-manager'
-import {useSyncTemporarilyPaused} from '@yoroi/wallet-manager'
-import {useWalletManager} from '@yoroi/wallet-manager'
+import {
+  useLaunchWalletAfterSyncing,
+  useSyncTemporarilyPaused,
+  useWalletManager,
+} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {Text, View} from 'react-native'
@@ -32,12 +34,25 @@ export const PreparingWalletScreen = () => {
     React.useState(true)
   const [showBackgroundButton, setShowBackgroundButton] = React.useState(false)
 
+  // Memoize walletNavigation object to prevent unnecessary re-renders
+  const memoizedWalletNavigation = React.useMemo(
+    () => ({
+      resetToWalletSelection: walletNavigation.resetToWalletSelection,
+      resetToTxHistory: walletNavigation.resetToTxHistory,
+    }),
+    [
+      walletNavigation.resetToWalletSelection,
+      walletNavigation.resetToTxHistory,
+    ],
+  )
+
   // Only start wallet sync if user is logged in
   // Wallet restoration should not proceed until user is authenticated
   useLaunchWalletAfterSyncing({
     isGlobalSyncPaused: isGlobalSyncPaused && isLoggedIn,
     walletId: isLoggedIn ? walletId : null,
     shouldNavigateAfterSync,
+    walletNavigation: memoizedWalletNavigation,
   })
 
   // If user is not logged in, show message and wait for login

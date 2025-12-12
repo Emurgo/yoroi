@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/transfer",
-  "version": "6.0.0",
+  "version": "7.0.0-beta",
   "description": "The Transfer package of Yoroi SDK",
   "keywords": [
     "yoroi",
@@ -81,6 +81,7 @@
     "@types/react": "19.0.10",
     "@types/react-test-renderer": "19.0.0",
     "@yoroi/common": "file:../common",
+    "@yoroi/logger": "file:../logger",
     "@yoroi/portfolio": "file:../portfolio",
     "@yoroi/resolver": "file:../resolver",
     "@yoroi/types": "file:../types",
@@ -106,9 +107,9 @@
   "peerDependencies": {
     "@react-native-async-storage/async-storage": "2.1.2",
     "@tanstack/react-query": "5.76.2",
-    "@yoroi/common": "file:../common",
-    "@yoroi/portfolio": "file:../portfolio",
-    "@yoroi/resolver": "file:../resolver",
+    "@yoroi/common": "^7.0.0-beta",
+    "@yoroi/portfolio": "^7.0.0-beta",
+    "@yoroi/resolver": "^7.0.0-beta",
     "axios": "1.10.0",
     "bignumber.js": "9.3.0",
     "immer": "10.1.1",

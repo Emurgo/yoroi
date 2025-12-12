@@ -1,6 +1,5 @@
-import {useCollateralInfo} from '@yoroi/cardano-wallet'
 import {amountFormatter} from '@yoroi/portfolio'
-import {useWalletManager} from '@yoroi/wallet-manager'
+import {useCollateralInfo, useWalletManager} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 

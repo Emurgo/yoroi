@@ -4,9 +4,15 @@ import {getLogger} from '@yoroi/logger'
 
 import * as React from 'react'
 
-import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
-
 import {useWalletManagerSelector} from '../context/WalletManagerProvider'
+
+/**
+ * Wallet navigation functions - should be provided by the app
+ */
+export type WalletNavigation = {
+  resetToWalletSelection: () => void
+  resetToTxHistory: () => void
+}
 
 /**
  * Custom hook to launch a new wallet first time or when a previous sync is required, it will follow these steps:
@@ -31,12 +37,16 @@ export function useLaunchWalletAfterSyncing({
   isGlobalSyncPaused = false,
   walletId,
   shouldNavigateAfterSync = true,
+  walletNavigation,
 }: {
   isGlobalSyncPaused: boolean
   walletId: YoroiWallet['id'] | null
   shouldNavigateAfterSync?: boolean
+  /**
+   * Navigation functions - should be provided by the app
+   */
+  walletNavigation: WalletNavigation
 }) {
-  const walletNavigation = useWalletNavigation()
   // Use selector to prevent re-renders when selected wallet changes
   const walletManager = useWalletManagerSelector((ctx) => ctx.walletManager)
 
@@ -132,7 +142,7 @@ export function useLaunchWalletAfterSyncing({
         }
 
         // Start full sync in the background without waiting
-        wallet.sync({isForced: true}).catch((error) => {
+        wallet.sync({isForced: true}).catch((error: unknown) => {
           getLogger().error(
             'useLaunchWalletAfterSyncing: Error during background full sync',
             {error, walletId},

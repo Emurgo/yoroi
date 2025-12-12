@@ -10,7 +10,7 @@ describe('toTransactionOutput', () => {
       address: 'exampleAddress' as Address,
       datum: {
         hash: 'exampleHash' as DatumHash,
-      },
+      } as TransactionOutput['datum'],
       amounts: {
         [primaryTokenId]: '10',
         [tokenBalanceMocks.nftCryptoKitty.info.id]: '20',
@@ -20,7 +20,8 @@ describe('toTransactionOutput', () => {
     const transferEntry: Transfer.Entry = {
       address: 'exampleAddress' as Address,
       datum: {
-        hash: 'exampleHash' as DatumHash,
+        type: 'hash',
+        hash: 'exampleHash',
       },
       amounts: {
         [tokenBalanceMocks.primaryETH.info.id]: {
