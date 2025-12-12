@@ -5,6 +5,7 @@ import * as React from 'react'
 import {Alert, Platform, ScrollView, Text} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
+import {useBackgroundTimerControl} from '~/common/providers/BackgroundTimerContext'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
@@ -34,11 +35,15 @@ export const LedgerTransportSwitchView = ({
 }: Props) => {
   const strings = useStrings()
   const isUSBSupported = useIsUsbSupported()
+  const backgroundTimerControl = useBackgroundTimerControl()
 
-  const {request} = useLedgerPermissions({
-    onError: () => Alert.alert(strings.hw.error, strings.hw.bluetoothError),
-    onSuccess: onSelectBLE,
-  })
+  const {request} = useLedgerPermissions(
+    {
+      onError: () => Alert.alert(strings.hw.error, strings.hw.bluetoothError),
+      onSuccess: onSelectBLE,
+    },
+    backgroundTimerControl,
+  )
 
   const getUsbButtonTitle = (): string => {
     if (Platform.OS === 'ios') {
