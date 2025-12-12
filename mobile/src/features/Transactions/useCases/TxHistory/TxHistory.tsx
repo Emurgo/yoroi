@@ -117,8 +117,6 @@ export const TxHistory = () => {
     return unsubscribe
   }, [navigation, walletNavigation])
 
-  // DISABLED: EarnRewardsBanner - "Delegate with Yoroi DRep" banner temporarily deactivated
-  // const earnRewardsBanner = renderEarnRewardsBanner()
   return (
     <LinearGradient
       colors={
@@ -197,8 +195,6 @@ export const TxHistory = () => {
 
         <Space.Height.md />
 
-        {earnRewardsBanner}
-
         <TxFilter
           selectedOperations={filters.selectedOperations}
           metadataMemoSearch={filters.metadataMemoSearch}
@@ -209,6 +205,7 @@ export const TxHistory = () => {
             onScroll={onScroll}
             refreshing={isLoading}
             onRefresh={handleOnRefresh}
+            listHeaderComponent={earnRewardsBanner}
           />
         </TxFilter>
       </View>
