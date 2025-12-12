@@ -23,7 +23,6 @@ import {
   ChevronRightDarkIllustration,
   ChevronRightGrayIllustration,
 } from '~/features/SetupWallet/illustrations/ChevronRight'
-import {features} from '~/kernel/features'
 import {Icon} from '~/ui/Icon'
 import {Loading} from '~/ui/Loading/Loading'
 import {Space} from '~/ui/Space/Space'
@@ -166,17 +165,11 @@ export const WalletListItem = ({
             </>
           )}
 
-          {features.walletListFeedback && (
-            <>
-              {(syncWalletInfo?.status === 'syncing' || isLoading) && (
-                <Loading />
-              )}
+          {(syncWalletInfo?.status === 'syncing' || isLoading) && <Loading />}
 
-              <Space.Width.md />
+          <Space.Width.md />
 
-              {isSelected && <Icon.Check size={20} color={p.primary_600} />}
-            </>
-          )}
+          {isSelected && <Icon.Check size={20} color={p.primary_600} />}
 
           <Space.Width.xl />
 
