@@ -1,4 +1,4 @@
-import {App} from '@yoroi/types'
+import type {App} from '@yoroi/types'
 
 import {observerMaker} from '../../observer/observer'
 import {intersection} from '../../utils/arrays'
@@ -39,18 +39,27 @@ export const observableStorageMaker = <
     get(
       target: App.ObservableStorage<IsAsync, K>,
       property: keyof App.ObservableStorage<IsAsync, K>,
-      receiver: any,
+      receiver: unknown,
     ) {
       const origProperty = target[property]
       if (typeof origProperty === 'function' && triggers.includes(property)) {
-        const origMethod: (...args: any[]) => any = origProperty
-        return function (...args: any[]) {
+        type MethodType = typeof origProperty
+        type MethodParams = Parameters<MethodType>
+        type MethodReturn = ReturnType<MethodType>
+        const origMethod = origProperty as (
+          ...args: MethodParams
+        ) => MethodReturn
+        return function (...args: MethodParams): MethodReturn {
           const notify = () => {
             const [firstArg] = args
             const isArray = Array.isArray(firstArg)
-            if (isString(firstArg as K)) {
+            if (
+              firstArg != null &&
+              typeof firstArg === 'string' &&
+              isString(firstArg)
+            ) {
               // single operations
-              observer.notify([firstArg])
+              observer.notify([firstArg as K])
             } else if (isArray) {
               // multi operations
               const keys = firstArg as K[]
@@ -60,16 +69,13 @@ export const observableStorageMaker = <
               observer.notify(null)
             }
           }
-          const result: ReturnType<typeof origMethod> = origMethod.apply(
-            target,
-            args,
-          )
+          const result: MethodReturn = origMethod.apply(target, args)
 
           if (result instanceof Promise) {
             return result.then((resolvedValue) => {
               notify()
               return resolvedValue
-            })
+            }) as MethodReturn
           } else {
             notify()
             return result
@@ -110,22 +116,24 @@ export const observableMultiStorageMaker = <
     get(
       target: App.MultiStorage<T, IsAsync, K>,
       property: keyof App.MultiStorage<T, IsAsync, K>,
-      receiver: any,
+      receiver: unknown,
     ) {
       const origProperty = target[property]
       if (typeof origProperty === 'function' && triggers.includes(property)) {
-        const origMethod: (...args: any[]) => any = origProperty
-        return function (...args: any[]) {
-          const result: ReturnType<typeof origMethod> = origMethod.apply(
-            target,
-            args,
-          )
+        type MethodType = typeof origProperty
+        type MethodParams = Parameters<MethodType>
+        type MethodReturn = ReturnType<MethodType>
+        const origMethod = origProperty as (
+          ...args: MethodParams
+        ) => MethodReturn
+        return function (...args: MethodParams): MethodReturn {
+          const result: MethodReturn = origMethod.apply(target, args)
 
           if (result instanceof Promise) {
             return result.then((resolvedValue) => {
               observer.notify(null)
               return resolvedValue
-            })
+            }) as MethodReturn
           } else {
             observer.notify(null)
             return result

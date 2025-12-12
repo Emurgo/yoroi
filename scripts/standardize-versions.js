@@ -38,6 +38,7 @@ const STANDARD_VERSIONS = {
   "@yoroi/links": "file:../links",
   "@yoroi/notifications": "file:../notifications",
   "@yoroi/dapp-connector": "file:../dapp-connector",
+  "@yoroi/p2p-communication": "file:../p2p-communication",
 
   // Dev dependencies
   "@babel/core": "7.26.0",
@@ -96,6 +97,7 @@ const PACKAGES = [
   "scripts/packages/identicon",
   "scripts/packages/links",
   "scripts/packages/notifications",
+  "scripts/packages/p2p-communication",
   "scripts/packages/portfolio",
   "scripts/packages/resolver",
   "scripts/packages/setup-wallet",

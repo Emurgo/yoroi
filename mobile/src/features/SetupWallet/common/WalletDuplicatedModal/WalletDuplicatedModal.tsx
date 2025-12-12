@@ -1,10 +1,10 @@
 import {Blockies} from '@yoroi/identicon'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useWalletManager} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
@@ -35,7 +35,7 @@ const WalletDuplicatedModalContent = ({
 
       <View style={[a.flex_row, a.align_center, a.gap_md]}>
         <Icon.WalletAvatar
-          image={new Blockies({seed}).asBase64()}
+          image={Blockies({seed}).asBase64()}
           size={38}
           style={{
             width: 38,

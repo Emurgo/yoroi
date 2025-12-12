@@ -3,8 +3,8 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
 import {
+  Pressable,
   Text,
-  TouchableHighlight,
   TouchableOpacity,
   View,
   useWindowDimensions,
@@ -136,14 +136,14 @@ export const AboutScreen = () => {
             {strings.settings.about.currentVersion}
           </Text>
 
-          <TouchableHighlight onLongPress={handleOnLongPress}>
+          <Pressable onLongPress={handleOnLongPress}>
             <Text
               style={[a.body_1_lg_regular, ta.text_gray_medium]}
               numberOfLines={1}
             >
               {appVersion}
             </Text>
-          </TouchableHighlight>
+          </Pressable>
         </View>
 
         <View style={[a.flex_row, a.justify_between, a.align_center]}>

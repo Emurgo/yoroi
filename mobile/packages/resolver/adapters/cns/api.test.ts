@@ -1,3 +1,4 @@
+import {isError} from '@yoroi/common'
 import {Api, Resolver} from '@yoroi/types'
 
 import {init} from '@emurgo/cross-csl-nodejs'
@@ -79,7 +80,8 @@ describe('cnsCryptoAddress', () => {
       await getAddress(receiver)
 
       fail('it should crash before')
-    } catch (e: any) {
+    } catch (e: unknown) {
+      if (!isError(e)) throw e
       expect(e.message).toBe(error.message)
     }
   })
@@ -123,8 +125,9 @@ describe('handleCnsApiError', () => {
       handleCnsApiError(unknownError)
 
       fail('it should crash before')
-    } catch (e: any) {
+    } catch (e: unknown) {
       expect(e).toBeInstanceOf(Error)
+      if (!isError(e)) throw e
       expect(e.message).toBe('unknown error')
     }
   })

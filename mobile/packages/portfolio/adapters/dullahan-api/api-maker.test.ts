@@ -1,4 +1,4 @@
-import {Api, Chain, Portfolio} from '@yoroi/types'
+import {Api, Branded, Chain, Portfolio} from '@yoroi/types'
 
 import {tokenActivityMocks} from '../token-activity.mocks'
 import {tokenDiscoveryMocks} from '../token-discovery.mocks'
@@ -66,15 +66,17 @@ describe('portfolioApiMaker', () => {
     })
     const mockTokenIdsWithCache: ReadonlyArray<
       Api.RequestWithCache<Portfolio.Token.Id>
-    > = [['token.id', 'etag-hash']]
+    > = [[Branded.asTokenId('token.id'), 'etag-hash']]
     const mockTokenIdsWithCacheRequest: DullahanApiCachedIdsRequest = [
       'token.id:etag-hash',
     ]
 
     await api.tokenDiscovery(tokenDiscoveryMocks.nftCryptoKitty.id)
     await api.tokenInfos(mockTokenIdsWithCache)
-    await api.tokenTraits(tokenMocks.nftCryptoKitty.info.id)
-    await api.tokenInfo(tokenMocks.nftCryptoKitty.info.id)
+    await api.tokenTraits(
+      tokenMocks.nftCryptoKitty.info.id as Portfolio.Token.Id,
+    )
+    await api.tokenInfo(tokenMocks.nftCryptoKitty.info.id as Portfolio.Token.Id)
     await api.tokenActivity(
       tokenActivityMocks.api.request,
       Portfolio.Token.ActivityWindow.OneDay,
@@ -193,7 +195,9 @@ describe('portfolioApiMaker', () => {
       },
     })
 
-    const resultInfo = await api.tokenInfo(tokenMocks.nftCryptoKitty.info.id)
+    const resultInfo = await api.tokenInfo(
+      tokenMocks.nftCryptoKitty.info.id as Portfolio.Token.Id,
+    )
     expect(mockRequest).toHaveBeenCalledTimes(2)
     expect(mockRequest).toHaveBeenCalledWith({
       method: 'get',
@@ -286,7 +290,7 @@ describe('portfolioApiMaker', () => {
     })
     const mockTokenIdsWithCache: ReadonlyArray<
       Api.RequestWithCache<Portfolio.Token.Id>
-    > = [['token.id', 'etag-hash']]
+    > = [[Branded.asTokenId('token.id'), 'etag-hash']]
     const mockTokenIdsWithCacheRequest: DullahanApiCachedIdsRequest = [
       'token.id:etag-hash',
     ]
@@ -334,7 +338,7 @@ describe('portfolioApiMaker', () => {
     })
 
     await expect(
-      api.tokenTraits(tokenMocks.nftCryptoKitty.info.id),
+      api.tokenTraits(tokenMocks.nftCryptoKitty.info.id as Portfolio.Token.Id),
     ).resolves.toEqual({
       tag: 'left',
       value: {
@@ -357,7 +361,7 @@ describe('portfolioApiMaker', () => {
     })
 
     await expect(
-      api.tokenInfo(tokenMocks.nftCryptoKitty.info.id),
+      api.tokenInfo(tokenMocks.nftCryptoKitty.info.id as Portfolio.Token.Id),
     ).resolves.toEqual({
       tag: 'left',
       value: {
@@ -445,7 +449,9 @@ describe('portfolioApiMaker', () => {
       maxConcurrentRequests: 10,
     })
 
-    const result = await api.tokenTraits(tokenMocks.nftCryptoKitty.info.id)
+    const result = await api.tokenTraits(
+      tokenMocks.nftCryptoKitty.info.id as Portfolio.Token.Id,
+    )
     expect(mockRequest).toHaveBeenCalledTimes(1)
     expect(mockRequest).toHaveBeenCalledWith({
       method: 'get',
@@ -482,7 +488,9 @@ describe('portfolioApiMaker', () => {
       maxConcurrentRequests: 10,
     })
 
-    const result = await api.tokenInfo(tokenMocks.nftCryptoKitty.info.id)
+    const result = await api.tokenInfo(
+      tokenMocks.nftCryptoKitty.info.id as Portfolio.Token.Id,
+    )
     expect(mockRequest).toHaveBeenCalledTimes(1)
     expect(mockRequest).toHaveBeenCalledWith({
       method: 'get',

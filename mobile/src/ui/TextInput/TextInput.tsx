@@ -1,4 +1,5 @@
-import {isString} from '@yoroi/common'
+import {isEmptyString} from '@yoroi/cardano-wallet'
+import {isString, useDebouncedCallback} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
@@ -16,7 +17,6 @@ import {
 } from 'react-native-paper'
 
 import {Icon} from '~/ui/Icon'
-import {isEmptyString} from '~/wallets/utils/string'
 
 export type TextInputProps = RNTextInputProps &
   Omit<React.ComponentProps<typeof RNPTextInput>, 'theme'> & {
@@ -33,19 +33,6 @@ export type TextInputProps = RNTextInputProps &
     showErrorOnBlur?: boolean
     selectTextOnAutoFocus?: boolean
   }
-
-const useDebounced = (callback: VoidFunction, value: unknown, delay = 1000) => {
-  const first = React.useRef(true)
-  React.useEffect(() => {
-    if (first.current) {
-      first.current = false
-    }
-
-    const handler = setTimeout(() => callback(), delay)
-
-    return () => clearTimeout(handler)
-  }, [callback, delay, value])
-}
 
 export const TextInput = React.forwardRef(
   (props: TextInputProps, ref: React.ForwardedRef<RNTextInput>) => {
@@ -74,10 +61,10 @@ export const TextInput = React.forwardRef(
     const [showPassword, setShowPassword] = React.useState(false)
     const [errorTextEnabled, setErrorTextEnabled] = React.useState(errorOnMount)
     const {palette: p, isDark} = useTheme()
-    useDebounced(
+    useDebouncedCallback(
       React.useCallback(() => setErrorTextEnabled(true), []),
       value,
-      errorDelay,
+      errorDelay || 1000,
     )
     const showError = errorTextEnabled && !isEmptyString(errorText)
     const showHelperComponent = helper != null && !isString(helper)
@@ -100,7 +87,10 @@ export const TextInput = React.forwardRef(
           ref={ref}
           style={{textAlign}}
           value={value}
-          onChange={() => setErrorTextEnabled(false)}
+          onChange={() => {
+            setErrorTextEnabled(false)
+          }}
+          onChangeText={restProps.onChangeText}
           autoCorrect={false}
           autoComplete={autoComplete}
           autoCapitalize="none"
@@ -173,7 +163,7 @@ export const TextInput = React.forwardRef(
           {...restProps}
         />
 
-        {!noHelper && helperToShow}
+        {!noHelper && <View style={{minHeight: 22}}>{helperToShow}</View>}
       </View>
     )
   },

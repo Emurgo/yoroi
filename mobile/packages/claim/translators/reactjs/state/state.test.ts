@@ -1,4 +1,4 @@
-import {Scan} from '@yoroi/types'
+import {Links} from '@yoroi/types'
 
 import {claimApiMockResponses} from '../../../manager.mocks'
 import {
@@ -35,7 +35,7 @@ describe('claimReducer', () => {
 
   it('should handle ScanActionClaimChanged action', () => {
     const initialState = defaultClaimState
-    const scanAction: Scan.ActionClaim = {
+    const cardanoAction: Links.CardanoActionClaim = {
       action: 'claim',
       code: 'code',
       params: {},
@@ -43,16 +43,16 @@ describe('claimReducer', () => {
     }
     const action: ClaimActionScanActionClaimChanged = {
       type: ClaimActionType.ScanActionClaimChanged,
-      scanActionClaim: scanAction,
+      scanActionClaim: cardanoAction,
     }
 
     const newState = claimReducer(initialState, action)
 
-    expect(newState.scanActionClaim).toEqual(scanAction)
+    expect(newState.scanActionClaim).toEqual(cardanoAction)
   })
 
   it('should handle Reset action', () => {
-    const scanAction: Scan.ActionClaim = {
+    const cardanoAction: Links.CardanoActionClaim = {
       action: 'claim',
       code: 'code',
       params: {},
@@ -60,7 +60,7 @@ describe('claimReducer', () => {
     }
     const populatedState = {
       claimInfo: claimApiMockResponses.claimTokens.accepted,
-      scanActionClaim: scanAction,
+      scanActionClaim: cardanoAction,
     }
     const action: ClaimActionReset = {
       type: ClaimActionType.Reset,

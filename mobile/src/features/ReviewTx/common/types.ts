@@ -1,3 +1,11 @@
+import {
+  CertificateKind,
+  type ChainValidationResult,
+  type DecodedDatum,
+  type Proposal,
+  type ReferenceScript,
+  type Vote,
+} from '@yoroi/tx'
 import {Balance, Portfolio} from '@yoroi/types'
 
 import {
@@ -23,6 +31,13 @@ export type FormattedInput = {
   ownAddress: boolean | null
   txIndex: number
   txHash: string
+  resolvedName?: string | null // Resolved alias (AdaHandle, CNS, etc.)
+  contractInfo?: {
+    name?: string
+    purpose?: string
+    description?: string
+  } | null // Smart contract information
+  referenceScript?: ReferenceScript | null // Reference script if present
 }
 
 export type FormattedInputs = Array<FormattedInput>
@@ -36,6 +51,20 @@ export type FormattedOutput = {
   addressKind: CredKind | null
   rewardAddress: string | null
   ownAddress: boolean
+  resolvedName?: string | null // Resolved alias (AdaHandle, CNS, etc.)
+  contractInfo?: {
+    name?: string
+    purpose?: string
+    description?: string
+  } | null // Smart contract information
+  datum?: {
+    type: 'hash' | 'inline' | 'embedded'
+    hash: string
+    data?: string // PlutusData hex (if available)
+    decoded?: DecodedDatum | null // Decoded datum for display
+    json?: unknown | null // JSON representation if available
+  } | null // Datum information
+  referenceScript?: ReferenceScript | null // Reference script if present
 }
 
 export type FormattedOutputs = Array<FormattedOutput>
@@ -45,6 +74,37 @@ export type FormattedFee = {
   quantity: Balance.Quantity
 }
 
+export type FormattedWithdrawal = {
+  address: string
+  amount: Balance.Quantity
+  tokenInfo: Portfolio.Token.Info
+}
+
+export type FormattedWithdrawals = Array<FormattedWithdrawal>
+
+export type FormattedWitness = {
+  type: 'vkey' | 'bootstrap' | 'nativeScript' | 'plutusScript'
+  publicKey?: string // For vkey and bootstrap
+  signature?: string // For vkey and bootstrap
+  scriptHash?: string // For native and plutus scripts
+  scriptBytes?: string // For plutus scripts
+  chaincode?: string // For bootstrap
+  attributes?: string // For bootstrap
+}
+
+export type FormattedWitnessSet = {
+  vkeys: Array<{publicKey: string; signature: string}>
+  bootstraps: Array<{
+    publicKey: string
+    signature: string
+    chaincode: string
+    attributes: string
+  }>
+  nativeScripts: Array<{scriptHash: string}>
+  plutusScripts: Array<{scriptHash: string; scriptBytes: string}>
+  plutusData: Array<{data: string; decoded?: unknown}>
+}
+
 export type FormattedTx = {
   inputs: FormattedInputs
   outputs: FormattedOutputs
@@ -52,11 +112,32 @@ export type FormattedTx = {
   certificates: FormattedCertificate[] | null
   mint: Array<[Portfolio.Token.Info, string]> | null
   referenceInputs: FormattedInputs
+  withdrawals: FormattedWithdrawals | null
+  collateral: FormattedInputs | null
+  collateralReturn: FormattedOutput | null
+  totalCollateral: FormattedFee | null
+  requiredSigners: string[] | null // Ed25519 key hashes
+  scriptDataHash: string | null
+  ttl: number | null
+  validityIntervalStart: number | null
+  networkId: number | null
+  witnessSet: FormattedWitnessSet | null
+  governance?: {
+    proposals: Proposal[]
+    votes: Vote[]
+  } | null // Governance actions (proposals and votes)
+  chainInfo?: {
+    isChained: boolean
+    chainOrder?: number
+    validationResult?: ChainValidationResult
+  } | null // Transaction chaining information
 }
 
 export type FormattedMetadata = {
   hash: string | null
   metadata: {msg: Array<string>} | null
+  allLabels: Record<string, unknown> | null // All metadata labels, not just 674
+  scripts: Array<{scriptHash: string; scriptBytes: string}> | null // Scripts in auxiliary data
 }
 
 type AssertEqual<T, Expected> = T extends Expected
@@ -78,30 +159,20 @@ type Transformed<T> = {
   }
 }[keyof UnionToIntersection<T>]
 
-export type FormattedCertificate = Transformed<CertificateJSON>
+// Minimal certificate with just type (for historical transactions)
+type MinimalCertificate = {
+  type: CertificateType
+  value: Partial<Record<string, unknown>>
+}
 
-export const CertificateType = {
-  StakeRegistration: 'StakeRegistration', //
-  StakeDeregistration: 'StakeDeregistration', //
-  StakeDelegation: 'StakeDelegation', //
-  PoolRegistration: 'PoolRegistration', //
-  PoolRetirement: 'PoolRetirement', //
-  GenesisKeyDelegation: 'GenesisKeyDelegation', //
-  MoveInstantaneousRewardsCert: 'MoveInstantaneousRewardsCert', //
-  CommitteeHotAuth: 'CommitteeHotAuth', //
-  CommitteeColdResign: 'CommitteeColdResign', //
-  DRepDeregistration: 'DRepDeregistration', //
-  DRepRegistration: 'DRepRegistration', //
-  DRepUpdate: 'DRepUpdate', //
-  VoteDelegation: 'VoteDelegation', //
-  StakeAndVoteDelegation: 'StakeAndVoteDelegation', // NO
-  StakeRegistrationAndDelegation: 'StakeRegistrationAndDelegation', // NO
-  StakeVoteRegistrationAndDelegation: 'StakeVoteRegistrationAndDelegation', // NO
-  VoteRegistrationAndDelegation: 'VoteRegistrationAndDelegation', // NO
-} as const
+// FormattedCertificate can be either a full certificate or a minimal one
+export type FormattedCertificate =
+  | Transformed<CertificateJSON>
+  | MinimalCertificate
 
-export type CertificateType =
-  (typeof CertificateType)[keyof typeof CertificateType]
+// Re-export CertificateKind from @yoroi/tx as CertificateType for backward compatibility
+export const CertificateType = CertificateKind
+export type CertificateType = CertificateKind
 
 // Makes sure CertificateType lists all the certificates in CertificateJSON
 export type AssertAllImplementedCertTypes = AssertEqual<

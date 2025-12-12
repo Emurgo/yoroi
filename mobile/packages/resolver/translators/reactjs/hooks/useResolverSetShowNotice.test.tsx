@@ -24,7 +24,10 @@ describe('useResolverSetShowNotice', () => {
     await waitFor(() => expect(result.current.isPending).toBe(false))
 
     expect(mockResolverManager.showNotice.save).toHaveBeenCalledTimes(1)
-    expect(mockResolverManager.showNotice.save).toHaveBeenCalledWith(true)
+    expect(mockResolverManager.showNotice.save).toHaveBeenCalledWith(
+      true,
+      expect.any(Object),
+    )
     expect(result.current.isError).toBe(false)
   })
 
@@ -49,7 +52,10 @@ describe('useResolverSetShowNotice', () => {
     await waitFor(() => expect(result.current.isError).toBe(true))
 
     expect(mockResolverManager.showNotice.save).toHaveBeenCalledTimes(1)
-    expect(mockResolverManager.showNotice.save).toHaveBeenCalledWith(true)
+    expect(mockResolverManager.showNotice.save).toHaveBeenCalledWith(
+      true,
+      expect.any(Object),
+    )
     expect(result.current.error).toBe(testError)
   })
 })

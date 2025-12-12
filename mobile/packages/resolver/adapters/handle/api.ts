@@ -111,6 +111,64 @@ const HandleApiResponseSchema = z.object({
     ada: z.string(),
   }),
 })
+
+const HandleApiDRepResponseSchema = z.object({
+  drep: z
+    .object({
+      type: z.enum(['drep', 'cc_hot', 'cc_cold']),
+      cred: z.enum(['key', 'script']),
+      hex: z.string(),
+      cip_105: z.string(),
+      cip_129: z.string(),
+    })
+    .optional(),
+})
+
+export type HandleDRepInfo = {
+  type: 'drep' | 'cc_hot' | 'cc_cold'
+  cred: 'key' | 'script'
+  hex: string
+  cip_105: string
+  cip_129: string
+}
+
+export const handleApiGetDRepId = ({
+  request,
+  isMainnet = true,
+}: {request: FetchData; isMainnet?: boolean} = initialDeps) => {
+  return async (
+    resolve: Resolver.Receiver['resolve'],
+    fetcherConfig?: AxiosRequestConfig,
+  ): Promise<HandleDRepInfo | null> => {
+    if (!isAdaHandleDomain(resolve)) throw new Resolver.Errors.InvalidDomain()
+
+    const sanitizedDomain = resolve.replace(/^\$/, '')
+    const config = {
+      url: `${
+        isMainnet
+          ? handleApiConfig.mainnet.getCryptoAddress
+          : handleApiConfig.preprod.getCryptoAddress
+      }${sanitizedDomain}`,
+    } as const
+
+    try {
+      const response = await request<HandleApiGetCryptoAddressResponse>(
+        config,
+        fetcherConfig,
+      )
+
+      if (isLeft(response)) throw getApiError(response.error)
+
+      const parsedResponse = HandleApiDRepResponseSchema.parse(
+        response.value.data,
+      )
+      return parsedResponse.drep ?? null
+    } catch (error: unknown) {
+      throw getHandleApiError(error)
+    }
+  }
+}
+
 export const isAdaHandleDomain = (value: string) =>
   value.startsWith('$') && value.length > 1
 

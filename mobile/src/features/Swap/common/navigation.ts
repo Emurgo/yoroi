@@ -2,12 +2,16 @@ import {useNavigation} from '@react-navigation/native'
 import {useRef} from 'react'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {useResultNavigation} from '~/kernel/navigation/hooks/useResultNavigation'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {SwapTokenRouteseNavigation} from '~/kernel/navigation/types'
 
 export const useNavigateTo = () => {
   const navigation = useNavigation<SwapTokenRouteseNavigation>()
   const rootNavigation = useNavigation()
   const strings = useStrings()
+  const resultNavigation = useResultNavigation()
+  const walletNavigation = useWalletNavigation()
 
   return useRef({
     selectProtocol: () => navigation.navigate('select-protocol'),
@@ -31,16 +35,26 @@ export const useNavigateTo = () => {
         },
       }),
     submittedTx: () =>
-      navigation.navigate('submitted-tx', {
+      resultNavigation.showResultScreen({
+        type: 'success',
+        context: 'swap',
         title: strings.swap.submittedTxScreenTitle,
         message: strings.swap.submittedTxScreenText,
-        buttonTitle: strings.swap.submittedTxScreenButton,
+        primaryAction: {
+          title: strings.swap.submittedTxScreenButton,
+          onPress: walletNavigation.resetToTxHistory,
+        },
       }),
     failedTx: () =>
-      navigation.navigate('failed-tx', {
+      resultNavigation.showResultScreen({
+        type: 'error',
+        context: 'swap',
         title: strings.swap.failedTxTitle,
         message: strings.swap.failedTxText,
-        buttonTitle: strings.swap.failedTxButton,
+        primaryAction: {
+          title: strings.swap.failedTxButton,
+          onPress: walletNavigation.resetToTxHistory,
+        },
       }),
     swapOpenOrders: () => navigation.navigate('orders'),
     resetToStartSwap: () => navigation.navigate('main'),

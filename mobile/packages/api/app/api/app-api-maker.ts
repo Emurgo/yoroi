@@ -1,18 +1,11 @@
-import {Fetcher, fetcher} from '@yoroi/common'
 import {App} from '@yoroi/types'
 
-import {getFrontendFees as getFrontendFeesWrapper} from './frontend-fees'
-
 export const appApiMaker = ({
-  baseUrl,
-  request = fetcher,
+  baseUrl: _baseUrl,
+  request: _request,
 }: {
   baseUrl: string
-  request?: Fetcher
+  request?: unknown
 }): Readonly<App.Api> => {
-  const getFrontendFees = getFrontendFeesWrapper(baseUrl, request)
-
-  return {
-    getFrontendFees,
-  } as const
+  return {} as const
 }

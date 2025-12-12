@@ -1,23 +1,24 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {UnsignedTransaction} from '@yoroi/tx'
 import {App} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
+import * as CSL from '@emurgo/cross-csl-core'
 import * as React from 'react'
 import {ActivityIndicator, TextInput as RNTextInput, View} from 'react-native'
 
 import {useSignTxWithPassword} from '~/features/Transactions/hooks/useSignTxWithPassword'
 import {useSubmitTx} from '~/features/Transactions/hooks/useSubmitTx'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {debugWalletInfo, features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {Checkmark, TextInput} from '~/ui/TextInput/TextInput'
-import {YoroiSignedTx, YoroiUnsignedTx} from '~/wallets/types/yoroi'
 
 type Props = {
-  onSuccess?: (signedTx: YoroiSignedTx) => void
-  unsignedTx: YoroiUnsignedTx
+  onSuccess?: (signedTx: CSL.Transaction) => void
+  unsignedTx: UnsignedTransaction
   onError?: (error: unknown) => void
 }
 
@@ -100,7 +101,7 @@ export const SignWithPasswordModal = ({
           testID="confirmButton"
           title={strings.staking.sign}
           onPress={() => onSubmit?.(spendingPassword)}
-          disabled={spendingPassword.length === 0}
+          disabled={spendingPassword.length === 0 || isLoading}
         />
       </View>
 

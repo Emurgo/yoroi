@@ -5,9 +5,10 @@ import * as React from 'react'
 import {Linking, Text, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
+import {useBold} from '~/common/hooks/useBold'
 import {useAnalyticsContext} from '~/features/Analytics/context/AnalyticsRootProvider'
-import {useBold} from '~/hooks/useBold'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {logger} from '~/kernel/logger/logger'
 import {metricsConsentRequestedStorageKeyManager} from '~/kernel/storage/storages'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
@@ -122,7 +123,15 @@ const Info = ({showLogo}: {showLogo?: boolean}) => {
   const bold = useBold({style: a.body_1_lg_medium})
 
   const handleOnReadMore = () => {
-    openReadMoreLink()
+    const url =
+      'https://help.yoroi-wallet.com/en/article/whats-user-insights-1nmw7pq/'
+    Linking.openURL(url).catch((error) => {
+      logger.error('Error opening URL', {
+        error,
+        url,
+        origin: 'Analytics',
+      })
+    })
   }
 
   const list = [
@@ -193,12 +202,6 @@ const Info = ({showLogo}: {showLogo?: boolean}) => {
         </Text>
       </TouchableOpacity>
     </View>
-  )
-}
-
-const openReadMoreLink = () => {
-  Linking.openURL(
-    'https://help.yoroi-wallet.com/en/article/whats-user-insights-1nmw7pq/',
   )
 }
 

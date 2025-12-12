@@ -14,6 +14,7 @@ import React, {
   useReducer,
 } from 'react'
 import {
+  ActivityIndicator,
   Dimensions,
   Platform,
   TextInput,
@@ -28,6 +29,7 @@ type SearchState = {
   search: string
   visible: boolean
   isSearching: boolean
+  isLoading: boolean
 }
 type SearchActions = {
   searchChanged: (search: string) => void
@@ -35,6 +37,7 @@ type SearchActions = {
   closeSearch: () => void
   showSearch: () => void
   hideSearch: () => void
+  setLoading: (loading: boolean) => void
 }
 
 const SearchContext = createContext<undefined | (SearchState & SearchActions)>(
@@ -67,6 +70,7 @@ export const SearchProvider = ({
       dispatch({type: 'searchChanged', search}),
     showSearch: () => dispatch({type: 'showSearch'}),
     hideSearch: () => dispatch({type: 'hideSearch'}),
+    setLoading: (loading: boolean) => dispatch({type: 'setLoading', loading}),
   }).current
 
   const context = React.useMemo(
@@ -85,6 +89,7 @@ type SearchAction =
   | {type: 'searchChanged'; search: string}
   | {type: 'showSearch'}
   | {type: 'hideSearch'}
+  | {type: 'setLoading'; loading: boolean}
 
 function searchReducer(state: SearchState, action: SearchAction) {
   return produce(state, (draft) => {
@@ -92,12 +97,14 @@ function searchReducer(state: SearchState, action: SearchAction) {
       case 'clear':
         draft.search = ''
         draft.isSearching = false
+        draft.isLoading = false
         break
 
       case 'close':
         draft.search = ''
         draft.visible = false
         draft.isSearching = false
+        draft.isLoading = false
         break
 
       case 'searchChanged':
@@ -115,6 +122,10 @@ function searchReducer(state: SearchState, action: SearchAction) {
         draft.isSearching = false
         break
 
+      case 'setLoading':
+        draft.isLoading = action.loading
+        break
+
       default:
         throw new Error(`searchReducer invalid action`)
     }
@@ -125,6 +136,7 @@ const defaultState: SearchState = Object.freeze({
   search: '',
   visible: false,
   isSearching: false,
+  isLoading: false,
 })
 
 export const useSearchOnNavBar = ({
@@ -149,7 +161,8 @@ export const useSearchOnNavBar = ({
     [p],
   )
 
-  const {search, visible, showSearch, hideSearch, clearSearch} = useSearch()
+  const {search, visible, showSearch, hideSearch, clearSearch, isLoading} =
+    useSearch()
 
   const handleCloseSearch = useCallback(() => {
     hideSearch()
@@ -176,7 +189,18 @@ export const useSearchOnNavBar = ({
       ...defaultNavigationOptions,
       headerTitle: () => <InputSearch placeholder={placeholder} />,
       headerRight: () =>
-        search.length > 0 ? <EraseButton onPress={handleCloseSearch} /> : null,
+        search.length > 0 ? (
+          <View style={[a.flex_row, a.gap_sm]}>
+            {isLoading && (
+              <ActivityIndicator
+                size="small"
+                color={p.el_primary_medium}
+                testID="searchLoadingSpinner"
+              />
+            )}
+            <EraseButton onPress={handleCloseSearch} />
+          </View>
+        ) : null,
       headerLeft: () => <BackButton onPress={handleGoBack} />,
       headerTitleAlign: 'left',
       headerTitleContainerStyle: {
@@ -188,8 +212,10 @@ export const useSearchOnNavBar = ({
       defaultNavigationOptions,
       handleCloseSearch,
       handleGoBack,
+      p.el_primary_medium,
       placeholder,
       search.length,
+      isLoading,
     ],
   )
 
@@ -277,7 +303,7 @@ const InputSearch = ({placeholder}: Props) => {
       autoFocus
       value={search}
       placeholder={placeholder}
-      onChangeText={(search) => searchChanged(search)}
+      onChangeText={searchChanged}
       autoCapitalize="none"
       style={[a.flex_1, {color: p.el_gray_max}]}
       testID="inputSearch"

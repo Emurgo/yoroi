@@ -1,4 +1,5 @@
-import {atoms as a} from '@yoroi/theme'
+import {isValidPoolIdOrHash, normalizeToPoolHash} from '@yoroi/cardano-wallet'
+import {atoms as a, useTheme} from '@yoroi/theme'
 
 import {useQuery} from '@tanstack/react-query'
 import * as React from 'react'
@@ -8,10 +9,6 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
 import {TextInput} from '~/ui/TextInput/TextInput'
-import {
-  isValidPoolIdOrHash,
-  normalizeToPoolHash,
-} from '~/wallets/cardano/delegationUtils'
 
 type Props = {
   onPressDelegate: (poolHash: string) => void
@@ -23,6 +20,7 @@ export const PoolDetailScreen = ({
   disabled = false,
 }: Props) => {
   const strings = useStrings()
+  const {atoms: ta} = useTheme()
   const [poolIdOrHash, setPoolIdOrHash] = React.useState('')
 
   const {data: isValid} = useIsValidPoolIdOrHash(poolIdOrHash)
@@ -37,11 +35,11 @@ export const PoolDetailScreen = ({
   return (
     <>
       <View>
-        <Text style={[a.body_1_lg_medium]}>
+        <Text style={[a.body_1_lg_medium, ta.text_gray_max]}>
           {strings.staking.poolDetails.disclaimerTitle}
         </Text>
         <Space.Height.xs />
-        <Text style={[a.body_2_md_regular]}>
+        <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
           {strings.staking.poolDetails.disclaimerText}
         </Text>
       </View>

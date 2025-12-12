@@ -2,13 +2,16 @@ import {BehaviorSubject, Subject} from 'rxjs'
 
 import {AppStorage} from '../app/storage'
 
-export enum NotificationTrigger {
-  'TransactionReceived' = 'TransactionReceived',
-  'RewardsUpdated' = 'RewardsUpdated',
-  'PrimaryTokenPriceChanged' = 'PrimaryTokenPriceChanged',
-  'Push' = 'Push',
-  'Banner' = 'Banner',
-}
+export const NotificationTrigger = {
+  TransactionReceived: 'TransactionReceived',
+  RewardsUpdated: 'RewardsUpdated',
+  PrimaryTokenPriceChanged: 'PrimaryTokenPriceChanged',
+  Push: 'Push',
+  Banner: 'Banner',
+} as const
+
+export type NotificationTrigger =
+  (typeof NotificationTrigger)[keyof typeof NotificationTrigger]
 
 export type NotificationManagerMakerProps = {
   eventsStorage: AppStorage<true, string>
@@ -23,8 +26,8 @@ export type NotificationManagerMakerProps = {
   eventsLimit?: number
 }
 
-export interface BannerNotificationEvent extends NotificationEventBase {
-  trigger: NotificationTrigger.Banner
+export type BannerNotificationEvent = NotificationEventBase & {
+  trigger: typeof NotificationTrigger.Banner
   metadata: {
     title: string
     body: string
@@ -32,8 +35,8 @@ export interface BannerNotificationEvent extends NotificationEventBase {
   }
 }
 
-export interface PushNotificationEvent extends NotificationEventBase {
-  trigger: NotificationTrigger.Push
+export type PushNotificationEvent = NotificationEventBase & {
+  trigger: typeof NotificationTrigger.Push
   metadata: {
     title: string
     body: string
@@ -41,9 +44,8 @@ export interface PushNotificationEvent extends NotificationEventBase {
   }
 }
 
-export interface NotificationTransactionReceivedEvent
-  extends NotificationEventBase {
-  trigger: NotificationTrigger.TransactionReceived
+export type NotificationTransactionReceivedEvent = NotificationEventBase & {
+  trigger: typeof NotificationTrigger.TransactionReceived
   metadata: {
     walletId: string
     previousTxsCounter: number
@@ -53,21 +55,21 @@ export interface NotificationTransactionReceivedEvent
   }
 }
 
-export interface NotificationRewardsUpdatedEvent extends NotificationEventBase {
-  trigger: NotificationTrigger.RewardsUpdated
+export type NotificationRewardsUpdatedEvent = NotificationEventBase & {
+  trigger: typeof NotificationTrigger.RewardsUpdated
   metadata: {
     walletId: string
   }
 }
 
-export interface NotificationPrimaryTokenPriceChangedEvent
-  extends NotificationEventBase {
-  trigger: NotificationTrigger.PrimaryTokenPriceChanged
-  metadata: {
-    previousPrice: number
-    nextPrice: number
+export type NotificationPrimaryTokenPriceChangedEvent =
+  NotificationEventBase & {
+    trigger: typeof NotificationTrigger.PrimaryTokenPriceChanged
+    metadata: {
+      previousPrice: number
+      nextPrice: number
+    }
   }
-}
 
 export type NotificationGroup = 'transaction-history' | 'portfolio' | 'push'
 
@@ -80,7 +82,7 @@ export type NotificationEvent =
 
 type NotificationEventId = number
 
-interface NotificationEventBase {
+type NotificationEventBase = {
   id: NotificationEventId
   date: string
   isRead: boolean

@@ -1,3 +1,4 @@
+import {generateAdaMnemonic} from '@yoroi/cardano-wallet'
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
@@ -6,8 +7,9 @@ import {BlurView} from 'expo-blur'
 import * as React from 'react'
 import {Platform, Text, TouchableOpacity, View} from 'react-native'
 
-import {useBold} from '~/hooks/useBold'
+import {useBold} from '~/common/hooks/useBold'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {Button} from '~/ui/Button/Button'
 import {CardAboutPhrase} from '~/ui/CardAboutPhrase/CardAboutPhrase'
 import {Info as InfoIcon} from '~/ui/InfoIcon/InfoIcon'
@@ -16,7 +18,6 @@ import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {StepperProgress} from '~/ui/StepperProgress/StepperProgress'
-import {generateAdaMnemonic} from '~/wallets/cardano/mnemonic/mnemonic'
 
 import {EyeClosed} from '../../illustrations/EyeClosed'
 import {EyeOpen} from '../../illustrations/EyeOpen'
@@ -25,7 +26,7 @@ export const RecoveryPhraseScreen = () => {
   const bold = useBold({style: a.body_1_lg_medium})
   const {openModal, closeModal} = useModal()
   const [isBlur, setIsBlur] = React.useState(true)
-  const navigation = useNavigation<any>()
+  const navigation = useNavigation<SetupWalletRouteNavigation>()
   const strings = useStrings()
   const {
     mnemonicChanged,
@@ -126,7 +127,7 @@ export const RecoveryPhraseScreen = () => {
 
               <Text style={[a.body_1_lg_regular, {color: p.primary_600}]}>
                 <Text style={[a.body_1_lg_regular, {color: p.primary_600}]}>
-                  {index + 1}.{' '}
+                  {index + 1}.
                 </Text>
 
                 {word}

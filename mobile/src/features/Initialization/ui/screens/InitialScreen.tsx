@@ -7,8 +7,8 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {LanguageRecord, supportedLanguages} from '~/kernel/i18n/localization'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {BlueCheckbox} from '~/ui/BlueCheckbox/BlueCheckbox'
 import {Button, ButtonType} from '~/ui/Button/Button'
+import {Checkbox} from '~/ui/Checkbox/Checkbox'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 import {YoroiLogo} from '~/ui/YoroiLogo/YoroiLogo'
@@ -37,8 +37,8 @@ export const InitialScreen = () => {
     navigateTo.languagePick()
   }
 
-  const onPressTosCheckbox = () => {
-    setTosAccepted((checked) => !checked)
+  const onTosCheckboxChange = (checked: boolean) => {
+    setTosAccepted(checked)
   }
 
   return (
@@ -60,13 +60,12 @@ export const InitialScreen = () => {
 
         <Space.Height.lg />
 
-        <BlueCheckbox
+        <Checkbox
           checked={tosAccepted}
-          spacing={8}
-          onPress={onPressTosCheckbox}
-          style={a.align_start}
+          onChange={onTosCheckboxChange}
+          testID="checkboxSelect"
         >
-          <View style={[a.flex, a.flex_row, a.flex_wrap]}>
+          <View style={[a.flex_row, a.flex_wrap]}>
             <Text
               style={[a.body_1_lg_regular, {color: p.gray_max}]}
             >{`${strings.initialization.tosIAgreeWith} `}</Text>
@@ -108,7 +107,7 @@ export const InitialScreen = () => {
               </Text>
             </TouchableOpacity>
           </View>
-        </BlueCheckbox>
+        </Checkbox>
       </ScrollView>
 
       <Button

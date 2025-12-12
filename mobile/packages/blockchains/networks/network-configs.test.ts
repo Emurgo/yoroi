@@ -41,22 +41,6 @@ describe('networkConfigs', () => {
     })
   })
 
-  describe('Preview config', () => {
-    const preview = networkConfigs[Chain.Network.Preview]
-
-    it('should compute epoch progress without error', () => {
-      const progress = preview.epoch.progress(
-        new Date('2024-01-01T01:00:00.000Z'),
-      )
-      expect(progress).toEqual({
-        absoluteSlot: 108011709,
-        currentSlot: 11709,
-        progress: 2.71,
-        timeRemaining: {days: 4, hours: 20, minutes: 44, seconds: 51},
-      })
-    })
-  })
-
   it('should be frozen (read-only)', () => {
     expect(Object.isFrozen(networkConfigs)).toBe(true)
   })

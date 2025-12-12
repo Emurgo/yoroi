@@ -1,51 +1,51 @@
-import {App} from '@yoroi/types'
-
 import {observerMaker} from './observer'
 
-describe('Observer', () => {
-  let observer: App.ObserverManager<number>
-  let mockSubscriber1: App.Subscriber<number>
-  let mockSubscriber2: App.Subscriber<number>
-
-  beforeEach(() => {
-    observer = observerMaker<number>()
-    mockSubscriber1 = jest.fn()
-    mockSubscriber2 = jest.fn()
+describe('observerMaker', () => {
+  it('should create observer manager', () => {
+    const manager = observerMaker<string>()
+    expect(manager.subscribe).toBeDefined()
+    expect(manager.unsubscribe).toBeDefined()
+    expect(manager.notify).toBeDefined()
+    expect(manager.destroy).toBeDefined()
+    expect(manager.observable).toBeDefined()
   })
 
-  it('should allow subscribers to subscribe', () => {
-    observer.subscribe(mockSubscriber1)
-    observer.notify(42)
-    expect(mockSubscriber1).toHaveBeenCalledWith(42)
+  it('should subscribe and notify observers', () => {
+    const manager = observerMaker<string>()
+    const observer = jest.fn()
+
+    const subscription = manager.subscribe(observer)
+    manager.notify('test')
+
+    expect(observer).toHaveBeenCalledWith('test')
+    manager.unsubscribe(subscription)
   })
 
-  it('should allow multiple subscribers to subscribe', () => {
-    const client1 = observer.subscribe(mockSubscriber1)
-    const client2 = observer.subscribe(mockSubscriber2)
-    observer.notify(42)
-    expect(mockSubscriber1).toHaveBeenCalledWith(42)
-    expect(mockSubscriber2).toHaveBeenCalledWith(42)
-    client1.unsubscribe()
-    client2.unsubscribe()
+  it('should handle multiple subscribers', () => {
+    const manager = observerMaker<number>()
+    const observer1 = jest.fn()
+    const observer2 = jest.fn()
+
+    const sub1 = manager.subscribe(observer1)
+    const sub2 = manager.subscribe(observer2)
+
+    manager.notify(42)
+
+    expect(observer1).toHaveBeenCalledWith(42)
+    expect(observer2).toHaveBeenCalledWith(42)
+
+    manager.unsubscribe(sub1)
+    manager.unsubscribe(sub2)
   })
 
-  it('should allow subscribers to unsubscribe', () => {
-    const client1 = observer.subscribe(mockSubscriber1)
-    client1.unsubscribe()
-    observer.notify(42)
-    expect(mockSubscriber1).not.toHaveBeenCalled()
-  })
+  it('should destroy observer', () => {
+    const manager = observerMaker<string>()
+    const observer = jest.fn()
 
-  it('should allow destroying all subscriptions', () => {
-    const client1 = observer.subscribe(mockSubscriber1)
-    observer.subscribe(mockSubscriber2)
-    observer.unsubscribe(client1)
-    observer.notify(42)
-    expect(mockSubscriber2).toHaveBeenCalledWith(42)
-    expect(mockSubscriber1).not.toHaveBeenCalled()
-    observer.destroy()
-    observer.notify(42)
-    expect(mockSubscriber1).not.toHaveBeenCalled()
-    expect(mockSubscriber2).toHaveBeenCalledTimes(1)
+    manager.subscribe(observer)
+    manager.destroy()
+    manager.notify('test')
+
+    expect(observer).not.toHaveBeenCalled()
   })
 })

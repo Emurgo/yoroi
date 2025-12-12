@@ -87,7 +87,7 @@ const normaliseDappConnection = (
   return {walletId, dappOrigin, network}
 }
 
-export interface DappConnection {
+export type DappConnection = {
   walletId: string
   dappOrigin: string
   network: Chain.Network

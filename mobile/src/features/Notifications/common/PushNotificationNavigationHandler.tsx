@@ -1,7 +1,8 @@
+import {useWalletManager} from '@yoroi/wallet-manager'
+
 import * as React from 'react'
 import {AppState, AppStateStatus, InteractionManager} from 'react-native'
 
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 import {isAndroid} from '~/kernel/constants'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 

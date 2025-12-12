@@ -5,6 +5,7 @@ import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {ScrollView, View} from 'react-native'
 
+import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {isIOS} from '~/kernel/constants'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
@@ -23,6 +24,7 @@ export const ChooseSetupTypeScreen = () => {
   const strings = useStrings()
   const {walletImplementationChanged, setupTypeChanged} = useSetupWallet()
   const {openModal} = useModal()
+  const {isAuthDev} = useAuth()
 
   const navigation = useNavigation<SetupWalletRouteNavigation>()
 
@@ -48,6 +50,13 @@ export const ChooseSetupTypeScreen = () => {
       withFeedback: true,
       height: isIOS ? 250 : 300,
     })
+  }
+
+  const handleReadOnly = () => {
+    walletImplementationChanged('cardano-cip1852')
+    // Note: setupTypeChanged doesn't support 'readonly', but navigation works without it
+
+    navigation.navigate('setup-wallet-restore-read-only-choose-type')
   }
 
   return (
@@ -87,6 +96,19 @@ export const ChooseSetupTypeScreen = () => {
             onPress={handleHw}
             testID="setup-connect-HW-wallet-button"
           />
+
+          {isAuthDev && (
+            <>
+              <Space.Height.lg />
+
+              <ButtonCard
+                title="Restore Read-Only Wallet"
+                icon={<RestoreWallet style={[a.absolute, {right: 0}]} />}
+                onPress={handleReadOnly}
+                testID="setup-restore-read-only-wallet-button"
+              />
+            </>
+          )}
 
           <Space.Height.lg />
         </View>

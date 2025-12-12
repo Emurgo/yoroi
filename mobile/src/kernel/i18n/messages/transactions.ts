@@ -46,7 +46,7 @@ export const transactionsMessages = defineMessages({
     defaultMessage: '!!!Total',
   },
   date: {
-    id: 'components.governance.delegateVotingToDRepDeprecatedFormatNotice',
+    id: 'swap.listOrders.timeCreated',
     defaultMessage: '!!!Date',
   },
   time: {
@@ -109,6 +109,121 @@ export const transactionsMessages = defineMessages({
     id: 'components.utxoConsolidationWarning',
     defaultMessage: '!!!Consolidate your UTxOs to improve wallet performance',
   },
+  noUtxos: {
+    id: 'components.utxoList.noUtxos',
+    defaultMessage: '!!!No UTxOs found',
+  },
+  messageSigningTitle: {
+    id: 'components.messageSigning.title',
+    defaultMessage: '!!!Message Signing',
+  },
+  messageSigningInputLabel: {
+    id: 'components.messageSigning.inputLabel',
+    defaultMessage: '!!!Message',
+  },
+  messageSigningPlaceholder: {
+    id: 'components.messageSigning.placeholder',
+    defaultMessage: '!!!Paste or type your message here...',
+  },
+  messageSigningSignButton: {
+    id: 'components.messageSigning.signButton',
+    defaultMessage: '!!!Sign',
+  },
+  messageSigningMaxLengthError: {
+    id: 'components.messageSigning.maxLengthError',
+    defaultMessage: '!!!Message exceeds maximum length (64 bytes)',
+  },
+  messageSigningLengthInfo: {
+    id: 'components.messageSigning.lengthInfo',
+    defaultMessage: '!!!Current: {current} bytes / Max: {max} bytes',
+  },
+  messageSigningResultTitle: {
+    id: 'components.messageSigning.resultTitle',
+    defaultMessage: '!!!Signed Message',
+  },
+  messageSigningSignatureLabel: {
+    id: 'components.messageSigning.signatureLabel',
+    defaultMessage: '!!!Signature',
+  },
+  messageSigningKeyLabel: {
+    id: 'components.messageSigning.keyLabel',
+    defaultMessage: '!!!Key',
+  },
+  messageSigningCopied: {
+    id: 'components.messageSigning.copied',
+    defaultMessage: '!!!Copied',
+  },
+  messageSigningError: {
+    id: 'components.messageSigning.error',
+    defaultMessage: '!!!An error occurred while signing the message',
+  },
+  messageSigningSignatureDescription: {
+    id: 'components.messageSigning.signatureDescription',
+    defaultMessage:
+      '!!!The cryptographic signature (COSE_Sign1) proving the message was signed by your wallet. This can be verified using the public key.',
+  },
+  messageSigningKeyDescription: {
+    id: 'components.messageSigning.keyDescription',
+    defaultMessage:
+      '!!!The public key (COSE key format) used to verify the signature. Together with the signature, this proves ownership of the wallet address.',
+  },
+  messageSigningPublicKeyLabel: {
+    id: 'components.messageSigning.publicKeyLabel',
+    defaultMessage: '!!!Public Key',
+  },
+  messageSigningPublicKeyDescription: {
+    id: 'components.messageSigning.publicKeyDescription',
+    defaultMessage:
+      '!!!The raw Ed25519 public key extracted from the COSE key. This can be used to verify the signature.',
+  },
+  messageSigningTabSign: {
+    id: 'components.messageSigning.tabSign',
+    defaultMessage: '!!!Sign',
+  },
+  messageSigningTabVerify: {
+    id: 'components.messageSigning.tabVerify',
+    defaultMessage: '!!!Verify',
+  },
+  messageSigningPayloadFormatText: {
+    id: 'components.messageSigning.payloadFormatText',
+    defaultMessage: '!!!Text',
+  },
+  messageSigningPayloadFormatJson: {
+    id: 'components.messageSigning.payloadFormatJson',
+    defaultMessage: '!!!JSON',
+  },
+  messageSigningPayloadFormatHex: {
+    id: 'components.messageSigning.payloadFormatHex',
+    defaultMessage: '!!!Hex',
+  },
+  messageSigningVerifyButton: {
+    id: 'components.messageSigning.verifyButton',
+    defaultMessage: '!!!Verify',
+  },
+  messageSigningVerifySuccess: {
+    id: 'components.messageSigning.verifySuccess',
+    defaultMessage: '!!!Signature is valid',
+  },
+  messageSigningVerifyError: {
+    id: 'components.messageSigning.verifyError',
+    defaultMessage: '!!!Signature verification failed',
+  },
+  messageSigningVerifySignatureLabel: {
+    id: 'components.messageSigning.verifySignatureLabel',
+    defaultMessage: '!!!Signature',
+  },
+  messageSigningVerifyKeyLabel: {
+    id: 'components.messageSigning.verifyKeyLabel',
+    defaultMessage: '!!!Key',
+  },
+  messageSigningVerifyAddressLabel: {
+    id: 'components.messageSigning.verifyAddressLabel',
+    defaultMessage: '!!!Address (optional)',
+  },
+  messageSigningVerifyAddressPlaceholder: {
+    id: 'components.messageSigning.verifyAddressPlaceholder',
+    defaultMessage: '!!!Enter address to verify ownership',
+  },
   noTransactions: {
     id: 'components.txhistory.txhistory.noTransactions',
     defaultMessage: '!!!No transactions',
@@ -133,12 +248,21 @@ export const transactionsMessages = defineMessages({
     id: 'components.txhistory.txhistory.warningbanner.message',
     defaultMessage: '!!!Message',
   },
+  byronWalletNoticeTitle: {
+    id: 'components.txhistory.txhistory.byronWalletNotice.title',
+    defaultMessage: '!!!Byron Wallet',
+  },
+  byronWalletNoticeMessage: {
+    id: 'components.txhistory.txhistory.byronWalletNotice.message',
+    defaultMessage:
+      '!!!This is a Byron-era wallet. Staking, governance, catalyst voting, and airdrop features are not available. To use these features, you will need to create a new Shelley-era wallet.',
+  },
   unknownAssetName: {
     id: 'components.txhistory.txhistory.title',
     defaultMessage: '!!!Unknown Asset Name',
   },
   walletAddress: {
-    id: 'components.txhistory.txdetails.transactionId',
+    id: 'components.transactions.address',
     defaultMessage: '!!!Wallet Address',
   },
   BIP32path: {
@@ -282,5 +406,169 @@ export const transactionsMessages = defineMessages({
   addressPrefixNotMine: {
     id: 'components.txhistory.txdetails.addressPrefixNotMine',
     defaultMessage: '!!!External Address',
+  },
+  addressDetailsTitle: {
+    id: 'components.transactions.addressDetailsTitle',
+    defaultMessage: '!!!Address Details',
+  },
+  blockDetailsTitle: {
+    id: 'components.transactions.blockDetailsTitle',
+    defaultMessage: '!!!Block Details',
+  },
+  address: {
+    id: 'components.transactions.address',
+    defaultMessage: '!!!Address',
+  },
+  operationStakeRegistration: {
+    id: 'components.transactions.operation.stakeRegistration',
+    defaultMessage: '!!!Stake Registration',
+  },
+  operationStakeDeregistration: {
+    id: 'components.transactions.operation.stakeDeregistration',
+    defaultMessage: '!!!Stake Deregistration',
+  },
+  operationStakeDelegation: {
+    id: 'components.transactions.operation.stakeDelegation',
+    defaultMessage: '!!!Stake Delegation',
+  },
+  operationStakingDelegated: {
+    id: 'components.transactions.operation.stakingDelegated',
+    defaultMessage: '!!!Staking Delegated',
+  },
+  operationStakeUndelegation: {
+    id: 'components.transactions.operation.stakeUndelegation',
+    defaultMessage: '!!!Stake Undelegation',
+  },
+  operationPoolRegistration: {
+    id: 'components.transactions.operation.poolRegistration',
+    defaultMessage: '!!!Pool Registration',
+  },
+  operationPoolRetirement: {
+    id: 'components.transactions.operation.poolRetirement',
+    defaultMessage: '!!!Pool Retirement',
+  },
+  operationGenesisKeyDelegation: {
+    id: 'components.transactions.operation.genesisKeyDelegation',
+    defaultMessage: '!!!Genesis Key Delegation',
+  },
+  operationMoveInstantaneousRewards: {
+    id: 'components.transactions.operation.moveInstantaneousRewards',
+    defaultMessage: '!!!Move Instantaneous Rewards',
+  },
+  operationCommitteeHotAuth: {
+    id: 'components.transactions.operation.committeeHotAuth',
+    defaultMessage: '!!!Committee Hot Auth',
+  },
+  operationCommitteeColdResign: {
+    id: 'components.transactions.operation.committeeColdResign',
+    defaultMessage: '!!!Committee Cold Resign',
+  },
+  operationDrepDeregistration: {
+    id: 'components.transactions.operation.drepDeregistration',
+    defaultMessage: '!!!DRep Deregistration',
+  },
+  operationDrepRegistration: {
+    id: 'components.transactions.operation.drepRegistration',
+    defaultMessage: '!!!DRep Registration',
+  },
+  operationDrepUpdate: {
+    id: 'components.transactions.operation.drepUpdate',
+    defaultMessage: '!!!DRep Update',
+  },
+  operationStakeAndVoteDelegation: {
+    id: 'components.transactions.operation.stakeAndVoteDelegation',
+    defaultMessage: '!!!Stake And Vote Delegation',
+  },
+  operationStakeRegistrationAndDelegation: {
+    id: 'components.transactions.operation.stakeRegistrationAndDelegation',
+    defaultMessage: '!!!Stake Registration And Delegation',
+  },
+  operationStakeVoteRegistrationAndDelegation: {
+    id: 'components.transactions.operation.stakeVoteRegistrationAndDelegation',
+    defaultMessage: '!!!Stake Vote Registration And Delegation',
+  },
+  operationVoteDelegation: {
+    id: 'components.transactions.operation.voteDelegation',
+    defaultMessage: '!!!Vote Delegation',
+  },
+  operationVoteRegistrationAndDelegation: {
+    id: 'components.transactions.operation.voteRegistrationAndDelegation',
+    defaultMessage: '!!!Vote Registration And Delegation',
+  },
+  operationWithdrawal: {
+    id: 'components.transactions.operation.withdrawal',
+    defaultMessage: '!!!Withdrawal',
+  },
+  operationSwap: {
+    id: 'components.transactions.operation.swap',
+    defaultMessage: '!!!Swap',
+  },
+  operationSwapCreated: {
+    id: 'components.transactions.operation.swapCreated',
+    defaultMessage: '!!!Swap Created',
+  },
+  operationSwapResolved: {
+    id: 'components.transactions.operation.swapResolved',
+    defaultMessage: '!!!Swap Resolved',
+  },
+  operationSwapCancel: {
+    id: 'components.transactions.operation.swapCancel',
+    defaultMessage: '!!!Swap Cancel',
+  },
+  operationSmartContract: {
+    id: 'components.transactions.operation.smartContract',
+    defaultMessage: '!!!Smart Contract',
+  },
+  operationNightRedemption: {
+    id: 'components.transactions.operation.nightRedemption',
+    defaultMessage: '!!!NIGHT Redemption',
+  },
+  operationCollateralCreation: {
+    id: 'components.transactions.operation.collateralCreation',
+    defaultMessage: '!!!Collateral Creation',
+  },
+  operationMint: {
+    id: 'components.transactions.operation.mint',
+    defaultMessage: '!!!Mint',
+  },
+  operationBurn: {
+    id: 'components.transactions.operation.burn',
+    defaultMessage: '!!!Burn',
+  },
+  filterModalTitle: {
+    id: 'components.transactions.filterModalTitle',
+    defaultMessage: '!!!Filter Transactions',
+  },
+  filterOperations: {
+    id: 'components.transactions.filterOperations',
+    defaultMessage: '!!!Operation Types',
+  },
+  filterMetadataMemo: {
+    id: 'components.transactions.filterMetadataMemo',
+    defaultMessage: '!!!Search Metadata/Memo',
+  },
+  filterMetadataMemoPlaceholder: {
+    id: 'components.transactions.filterMetadataMemoPlaceholder',
+    defaultMessage: '!!!Search in metadata and memo...',
+  },
+  filterAdaAmount: {
+    id: 'components.transactions.filterAdaAmount',
+    defaultMessage: '!!!ADA Amount',
+  },
+  filterMinAda: {
+    id: 'components.transactions.filterMinAda',
+    defaultMessage: '!!!Min ADA',
+  },
+  filterMaxAda: {
+    id: 'components.transactions.filterMaxAda',
+    defaultMessage: '!!!Max ADA',
+  },
+  filterApply: {
+    id: 'components.transactions.filterApply',
+    defaultMessage: '!!!Apply Filters',
+  },
+  filterClear: {
+    id: 'components.transactions.filterClear',
+    defaultMessage: '!!!Clear Filters',
   },
 })

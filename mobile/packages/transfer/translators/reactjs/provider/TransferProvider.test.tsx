@@ -1,5 +1,5 @@
-import {tokenBalanceMocks} from '@yoroi/portfolio'
-import {Chain, Links, Resolver} from '@yoroi/types'
+import {primaryTokenId, tokenBalanceMocks} from '@yoroi/portfolio'
+import {Address, Balance, Chain, Links, Resolver} from '@yoroi/types'
 
 import {act, renderHook} from '@testing-library/react-native'
 import * as React from 'react'
@@ -73,7 +73,7 @@ describe('TransferContext :: hooks', () => {
     const {result} = renderHook(() => useTransfer(), {wrapper})
 
     act(() => {
-      result.current.tokenSelectedChanged('.')
+      result.current.tokenSelectedChanged(primaryTokenId)
     })
 
     expect(result.current.selectedTokenId).toBe('.')
@@ -184,19 +184,19 @@ describe('TransferContext :: hooks', () => {
 const yoroiUnsignedTx: Chain.Cardano.UnsignedTx & {mock: true} = {
   entries: [
     {
-      address: 'address1',
+      address: 'address1' as Address,
       amounts: {
-        [tokenBalanceMocks.primaryETH.info.id]: '1',
+        [tokenBalanceMocks.primaryETH.info.id]: '1' as Balance.Quantity,
       },
     },
   ],
-  fee: {'.': '12345'},
+  fee: {[primaryTokenId]: '12345' as Balance.Quantity},
   metadata: {},
   change: [
     {
-      address: 'change_address',
+      address: 'change_address' as Address,
       amounts: {
-        [tokenBalanceMocks.primaryETH.info.id]: '1',
+        [tokenBalanceMocks.primaryETH.info.id]: '1' as Balance.Quantity,
       },
     },
   ],

@@ -58,8 +58,6 @@ export const NotifySupportedNameServers = () => {
         <NameServer text="ADA Handle" />
 
         <NameServer text="Unstoppable Domains" />
-
-        <NameServer text="Cardano Name Service (CNS)" />
       </LinearGradient>
 
       <Space.Height.md />

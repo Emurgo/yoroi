@@ -1,13 +1,14 @@
+import {withBLE, withUSB} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
+import {useWalletManager} from '@yoroi/wallet-manager'
 
 import {useMutation} from '@tanstack/react-query'
 import React, {useCallback, useState} from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 import {ActivityIndicator, View} from 'react-native'
 
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {LedgerConnect} from '~/ui/LedgerConnect/LedgerConnect'
 import {LedgerTransportSwitch} from '~/ui/LedgerTransportSwitch/LedgerTransportSwitch'
@@ -15,7 +16,6 @@ import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {ModalError} from '~/ui/ModalError/ModalError'
 import {Text} from '~/ui/Text/Text'
-import {withBLE, withUSB} from '~/wallets/hw/hwWallet'
 
 type TransportType = 'USB' | 'BLE'
 type Step = 'select-transport' | 'connect-transport' | 'loading'
@@ -68,9 +68,20 @@ const ConfirmHWConnectionModal = ({onConfirm}: Pick<Props, 'onConfirm'>) => {
   const {meta} = useSelectedWallet()
   const strings = useStrings()
   const {palette: p} = useTheme()
+  const {setHeight} = useModal()
   const {mutate: handleOnConfirm} = useMutation<void, Error, OnConfirmOptions>({
     mutationFn: onConfirm,
   })
+
+  React.useEffect(() => {
+    if (step === 'connect-transport') {
+      // Increase modal height when scanning for devices
+      setHeight(600)
+    } else if (step === 'select-transport') {
+      // Reset to default height for transport selection
+      setHeight(350)
+    }
+  }, [step, setHeight])
 
   const onSelectTransport = (selectedTransportType: TransportType) => {
     setTransportType(selectedTransportType)

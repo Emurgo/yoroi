@@ -1,4 +1,4 @@
-import {Balance} from '@yoroi/types'
+import {AssetName, Balance, PolicyId} from '@yoroi/types'
 
 /**
  * Extracts the identity components of a Cardano token.
@@ -8,7 +8,7 @@ import {Balance} from '@yoroi/types'
  * The `tokenId` is expected to follow a specific format, usually `policyId.assetName`.
  *
  * @param {Balance.TokenInfo['id']} tokenId - The tokenId string from which to extract information.
- * @returns {Readonly<{policyId: string; name: string; assetName: string}>} An immutable object containing:
+ * @returns {Readonly<{policyId: PolicyId; name: string; assetName: AssetName}>} An immutable object containing:
  *  - `policyId`: The policy ID of the token.
  *  - `name`: The human-readable name of the asset, derived from its hex-encoded `assetName`.
  *  - `assetName`: The hex-encoded asset name from the tokenId.
@@ -16,12 +16,17 @@ import {Balance} from '@yoroi/types'
  */
 export function getTokenIdentity(
   tokenId: Balance.TokenInfo['id'],
-): Readonly<{policyId: string; name: string; assetName: string}> {
-  const [policyId, assetName = ''] = tokenId.split('.')
+): Readonly<{policyId: PolicyId; name: string; assetName: AssetName}> {
+  const tokenIdStr = typeof tokenId === 'string' ? tokenId : tokenId
+  const [policyId, assetName = ''] = tokenIdStr.split('.')
 
   if (!policyId || policyId.length !== 56) throw new Error('Invalid policyId')
 
   const name = Buffer.from(assetName, 'hex').toString('utf8')
 
-  return {policyId, assetName, name} as const
+  return {
+    policyId: policyId as PolicyId,
+    assetName: assetName as AssetName,
+    name,
+  } as const
 }

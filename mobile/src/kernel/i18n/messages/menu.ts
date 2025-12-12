@@ -37,4 +37,12 @@ export const menuMessages = defineMessages({
     id: 'menu.governanceCentre',
     defaultMessage: '!!!Governance Centre',
   },
+  messageSigning: {
+    id: 'menu.messageSigning',
+    defaultMessage: '!!!Message Signing',
+  },
+  airdrop: {
+    id: 'menu.airdrop',
+    defaultMessage: '!!!Airdrop',
+  },
 })

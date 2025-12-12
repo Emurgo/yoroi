@@ -1,3 +1,5 @@
+import {getLogger} from '@yoroi/logger'
+
 import {freeze, produce} from 'immer'
 
 export const catalystReducer = (
@@ -76,5 +78,7 @@ export const initialCatalystContext: CatalystState & CatalystActions = freeze(
 
 /* istanbul ignore next */
 function missingInit() {
-  console.error('[CatalystContext] missing initialization')
+  getLogger().error('[CatalystContext] missing initialization', {
+    origin: 'staking',
+  })
 }

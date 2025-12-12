@@ -3,7 +3,7 @@ import {invalid} from '@yoroi/common'
 import * as React from 'react'
 import {ScrollView} from 'react-native'
 
-interface ScrollViewContextValue {
+type ScrollViewContextValue = {
   scrollViewRef: React.RefObject<ScrollView | null>
   isScrollBarShown: boolean
   setIsScrollBarShown: (isShown: boolean) => void

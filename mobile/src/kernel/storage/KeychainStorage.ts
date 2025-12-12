@@ -1,3 +1,5 @@
+import {CancelledByUser, TooManyAttempts} from '@yoroi/types'
+
 import * as LocalAuth from 'expo-local-authentication'
 import {Platform} from 'react-native'
 import * as Keychain from 'react-native-keychain'
@@ -25,7 +27,9 @@ async function read(key: string, _authenticationPrompt: AuthenticationPrompt) {
     if (!result.success) throw decodeLocalAuthError(result.error)
   } catch (error) {
     // Map any thrown errors as well
-    throw decodeLocalAuthError((error as any)?.message)
+    const errorMessage =
+      error instanceof Error ? error.message : String(error ?? 'Unknown error')
+    throw decodeLocalAuthError(errorMessage)
   }
 
   let credentials: false | Keychain.UserCredentials
@@ -47,9 +51,6 @@ async function remove(key: string) {
   })
 }
 
-class CancelledByUser extends Error {}
-class TooManyAttempts extends Error {}
-
 const Errors = {
   CancelledByUser,
   TooManyAttempts,
@@ -66,24 +67,32 @@ export const KeychainStorage = {
 // iOS = `Error.code`
 // Android = Error.message
 
-const errorDecoder = Platform.select<(error: any) => Error>({
-  android: (error) => {
-    if (/code: 13/.test(error?.message)) return new CancelledByUser()
-    if (/code: 10/.test(error?.message)) return new CancelledByUser()
-    if (/code: 7/.test(error?.message)) return new TooManyAttempts()
+type KeychainError = Error & {
+  code?: string | number
+  message?: string
+}
 
-    return error
+const errorDecoder = Platform.select<(error: unknown) => Error>({
+  android: (error) => {
+    const keychainError = error as KeychainError
+    const message = keychainError?.message ?? ''
+    if (/code: 13/.test(message)) return new CancelledByUser()
+    if (/code: 10/.test(message)) return new CancelledByUser()
+    if (/code: 7/.test(message)) return new TooManyAttempts()
+
+    return error instanceof Error ? error : new Error(String(error))
   },
 
   ios: (error) => {
-    if (error?.code === '-128') return new CancelledByUser()
+    const keychainError = error as KeychainError
+    if (keychainError?.code === '-128') return new CancelledByUser()
     // if too many attempts, iOS will fallback to PIN,
     // if incorrect pin, sensor would be disabled (app will trigger pin creation)
 
-    return error
+    return error instanceof Error ? error : new Error(String(error))
   },
 
-  default: (_) => new Error(),
+  default: (_) => new Error('Unknown keychain error'),
 })
 
 export type AuthenticationPrompt = unknown

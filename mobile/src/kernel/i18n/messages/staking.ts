@@ -38,7 +38,7 @@ export const stakingMessages = defineMessages({
     defaultMessage: '!!!Stake Pools',
   },
   searchPools: {
-    id: 'nft.navigation.search',
+    id: 'components.staking.searchPools',
     defaultMessage: '!!!Search Pools',
   },
   noPoolsFound: {
@@ -237,6 +237,23 @@ export const stakingMessages = defineMessages({
     id: 'components.stakingcenter.title',
     defaultMessage: '!!!Update',
   },
+  stakingUpdatesTitle: {
+    id: 'components.staking.stakingUpdatesTitle',
+    defaultMessage: '!!!Staking updates',
+  },
+  stakingUpdateHeading: {
+    id: 'components.staking.stakingUpdateHeading',
+    defaultMessage: '!!!Upcoming update to EMURGO and Yoroi stakepools',
+  },
+  stakingUpdateDescription: {
+    id: 'components.staking.stakingUpdateDescription',
+    defaultMessage:
+      '!!!EMURGO is updating the margin fee on its stakepools as part of a broader 2026 modernization effort.',
+  },
+  skip: {
+    id: 'components.staking.skip',
+    defaultMessage: '!!!SKIP',
+  },
   governanceCentreTitle: {
     id: 'components.governance.governanceCentreTitle',
     defaultMessage: '!!!Governance Dashboard',
@@ -401,6 +418,14 @@ export const stakingMessages = defineMessages({
     id: 'components.governance.withdrawWarningButton',
     defaultMessage: '!!!Withdraw Warning Button',
   },
+  delegateAndWithdraw: {
+    id: 'components.governance.delegateAndWithdraw',
+    defaultMessage: '!!!Delegate and Withdraw',
+  },
+  goToGovernanceCenter: {
+    id: 'components.governance.goToGovernanceCenter',
+    defaultMessage: '!!!Go to Governance Center',
+  },
   enterDRepID: {
     id: 'components.governance.enterDRepID',
     defaultMessage: '!!!Enter DRep ID',
@@ -432,7 +457,7 @@ export const stakingMessages = defineMessages({
   enterDrepIDInfo: {
     id: 'components.governance.enterDrepIDInfo',
     defaultMessage:
-      '!!!Find your preferred DRep and enter their ID below to delegate your vote:',
+      '!!!Identify your preferred DRep and enter their ID or ADA handle below to delegate your vote',
   },
   goToStaking: {
     id: 'components.governance.goToStaking',
@@ -559,6 +584,36 @@ export const stakingMessages = defineMessages({
     id: 'global.cancel',
     defaultMessage: '!!!Cancel',
   },
+  earnRewardsBannerTitle: {
+    id: 'components.governance.earnRewardsBanner.title',
+    defaultMessage: '!!!Earn Rewards with Yoroi',
+  },
+  earnRewardsBannerDescription: {
+    id: 'components.governance.earnRewardsBanner.description',
+    defaultMessage:
+      '!!!Delegate your ADA to our stake pool and DRep in one step. Support Cardano governance, strengthen the network, and earn rewards along the way.',
+  },
+  earnRewardsBannerCta: {
+    id: 'components.governance.earnRewardsBanner.cta',
+    defaultMessage: '!!!EARN ADA',
+  },
+  governanceRequiredTitle: {
+    id: 'components.stakingcenter.governanceRequired.title',
+    defaultMessage: '!!!Governance updates',
+  },
+  governanceRequiredDescription: {
+    id: 'components.stakingcenter.governanceRequired.description',
+    defaultMessage:
+      '!!!To withdraw rewards from your stake delegation, you must also delegate your voting power. Save time and fees by delegating to our Yoroi DRep now, alongside your stake pool delegation.',
+  },
+  delegateToYoroiDRep: {
+    id: 'components.stakingcenter.governanceRequired.delegateToYoroiDRep',
+    defaultMessage: '!!!Delegate to Yoroi DRep',
+  },
+  delegateStakeOnly: {
+    id: 'components.stakingcenter.governanceRequired.delegateStakeOnly',
+    defaultMessage: '!!!Delegate stake only',
+  },
   votingOptionsTitle: {
     id: 'components.governance.votingOptionsTitle',
     defaultMessage: '!!!Voting options',
@@ -622,5 +677,21 @@ export const stakingMessages = defineMessages({
   orDelegateToYoroiDrepBelow: {
     id: 'components.governance.orDelegateToYoroiDrepBelow',
     defaultMessage: '!!!or delegate to Yoroi DRep below',
+  },
+  failedToLoadPools: {
+    id: 'components.staking.failedToLoadPools',
+    defaultMessage: '!!!Failed to load pools',
+  },
+  poolStake: {
+    id: 'components.staking.poolStake',
+    defaultMessage: '!!!Stake',
+  },
+  poweredBy: {
+    id: 'components.staking.poweredBy',
+    defaultMessage: '!!!Powered by',
+  },
+  resolvedDrepId: {
+    id: 'components.governance.resolvedDrepId',
+    defaultMessage: '!!!Resolved DRep ID:',
   },
 })

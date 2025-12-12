@@ -1,3 +1,8 @@
+import {
+  BluetoothDisabledError,
+  RejectedByUserError,
+} from '@yoroi/cardano-wallet'
+import {Device} from '@yoroi/cardano-wallet'
 import {atoms as a, lightPalette, useTheme} from '@yoroi/theme'
 import {HW} from '@yoroi/types'
 
@@ -21,8 +26,6 @@ import {
 import {logger} from '~/kernel/logger/logger'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
-import {BluetoothDisabledError, RejectedByUserError} from '~/wallets/hw/hw'
-import {Device} from '~/wallets/types/hw'
 
 import {BulletPointItem} from '../BulletPointItem'
 import {Loading} from '../Loading/Loading'
@@ -58,61 +61,132 @@ type Props = {
   defaultDevices?: Device[]
 }
 
-type State = {
-  devices: Array<Device>
-  deviceId?: null | string
-  deviceObj?: null | HW.DeviceObj
-  error?: Error | null
-  refreshing: boolean
-  waiting: boolean
-}
+function LedgerConnectInt(props: Props): React.ReactElement {
+  const {
+    intl,
+    useUSB,
+    defaultDevices,
+    onConnectUSB,
+    onConnectBLE,
+    onWaitingMessage,
+  } = props
 
-class LedgerConnectInt extends React.Component<Props, State> {
-  state: State = {
-    devices: this.props.defaultDevices ? this.props.defaultDevices : [],
-    deviceId: null,
-    deviceObj: null,
-    error: null,
-    refreshing: true,
-    waiting: false,
-  }
+  const [devices, setDevices] = React.useState<Array<Device>>(
+    defaultDevices ?? [],
+  )
+  const [deviceId, setDeviceId] = React.useState<string | null>(null)
+  const [deviceObj, setDeviceObj] = React.useState<HW.DeviceObj | null>(null)
+  const [error, setError] = React.useState<Error | null>(null)
+  const [refreshing, setRefreshing] = React.useState(true)
+  const [waiting, setWaiting] = React.useState(false)
 
-  _subscriptions: null | {unsubscribe: () => void} = null
-  _bluetoothEnabled: null | boolean = null
-  _transportLib: typeof TransportHID | typeof TransportBLE | null = null
-  _isMounted = false
+  const subscriptionsRef = React.useRef<{unsubscribe: () => void} | null>(null)
+  const bluetoothEnabledRef = React.useRef<boolean | null>(null)
+  const transportLibRef = React.useRef<
+    typeof TransportHID | typeof TransportBLE | null
+  >(null)
+  const isMountedRef = React.useRef(true)
 
-  componentDidMount() {
-    const {useUSB} = this.props
-    this._transportLib = useUSB === true ? TransportHID : TransportBLE
-    this._isMounted = true
+  const startScan = React.useCallback(async () => {
+    const onComplete = () => {
+      logger.debug('listen: subscription completed', {useUSB})
+      setRefreshing(false)
+    }
+
+    const onError = (error: Error) => {
+      logger.error('listen: error occurred', {error, useUSB})
+      setError(error)
+      setRefreshing(false)
+      setDevices([])
+    }
+
+    const onBLENext = (e: {type: string; descriptor: Device}) => {
+      if (e.type === 'add') {
+        logger.debug('listen: new device detected', {useUSB, event: e})
+        setDevices((prev) =>
+          prev.some((d) => d.id === e.descriptor.id)
+            ? prev
+            : [...prev, e.descriptor],
+        )
+      }
+    }
+
+    const onHWNext = (e: {type: string; descriptor: HW.DeviceObj}) => {
+      if (e.type === 'add') {
+        logger.debug('listen: new device detected', {useUSB, event: e})
+        setRefreshing(false)
+        setDeviceObj(e.descriptor)
+      }
+    }
+
+    if (transportLibRef.current == null) return
+
+    // Try calling list() to check for existing devices
+    if (!useUSB && typeof transportLibRef.current?.list === 'function') {
+      try {
+        const existingDevices = await transportLibRef.current.list()
+        if (existingDevices && existingDevices.length > 0) {
+          setDevices(existingDevices as Device[])
+          setRefreshing(false)
+        }
+      } catch (listError) {
+        logger.debug('TransportBLE.list() error', {error: listError})
+      }
+    }
+
+    try {
+      subscriptionsRef.current = transportLibRef.current.listen({
+        complete: onComplete,
+        next: useUSB ? onHWNext : onBLENext,
+        error: onError,
+      })
+    } catch (err) {
+      logger.error('Failed to start transport listen', {error: err, useUSB})
+      setError(err instanceof Error ? err : new Error(String(err)))
+      setRefreshing(false)
+    }
+  }, [useUSB])
+
+  const unsubscribe = React.useCallback(() => {
+    if (subscriptionsRef.current != null) {
+      subscriptionsRef.current.unsubscribe()
+      subscriptionsRef.current = null
+    }
+  }, [])
+
+  const reload = React.useCallback(() => {
+    unsubscribe()
+    setDevices(defaultDevices ?? [])
+    setDeviceId(null)
+    setDeviceObj(null)
+    setError(null)
+    setRefreshing(false)
+    startScan()
+  }, [defaultDevices, startScan, unsubscribe])
+
+  React.useEffect(() => {
+    transportLibRef.current = useUSB === true ? TransportHID : TransportBLE
+    isMountedRef.current = true
+
     if (useUSB === false) {
-      // check if bluetooth is available
-      // no need to save a reference to this subscription's unsubscribe func
-      // as it's just an empty method. Rather, we make sure sate is only
-      // modified when component is mounted
       let previousAvailable = false
       const observer: Observer<{available: boolean; type: string}> = {
         next: (e: {available: boolean; type: string}) => {
-          if (this._isMounted) {
-            logger.debug('BLE observeState event', {event: e})
-            if (this._bluetoothEnabled == null && !e.available) {
-              this.setState({
-                error: new BluetoothDisabledError(),
-                refreshing: false,
-              })
+          logger.debug('BLE observeState event', {event: e})
+          if (isMountedRef.current) {
+            if (bluetoothEnabledRef.current == null && !e.available) {
+              setError(new BluetoothDisabledError())
+              setRefreshing(false)
             }
             if (e.available !== previousAvailable) {
               previousAvailable = e.available
-              this._bluetoothEnabled = e.available
+              bluetoothEnabledRef.current = e.available
               if (e.available) {
-                this.reload()
+                reload()
               } else {
-                this.setState({
-                  error: new BluetoothDisabledError(),
-                  refreshing: false,
-                  devices: [],
-                })
+                setError(new BluetoothDisabledError())
+                setRefreshing(false)
+                setDevices([])
               }
             }
           }
@@ -126,120 +200,63 @@ class LedgerConnectInt extends React.Component<Props, State> {
       }
       TransportBLE.observeState(observer)
     }
-    this.startScan()
-  }
 
-  componentWillUnmount() {
-    this._unsubscribe()
-    this._isMounted = false
-  }
+    startScan()
 
-  startScan = () => {
-    const {useUSB} = this.props
-
-    const onComplete = () => {
-      logger.debug('listen: subscription completed', {useUSB})
-      this.setState({refreshing: false})
+    return () => {
+      unsubscribe()
+      isMountedRef.current = false
     }
+  }, [useUSB, startScan, reload, unsubscribe])
 
-    const onError = (error: Error) => {
-      this.setState({error, refreshing: false, devices: []})
-    }
-
-    const onBLENext = (e: {type: string; descriptor: Device}) => {
-      if (e.type === 'add') {
-        logger.debug('listen: new device detected', {useUSB, event: e})
-        // with bluetooth, new devices are appended in the screen
-        this.setState(deviceAddition(e.descriptor))
+  const onSelectDevice = React.useCallback(
+    async (device: Device) => {
+      unsubscribe()
+      try {
+        if (device.id == null) {
+          throw new Error('device id is null')
+        }
+        setDeviceId(device.id.toString())
+        setRefreshing(false)
+        setWaiting(true)
+        await onConnectBLE(device.id.toString())
+      } catch (e) {
+        if (!(e instanceof Error)) return
+        if (e instanceof RejectedByUserError) {
+          reload()
+          return
+        }
+        logger.error(e, {device})
+        setError(e)
+      } finally {
+        setWaiting(false)
       }
-    }
+    },
+    [onConnectBLE, reload, unsubscribe],
+  )
 
-    const onHWNext = (e: {type: string; descriptor: HW.DeviceObj}) => {
-      if (e.type === 'add') {
-        logger.debug('listen: new device detected', {useUSB, event: e})
-        // if a device is detected, save it in state immediately
-        this.setState({refreshing: false, deviceObj: e.descriptor})
+  const onConfirm = React.useCallback(
+    async (deviceObj: HW.DeviceObj) => {
+      unsubscribe()
+      try {
+        setWaiting(true)
+        await onConnectUSB(deviceObj)
+      } catch (e) {
+        if (!(e instanceof Error)) return
+        if (e instanceof RejectedByUserError) {
+          reload()
+          return
+        }
+        logger.error(e, {deviceObj})
+        setError(e)
+      } finally {
+        setWaiting(false)
       }
-    }
+    },
+    [onConnectUSB, reload, unsubscribe],
+  )
 
-    if (this._transportLib == null) return
-    this._subscriptions = this._transportLib.listen({
-      complete: onComplete,
-      next: useUSB ? onHWNext : onBLENext,
-      error: onError,
-    })
-  }
-
-  _unsubscribe: () => void = () => {
-    if (this._subscriptions != null) {
-      this._subscriptions.unsubscribe()
-      this._subscriptions = null
-    }
-  }
-
-  reload = () => {
-    this._unsubscribe()
-    this.setState({
-      devices: this.props.defaultDevices ? this.props.defaultDevices : [],
-      deviceId: null,
-      deviceObj: null,
-      error: null,
-      refreshing: false,
-    })
-    this.startScan()
-  }
-
-  _onSelectDevice = async (device: Device) => {
-    this._unsubscribe()
-    const {onConnectBLE} = this.props
-    try {
-      if (device.id == null) {
-        // should never happen
-        throw new Error('device id is null')
-      }
-      this.setState({
-        deviceId: device.id.toString(),
-        refreshing: false,
-        waiting: true,
-      })
-      await onConnectBLE(device.id.toString())
-    } catch (e) {
-      if (!(e instanceof Error)) return
-      if (e instanceof RejectedByUserError) {
-        this.reload()
-        return
-      }
-      logger.error(e, {device})
-      this.setState({error: e})
-    } finally {
-      this.setState({waiting: false})
-    }
-  }
-
-  _onConfirm = async (deviceObj: HW.DeviceObj) => {
-    this._unsubscribe()
-    try {
-      this.setState({
-        waiting: true,
-      })
-      await this.props.onConnectUSB(deviceObj)
-    } catch (e) {
-      if (!(e instanceof Error)) return
-      if (e instanceof RejectedByUserError) {
-        this.reload()
-        return
-      }
-      logger.error(e, {deviceObj})
-      this.setState({error: e})
-    } finally {
-      this.setState({waiting: false})
-    }
-  }
-
-  ListHeader = () => {
-    const {error, waiting, deviceObj} = this.state
-    const {intl, onWaitingMessage} = this.props
-
+  const ListHeader = React.useCallback(() => {
     let msg, errMsg
     if (error != null) {
       msg = intl.formatMessage(messages.error)
@@ -257,97 +274,92 @@ class LedgerConnectInt extends React.Component<Props, State> {
     }
     if (msg == null) return null
     return <ListHeaderWrapper msg={msg} err={errMsg} />
-  }
+  }, [error, waiting, deviceObj, intl, onWaitingMessage])
 
-  render() {
-    const {intl, useUSB} = this.props
-    const {error, devices, refreshing, deviceId, deviceObj, waiting} =
-      this.state
+  const rows = [
+    intl.formatMessage(ledgerMessages.enterPin),
+    intl.formatMessage(ledgerMessages.openApp),
+  ]
 
-    const rows = [
-      intl.formatMessage(ledgerMessages.enterPin),
-      intl.formatMessage(ledgerMessages.openApp),
-    ]
-    return (
-      <>
-        <Space.Height.lg />
+  return (
+    <>
+      <Space.Height.lg />
 
-        <Text style={[a.body_1_lg_medium, {color: lightPalette.gray_500}]}>
-          {intl.formatMessage(messages.introline)}
-        </Text>
+      <Text style={[a.body_1_lg_medium, {color: lightPalette.gray_500}]}>
+        {intl.formatMessage(messages.introline)}
+      </Text>
 
-        <Space.Height.lg />
+      <Space.Height.lg />
 
-        {rows.map((row, index) => (
-          <BulletPointItem
-            textRow={row}
-            key={index}
-            style={[a.body_1_lg_regular, {color: lightPalette.gray_500}]}
-          />
-        ))}
-
-        <Space.Height.lg />
-
-        <View style={[a.align_center, a.justify_center]}>
-          <Image source={useUSB === true ? usbImage : bleImage} />
-
-          <Space.Height.lg />
-
-          {!useUSB && (
-            <Text style={[a.body_2_md_regular, {color: lightPalette.gray_500}]}>
-              {intl.formatMessage(messages.caption)}
-            </Text>
-          )}
-        </View>
-
-        <Space.Height.lg />
-
-        {((!useUSB && devices.length === 0) || waiting) && (
-          <View style={[a.align_center, a.justify_center, a.flex_row]}>
-            <Loading />
-          </View>
-        )}
-
-        <FlatList
-          extraData={[error, deviceId]}
-          style={{flexDirection: 'column'}}
-          data={devices}
-          renderItem={({item}: {item: Device}) => (
-            <DeviceItem
-              disabled={waiting}
-              device={item}
-              onSelect={() => this._onSelectDevice(item)}
-            />
-          )}
-          ListHeaderComponent={this.ListHeader}
-          keyExtractor={(item) => item.id.toString()}
-          horizontal={false}
-          scrollEnabled={false}
-          showsVerticalScrollIndicator={false}
+      {rows.map((row, index) => (
+        <BulletPointItem
+          textRow={row}
+          key={index}
+          style={[a.body_1_lg_regular, {color: lightPalette.gray_500}]}
         />
+      ))}
 
-        <Space.Height.sm fill />
+      <Space.Height.lg />
 
-        {useUSB === true && (
-          <Button
-            onPress={() => {
-              if (refreshing || deviceObj == null || waiting) {
-                return Alert.alert(
-                  intl.formatMessage(globalMessages.error),
-                  rows.reduce((acc, item) => acc + '\n' + item),
-                )
-              }
-              this._onConfirm(deviceObj)
-            }}
-            title={intl.formatMessage(
-              confirmationMessages.commonButtons.confirmButton,
-            )}
-            style={[a.px_md, a.pb_sm]}
+      <View style={[a.align_center, a.justify_center]}>
+        <Image source={useUSB === true ? usbImage : bleImage} />
+
+        <Space.Height.lg />
+
+        {!useUSB && (
+          <Text style={[a.body_2_md_regular, {color: lightPalette.gray_500}]}>
+            {intl.formatMessage(messages.caption)}
+          </Text>
+        )}
+      </View>
+
+      <Space.Height.lg />
+
+      {((!useUSB && devices.length === 0) || waiting) && (
+        <View style={[a.align_center, a.justify_center, a.flex_row]}>
+          <Loading />
+        </View>
+      )}
+
+      <FlatList
+        extraData={[error, deviceId]}
+        style={{flexDirection: 'column'}}
+        data={devices}
+        renderItem={({item}: {item: Device}) => (
+          <DeviceItem
+            disabled={waiting}
+            device={item}
+            onSelect={() => onSelectDevice(item)}
           />
         )}
-      </>
-    )
-  }
+        ListHeaderComponent={ListHeader}
+        keyExtractor={(item) => item.id.toString()}
+        horizontal={false}
+        scrollEnabled={false}
+        showsVerticalScrollIndicator={false}
+      />
+
+      <Space.Height.sm fill />
+
+      {useUSB === true && (
+        <Button
+          onPress={() => {
+            if (refreshing || deviceObj == null || waiting) {
+              return Alert.alert(
+                intl.formatMessage(globalMessages.error),
+                rows.reduce((acc, item) => acc + '\n' + item),
+              )
+            }
+            onConfirm(deviceObj)
+          }}
+          title={intl.formatMessage(
+            confirmationMessages.commonButtons.confirmButton,
+          )}
+          style={[a.px_md, a.pb_sm]}
+        />
+      )}
+    </>
+  )
 }
 
 export const LedgerConnect = (props: Omit<Props, 'intl' | 'styles'>) => {
@@ -376,13 +388,3 @@ const messages = defineMessages({
       '!!!An error occurred while trying to connect with your hardware wallet:',
   },
 })
-
-const deviceAddition =
-  (device: Device) =>
-  ({devices}: {devices: Device[]}) => {
-    return {
-      devices: devices.some((i) => i.id === device.id)
-        ? devices
-        : devices.concat(device),
-    }
-  }

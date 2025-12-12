@@ -2,7 +2,7 @@ import {AxiosRequestConfig} from 'axios'
 
 import {ResolverReceiver} from './receiver'
 
-export interface ResolverApi {
+export type ResolverApi = {
   getCardanoAddresses(
     args: {
       resolve: ResolverReceiver['resolve']

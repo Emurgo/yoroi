@@ -1,17 +1,15 @@
 import {
-  isBoolean,
-  parseSafe,
+  parseBoolean,
   useAsyncStorage,
   useMutationWithInvalidations,
 } from '@yoroi/common'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {
   UseMutationOptions,
   UseSuspenseQueryOptions,
   useSuspenseQuery,
 } from '@tanstack/react-query'
-
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 
 const isShowingMultipleAddressInfoKey = 'isShowingMultipleAddressesModal'
 
@@ -47,9 +45,9 @@ const useIsShowingMultipleAddressesInfo = (
         isShowingMultipleAddressInfoKey,
       )
 
-      const parsed = parseSafe(storedStorage)
+      // parseBoolean handles both cases: if it's already a boolean, return it; if it's a string, parse it
       // old wallets wont have this key, so we default to true
-      return isBoolean(parsed) ? parsed : true
+      return parseBoolean(storedStorage) ?? true
     },
   })
 

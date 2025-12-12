@@ -1,6 +1,15 @@
+import {RawUtxo} from '@yoroi/api'
+import {createSendTxFromWallet} from '@yoroi/cardano-wallet'
+import {Amounts, Quantities, asQuantity} from '@yoroi/cardano-wallet'
+import {useCollateralInfo} from '@yoroi/cardano-wallet'
+import {useSetCollateralId} from '@yoroi/cardano-wallet'
+import {collateralConfig, utxosMaker} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {Portfolio} from '@yoroi/types'
+import {TransactionOutput} from '@yoroi/tx'
+import {Branded, Portfolio, UtxoId} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
+import * as CSL from '@emurgo/cross-csl-core'
 import {useMutation} from '@tanstack/react-query'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
@@ -16,8 +25,7 @@ import {
 } from 'react-native'
 
 import {useBalances} from '~/features/Portfolio/common/hooks/useBalances'
-import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
+import {getTxIdFromArgs} from '~/features/ReviewTx/common/utils/getTxId'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
@@ -26,18 +34,11 @@ import {Button, ButtonType} from '~/ui/Button/Button'
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {ErrorPanel} from '~/ui/ErrorPanel/ErrorPanel'
 import {Icon} from '~/ui/Icon'
-import {Info} from '~/ui/Icon/Info'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
 import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
-import {useCollateralInfo} from '~/wallets/cardano/utxoManager/useCollateralInfo'
-import {useSetCollateralId} from '~/wallets/cardano/utxoManager/useSetCollateralId'
-import {collateralConfig, utxosMaker} from '~/wallets/cardano/utxoManager/utxos'
-import {RawUtxo} from '~/wallets/types/other'
-import {YoroiEntry, YoroiSignedTx} from '~/wallets/types/yoroi'
-import {Amounts, Quantities, asQuantity} from '~/wallets/utils/utils'
 
 import {CollateralInfoModal} from './CollateralInfoModal'
 import {
@@ -56,17 +57,16 @@ export const ManageCollateralScreen = () => {
   const strings = useStrings()
   const balances = useBalances(wallet)
   const {navigateToTxReview, resetToTxHistory} = useWalletNavigation()
-  const {unsignedTxChanged} = useReviewTx()
 
   const lockedAmount = asQuantity(
-    wallet.primaryBreakdown.lockedAsStorageCost.toString(),
+    wallet.primaryBreakdown().lockedAsStorageCost.toString(),
   )
   const hasCollateral = collateralId !== '' && utxo !== undefined
   const params = useUnsafeParams<SettingsStackRoutes['manage-collateral']>()
 
   const {mutate: createUnsignedTx, isPending: isLoadingTx} = useMutation({
-    mutationFn: (entries: YoroiEntry[]) =>
-      wallet.createUnsignedTx({entries, addressMode: meta.addressMode}),
+    mutationFn: (entries: TransactionOutput[]) =>
+      createSendTxFromWallet(wallet, {entries, addressMode: meta.addressMode}),
     retry: false,
   })
 
@@ -74,17 +74,27 @@ export const ManageCollateralScreen = () => {
     useSetCollateralId(wallet)
   const handleRemoveCollateral = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    setCollateralId('')
+    setCollateralId('' as UtxoId)
   }
   const handleSetCollateralId = (collateralId: RawUtxo['utxo_id']) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setCollateralId(collateralId)
   }
 
-  const handleOnSuccess = (signedTx?: YoroiSignedTx) => {
-    if (signedTx?.signedTx?.id == null)
-      throw new Error('ManageCollateralScreen:: invalid state')
-    const collateralId = `${signedTx.signedTx.id}:0`
+  const handleOnSuccess = async (args?: {
+    signedTx?: CSL.Transaction | ((csl: CSL.WasmModuleProxy) => CSL.Transaction)
+    txId?: string
+  }) => {
+    // Use utility function to safely extract txId
+    // The CBOR was already passed to navigateToTxReview, so we can't access it here
+    // But args?.txId should be available from useOnConfirm
+    const txId = await getTxIdFromArgs(args)
+
+    if (!txId) {
+      throw new Error('ManageCollateralScreen:: no txId available')
+    }
+
+    const collateralId = Branded.asUtxoId(`${txId}:0`)
     setCollateralId(collateralId)
     resetToTxHistory()
   }
@@ -93,11 +103,27 @@ export const ManageCollateralScreen = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
 
     createUnsignedTx([createCollateralEntry(wallet)], {
-      onSuccess: (yoroiUnsignedTx) => {
-        unsignedTxChanged(yoroiUnsignedTx)
+      onSuccess: async (result) => {
+        // Set collateral ID immediately after transaction creation (even if not yet onchain)
+        // This prevents the UTXO from being used in other transactions
+        // The collateral UTXO will be at index 0 (first output of the transaction)
+        try {
+          const txId = await getTxIdFromArgs(undefined, result.cbor)
+          if (txId) {
+            const collateralId = Branded.asUtxoId(`${txId}:0`)
+            setCollateralId(collateralId)
+          }
+        } catch (error) {
+          // Don't block the flow if setting collateral ID fails
+        }
+
         navigateToTxReview({
-          onSuccessWithoutFeedback: (args) => handleOnSuccess(args?.signedTx),
-          operations: [<Operation key="0" />],
+          cbor: result.cbor,
+          onSuccessWithoutFeedback: (args) => handleOnSuccess(args),
+          details: {
+            title: strings.manageCollateral.collateralInfoModalLabel,
+            component: <CollateralInfoModal />,
+          },
           context: 'send',
         })
       },
@@ -107,7 +133,7 @@ export const ManageCollateralScreen = () => {
   const isLoading = isLoadingTx || isLoadingCollateral
 
   const handleGenerateCollateral = () => {
-    const utxos = utxosMaker(wallet.utxos)
+    const utxos = utxosMaker(wallet.utxos())
     const possibleCollateralId = utxos.drawnCollateral()
 
     if (possibleCollateralId !== undefined) {
@@ -169,16 +195,13 @@ export const ManageCollateralScreen = () => {
         <Text style={[a.self_center, ta.text_gray_max]}>
           {strings.manageCollateral.lockedAsCollateral}
         </Text>
-
         <Space.Height.sm />
-
         <ActionableAmount
           amount={amount}
           onRemove={handleRemoveCollateral}
           collateralId={collateralId}
           disabled={isLoading}
         />
-
         {hasCollateral && (
           <>
             <Space.Height.lg />
@@ -203,9 +226,7 @@ export const ManageCollateralScreen = () => {
             <Text>{strings.manageCollateral.removeCollateral}</Text>
           </>
         )}
-
         <Space.Height.lg fill />
-
         {didSpend && (
           <>
             <ErrorPanel>
@@ -290,42 +311,5 @@ const RemoveAmountButton = ({disabled, ...props}: TouchableOpacityProps) => {
     >
       <Icon.CrossCircle size={26} color={p.gray_900} />
     </TouchableOpacity>
-  )
-}
-
-const Operation = () => {
-  const {atoms: ta, palette: p} = useTheme()
-  const strings = useStrings()
-  const screenHeight = useWindowDimensions().height
-  const {openModal, closeModal} = useModal()
-
-  const handleOnPressInfo = () => {
-    openModal({
-      title: strings.manageCollateral.collateralInfoModalTitle,
-      content: <CollateralInfoModal />,
-      footer: (
-        <View style={[a.flex_row, a.gap_md]}>
-          <Button
-            title={strings.manageCollateral.collateralInfoModalLabel}
-            onPress={closeModal}
-          />
-        </View>
-      ),
-      height: Math.min(screenHeight * 0.9, 650),
-    })
-  }
-
-  return (
-    <View style={[a.flex_row, a.align_center]}>
-      <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
-        {strings.manageCollateral.collateralInfoModalLabel}
-      </Text>
-
-      <Space.Width.xs />
-
-      <TouchableOpacity onPress={handleOnPressInfo}>
-        <Info size={24} color={p.gray_900} />
-      </TouchableOpacity>
-    </View>
   )
 }

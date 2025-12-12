@@ -1,5 +1,6 @@
 import {isString} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
+import {useHasWallets} from '@yoroi/wallet-manager'
 
 import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
@@ -10,6 +11,7 @@ import {InitiatePinScreen} from '~/features/Auth/ui/screens/InitiatePinScreen'
 import {LoginWithHostScreen} from '~/features/Auth/ui/screens/LoginWithHostScreen'
 import {LoginWithPinScreen} from '~/features/Auth/ui/screens/LoginWithPinScreen'
 import {DevMenu} from '~/features/DevMenu/DevMenu'
+import {IconGallery} from '~/features/DevMenu/IconGallery'
 import {AgreementChangedNavigator} from '~/features/Initialization/ui/navigation/AgreementChangedNavigator'
 import {InitializationNavigator} from '~/features/Initialization/ui/navigation/InitializationNavigator'
 import {
@@ -22,14 +24,13 @@ import {
 } from '~/features/Initialization/ui/screens/DarkThemeAnnouncementScreen'
 import {LegalAgreement} from '~/features/Legal/common/types'
 import {useLegalAgreement} from '~/features/Legal/hooks/useLegalAgreement'
+import {ActionHandler} from '~/features/Links/components/ActionHandler'
 import {useDeepLinkWatcher} from '~/features/Links/hooks/useDeepLinkWatcher'
-import {useLinksRequestAction} from '~/features/Links/hooks/useLinksRequestAction'
 import {PushNotificationNavigationHandler} from '~/features/Notifications/common/PushNotificationNavigationHandler'
 import {useInitNotifications} from '~/features/Notifications/common/hooks'
 import {NotificationUIHandler} from '~/features/Notifications/useCases/NotificationUIHandler'
 import {NotificationsDevScreen} from '~/features/Notifications/useCases/NotificationsDevScreen'
 import {SetupWalletNavigator} from '~/features/SetupWallet/SetupWalletNavigator'
-import {useHasWallets} from '~/features/WalletManager/hooks/useHasWallets'
 
 import {agreementDate} from '../constants'
 import {features} from '../features'
@@ -47,11 +48,8 @@ export const AppNavigator = () => {
   const afterLoginAction = useAfterLoginAction()
   const strings = useStrings()
 
-  // Enable deep link watching
+  // Watch for deep links (both Yoroi and Cardano)
   useDeepLinkWatcher()
-
-  // Enable deep link action handling with modal support (only when logged in)
-  useLinksRequestAction()
 
   const screenOptions = React.useMemo(
     () => ({...defaultStackNavigationOptions(p), headerShown: false}),
@@ -65,6 +63,8 @@ export const AppNavigator = () => {
 
   return (
     <>
+      {/* Handle all link actions - render unconditionally to support wallet restoration */}
+      <ActionHandler />
       <Stack.Navigator screenOptions={screenOptions}>
         {/* Not Authenticated */}
         {isLoggedOut && (
@@ -105,6 +105,13 @@ export const AppNavigator = () => {
                 options={{title: strings.auth.pinInputTitle}}
               />
             )}
+
+            {/* Setup wallet screen available when not logged in for wallet restoration from links */}
+            <Stack.Screen
+              name="setup-wallet"
+              options={{headerShown: false}}
+              getComponent={() => SetupWalletNavigator}
+            />
           </Stack.Group>
         )}
 
@@ -168,12 +175,23 @@ export const AppNavigator = () => {
               name="notifications"
               getComponent={() => NotificationsDevScreen}
             />
+
+            <Stack.Screen
+              name="icon-gallery"
+              options={{
+                headerShown: true,
+                title: 'Icon Gallery',
+              }}
+              getComponent={() => IconGallery}
+            />
           </Stack.Group>
         )}
       </Stack.Navigator>
 
       <NotificationUIHandler />
       {isLoggedIn && <PushNotificationNavigationHandler />}
+      {/* Temporarily disabled - P2P provider is now inside WithWalletOpened */}
+      {/* {isLoggedIn && <P2PConnectionStatusBar />} */}
     </>
   )
 }

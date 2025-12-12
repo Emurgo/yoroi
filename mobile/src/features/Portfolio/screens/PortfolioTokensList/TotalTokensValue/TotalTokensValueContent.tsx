@@ -8,10 +8,7 @@ import {
   formatPriceChange,
   priceChange,
 } from '~/features/Portfolio/common/helpers/priceChange'
-import {
-  PortfolioListTab,
-  usePortfolio,
-} from '~/features/Portfolio/context/PortfolioProvider'
+import {usePortfolio} from '~/features/Portfolio/context/PortfolioProvider'
 import {useCurrencyPairing} from '~/features/Settings/context/CurrencyProvider'
 import {usePrivacyMode} from '~/features/Settings/hooks/usePrivacyMode'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -38,8 +35,7 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
     ptActivity: {close, open},
     isLoading,
   } = useCurrencyPairing()
-  const {isPrimaryTokenActive, setIsPrimaryTokenActive, listTab} =
-    usePortfolio()
+  const {isPrimaryTokenActive, setIsPrimaryTokenActive} = usePortfolio()
   const {toggleIsPrivacyModeEnabled} = usePrivacyMode()
 
   const {changePercent, changeValue, variantPnl} = priceChange(open, close)
@@ -79,13 +75,7 @@ export const TotalTokensValueContent = ({amount, headerCard}: Props) => {
             isPrimaryTokenActive={isPrimaryTokenActive}
           />
 
-          <Tooltip
-            title={
-              listTab === PortfolioListTab.Dapps
-                ? strings.portfolio.totalDAppsValueTooltip
-                : strings.portfolio.totalWalletValueTooltip
-            }
-          >
+          <Tooltip title={strings.portfolio.totalWalletValueTooltip}>
             <View style={[a.flex_row, a.gap_xs, a.align_stretch]}>
               {isLoading ? (
                 <SkeletonQuantityChange />

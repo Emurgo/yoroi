@@ -1,10 +1,15 @@
 import {ApiHttpStatusCode} from './status-code'
 
 export type ApiResponseRecordWithCache<T> =
-  | [StatusCode: ApiHttpStatusCode.Ok, Record: T, ETag: string, MaxAge: number]
-  | [StatusCode: ApiHttpStatusCode.NotModified, MaxAge: number]
   | [
-      StatusCode: ApiHttpStatusCode.InternalServerError,
+      StatusCode: typeof ApiHttpStatusCode.Ok,
+      Record: T,
+      ETag: string,
+      MaxAge: number,
+    ]
+  | [StatusCode: typeof ApiHttpStatusCode.NotModified, MaxAge: number]
+  | [
+      StatusCode: typeof ApiHttpStatusCode.InternalServerError,
       Reason: string,
       MaxAge: number,
     ]

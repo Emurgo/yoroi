@@ -1,11 +1,12 @@
+import {isEmptyString} from '@yoroi/cardano-wallet'
 import {infoExtractName, isPrimaryToken} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import React, {useState} from 'react'
 import {Linking, Text, TouchableOpacity, View} from 'react-native'
 
 import {usePortfolioTokenDetailParams} from '~/features/Portfolio/common/hooks/useNavigateTo'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Accordion} from '~/ui/Accordion/Accordion'
@@ -13,7 +14,6 @@ import {Copiable} from '~/ui/Copiable/Copiable'
 import {ExplorerInfoLinks} from '~/ui/ExplorerInfoLinks/ExplorerInfoLinks'
 import {Space} from '~/ui/Space/Space'
 import {TokenInfoIcon} from '~/ui/TokenInfoIcon/TokenInfoIcon'
-import {isEmptyString} from '~/wallets/utils/string'
 
 import {TokenNews} from './TokenNews'
 
@@ -22,9 +22,8 @@ export const Overview = () => {
   const strings = useStrings()
   const [expanded, setExpanded] = useState(true)
   const {id: tokenId} = usePortfolioTokenDetailParams()
-  const {
-    wallet: {balances},
-  } = useSelectedWallet()
+  const {wallet} = useSelectedWallet()
+  const balances = wallet.balances()
   const tokenAmount = balances.records.get(tokenId)
   const tokenInfo = tokenAmount?.info
   if (!tokenInfo) return null

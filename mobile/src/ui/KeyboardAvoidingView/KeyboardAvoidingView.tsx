@@ -6,7 +6,7 @@ import {
 } from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
-import {useIsKeyboardOpen} from '~/hooks/useIsKeyboardOpen'
+import {useIsKeyboardOpen} from '~/common/hooks/useIsKeyboardOpen'
 
 export const KeyboardAvoidingView = ({
   children,

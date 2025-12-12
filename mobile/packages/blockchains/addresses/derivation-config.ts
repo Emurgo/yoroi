@@ -3,7 +3,7 @@ import {freeze} from 'immer'
 // https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki
 export const derivationConfig = freeze(
   {
-    gapLimit: 20,
+    gapLimit: 40,
     hardStart: 2_147_483_648,
     keyLevel: {
       root: 0,

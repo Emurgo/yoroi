@@ -57,8 +57,8 @@ export const parseTokenDiscoveryResponseWithCacheRecord = (
 
 export const TokenDiscoveryWithCacheRecordSchema =
   cacheRecordSchemaMaker<Portfolio.Token.Discovery>(
-    TokenDiscoverySchema as any,
-  ) as any
+    TokenDiscoverySchema as unknown as z.ZodType<Portfolio.Token.Discovery>,
+  ) as z.ZodSchema<App.CacheRecord<Portfolio.Token.Discovery>>
 
 export const isTokenDiscoveryWithCacheRecord = (
   data: unknown,

@@ -1,5 +1,6 @@
 import {networkConfigs} from '@yoroi/blockchains'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useSelectedNetwork} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {ScrollView} from 'react-native'
@@ -8,16 +9,15 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {useAuthWithOs} from '~/features/Auth/hooks/useAuthWithOs'
 import {useNavigateTo} from '~/features/Settings/hooks/useNavigateTo'
-import {useScreenCapture} from '~/features/Settings/hooks/useScreenCapture'
 import {
   NavigatedSettingsItem,
   SettingsItem,
   SettingsSection,
 } from '~/features/Settings/ui/shared/SettingsItems'
-import {useSelectedNetwork} from '~/features/WalletManager/hooks/useSelectedNetwork'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {LanguageRecord, supportedLanguages} from '~/kernel/i18n/localization'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Icon} from '~/ui/Icon'
 import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
 
@@ -31,15 +31,11 @@ export const ApplicationSettingsScreen = () => {
   const {isCrashReportEnabled, toggleIsCrashReportEnabled} = useCrashReport()
   const {currency} = useCurrencyPairing()
   const navigateTo = useNavigateTo()
+  const {navigateToNotificationSettings} = useWalletNavigation()
   const {network} = useSelectedNetwork()
   const {atoms: ta, paletteName: name, palette: p} = useTheme()
   const {languageCode} = useLanguage()
   const {authWithOs} = useAuthWithOs({onSuccess: navigateTo.enableLoginWithPin})
-  const {
-    isScreenCaptureEnabled,
-    toggleIsScreenCaptureEnabled,
-    canSwitchScreenCapture,
-  } = useScreenCapture()
   const {enableLoginWithHost, authSetting, canAuthWithHost} = useAuth()
 
   const language = supportedLanguages.find(
@@ -51,9 +47,6 @@ export const ApplicationSettingsScreen = () => {
   }
   const handleOnToggleCrashReports = () => {
     toggleIsCrashReportEnabled()
-  }
-  const handleOnToggleScreenCaptureEnabled = () => {
-    toggleIsScreenCaptureEnabled()
   }
   const handleOnToggleEnableLoginWithHost = () => {
     if (authSetting === 'os') {
@@ -130,6 +123,12 @@ export const ApplicationSettingsScreen = () => {
             onNavigate={navigateTo.changeTheme}
             selected={strings.settings.theme.translateThemeName(name)}
           />
+
+          <NavigatedSettingsItem
+            icon={<Icon.Bell {...iconProps} />}
+            label={strings.settings.notifications}
+            onNavigate={() => navigateToNotificationSettings()}
+          />
         </SettingsSection>
 
         <SettingsSection
@@ -176,19 +175,6 @@ export const ApplicationSettingsScreen = () => {
               onValueChange={handleOnToggleCrashReports}
             />
           </SettingsItem>
-
-          {canSwitchScreenCapture && (
-            <SettingsItem
-              icon={<Icon.Share {...iconProps} />}
-              label={strings.settings.applicationSettings.screenSharing}
-              info={strings.settings.applicationSettings.screenSharingInfo}
-            >
-              <SettingsSwitch
-                value={isScreenCaptureEnabled}
-                onValueChange={handleOnToggleScreenCaptureEnabled}
-              />
-            </SettingsItem>
-          )}
         </SettingsSection>
       </ScrollView>
     </SafeAreaView>

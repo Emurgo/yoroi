@@ -1,4 +1,4 @@
-import {Either} from '@yoroi/types'
+import type {Either} from '@yoroi/types'
 
 export function isLeft<E, T>(
   either: Either<E, T>,

@@ -1,4 +1,4 @@
-import {Api, Portfolio} from '@yoroi/types'
+import {Api, Branded, Portfolio} from '@yoroi/types'
 
 import {tokenActivityMocks} from '../token-activity.mocks'
 import {tokenHistoryMocks} from '../token-history.mocks'
@@ -28,7 +28,7 @@ describe('transformers', () => {
 
     it('should return the updated token info if the status code is not HttpStatusCode.NotModified', () => {
       const apiTokenInfosResponse: Portfolio.Api.TokenInfosResponse = {
-        [tokenMocks.primaryETH.info.id]: [
+        [tokenMocks.primaryETH.info.id as Portfolio.Token.Id]: [
           Api.HttpStatusCode.NotModified,
           123456,
         ],
@@ -41,11 +41,11 @@ describe('transformers', () => {
 
     it('should return the original token info if the status code is HttpStatusCode.NotModified', () => {
       const apiTokenInfosResponse: Portfolio.Api.TokenInfosResponse = {
-        [tokenMocks.rnftWhatever.info.id]: [
+        [tokenMocks.rnftWhatever.info.id as Portfolio.Token.Id]: [
           Api.HttpStatusCode.NotModified,
           123456,
         ],
-        [tokenMocks.nftCryptoKitty.info.id]: [
+        [tokenMocks.nftCryptoKitty.info.id as Portfolio.Token.Id]: [
           Api.HttpStatusCode.Ok,
           tokenMocks.nftCryptoKitty.info,
           'etag',
@@ -56,11 +56,11 @@ describe('transformers', () => {
       const result = toSecondaryTokenInfos(apiTokenInfosResponse)
 
       expect(result).toEqual({
-        [tokenMocks.rnftWhatever.info.id]: [
+        [tokenMocks.rnftWhatever.info.id as Portfolio.Token.Id]: [
           Api.HttpStatusCode.NotModified,
           123456,
         ],
-        [tokenMocks.nftCryptoKitty.info.id]: [
+        [tokenMocks.nftCryptoKitty.info.id as Portfolio.Token.Id]: [
           200,
           tokenMocks.nftCryptoKitty.info,
           'etag',
@@ -71,7 +71,7 @@ describe('transformers', () => {
 
     it('should return drop the record if unable to parse the token-info response', () => {
       const apiTokenInfosResponse: Portfolio.Api.TokenInfosResponse = {
-        [tokenMocks.primaryETH.info.id]: [
+        [tokenMocks.primaryETH.info.id as Portfolio.Token.Id]: [
           2000 as any,
           tokenMocks.primaryETH.info,
           'etag',
@@ -99,12 +99,12 @@ describe('transformers', () => {
 
     it('should return drop the record when the status code is HttpStatusCode.InternalServerError', () => {
       const apiTokenInfosResponse: Portfolio.Api.TokenInfosResponse = {
-        [tokenMocks.rnftWhatever.info.id]: [
+        [tokenMocks.rnftWhatever.info.id as Portfolio.Token.Id]: [
           Api.HttpStatusCode.InternalServerError,
           'Not found',
           3600,
         ],
-        [tokenMocks.nftCryptoKitty.info.id]: [
+        [tokenMocks.nftCryptoKitty.info.id as Portfolio.Token.Id]: [
           Api.HttpStatusCode.Ok,
           tokenMocks.nftCryptoKitty.info,
           'etag',
@@ -133,11 +133,22 @@ describe('transformers', () => {
     })
 
     it('should return the data and deal with empty records', () => {
-      const responseWithEmptyRecords = {
+      const responseWithEmptyRecords: DullahanApiTokenActivityResponse = {
         ...duallahanTokenActivityMocks.api.responseSuccessDataOnly,
-        'token.4': undefined,
-        'token.5': [Api.HttpStatusCode.InternalServerError, 'Not found'],
-      } as any
+        [Branded.asTokenId('token.5')]: [
+          Api.HttpStatusCode.InternalServerError,
+          {
+            price: {
+              ts: 0,
+              open: '0',
+              close: '0',
+              low: '0',
+              high: '0',
+              change: 0,
+            },
+          },
+        ],
+      }
       const result = toTokenActivity(responseWithEmptyRecords)
 
       expect(result).toEqual(tokenActivityMocks.api.responseDataOnly)
@@ -166,9 +177,9 @@ describe('transformers', () => {
 describe('toDullahanRequest', () => {
   it('success', () => {
     const request: ReadonlyArray<Api.RequestWithCache<Portfolio.Token.Id>> = [
-      ['token.1', 'hash1'],
-      ['token.2', 'hash2'],
-      ['token.3', 'hash3'],
+      [Branded.asTokenId('token.1'), 'hash1'],
+      [Branded.asTokenId('token.2'), 'hash2'],
+      [Branded.asTokenId('token.3'), 'hash3'],
     ]
 
     const result = toDullahanRequest(request)
@@ -179,7 +190,7 @@ describe('toDullahanRequest', () => {
 
 describe('toProcessedMediaRequest', () => {
   it('success', () => {
-    const request: Portfolio.Token.Id = 'token.1'
+    const request: Portfolio.Token.Id = Branded.asTokenId('token.1')
 
     const result = toProcessedMediaRequest(request)
 
