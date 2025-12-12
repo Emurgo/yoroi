@@ -1,12 +1,13 @@
 // @ts-ignore
-import QuickCrypto from 'react-native-quick-crypto'
-
 /**
  * Get backend-zero base URL from legacy API URL
  * @deprecated Use getBackendZeroUrl from '@yoroi/api' instead
  * Re-exported from package to maintain backward compatibility
  */
 import {getBackendZeroUrl} from '@yoroi/api'
+
+import QuickCrypto from 'react-native-quick-crypto'
+
 import {getSpendingKey} from '../addressInfo/addressInfo'
 
 /**

@@ -1,6 +1,6 @@
 // @ts-expect-error - Missing dependency, should be added to devDependencies
-import {linksCardanoModuleMaker} from '@yoroi/links'
 import type {WalletEncryptedStorage} from '@yoroi/cardano-wallet'
+import {linksCardanoModuleMaker} from '@yoroi/links'
 
 import * as React from 'react'
 
