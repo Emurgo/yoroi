@@ -33,6 +33,7 @@ config.resolver.alias = {
     projectRoot,
     './packages/dapp-connector',
   ),
+  '@yoroi/logger': path.resolve(projectRoot, './packages/logger'),
   '@yoroi/exchange': path.resolve(projectRoot, './packages/exchange'),
   '@yoroi/explorers': path.resolve(projectRoot, './packages/explorers'),
   '@yoroi/identicon': path.resolve(projectRoot, './packages/identicon'),
@@ -46,8 +47,14 @@ config.resolver.alias = {
   '@yoroi/theme': path.resolve(projectRoot, './packages/theme'),
   '@yoroi/transfer': path.resolve(projectRoot, './packages/transfer'),
   '@yoroi/types': path.resolve(projectRoot, './packages/types'),
-  '@yoroi/cardano-wallet': path.resolve(projectRoot, './packages/cardano-wallet'),
-  '@yoroi/wallet-manager': path.resolve(projectRoot, './packages/wallet-manager'),
+  '@yoroi/cardano-wallet': path.resolve(
+    projectRoot,
+    './packages/cardano-wallet',
+  ),
+  '@yoroi/wallet-manager': path.resolve(
+    projectRoot,
+    './packages/wallet-manager',
+  ),
   '@yoroi/tx': path.resolve(projectRoot, './packages/tx'),
   '@yoroi/p2p-communication': path.resolve(
     projectRoot,
@@ -57,6 +64,7 @@ config.resolver.alias = {
   // ~ aliases
   '~/ui': path.resolve(projectRoot, './src/ui'),
   '~/features': path.resolve(projectRoot, './src/features'),
+  '~/common': path.resolve(projectRoot, './src/common'),
   '~/hooks': path.resolve(projectRoot, './src/hooks'),
   '~/kernel': path.resolve(projectRoot, './src/kernel'),
   '~/wallets': path.resolve(projectRoot, './src/wallets'),
