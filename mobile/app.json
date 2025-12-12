@@ -152,7 +152,6 @@
           "organization": "emurgo-fintech-inc"
         }
       ],
-      "./plugins/with-app-turbo-module-provider.js",
       "./plugins/with-async-storage-db-size.js",
       "./plugins/with-firebase-modular-headers.js"
     ],
