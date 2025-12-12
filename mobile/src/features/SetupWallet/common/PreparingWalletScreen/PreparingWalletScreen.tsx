@@ -34,16 +34,25 @@ export const PreparingWalletScreen = () => {
     React.useState(true)
   const [showBackgroundButton, setShowBackgroundButton] = React.useState(false)
 
+  // Memoize walletNavigation object to prevent unnecessary re-renders
+  const memoizedWalletNavigation = React.useMemo(
+    () => ({
+      resetToWalletSelection: walletNavigation.resetToWalletSelection,
+      resetToTxHistory: walletNavigation.resetToTxHistory,
+    }),
+    [
+      walletNavigation.resetToWalletSelection,
+      walletNavigation.resetToTxHistory,
+    ],
+  )
+
   // Only start wallet sync if user is logged in
   // Wallet restoration should not proceed until user is authenticated
   useLaunchWalletAfterSyncing({
     isGlobalSyncPaused: isGlobalSyncPaused && isLoggedIn,
     walletId: isLoggedIn ? walletId : null,
     shouldNavigateAfterSync,
-    walletNavigation: {
-      resetToWalletSelection: walletNavigation.resetToWalletSelection,
-      resetToTxHistory: walletNavigation.resetToTxHistory,
-    },
+    walletNavigation: memoizedWalletNavigation,
   })
 
   // If user is not logged in, show message and wait for login
