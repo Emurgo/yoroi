@@ -1,7 +1,7 @@
 import {RawUtxo} from '@yoroi/api'
 import {createSendTxFromWallet} from '@yoroi/cardano-wallet'
 import {Amounts, Quantities, asQuantity} from '@yoroi/cardano-wallet'
-import {useCollateralInfo} from '@yoroi/cardano-wallet'
+import {useCollateralInfo} from '@yoroi/wallet-manager'
 import {useSetCollateralId} from '@yoroi/cardano-wallet'
 import {collateralConfig, utxosMaker} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'

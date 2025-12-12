@@ -1,4 +1,4 @@
-import {useCollateralInfo} from '@yoroi/cardano-wallet'
+import {useCollateralInfo} from '@yoroi/wallet-manager'
 import {amountFormatter} from '@yoroi/portfolio'
 import {useWalletManager} from '@yoroi/wallet-manager'
 
