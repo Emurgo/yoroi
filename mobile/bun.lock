@@ -9,8 +9,8 @@
         "@emurgo/cardano-serialization-lib-browser": "14.1.2",
         "@emurgo/cip14-js": "3.0.1",
         "@emurgo/cip4-js": "1.0.7",
-        "@emurgo/cross-csl-core": "9.0.0-beta.1",
-        "@emurgo/cross-csl-mobile": "9.0.0-beta.1",
+        "@emurgo/cross-csl-core": "9.0.0-beta.2",
+        "@emurgo/cross-csl-mobile": "9.0.0-beta.2",
         "@emurgo/cross-msl-core": "3.0.0-beta.1",
         "@emurgo/cross-msl-mobile": "3.0.0-beta.1",
         "@emurgo/csl-mobile-bridge-jsi": "2.0.0-alpha.12",
@@ -123,7 +123,7 @@
         "@babel/core": "7.26.0",
         "@babel/plugin-transform-export-namespace-from": "7.27.1",
         "@emurgo/cardano-serialization-lib-nodejs": "14.1.2",
-        "@emurgo/cross-csl-nodejs": "9.0.0-beta.1",
+        "@emurgo/cross-csl-nodejs": "9.0.0-beta.2",
         "@emurgo/cross-msl-nodejs": "3.0.0-beta.1",
         "@expo/config-plugins": "54.0.2",
         "@formatjs/cli": "6.7.1",
@@ -380,15 +380,17 @@
 
     "@emurgo/cardano-serialization-lib-nodejs": ["@emurgo/cardano-serialization-lib-nodejs@14.1.2", "", {}, "sha512-g8sxCEaQXqRt4A3zmhebuo+pMucVDs/4FlkUD+J+awJCJMAkK7eCFBEb09d8+jREec687D5fY+FG9NemExSQhQ=="],
 
+    "@emurgo/cardano-serialization-lib-nodejs-gc": ["@emurgo/cardano-serialization-lib-nodejs-gc@15.0.3", "", {}, "sha512-gGOpxKaP7FtytOUmhisQ3Gdpxxaes7Qqc/OnVqddU9SOJsrVqX9eEzvu1HmpOoF2MVmyTn7ehWY7OP3hc1/UGA=="],
+
     "@emurgo/cip14-js": ["@emurgo/cip14-js@3.0.1", "", { "dependencies": { "bech32": "2.0.0", "blake2b": "2.1.3" } }, "sha512-u0XobeajNSlmeGBmY3ntA+NE/Vns7hKP0xrFzWyAO7YubETOifTjUddJN4gpvXE4S08DPUcNBVe3sx1m5GPIOg=="],
 
     "@emurgo/cip4-js": ["@emurgo/cip4-js@1.0.7", "", { "dependencies": { "blake2b": "2.1.3", "buffer-crc32": "0.2.13", "fnv-plus": "1.3.1" } }, "sha512-ovhXMm1xyiq4EQf6LTbZ8I+ZmGTNYPBJ/JP5dOnnEAZEgSmXcpoDTOvp9Fp5SktzyI7nSrsmoDK9Cjq961Qo3Q=="],
 
-    "@emurgo/cross-csl-core": ["@emurgo/cross-csl-core@9.0.0-beta.1", "", {}, "sha512-Vr60ZYmYx1ePaaew4CkyeSNZ+HG/RfHc7rLK8l0lP336A/bj6wK/A+qXR5FJB64m3URzomL5C82X86KYSqe1ug=="],
+    "@emurgo/cross-csl-core": ["@emurgo/cross-csl-core@9.0.0-beta.2", "", {}, "sha512-JSp0nhufBSaCT5mWGkznaEbwIO/kw5N1UCyiC2CzJ9cjsN86IxGrQj+sSN3v6u9MukimQvJZl110S4v1iHWDUw=="],
 
-    "@emurgo/cross-csl-mobile": ["@emurgo/cross-csl-mobile@9.0.0-beta.1", "", { "dependencies": { "@emurgo/cross-csl-core": "9.0.0-beta.1" }, "peerDependencies": { "@emurgo/csl-mobile-bridge-jsi": "2.0.0-alpha.4" } }, "sha512-yG6+Kv5P7HSAuBcg4pqPgQe4lQrY75UWaXllAdoYV8Dr+9gwqHLJUvSGk9BMmNpI3mKEU0qKoL6aTZjkXDgHWg=="],
+    "@emurgo/cross-csl-mobile": ["@emurgo/cross-csl-mobile@9.0.0-beta.2", "", { "dependencies": { "@emurgo/cross-csl-core": "9.0.0-beta.2" }, "peerDependencies": { "@emurgo/csl-mobile-bridge-jsi": "2.0.0-alpha.4" } }, "sha512-Wo/0mY+Jpvg94Izvcso61kSkWdnWMMym5T2+kpkgFujuIw9flXAbKxgMjE81ka8+WRywYUw3bAT0B9KLwYOA3Q=="],
 
-    "@emurgo/cross-csl-nodejs": ["@emurgo/cross-csl-nodejs@9.0.0-beta.1", "", { "dependencies": { "@emurgo/cardano-serialization-lib-nodejs": "15.0.3", "@emurgo/cross-csl-core": "9.0.0-beta.1" } }, "sha512-AwKnChaqdBL32X2xDNQ+hTStEeN40kC52xASM2B8sG92VSlFro1wr3qphNv3LDtM13vscOPxH3uZ0O4WFHDaHw=="],
+    "@emurgo/cross-csl-nodejs": ["@emurgo/cross-csl-nodejs@9.0.0-beta.2", "", { "dependencies": { "@emurgo/cardano-serialization-lib-nodejs-gc": "15.0.3", "@emurgo/cross-csl-core": "9.0.0-beta.2" } }, "sha512-IDXDV/qUHoOZMVOh7mjcR5WO9/Om0wcw3OU9NdHFm66RJE2HpXuI11N3G2GTim3cHcLdarzvOwwzSSeI88G8ig=="],
 
     "@emurgo/cross-msl-core": ["@emurgo/cross-msl-core@3.0.0-beta.1", "", {}, "sha512-hWOJDVcl0XmjsN8Wv+wT5kJzIKb9TZ6btRQOFKaU5DgKjrDVyu55awILIsxR9hdSguNg18c0HHTUZT13gEtDSA=="],
 
@@ -2659,8 +2661,6 @@
     "@cardano-foundation/ledgerjs-hw-app-cardano/int64-buffer": ["int64-buffer@1.1.0", "", {}, "sha512-94smTCQOvigN4d/2R/YDjz8YVG0Sufvv2aAh8P5m42gwhCsDAJqnbNOrxJsrADuAFAA69Q/ptGzxvNcNuIJcvw=="],
 
     "@emurgo/cip14-js/bech32": ["bech32@2.0.0", "", {}, "sha512-LcknSilhIGatDAsY1ak2I8VtGaHNhgMSYVxFrGLXv+xLHytaKZKcaUJJUE7qmBr7h33o5YQwP55pMI0xmkpJwg=="],
-
-    "@emurgo/cross-csl-nodejs/@emurgo/cardano-serialization-lib-nodejs": ["@emurgo/cardano-serialization-lib-nodejs@15.0.3", "", {}, "sha512-CZkAF7P3Ip3gUCAa6v93DLKp9hGqsfE6F/b3Qrqvym7rEJKi3j+dDk/OPxtmynWWGHhqXL85vzFOOwVduhLAjA=="],
 
     "@eslint/eslintrc/ajv": ["ajv@6.12.6", "", { "dependencies": { "fast-deep-equal": "^3.1.1", "fast-json-stable-stringify": "^2.0.0", "json-schema-traverse": "^0.4.1", "uri-js": "^4.2.2" } }, "sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g=="],
 
