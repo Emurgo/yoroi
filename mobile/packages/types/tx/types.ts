@@ -75,6 +75,3 @@ export type TransactionMetadata = {
   label: string
   data: MetadataDataValue
 }
-
-// Re-export as TxMetadata for backward compatibility
-export type {TransactionMetadata as TxMetadata}

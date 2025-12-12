@@ -6,7 +6,7 @@ import {
   DatumCbor,
   DatumHash,
   TokenId,
-  TxMetadata,
+  TransactionMetadata,
 } from '@yoroi/types'
 
 // Transaction types
@@ -122,11 +122,11 @@ export type TokenEntry = {
 }
 
 export type TxOptions = {
-  metadata?: ReadonlyArray<TxMetadata>
+  metadata?: ReadonlyArray<TransactionMetadata>
 }
 
 // Re-export from @yoroi/types for backward compatibility
-export type {MetadataDataValue, TxMetadata} from '@yoroi/types'
+export type {MetadataDataValue, TransactionMetadata} from '@yoroi/types'
 
 export type CardanoHaskellConfig = {
   keyDeposit: string
