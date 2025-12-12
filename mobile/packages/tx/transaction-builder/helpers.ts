@@ -342,8 +342,8 @@ export function selectUtxosForAmounts(
       minUtxoValue + adaPerToken * tokenMultiplier * BigInt(2) // 2x multiplier for safety
   }
 
-  // Calculate required ADA including proper change output minimum
-  const requiredAda =
+  // Calculate base required ADA (outputs + fee + buffer) - min UTXO calculated separately
+  const baseRequiredAda =
     (Object.keys(requiredAmounts) as Array<TokenId>).reduce((sum, tokenId) => {
       const tokenIdStr = typeof tokenId === 'string' ? tokenId : tokenId
       if (tokenIdStr === primaryTokenIdStr) {
@@ -354,11 +354,14 @@ export function selectUtxosForAmounts(
       return sum
     }, BigInt(0)) +
     BigInt(feeStr) +
-    estimatedMinUtxoForChange +
     feeBuffer
 
+  // Calculate required ADA including proper change output minimum
+  let requiredAda = baseRequiredAda + estimatedMinUtxoForChange
+
   // If we need more ADA, select from remaining UTXOs
-  // Prefer pure ADA UTXOs when tokens will be in change to ensure enough ADA
+  // Prefer pure ADA UTXOs to avoid adding unexpected tokens to change output
+  // This prevents underestimating minimum UTXO when non-required tokens end up in change
   let needsMoreAda = selectedAda < requiredAda
   if (needsMoreAda) {
     const pureAdaUtxos = filterPureAdaUtxos(utxosWithoutTokens, primaryTokenId)
@@ -366,17 +369,52 @@ export function selectUtxosForAmounts(
       (u) => !pureAdaUtxos.includes(u),
     )
 
-    // When tokens will be in change, prefer pure ADA UTXOs first
-    // This ensures we have enough ADA for the token-containing change output
-    const sortedRemaining =
-      tokenCountInChange > 0
-        ? [
-            ...sortUtxosByAda(pureAdaUtxos, primaryTokenId),
-            ...sortUtxosByAda(otherUtxos, primaryTokenId),
-          ]
-        : sortUtxosByAda(utxosWithoutTokens, primaryTokenId)
+    // Always prefer pure ADA UTXOs first to avoid adding tokens to change
+    // This ensures minimum UTXO estimate remains accurate
+    const sortedRemaining = [
+      ...sortUtxosByAda(pureAdaUtxos, primaryTokenId),
+      ...sortUtxosByAda(otherUtxos, primaryTokenId),
+    ]
+
+    // Track tokens being added and update minimum UTXO estimate dynamically
+    let currentTokensInChange = {...tokensInChange}
+    let currentEstimatedMinUtxo = estimatedMinUtxoForChange
+    const adaPerToken = BigInt('100000') // 0.1 ADA per token
 
     for (const utxo of sortedRemaining) {
+      // Check if this UTXO adds any tokens to change
+      const utxoTokenIds = (Object.keys(utxo.balance) as Array<TokenId>).filter(
+        (id) => {
+          const idStr = typeof id === 'string' ? id : id
+          return idStr !== primaryTokenIdStr
+        },
+      )
+
+      // Update tokens in change if UTXO contains non-required tokens
+      if (utxoTokenIds.length > 0) {
+        for (const tokenId of utxoTokenIds) {
+          const tokenIdStr = typeof tokenId === 'string' ? tokenId : tokenId
+          const tokenAmount = BigInt(utxo.balance[tokenId] || '0')
+          if (tokenAmount > BigInt(0)) {
+            // This token will be added to change (not required, so goes to change)
+            if (!currentTokensInChange[tokenIdStr]) {
+              currentTokensInChange[tokenIdStr] = BigInt(0)
+            }
+            currentTokensInChange[tokenIdStr] += tokenAmount
+          }
+        }
+
+        // Recalculate minimum UTXO estimate based on updated token count
+        const newTokenCount = Object.keys(currentTokensInChange).length
+        if (newTokenCount > 0) {
+          const tokenMultiplier = BigInt(newTokenCount)
+          currentEstimatedMinUtxo =
+            minUtxoValue + adaPerToken * tokenMultiplier * BigInt(2)
+          // Update required ADA with new minimum UTXO estimate
+          requiredAda = baseRequiredAda + currentEstimatedMinUtxo
+        }
+      }
+
       if (selectedAda >= requiredAda) break
       selected.push(utxo)
       selectedAda += BigInt(utxo.balance[primaryTokenIdStr] || '0')
