@@ -3,6 +3,7 @@ import {Branded, Chain} from '@yoroi/types'
 
 import {UseQueryOptions, useQuery} from '@tanstack/react-query'
 
+// @ts-expect-error - App-specific import, not available in package context
 import {persistPrefixKeyword} from '~/kernel/connection/ConnectionProvider'
 
 import {useSelectedNetwork} from './useSelectedNetwork'

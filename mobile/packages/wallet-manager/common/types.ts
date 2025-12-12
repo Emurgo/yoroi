@@ -10,6 +10,7 @@ import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 
 // TODO: KeychainManager should be injected, not imported from kernel
 // For now, keeping the import but it should come from dependencies
+// @ts-expect-error - App-specific import, not available in package context
 import {KeychainManager} from '~/kernel/storage/Keychain'
 
 export type NetworkTokenManagers = Readonly<

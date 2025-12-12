@@ -5,7 +5,8 @@
     "**/*.mock.ts",
     "**/mocks/**",
     "**/__tests__/**",
-    "**/__fixtures__/**"
+    "**/__fixtures__/**",
+    "src/wallet.mock.ts"
   ],
   "compilerOptions": {
     "declaration": true,
