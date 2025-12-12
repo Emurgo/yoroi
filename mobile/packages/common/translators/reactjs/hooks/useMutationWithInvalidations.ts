@@ -1,5 +1,4 @@
 import {
-  MutationFunctionContext,
   QueryKey,
   UseMutationOptions,
   useMutation,
@@ -13,6 +12,8 @@ export const useMutationWithInvalidations = <
   TContext = unknown,
 >({
   invalidateQueries,
+  onMutate: userOnMutate,
+  onSuccess: userOnSuccess,
   ...options
 }: UseMutationOptions<TData, TError, TVariables, TContext> & {
   invalidateQueries?: Array<QueryKey>
@@ -21,26 +22,28 @@ export const useMutationWithInvalidations = <
 
   return useMutation<TData, TError, TVariables, TContext>({
     ...options,
-    onMutate: async (
-      variables: TVariables,
-      context: MutationFunctionContext,
-    ) => {
+    onMutate: async (variables: TVariables) => {
       invalidateQueries?.forEach((key) =>
         queryClient.cancelQueries({queryKey: key}),
       )
-      const userContext = await options?.onMutate?.(variables, context)
+      // In react-query v5, onMutate only receives variables parameter
+      const userContext = await (
+        userOnMutate as
+          | ((variables: TVariables) => Promise<TContext> | TContext)
+          | undefined
+      )?.(variables)
       return (userContext ?? undefined) as TContext
     },
-    onSuccess: (
-      data: TData,
-      variables: TVariables,
-      context: TContext,
-      mutation: MutationFunctionContext,
-    ) => {
+    onSuccess: (data: TData, variables: TVariables, context: TContext) => {
       invalidateQueries?.forEach((key) =>
         queryClient.invalidateQueries({queryKey: key}),
       )
-      options?.onSuccess?.(data, variables, context, mutation)
+      // In react-query v5, onSuccess receives (data, variables, context) - 3 parameters
+      ;(
+        userOnSuccess as
+          | ((data: TData, variables: TVariables, context: TContext) => void)
+          | undefined
+      )?.(data, variables, context)
     },
   })
 }

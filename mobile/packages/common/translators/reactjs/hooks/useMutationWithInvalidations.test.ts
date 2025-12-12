@@ -71,7 +71,8 @@ describe('useMutationWithInvalidations', () => {
 
     await waitFor(() => {
       expect(onMutate).toHaveBeenCalled()
-      expect(onMutate).toHaveBeenCalledWith('test', expect.anything())
+      // In react-query v5, onMutate only receives variables parameter
+      expect(onMutate).toHaveBeenCalledWith('test')
     })
   })
 
@@ -93,12 +94,8 @@ describe('useMutationWithInvalidations', () => {
 
     await waitFor(() => {
       expect(onSuccess).toHaveBeenCalled()
-      expect(onSuccess).toHaveBeenCalledWith(
-        'success',
-        undefined,
-        undefined,
-        expect.anything(),
-      )
+      // In react-query v5, onSuccess receives (data, variables, context) - 3 parameters
+      expect(onSuccess).toHaveBeenCalledWith('success', undefined, undefined)
     })
   })
 
