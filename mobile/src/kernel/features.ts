@@ -1,5 +1,3 @@
-import {isDev} from './constants'
-
 export const features = {
   useTestnet: false,
   prefillWalletInfo: false,
@@ -10,7 +8,6 @@ export const features = {
   portfolioExport: false,
   walletListAggregatedBalance: false,
   swapTokenLinks: true,
-  utxoConsolidation: isDev,
   pushNotifications: true,
 }
 

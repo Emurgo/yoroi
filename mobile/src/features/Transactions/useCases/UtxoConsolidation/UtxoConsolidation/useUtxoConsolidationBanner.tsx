@@ -9,7 +9,6 @@ import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {BannerIds, showBanner} from '~/features/Notifications/common/banners'
 import {useUtxoList} from '~/features/Transactions/useCases/UtxoList/useUtxoList'
-import {features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 
 export const useUtxoConsolidationBanner = () => {
@@ -27,7 +26,7 @@ export const useUtxoConsolidationBanner = () => {
   useQuery({
     queryKey: ['utxoConsolidationBanner', wallet?.id, network],
     staleTime: time.fiveMinutes,
-    enabled: !isLoading && features.utxoConsolidation,
+    enabled: !isLoading,
     queryFn: async () => {
       if (isConsolidationNeeded) {
         if (network === Chain.Network.Mainnet) {

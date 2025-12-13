@@ -116,6 +116,8 @@ export const parseCardanoLink = (codeContent: string): Links.CardanoAction => {
   // Handle drep authority (DRep delegation)
   if (authority === 'drep') {
     const {drep} = parsedCardanoLink.params
+    // DRep ID from deeplink can be bech32 format (drep1...), not just hex
+    // asDRepId will warn if not hex but still cast it - parsing happens later
     return freeze({
       action: 'delegate-drep',
       drep: Branded.asDRepId(drep as string),

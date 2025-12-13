@@ -24,17 +24,23 @@ export const useHasRedeemableThaws = () => {
 
       // Also check if any thaw has started but isn't confirmed yet
       // (in case backend hasn't updated status yet)
+      // Exclude failed and skipped thaws - they cannot be redeemed
       return allocation.schedule.thaws.some((thaw) => {
+        const thawStatus = thaw.status
+        // Skip failed and skipped thaws - they cannot be redeemed
+        if (thawStatus === 'failed' || thawStatus === 'skipped') {
+          return false
+        }
+
         const thawDate = new Date(thaw.thawing_period_start.replace(/\s/g, ''))
         const hasStarted = thawDate <= now
-        const isRedeemable = thaw.status === 'redeemable'
+        const isRedeemable = thawStatus === 'redeemable'
         const isPendingRedeemable =
-          thaw.status === 'upcoming' || thaw.status === 'queued'
+          thawStatus === 'upcoming' || thawStatus === 'queued'
         const isNotRedeemed =
-          thaw.status !== 'confirmed' &&
-          thaw.status !== 'confirming' &&
-          thaw.status !== 'submitted' &&
-          thaw.status !== 'failed'
+          thawStatus !== 'confirmed' &&
+          thawStatus !== 'confirming' &&
+          thawStatus !== 'submitted'
 
         return (
           isRedeemable || (hasStarted && isPendingRedeemable && isNotRedeemed)

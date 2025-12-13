@@ -38,16 +38,16 @@ export const HomeScreen = () => {
   const routeParams = route.params as {drepId?: string} | undefined
   const navigateTo = useNavigateTo()
   const {isLoading, pendingAction, confirmedAction} = useHomeScreen()
-
   // Track if we've already navigated to prevent infinite loops
   const hasNavigatedRef = React.useRef<string | undefined>(undefined)
 
-  // If user is already participating and we have a drepId from route params,
+  // If user is already participating (either pending or confirmed) and we have a drepId from route params,
   // navigate to changeVote screen to handle the DRep change
   React.useEffect(() => {
     const drepId = routeParams?.drepId
+
     if (
-      confirmedAction !== null &&
+      (pendingAction !== null || confirmedAction !== null) &&
       drepId &&
       hasNavigatedRef.current !== drepId
     ) {
@@ -61,7 +61,7 @@ export const HomeScreen = () => {
       }
     }
     return undefined
-  }, [confirmedAction, routeParams?.drepId, navigateTo])
+  }, [pendingAction, confirmedAction, routeParams?.drepId, navigateTo])
 
   if (isLoading) return null
 

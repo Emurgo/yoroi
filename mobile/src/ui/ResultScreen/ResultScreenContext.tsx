@@ -55,6 +55,23 @@ const getDefaultConfig = (
       case 'delegate':
       case 'withdraw':
       case 'utxo-consolidation':
+        return {
+          defaultTitle: strings.txReview.failedTxTitle,
+          defaultMessage: strings.txReview.failedTxText,
+          defaultPrimaryAction: {
+            title: strings.txReview.failedTxButton,
+            onPress: navigation.resetToTxHistory,
+          },
+        }
+      case 'airdrop':
+        return {
+          defaultTitle: strings.airdrop.redeemError,
+          defaultMessage: strings.txReview.failedTxText,
+          defaultPrimaryAction: {
+            title: strings.txReview.failedTxButton,
+            onPress: navigation.resetToTxHistory,
+          },
+        }
       default:
         return {
           defaultTitle: strings.txReview.failedTxTitle,
