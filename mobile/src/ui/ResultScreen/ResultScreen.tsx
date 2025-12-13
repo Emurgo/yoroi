@@ -1,8 +1,10 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
+import {useStrings} from '~/kernel/i18n/useStrings'
 import {useUnsafeParams} from '~/kernel/navigation/hooks/useUnsafeParams'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {FailedTxIcon} from '~/ui/FailedTxIcon/FailedTxIcon'
@@ -15,6 +17,8 @@ import {ResultScreenParams} from './types'
 
 export const ResultScreen = (props?: ResultScreenParams) => {
   const {palette: p, atoms: ta} = useTheme()
+  const strings = useStrings()
+  const navigation = useNavigation()
   const navParamsRaw = useUnsafeParams<
     ResultScreenParams | {route?: {params?: ResultScreenParams}}
   >()
@@ -48,6 +52,18 @@ export const ResultScreen = (props?: ResultScreenParams) => {
   const defaultsForType = useResultScreenDefaults(context, type)
   const title = params.title ?? defaultsForType.defaultTitle
   const message = params.message ?? defaultsForType.defaultMessage
+
+  // Set navigation header title - use concise title for navigation, detailed message stays in content
+  // For error screens, use a short generic title; for success, use context-appropriate title
+  React.useEffect(() => {
+    const navigationTitle =
+      type === 'error'
+        ? strings.txReview.failedTxTitle // Concise title for navigation header
+        : title // Use full title for success screens
+    navigation.setOptions({
+      title: navigationTitle,
+    })
+  }, [navigation, type, title, strings.txReview.failedTxTitle])
   const icon = params.icon ?? defaultsForType.defaultIcon
   const primaryAction =
     params.primaryAction ?? defaultsForType.defaultPrimaryAction

@@ -5,7 +5,6 @@ import {FlashList} from '@shopify/flash-list'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Space} from '~/ui/Space/Space'
 
@@ -33,10 +32,7 @@ export const UtxoList = () => {
 
   const ListHeaderComponent = React.useMemo(
     () =>
-      features.utxoConsolidation &&
-      utxoList &&
-      utxoList.length > 1 &&
-      isSingle ? (
+      utxoList && utxoList.length > 1 && isSingle ? (
         <>
           <WarningSingleAddress />
 

@@ -1199,6 +1199,7 @@
   "airdrop.status.failed": "Failed",
   "airdrop.status.queued": "Queued",
   "airdrop.status.skipped": "Skipped",
+  "airdrop.tryAgain": "Try Again",
   "airdrop.enterPassword": "Enter your password to sign the redemption transaction",
   "airdrop.redeemSuccess": "Redemption transaction submitted successfully",
   "airdrop.redeemError": "Failed to redeem tokens",

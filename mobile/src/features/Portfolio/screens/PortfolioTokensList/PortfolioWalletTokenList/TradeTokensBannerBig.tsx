@@ -1,12 +1,11 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
-import {useNavigation} from '@react-navigation/native'
 import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
+import {useNavigateTo} from '~/features/Portfolio/common/hooks/useNavigateTo'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {TxHistoryRouteNavigation} from '~/kernel/navigation/types'
 import {Button} from '~/ui/Button/Button'
 import {Space} from '~/ui/Space/Space'
 
@@ -15,12 +14,10 @@ import {TradeTokensAsset} from '../../PortfolioDashboard/DashboardTokensList/Tra
 export const TradeTokensBannerBig = () => {
   const {palette: p, atoms: ta} = useTheme()
   const strings = useStrings()
+  const navigateTo = useNavigateTo()
 
-  const navigation = useNavigation<TxHistoryRouteNavigation>()
   const handleSwap = () => {
-    navigation.navigate('swap', {
-      screen: 'main',
-    })
+    navigateTo.resetTabAndSwapWithRemoteConfig()
   }
 
   return (
