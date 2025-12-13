@@ -1,14 +1,22 @@
 import {isEmptyString} from '@yoroi/cardano-wallet'
-import {Portfolio} from '@yoroi/types'
+import {Chain, Portfolio} from '@yoroi/types'
+import {useSelectedNetwork} from '@yoroi/wallet-manager'
 
 import {NavigationProp, useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 
+import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
+import {setPendingSwapToken} from '~/features/Notifications/common/tools'
+import {useSwap} from '~/features/Swap/common/useSwap'
 import {useParams} from '~/kernel/navigation/hooks/useParams'
 import {PortfolioRoutes} from '~/kernel/navigation/types'
 
 export const useNavigateTo = () => {
   const navigation = useNavigation<NavigationProp<PortfolioRoutes>>()
+  const swapForm = useSwap()
+  const {network} = useSelectedNetwork()
+  const {config} = useRemoteConfig()
+  const tokenOutId = config?.swap?.initialPair?.tokenOut
 
   return React.useRef({
     tokensList: () => navigation.navigate('portfolio-tokens-list'),
@@ -27,6 +35,31 @@ export const useNavigateTo = () => {
       navigation.navigate('history', {screen: 'send-start-tx'})
     },
     resetTabAndSwap: () => {
+      navigation.reset({index: 0, routes: [{name: 'dashboard-portfolio'}]})
+      navigation.navigate('history', {
+        screen: 'swap',
+        params: {
+          screen: 'main',
+        },
+      })
+    },
+    resetTabAndSwapWithRemoteConfig: async () => {
+      if (network === Chain.Network.Preprod) {
+        navigation.navigate('history', {
+          screen: 'swap',
+          params: {
+            screen: 'preprod-notice',
+          },
+        })
+        return
+      }
+
+      swapForm.action({type: 'ResetForm'})
+
+      if (tokenOutId) {
+        await setPendingSwapToken(tokenOutId)
+      }
+
       navigation.reset({index: 0, routes: [{name: 'dashboard-portfolio'}]})
       navigation.navigate('history', {
         screen: 'swap',
