@@ -31,27 +31,63 @@ export const useStakingUpdateModal = () => {
   const storage = useAsyncStorage()
   const queryClient = useQueryClient()
 
+  // Check cache first to avoid unnecessary storage reads
+  const cachedValue = queryClient.getQueryData<boolean>(QUERY_KEY)
+
   // Check if modal has been shown before (app-wide, not wallet-specific)
   // Use useQuery for proper caching and to prevent race conditions
   const hasBeenShownQuery = useQuery({
     queryKey: QUERY_KEY,
+    // If we already have the value in cache (especially if it's true), use it as initial data
+    // This prevents refetching when cache exists
+    initialData: cachedValue,
     queryFn: async () => {
       try {
-        // parseBoolean handles both cases: if it's already a boolean, return it; if it's a string, parse it
-        const storedValue = await storage.getItem(
+        // Read raw string from AsyncStorage to handle all possible formats
+        // Storage might contain: JSON string "true", plain string "true", or boolean true
+        const rawValue = await storage.getItem<string | null>(
           STAKING_UPDATE_MODAL_SHOWN_KEY,
+          (value) => value, // Get raw string from AsyncStorage
         )
 
-        return parseBoolean(storedValue) ?? false
+        // parseBoolean handles all formats:
+        // - If already boolean: returns it directly
+        // - If JSON string "true"/"false": parseSafe does JSON.parse, returns boolean
+        // - If plain string "true": parseSafe tries JSON.parse, fails, returns undefined
+        //   Then we check if rawValue === "true" as fallback
+        if (rawValue === null) {
+          return false
+        }
+
+        const parsed = parseBoolean(rawValue)
+        if (parsed !== undefined) {
+          return parsed
+        }
+
+        // Fallback: handle plain string "true"/"false" if JSON.parse failed
+        if (rawValue === 'true') {
+          return true
+        }
+        if (rawValue === 'false') {
+          return false
+        }
+
+        // Default to true (don't show) if value exists but can't be parsed
+        // Safer to assume modal was already shown rather than show it again
+        return true
       } catch (error) {
-        return false
+        // On error reading storage, default to true (don't show modal)
+        // Safer to assume modal was already shown rather than potentially show it multiple times
+        // This should only happen if storage is corrupted or inaccessible
+        return true
       }
     },
-    placeholderData: false,
+    placeholderData: true, // Default to true (don't show) while loading
     staleTime: Infinity, // Never refetch - once shown, always shown
     gcTime: Infinity, // Keep in cache forever
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    retry: false, // Don't retry on failure - if storage read fails, assume not shown
   })
 
   const setModalShown = useMutationWithInvalidations({
@@ -113,7 +149,12 @@ export const useStakingUpdateModal = () => {
       // Mark as triggered to prevent infinite loop
       hasTriggeredRef.current = true
 
-      // Mark as shown and update cache
+      // Update cache FIRST (synchronously) to prevent re-triggering on remount
+      // This ensures the modal won't show again even if storage write fails or component remounts
+      queryClient.setQueryData(QUERY_KEY, true)
+
+      // Write to storage asynchronously (fire and forget)
+      // If this fails, the cache update above still prevents re-showing
       setModalShown.mutate()
 
       openModal({
@@ -135,6 +176,7 @@ export const useStakingUpdateModal = () => {
     strings,
     modalHeight,
     setModalShown,
+    queryClient,
   ])
 
   return {isLoading: isLoadingStakingInfo || isLoadingConfig}

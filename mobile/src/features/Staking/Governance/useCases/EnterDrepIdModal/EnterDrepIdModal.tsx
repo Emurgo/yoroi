@@ -172,11 +172,19 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
 
     // If query is enabled but hasn't succeeded yet and isn't currently running, trigger it
     // Check isPending to see if query is waiting to start
-    if (queryEnabled && !isSuccess && !isFetching && !isPending) {
+    // Don't refetch if there's an error - user needs to fix input first
+    if (
+      queryEnabled &&
+      !isSuccess &&
+      !isFetching &&
+      !isPending &&
+      !isNonNullable(error)
+    ) {
       // Use a small delay to ensure React Query has processed the enabled state change
       const timer = setTimeout(() => {
         // Only refetch if still needed (query might have started automatically)
-        if (!isSuccess && !isFetching && !isPending) {
+        // Also check error again in case it was set during the delay
+        if (!isSuccess && !isFetching && !isPending && !isNonNullable(error)) {
           refetch().catch(() => {
             // Silently handle refetch errors
           })
@@ -194,6 +202,7 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
     isSuccess,
     isFetching,
     isPending,
+    error,
     refetch,
   ])
 
