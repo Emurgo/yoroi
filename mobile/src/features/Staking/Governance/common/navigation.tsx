@@ -66,16 +66,18 @@ export const useNavigateTo = () => {
     }
 
     return {
-      home: (params?: {drepId?: string}) =>
+      home: (params?: {drepId?: string}) => {
         navigation.navigate('governance', {
           screen: 'staking-gov-home',
           params,
-        }),
-      changeVote: (params?: {drepId?: string}) =>
+        })
+      },
+      changeVote: (params?: {drepId?: string}) => {
         navigation.navigate('governance', {
           screen: 'staking-gov-change-vote',
           params,
-        }),
+        })
+      },
       votingOptions: () =>
         navigation.navigate('governance', {
           screen: 'staking-gov-voting-options',

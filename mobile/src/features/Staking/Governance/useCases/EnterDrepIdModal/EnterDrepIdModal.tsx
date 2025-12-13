@@ -55,13 +55,8 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
   const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined)
   const showCardRef = React.useRef(showCard)
   const isInputFocusedRef = React.useRef(false)
-
-  // Update drepId when initialDrepId changes
-  React.useEffect(() => {
-    if (initialDrepId !== undefined && initialDrepId !== null) {
-      setDrepId(initialDrepId)
-    }
-  }, [initialDrepId])
+  // Track if we've already set initialDrepId to prevent overriding user input
+  const hasSetInitialDrepIdRef = React.useRef(false)
 
   React.useEffect(() => {
     return () => {
@@ -143,10 +138,64 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
     return trimmedDrepId
   }, [isHandle, drepInfo, trimmedDrepId])
 
-  const {error, isFetched, isFetching} = useIsValidDRepID(resolvedDrepId, {
+  const {
+    error,
+    isFetching,
+    isSuccess,
+    isPending,
+    data: isValidDRep,
+    refetch,
+  } = useIsValidDRepID(resolvedDrepId, {
     retry: false,
     enabled: resolvedDrepId.length > 0 && !isResolvingHandle,
+    refetchOnMount: 'always',
   })
+
+  // Update drepId when initialDrepId changes (only once, not on every drepId change)
+  // Use handleDrepIdChange to ensure all side effects (card hiding, validation) are triggered
+  React.useEffect(() => {
+    if (
+      initialDrepId !== undefined &&
+      initialDrepId !== null &&
+      !hasSetInitialDrepIdRef.current
+    ) {
+      hasSetInitialDrepIdRef.current = true
+      // Use handleDrepIdChange instead of setDrepId directly to trigger all side effects
+      handleDrepIdChange(initialDrepId)
+    }
+  }, [initialDrepId, handleDrepIdChange])
+
+  // Ensure validation runs when resolvedDrepId changes (including when initialDrepId is set)
+  // React Query should automatically run when enabled becomes true, but we ensure it runs
+  React.useEffect(() => {
+    const queryEnabled = resolvedDrepId.length > 0 && !isResolvingHandle
+
+    // If query is enabled but hasn't succeeded yet and isn't currently running, trigger it
+    // Check isPending to see if query is waiting to start
+    if (queryEnabled && !isSuccess && !isFetching && !isPending) {
+      // Use a small delay to ensure React Query has processed the enabled state change
+      const timer = setTimeout(() => {
+        // Only refetch if still needed (query might have started automatically)
+        if (!isSuccess && !isFetching && !isPending) {
+          refetch().catch(() => {
+            // Silently handle refetch errors
+          })
+        }
+      }, 200)
+
+      return () => {
+        clearTimeout(timer)
+      }
+    }
+    return undefined
+  }, [
+    resolvedDrepId,
+    isResolvingHandle,
+    isSuccess,
+    isFetching,
+    isPending,
+    refetch,
+  ])
 
   const noDrepForHandle =
     isHandle &&
@@ -157,11 +206,20 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
     ? 'This ADA handle does not have a DRep associated with it'
     : handleResolutionError?.message || error?.message
   const isLoading = isResolvingHandle || isFetching
+
+  // Button is enabled when:
+  // - DRep ID is entered
+  // - Not currently loading/resolving
+  // - Validation has succeeded (isSuccess && data === true)
+  // - No errors
+  // - If it's a handle, we have drepInfo
+  // Use isSuccess instead of isFetched because isSuccess is true when validation succeeds,
+  // while isFetched can be true even if validation failed
   const isSubmitDisabled =
-    isNonNullable(error) ||
     drepId.length === 0 ||
-    !isFetched ||
     isLoading ||
+    isNonNullable(error) ||
+    !(isSuccess && isValidDRep === true) ||
     (isHandle && drepInfo === null)
 
   const handleSubmit = () => {
