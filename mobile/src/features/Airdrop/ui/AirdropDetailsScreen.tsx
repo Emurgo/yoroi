@@ -72,18 +72,22 @@ const getCurrentThawIndex = (thaws: ReadonlyArray<Thaw>): number | null => {
 
   const now = new Date()
 
-  // First, try to find an active/redeemable thaw (started but not confirmed)
+  // First, try to find an active/redeemable thaw (started but not confirmed and not failed)
   for (let i = 0; i < thaws.length; i++) {
     const thaw = thaws[i]
     if (!thaw) continue
     const thawDate = new Date(thaw.thawing_period_start.replace(/\s/g, ''))
-    // Active thaw: started and not confirmed
-    if (thawDate <= now && thaw.status !== 'confirmed') {
+    // Active thaw: started and not confirmed and not failed
+    if (
+      thawDate <= now &&
+      thaw.status !== 'confirmed' &&
+      thaw.status !== 'failed'
+    ) {
       return i
     }
   }
 
-  // If no active thaw, find the first upcoming thaw (next one to start)
+  // If no active thaw, find the first upcoming thaw (next one to start, not failed)
   for (let i = 0; i < thaws.length; i++) {
     const thaw = thaws[i]
     if (!thaw) continue
@@ -293,7 +297,7 @@ export const AirdropDetailsScreen = () => {
         )
         resultNavigation.showResultScreen({
           type: 'error',
-          context: 'default',
+          context: 'airdrop',
           title: strings.airdrop.insufficientFunds,
           message: strings.airdrop.redeemError,
           primaryAction: {

@@ -144,7 +144,11 @@ export const airdropMessages = defineMessages({
   statusSkipped: {
     id: 'airdrop.status.skipped',
     defaultMessage: '!!!Skipped',
-  }, // Add these to the existing airdropMessages in airdrop.ts
+  },
+  tryAgain: {
+    id: 'airdrop.tryAgain',
+    defaultMessage: '!!!Try Again',
+  },
   destinationAddressTitle: {
     id: 'airdrop.destinationAddressTitle',
     defaultMessage: '!!!Destination address',

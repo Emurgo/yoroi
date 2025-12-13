@@ -354,6 +354,7 @@ export const useStrings = () => {
           queued: f(airdropMessages.statusQueued),
           skipped: f(airdropMessages.statusSkipped),
         },
+        tryAgain: f(airdropMessages.tryAgain),
       },
 
       // Portfolio strings
