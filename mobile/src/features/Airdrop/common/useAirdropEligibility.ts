@@ -41,6 +41,7 @@ export const useAirdropEligibility = () => {
       !!wallet &&
       !isByronWallet,
     staleTime: time.fiveMinutes,
+    retry: false,
     queryFn: async (): Promise<AddressAllocation[]> => {
       if (!wallet || !wallet.isMainnet) {
         return []
@@ -273,11 +274,25 @@ export const useAirdropEligibility = () => {
         cachedAllocationsCount: allocations.length,
       })
 
-      for (const address of addressesToCheck) {
+      // Helper function for rate limiting
+      const delay = (ms: number) =>
+        new Promise((resolve) => setTimeout(resolve, ms))
+
+      for (let i = 0; i < addressesToCheck.length; i++) {
+        const address = addressesToCheck[i]
+        if (!address) {
+          continue
+        }
+
         try {
           // Skip Byron addresses - they don't support airdrop
           if (isByronAddress(address)) {
             continue
+          }
+
+          // Add delay between API calls to avoid rate limiting (skip first call)
+          if (i > 0) {
+            await delay(200)
           }
 
           const schedule = await redemptionApi.getThawSchedule(address)
@@ -392,6 +407,32 @@ export const useAirdropEligibility = () => {
           }
         }
       }
+
+      // Sort allocations to maintain original order:
+      // 1. Wallet addresses first (in their original order)
+      // 2. External addresses next (in the order they were added)
+      allocations.sort((a, b) => {
+        // Both are external addresses - sort by their index in externalAddressesList
+        if (a.isExternal && b.isExternal) {
+          const indexA = externalAddressesList.indexOf(a.address)
+          const indexB = externalAddressesList.indexOf(b.address)
+          // If both found, sort by index; if not found, keep current order
+          if (indexA >= 0 && indexB >= 0) {
+            return indexA - indexB
+          }
+          return 0
+        }
+        // External addresses come after wallet addresses
+        if (a.isExternal && !b.isExternal) {
+          return 1
+        }
+        if (!a.isExternal && b.isExternal) {
+          return -1
+        }
+        // Both are wallet addresses - maintain original order
+        // (they were added in the order they appear in wallet.receiveAddresses())
+        return 0
+      })
 
       // Return allocations for all addresses we checked
       // Note: addresses cached as not-eligible were skipped entirely
