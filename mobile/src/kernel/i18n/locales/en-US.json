@@ -1955,5 +1955,7 @@
   "send.noAssetsAllocated": "No assets allocated yet",
   "send.availableToAllocate": "Available to allocate",
   "send.remaining": "Remaining",
-  "send.assets": "assets"
+  "send.assets": "assets",
+  "send.minimumUtxoErrorTitle": "Insufficient Amount",
+  "send.minimumUtxoErrorMessage": "Receiver {receiverNumber} ({address}) has {currentAmount} {ticker}, which is below the minimum UTXO value of {minAmount} {ticker}. Please allocate at least {minAmount} {ticker} to this recipient."
 }

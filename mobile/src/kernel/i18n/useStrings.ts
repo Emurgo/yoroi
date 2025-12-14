@@ -1099,6 +1099,14 @@ export const useStrings = () => {
         noAssetsAllocated: f(sendMessages.noAssetsAllocated),
         availableToAllocate: f(sendMessages.availableToAllocate),
         remaining: f(sendMessages.remaining),
+        minimumUtxoErrorTitle: f(sendMessages.minimumUtxoErrorTitle),
+        minimumUtxoErrorMessage: (params: {
+          receiverNumber: number
+          address: string
+          currentAmount: string
+          minAmount: string
+          ticker: string
+        }) => f(sendMessages.minimumUtxoErrorMessage, params),
       },
 
       // Global strings

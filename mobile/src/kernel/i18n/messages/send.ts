@@ -359,6 +359,15 @@ export const sendMessages = defineMessages({
     id: 'send.allocateAssetsDescription',
     defaultMessage: '!!!Distribute assets to {count} destination addresses',
   },
+  minimumUtxoErrorTitle: {
+    id: 'send.minimumUtxoErrorTitle',
+    defaultMessage: '!!!Insufficient Amount',
+  },
+  minimumUtxoErrorMessage: {
+    id: 'send.minimumUtxoErrorMessage',
+    defaultMessage:
+      '!!!Receiver {receiverNumber} ({address}) has {currentAmount} {ticker}, which is below the minimum UTXO value of {minAmount} {ticker}. Please allocate at least {minAmount} {ticker} to this recipient.',
+  },
   totalAssetsAvailable: {
     id: 'send.totalAssetsAvailable',
     defaultMessage: '!!!Total Assets Available',

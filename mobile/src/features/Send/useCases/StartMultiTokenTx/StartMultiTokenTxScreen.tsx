@@ -75,6 +75,45 @@ export const StartMultiTokenTxScreen = () => {
   // Track which address input is currently active (being edited)
   const [activeInputIndex, setActiveInputIndex] = React.useState(0)
 
+  // Restore validation state from existing targets when navigating back
+  // A target is valid if it has a resolved address (entry.address) or a valid direct address (receiver.resolve)
+  const previousTargetsLengthRef = React.useRef(targets.length)
+  React.useEffect(() => {
+    if (targets.length > 0) {
+      // Restore validations when:
+      // 1. Component mounts with existing targets (previousTargetsLengthRef is 0 but now we have targets)
+      // 2. Targets length changes (targets added/removed)
+      const targetsLengthChanged =
+        previousTargetsLengthRef.current !== targets.length
+      const hasNoValidations = addressValidations.size === 0
+
+      if (targetsLengthChanged || hasNoValidations) {
+        const restoredValidations = new Map<number, boolean>()
+        targets.forEach((target, index) => {
+          // Check if target has a valid address
+          const hasResolvedAddress = Boolean(
+            target.entry.address && target.entry.address.trim() !== '',
+          )
+          // Type guard: check if receiver.as is 'domain'
+          const receiverAs = target.receiver.as as 'domain' | 'address'
+          const isDomain = receiverAs === 'domain'
+          const hasDirectAddress = Boolean(
+            !isDomain &&
+              target.receiver.resolve &&
+              target.receiver.resolve.trim() !== '',
+          )
+          const isValid = hasResolvedAddress || hasDirectAddress
+          restoredValidations.set(index, isValid)
+        })
+        setAddressValidations(restoredValidations)
+        previousTargetsLengthRef.current = targets.length
+      }
+    } else {
+      previousTargetsLengthRef.current = 0
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [targets.length]) // Only depend on targets.length to avoid infinite loops
+
   // Initialize first target as selected on mount (only once)
   // Use a ref to ensure this only runs once, even if component re-renders
   const hasInitializedRef = React.useRef(false)
@@ -111,26 +150,61 @@ export const StartMultiTokenTxScreen = () => {
     selectedInputWalletIds.length > 0
 
   const handleOnNext = async () => {
-    // Save favorites for all addresses
-    for (const target of targets) {
-      const domainInput = target?.receiver.resolve?.trim()
-      if (domainInput && addressValidations.get(targets.indexOf(target))) {
-        if (isResolvableDomain(domainInput) && !isCnsDomain(domainInput)) {
-          try {
-            const policyId = wallet.isMainnet
-              ? handleApiConfig.mainnet.policyId
-              : handleApiConfig.preprod.policyId
-            const normalizedDomain =
-              domainNormalizer(policyId, domainInput) || domainInput
-            await favoriteContactsStorage.addFavorite(normalizedDomain, false)
-          } catch {
-            // Silently fail
+    // Save favorites for valid addresses before removing invalid ones
+    for (let i = 0; i < targets.length; i++) {
+      const target = targets[i]
+      const isValid = addressValidations.get(i) === true
+      if (target && isValid) {
+        const domainInput = target?.receiver.resolve?.trim()
+        if (domainInput) {
+          if (isResolvableDomain(domainInput) && !isCnsDomain(domainInput)) {
+            try {
+              const policyId = wallet.isMainnet
+                ? handleApiConfig.mainnet.policyId
+                : handleApiConfig.preprod.policyId
+              const normalizedDomain =
+                domainNormalizer(policyId, domainInput) || domainInput
+              await favoriteContactsStorage.addFavorite(normalizedDomain, false)
+            } catch {
+              // Silently fail
+            }
           }
         }
       }
     }
 
+    // Remove invalid addresses before proceeding
+    // Iterate in reverse order to avoid index shifting issues
+    const invalidIndices: number[] = []
+    for (let i = targets.length - 1; i >= 0; i--) {
+      const isValid = addressValidations.get(i) === true
+      if (!isValid) {
+        invalidIndices.push(i)
+      }
+    }
+
+    // Calculate how many valid targets we'll have after removal
+    const validTargetCount = targets.length - invalidIndices.length
+
+    // Remove invalid targets
+    // Note: targetRemoved updates the targets array synchronously, so after all removals,
+    // targets will only contain valid addresses
+    for (const index of invalidIndices) {
+      targetRemoved(index)
+    }
+
+    // Update addressValidations map - after removals, all remaining targets are valid
+    // Rebuild the map to have entries 0..(validTargetCount-1) all set to true
+    setAddressValidations(() => {
+      const updated = new Map<number, boolean>()
+      for (let i = 0; i < validTargetCount; i++) {
+        updated.set(i, true)
+      }
+      return updated
+    })
+
     // Navigate based on number of input wallets
+    // After removals, targets array will only contain valid addresses
     const hasMultipleInputWallets = selectedInputWalletIds.length > 1
 
     if (hasMultipleInputWallets) {
@@ -138,6 +212,7 @@ export const StartMultiTokenTxScreen = () => {
       navigateTo.selectedTokens()
     } else {
       // Single wallet: go directly to asset selection
+      // targets[0] will be valid since invalid ones were removed
       const amounts = targets[0]?.entry.amounts
       const shouldOpenAddToken = !amounts || Object.keys(amounts).length === 0
       if (shouldOpenAddToken) {
@@ -201,6 +276,7 @@ export const StartMultiTokenTxScreen = () => {
       selectedWalletIds: Array.from(selectedInputWalletIds),
       excludeWalletIds: [],
       minSelection: 1,
+      requiredWalletId: wallet.id, // Prevent unselecting the current wallet
       filter: (walletMeta) => {
         // Only show wallets on the same network
         const otherWallet = walletManager.getWalletById(walletMeta.id)
@@ -415,7 +491,6 @@ const SelectInputWalletsButton = ({
       ]}
     >
       <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-        <Icon.MultiParty size={20} color={p.primary_600} />
         <Text style={[a.body_1_lg_medium, {color: p.primary_600}]}>
           {strings.send.selectInputWallets}
         </Text>
@@ -426,7 +501,11 @@ const SelectInputWalletsButton = ({
             ? strings.send.singleWallet
             : strings.send.multipleWallets(selectedCount)}
         </Text>
-        <Icon.Chevron direction="right" color={ta.el_gray_max.color} />
+        <Icon.Chevron
+          direction="right"
+          color={ta.el_gray_max.color}
+          size={20}
+        />
       </View>
     </TouchableOpacity>
   )

@@ -19,7 +19,6 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler'
 
 import {PendingActionBanner} from '~/features/Links/components/PendingActionBanner'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/context/ModalContext'
@@ -39,6 +38,8 @@ type Props = {
   filter?: (walletMeta: Wallet.Meta) => boolean
   // For single selection mode (e.g., multisig parent wallet selection)
   singleSelection?: boolean
+  // Wallet ID that cannot be unselected (e.g., the current/initiator wallet)
+  requiredWalletId?: string
 }
 
 export const SelectMultipleWalletsModal = ({
@@ -50,6 +51,7 @@ export const SelectMultipleWalletsModal = ({
   maxSelection,
   filter,
   singleSelection = false,
+  requiredWalletId,
 }: Props) => {
   const walletMetas = useWalletMetas()
   const {palette: p} = useTheme()
@@ -90,6 +92,10 @@ export const SelectMultipleWalletsModal = ({
         // Multiple selection: toggle
         const next = new Set(prev)
         if (next.has(walletMeta.id)) {
+          // Prevent unselecting the required wallet (e.g., current/initiator wallet)
+          if (requiredWalletId && walletMeta.id === requiredWalletId) {
+            return prev // Don't allow unselecting the required wallet
+          }
           next.delete(walletMeta.id)
         } else {
           // Check max selection limit
@@ -101,7 +107,7 @@ export const SelectMultipleWalletsModal = ({
         return next
       })
     },
-    [maxSelection, singleSelection],
+    [maxSelection, singleSelection, requiredWalletId],
   )
 
   const handleConfirm = React.useCallback(() => {
@@ -123,19 +129,21 @@ export const SelectMultipleWalletsModal = ({
     () =>
       availableWallets?.map((walletMeta) => {
         const isSelected = selectedWalletIds.has(walletMeta.id)
+        const isRequired = requiredWalletId === walletMeta.id
 
         return (
           <React.Fragment key={walletMeta.id}>
             <MultiSelectWalletItem
               walletMeta={walletMeta}
               isSelected={isSelected}
+              isRequired={isRequired}
               onToggle={handleToggleWallet}
             />
             <Space.Height.lg />
           </React.Fragment>
         )
       }),
-    [availableWallets, selectedWalletIds, handleToggleWallet],
+    [availableWallets, selectedWalletIds, handleToggleWallet, requiredWalletId],
   )
 
   // Expose footer props via context or callback
@@ -176,12 +184,14 @@ export const SelectMultipleWalletsModal = ({
 type MultiSelectWalletItemProps = {
   walletMeta: Wallet.Meta
   isSelected: boolean
+  isRequired?: boolean
   onToggle: (walletMeta: Wallet.Meta) => void
 }
 
 const MultiSelectWalletItem = ({
   walletMeta,
   isSelected,
+  isRequired = false,
   onToggle,
 }: MultiSelectWalletItemProps) => {
   const {palette: p, atoms: ta} = useTheme()
@@ -191,9 +201,12 @@ const MultiSelectWalletItem = ({
     return walletMeta.implementation
   }, [walletMeta.implementation])
 
+  const isDisabled = isRequired && isSelected
+
   return (
     <TouchableOpacity
-      onPress={() => onToggle(walletMeta)}
+      onPress={() => !isDisabled && onToggle(walletMeta)}
+      disabled={isDisabled}
       style={[
         a.flex_row,
         a.align_center,
@@ -203,6 +216,7 @@ const MultiSelectWalletItem = ({
         isSelected
           ? {borderColor: p.primary_600, backgroundColor: p.primary_100}
           : {borderColor: p.gray_200, backgroundColor: 'transparent'},
+        isDisabled && {opacity: 0.6},
       ]}
     >
       <Icon.WalletAvatar image={walletMeta.avatar} />
@@ -291,7 +305,6 @@ const SelectMultipleWalletsModalFooter = ({
   const strings = useStrings()
   const {markActionProcessed} = useLinks()
   const {closeModal} = useModal()
-  const walletNavigation = useWalletNavigation()
 
   const canConfirm = selectedCount >= minSelection
 
@@ -299,9 +312,6 @@ const SelectMultipleWalletsModalFooter = ({
     markActionProcessed()
     closeModal()
     onCancel?.()
-    if (!singleSelection) {
-      walletNavigation.resetToWalletSelection()
-    }
   }
 
   return (
@@ -347,6 +357,7 @@ export const useSelectMultipleWalletsModal = () => {
       filter,
       singleSelection = false,
       title,
+      requiredWalletId,
     }: {
       onSelect: (selectedWalletIds: ReadonlyArray<string>) => void
       onCancel?: () => void
@@ -357,6 +368,7 @@ export const useSelectMultipleWalletsModal = () => {
       filter?: (walletMeta: Wallet.Meta) => boolean
       singleSelection?: boolean
       title?: string
+      requiredWalletId?: string
     }) => {
       if (!walletManager) {
         throw new Error('WalletManager not available')
@@ -379,6 +391,7 @@ export const useSelectMultipleWalletsModal = () => {
             maxSelection={maxSelection}
             filter={filter}
             singleSelection={singleSelection}
+            requiredWalletId={requiredWalletId}
           />
         ),
         height: Math.min(windowHeight * 0.85, 700),

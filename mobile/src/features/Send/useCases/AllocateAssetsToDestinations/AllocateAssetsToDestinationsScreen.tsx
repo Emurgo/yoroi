@@ -7,7 +7,7 @@ import {atomicBreakdown, truncateString} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import {NotEnoughMoneyToSendError, TransactionOutput} from '@yoroi/tx'
-import {Address, Portfolio} from '@yoroi/types'
+import {Address, Branded, Portfolio} from '@yoroi/types'
 import {useSelectedWallet, useWalletManager} from '@yoroi/wallet-manager'
 
 import {useNavigation} from '@react-navigation/native'
@@ -292,6 +292,28 @@ export const AllocateAssetsToDestinationsScreen = () => {
         })
         return
       }
+
+      // Check for minimum UTXO error
+      if (
+        error.message.includes('less than the minimum UTXO') ||
+        error.message.includes('below the minimum UTXO')
+      ) {
+        logger.error('AllocateAssetsToDestinationsScreen: Minimum UTXO error', {
+          errorMessage: error.message,
+        })
+        resultNavigation.showResultScreen({
+          type: 'error',
+          context: 'send',
+          title: strings.send.failedTxTitle,
+          message: error.message,
+          primaryAction: {
+            title: strings.send.failedTxButton,
+            onPress: resetToStartTransfer,
+          },
+        })
+        return
+      }
+
       throw error
     },
     [resultNavigation, strings, resetToStartTransfer],
@@ -304,7 +326,92 @@ export const AllocateAssetsToDestinationsScreen = () => {
   })
 
   const handleOnNext = React.useCallback(() => {
-    // Build transaction entries from allocations
+    // Use a conservative minimum UTXO value (1.2 ADA = 1,200,000 lovelace)
+    // This is higher than the base 1 ADA to account for actual minimums that can be higher
+    // The actual minimum will be validated by the transaction builder
+    const minUtxoValue = BigInt('1200000') // 1.2 ADA as a safe minimum
+    const primaryTokenId = wallet.portfolioPrimaryTokenInfo.id
+    const primaryTokenInfo = wallet.portfolioPrimaryTokenInfo
+
+    // Validate allocations before building entries
+    for (let targetIndex = 0; targetIndex < targets.length; targetIndex++) {
+      const target = targets[targetIndex]
+      if (!target) continue
+
+      const targetAllocations = allocations.get(targetIndex) ?? new Map()
+      const amounts: Record<Portfolio.Token.Id, Portfolio.Token.Amount> = {}
+
+      targetAllocations.forEach((quantity, tokenId) => {
+        const asset = allAssets.find((a) => a.info.id === tokenId)
+        if (asset && quantity > BigInt(0)) {
+          amounts[tokenId] = {
+            info: asset.info,
+            quantity,
+          }
+        }
+      })
+
+      // Validate address - only use resolved address, never unresolved domains
+      const isDomain = target.receiver.as === 'domain'
+      const resolvedAddress =
+        target.entry.address && target.entry.address.trim() !== ''
+          ? target.entry.address
+          : null
+
+      // For domains, we MUST have a resolved address
+      if (isDomain && !resolvedAddress) {
+        throw new Error(
+          `Domain "${target.receiver.resolve}" failed to resolve for target at index ${targetIndex}`,
+        )
+      }
+
+      // For direct addresses, use entry.address if available, otherwise use receiver.resolve
+      const address =
+        resolvedAddress ??
+        (target.receiver.resolve && !isDomain ? target.receiver.resolve : null)
+
+      if (!address || address.trim() === '') {
+        throw new Error(`Invalid address for target at index ${targetIndex}`)
+      }
+
+      // Validate minimum UTXO before creating entry
+      const adaAmount = BigInt(
+        amounts[primaryTokenId]?.quantity ?? Branded.ZERO_QUANTITY,
+      )
+
+      // Check if output has enough ADA
+      if (adaAmount < minUtxoValue) {
+        const displayAddress = truncateString({value: address, maxLength: 20})
+        const formattedAdaAmount = atomicBreakdown(
+          adaAmount,
+          primaryTokenInfo.decimals,
+        ).str
+        const formattedMinUtxo = atomicBreakdown(
+          minUtxoValue,
+          primaryTokenInfo.decimals,
+        ).str
+
+        // Show modal with localized error message
+        openModal({
+          title: strings.send.minimumUtxoErrorTitle,
+          content: (
+            <MinimumUtxoErrorModal
+              receiverNumber={targetIndex + 1}
+              address={displayAddress}
+              currentAmount={formattedAdaAmount}
+              minAmount={formattedMinUtxo}
+              ticker={primaryTokenInfo.ticker}
+              onClose={closeModal}
+            />
+          ),
+          canDiscard: true,
+          height: 400,
+        })
+        return // Don't proceed with transaction
+      }
+    }
+
+    // Build transaction entries from allocations (all validations passed)
     const entries: TransactionOutput[] = targets.map((target, targetIndex) => {
       const targetAllocations = allocations.get(targetIndex) ?? new Map()
       const amounts: Record<Portfolio.Token.Id, Portfolio.Token.Amount> = {}
@@ -350,7 +457,16 @@ export const AllocateAssetsToDestinationsScreen = () => {
     })
 
     createUnsignedTx(entries)
-  }, [targets, allocations, allAssets, createUnsignedTx])
+  }, [
+    targets,
+    allocations,
+    allAssets,
+    createUnsignedTx,
+    wallet,
+    openModal,
+    closeModal,
+    strings,
+  ])
 
   // Check if all assets are allocated (optional - can proceed with partial allocation)
   const hasAllocations = React.useMemo(() => {
@@ -686,6 +802,53 @@ const EditAllocationContent = ({
             type={ButtonType.Primary}
             onPress={handleOnApply}
             disabled={!isValid}
+            title={strings.global.ok}
+          />
+        </View>
+      </Modal.Footer>
+    </Modal.Content>
+  )
+}
+
+type MinimumUtxoErrorModalProps = {
+  receiverNumber: number
+  address: string
+  currentAmount: string
+  minAmount: string
+  ticker: string
+  onClose: () => void
+}
+
+const MinimumUtxoErrorModal = ({
+  receiverNumber,
+  address,
+  currentAmount,
+  minAmount,
+  ticker,
+  onClose,
+}: MinimumUtxoErrorModalProps) => {
+  const strings = useStrings()
+  const {palette: p} = useTheme()
+
+  return (
+    <Modal.Content>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <Text style={[a.body_2_md_regular, {color: p.gray_600}, a.pb_lg]}>
+          {strings.send.minimumUtxoErrorMessage({
+            receiverNumber,
+            address,
+            currentAmount,
+            minAmount,
+            ticker,
+          })}
+        </Text>
+      </ScrollView>
+
+      <Modal.Footer>
+        <View style={[a.flex_row, a.gap_md, a.justify_end]}>
+          <Button
+            type={ButtonType.Primary}
+            onPress={onClose}
             title={strings.global.ok}
           />
         </View>
