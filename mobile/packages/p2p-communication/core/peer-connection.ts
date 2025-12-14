@@ -33,6 +33,7 @@ type PeerConnectionState = {
   readonly status: ConnectionStatus
   readonly connectedPeerId: string | null // Track which peer we're connected to
   readonly isInitiator: boolean // Track if we initiated this connection
+  readonly signalingConnected: boolean // Track signaling server connection status
 }
 
 /**
@@ -81,6 +82,7 @@ const createInitialState = (peerId: string): PeerConnectionState =>
     status: 'initializing',
     connectedPeerId: null,
     isInitiator: false,
+    signalingConnected: false,
   } as const)
 
 export const peerConnectionMaker = (
@@ -130,6 +132,12 @@ export const peerConnectionMaker = (
   }
 
   const setupDataChannel = (channel: RTCDataChannel): void => {
+    getLogger().log('Setting up data channel', {
+      origin: 'p2p-communication',
+      myPeerId: state.peerId,
+      channelLabel: channel.label,
+      channelId: channel.id,
+    })
     channel.onopen = () => {
       getLogger().log('Data channel opened', {origin: 'p2p-communication'})
       updateState({connection: channel})
@@ -137,6 +145,13 @@ export const peerConnectionMaker = (
     }
 
     channel.onmessage = (event) => {
+      getLogger().log('Data channel message received', {
+        origin: 'p2p-communication',
+        myPeerId: state.peerId,
+        connectedPeerId: state.connectedPeerId,
+        dataLength:
+          typeof event.data === 'string' ? event.data.length : 'unknown',
+      })
       try {
         const data = JSON.parse(event.data)
         notifyListeners('data', data)
@@ -255,33 +270,65 @@ export const peerConnectionMaker = (
 
         // Setup signaling if URL provided
         if (deps.config?.signalingUrl) {
+          const signalingUrl = deps.config.signalingUrl
           const signaling = signalingClientMaker({
-            signalingUrl: deps.config.signalingUrl,
+            signalingUrl,
             peerId: persistentId,
             onMessage: (message) => {
               handleSignalingMessage(message, peer)
             },
             onError: (error) => {
+              getLogger().warn('Signaling error', {
+                origin: 'p2p-communication',
+                peerId: persistentId,
+                error,
+                signalingUrl,
+              })
+              updateState({
+                signalingConnected: false,
+                status: 'error',
+                isInitializing: false,
+              })
               notifyListeners('error', error)
             },
             onOpen: () => {
               getLogger().log('Signaling connected', {
                 origin: 'p2p-communication',
+                peerId: persistentId,
+                signalingUrl: deps.config?.signalingUrl || 'default',
               })
-              updateState({signaling})
+              updateState({
+                signaling,
+                signalingConnected: true,
+                status: 'ready',
+              })
             },
             onClose: () => {
               getLogger().log('Signaling disconnected', {
                 origin: 'p2p-communication',
+                peerId: persistentId,
               })
+              updateState({signalingConnected: false})
             },
           })
           // Store reference for ICE candidate handler
           signalingRef = signaling
-          updateState({signaling})
+          updateState({signaling, peer, isInitializing: false})
+          // Note: connect() is called automatically when signalingClientMaker returns
+          getLogger().log(
+            'Signaling client created, connection initiated automatically',
+            {
+              origin: 'p2p-communication',
+              peerId: persistentId,
+              signalingUrl,
+            },
+          )
+          // Status will be set to 'ready' when signaling connects (in onOpen)
+          // If connection fails, onError will update status to 'error'
+        } else {
+          // No signaling server - set ready immediately
+          updateState({peer, isInitializing: false, status: 'ready'})
         }
-
-        updateState({peer, isInitializing: false, status: 'ready'})
 
         return persistentId
       } catch (error) {
@@ -297,8 +344,16 @@ export const peerConnectionMaker = (
   }
 
   const connectToPeer = async (targetPeerId: string): Promise<void> => {
-    if (!state.signaling || !state.signaling.isConnected()) {
-      throw new Error('Signaling not connected. Call init() first.')
+    // Check if signaling is required and connected
+    if (deps.config?.signalingUrl) {
+      if (!state.signaling) {
+        throw new Error('Signaling client not initialized. Call init() first.')
+      }
+      if (!state.signalingConnected || !state.signaling.isConnected()) {
+        throw new Error(
+          'Signaling server not connected. Please wait for connection or check your network.',
+        )
+      }
     }
 
     if (!state.peer) {
@@ -398,12 +453,30 @@ export const peerConnectionMaker = (
     // If no targetPeerId, it's a broadcast (backward compatible)
     const targetPeerId =
       'targetPeerId' in message ? message.targetPeerId : undefined
+    getLogger().log('Signaling message received', {
+      origin: 'p2p-communication',
+      myPeerId: state.peerId,
+      messageType: message.type,
+      fromPeerId: message.peerId,
+      targetPeerId,
+    })
     if (targetPeerId && targetPeerId !== state.peerId) {
       // Message not for us, ignore
+      getLogger().debug('Ignoring signaling message - not for this peer', {
+        origin: 'p2p-communication',
+        myPeerId: state.peerId,
+        targetPeerId,
+        messageType: message.type,
+      })
       return
     }
 
     if (message.type === 'offer') {
+      getLogger().log('Processing offer', {
+        origin: 'p2p-communication',
+        myPeerId: state.peerId,
+        fromPeerId: message.peerId,
+      })
       // Only handle offer if we're not already connected or if it's from the peer we're waiting for
       if (state.connectedPeerId && state.connectedPeerId !== message.peerId) {
         getLogger().debug('Ignoring offer from different peer', {
@@ -425,12 +498,22 @@ export const peerConnectionMaker = (
         .then((answer) => peer.setLocalDescription(answer))
         .then(() => {
           if (state.signaling && peer.localDescription) {
+            getLogger().log('Sending answer via signaling', {
+              origin: 'p2p-communication',
+              myPeerId: state.peerId,
+              targetPeerId: message.peerId,
+            })
             updateState({connectedPeerId: message.peerId, isInitiator: false})
             state.signaling.send({
               type: 'answer',
               sdp: peer.localDescription.sdp,
               peerId: state.peerId,
               targetPeerId: message.peerId, // Send answer back to the offerer
+            })
+            getLogger().log('Answer sent, notifying peer connected', {
+              origin: 'p2p-communication',
+              myPeerId: state.peerId,
+              connectedPeerId: message.peerId,
             })
             notifyListeners('peerConnected', message.peerId)
           }
@@ -442,12 +525,20 @@ export const peerConnectionMaker = (
           )
         })
     } else if (message.type === 'answer') {
+      getLogger().log('Processing answer', {
+        origin: 'p2p-communication',
+        myPeerId: state.peerId,
+        fromPeerId: message.peerId,
+        isInitiator: state.isInitiator,
+        expectedPeerId: state.connectedPeerId,
+      })
       // Only handle answer if we initiated and it's from the peer we're connecting to
       if (!state.isInitiator || state.connectedPeerId !== message.peerId) {
         getLogger().debug(
           'Ignoring answer - not from expected peer or not initiator',
           {
             origin: 'p2p-communication',
+            myPeerId: state.peerId,
             isInitiator: state.isInitiator,
             expectedPeerId: state.connectedPeerId,
             receivedPeerId: message.peerId,
@@ -464,6 +555,11 @@ export const peerConnectionMaker = (
           }),
         )
         .then(() => {
+          getLogger().log('Answer processed, connection established', {
+            origin: 'p2p-communication',
+            myPeerId: state.peerId,
+            connectedPeerId: message.peerId,
+          })
           updateState({status: 'connected'})
           notifyListeners('peerConnected', message.peerId)
         })

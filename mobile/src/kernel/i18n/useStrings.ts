@@ -553,6 +553,7 @@ export const useStrings = () => {
         messageSigning: f(menuMessages.messageSigning),
         importTransaction: f(menuMessages.importTransaction),
         airdrop: f(menuMessages.airdrop),
+        p2pConnection: f(menuMessages.p2pConnection),
       },
 
       // Dashboard strings

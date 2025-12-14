@@ -19,7 +19,16 @@ import {type BaseStorage} from '@yoroi/types'
 
 import {useRoute} from '@react-navigation/native'
 import * as React from 'react'
-import {GestureResponderEvent, Text, View} from 'react-native'
+import {
+  GestureResponderEvent,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView as RNScrollView,
+  TextInput as RNTextInput,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import {
   RTCIceCandidate,
   RTCPeerConnection,
@@ -29,8 +38,9 @@ import {
 import {useP2PConnection} from '~/features/P2P/context/P2PConnectionProvider'
 import {logger} from '~/kernel/logger/logger'
 import {rootStorage} from '~/kernel/storage/storages'
-import {Button} from '~/ui/Button/Button'
+import {Button, ButtonType} from '~/ui/Button/Button'
 import {Copiable} from '~/ui/Copiable/Copiable'
+import {Icon} from '~/ui/Icon'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {ScrollView} from '~/ui/ScrollView/ScrollView'
 import {useScrollView} from '~/ui/ScrollView/hooks/useScrollView'
@@ -51,6 +61,7 @@ type ConnectionState = {
   isReconnecting: boolean
   lastStatusUpdate: number
   signalingServerFailed: boolean
+  signalingConnected: boolean
 }
 
 const Label = ({children}: {children: string}) => {
@@ -96,8 +107,105 @@ const createStorageAdapter = (): BaseStorage => {
   }
 }
 
+type ChatInputProps = {
+  chatInput: string
+  setChatInput: (text: string) => void
+  handleSendMessage: () => void
+}
+
+const ChatInput = React.memo<ChatInputProps>(
+  ({chatInput, setChatInput, handleSendMessage}) => {
+    const {palette: p} = useTheme()
+    const hasText = React.useMemo(
+      () => chatInput.trim().length > 0,
+      [chatInput],
+    )
+
+    return (
+      <View
+        style={[
+          a.flex_row,
+          a.align_center,
+          a.px_lg,
+          a.py_md,
+          {
+            backgroundColor: p.bg_color_max,
+            borderTopWidth: 1,
+            borderTopColor: p.gray_200,
+            gap: 12,
+          },
+        ]}
+      >
+        <View
+          style={[
+            a.flex_1,
+            a.flex_row,
+            a.align_center,
+            {
+              backgroundColor: p.gray_100,
+              borderRadius: 24,
+              paddingHorizontal: 16,
+              paddingVertical: Platform.OS === 'ios' ? 10 : 8,
+              minHeight: 48,
+              maxHeight: 100,
+            },
+          ]}
+        >
+          <RNTextInput
+            value={chatInput}
+            onChangeText={setChatInput}
+            placeholder="Type a message..."
+            placeholderTextColor={p.gray_600}
+            multiline
+            style={[
+              a.flex_1,
+              a.body_2_md_regular,
+              {
+                color: p.gray_max,
+                paddingVertical: 0,
+                paddingRight: 8,
+                maxHeight: 84,
+              },
+            ]}
+            onSubmitEditing={handleSendMessage}
+            returnKeyType="send"
+            blurOnSubmit={false}
+          />
+        </View>
+        <TouchableOpacity
+          onPress={handleSendMessage}
+          disabled={!hasText}
+          style={[
+            {
+              width: 48,
+              height: 48,
+              borderRadius: 24,
+              backgroundColor: hasText ? p.primary_600 : p.gray_300,
+              alignItems: 'center',
+              justifyContent: 'center',
+            },
+            !hasText && {
+              opacity: 0.5,
+            },
+          ]}
+          activeOpacity={0.7}
+        >
+          <Icon.Send size={20} color={hasText ? p.white_static : p.gray_600} />
+        </TouchableOpacity>
+      </View>
+    )
+  },
+  (prevProps, nextProps) => {
+    // Only re-render if chatInput or handleSendMessage changes
+    return (
+      prevProps.chatInput === nextProps.chatInput &&
+      prevProps.handleSendMessage === nextProps.handleSendMessage
+    )
+  },
+)
+
 export const P2PConnectionScreen = () => {
-  const {atoms: ta} = useTheme()
+  const {atoms: ta, palette: p} = useTheme()
   const params = useRoute().params as Params
   const {scrollViewRef} = useScrollView()
   const {registerConnection, unregisterConnection} = useP2PConnection()
@@ -128,6 +236,7 @@ export const P2PConnectionScreen = () => {
       isReconnecting: false,
       lastStatusUpdate: Date.now(),
       signalingServerFailed: false,
+      signalingConnected: false,
     },
   )
   const [connectedPeerId, setConnectedPeerId] = React.useState<string | null>(
@@ -136,16 +245,40 @@ export const P2PConnectionScreen = () => {
   const [isConnecting, setIsConnecting] = React.useState(false)
   const [connectionManager, setConnectionManager] =
     React.useState<ConnectionManager | null>(null)
-  const [activeTab, setActiveTab] = React.useState<'connection' | 'share'>(
-    'connection',
-  )
+  const [activeTab, setActiveTab] = React.useState<
+    'connection' | 'share' | 'chat'
+  >('connection')
+  const [chatMessages, setChatMessages] = React.useState<
+    Array<{id: string; text: string; isSent: boolean; timestamp: number}>
+  >([])
+  const [chatInput, setChatInput] = React.useState('')
+  const chatScrollViewRef = React.useRef<RNScrollView>(null)
+  const scrollToEndTimeoutRef = React.useRef<NodeJS.Timeout | null>(null)
 
   const webrtcAdapter = React.useMemo(() => createWebRTCAdapter(), [])
   const storageAdapter = React.useMemo(() => createStorageAdapter(), [])
 
+  // Track if we should recreate the manager (for retry)
+  const shouldRecreateManager = React.useRef(false)
+
   // IMPORTANT: This is the ONLY place in the app where P2P connections are established.
   // All P2P connection logic is isolated to this screen to prevent unwanted connections.
   React.useEffect(() => {
+    // Only create manager if we don't have one OR if retry was requested
+    if (connectionManager && !shouldRecreateManager.current) {
+      return
+    }
+
+    // Reset retry flag
+    shouldRecreateManager.current = false
+
+    logger.log('P2P: Creating new connection manager', {
+      origin: 'P2PConnectionScreen',
+      targetPeerId,
+      signalingUrl: signalingUrl || 'default',
+      isRetry: !connectionManager,
+    })
+
     const manager = connectionManagerMaker({
       storage: storageAdapter,
       webrtcAdapter,
@@ -153,7 +286,7 @@ export const P2PConnectionScreen = () => {
         signalingUrl:
           signalingUrl ||
           process.env.EXPO_PUBLIC_P2P_SIGNALING_URL ||
-          'wss://0.peerjs.com',
+          'wss://0.peerjs.com/peerjs',
         targetPeerId,
       },
       isWallet: true,
@@ -166,42 +299,66 @@ export const P2PConnectionScreen = () => {
     const initializeConnection = async (): Promise<void> => {
       try {
         setIsConnecting(true)
+        logger.log('P2P: Initializing connection', {
+          origin: 'P2PConnectionScreen',
+          targetPeerId,
+          signalingUrl: signalingUrl || 'default',
+        })
         setConnectionState({
           status: 'initializing',
           error: null,
           isReconnecting: false,
           lastStatusUpdate: Date.now(),
           signalingServerFailed: false,
+          signalingConnected: false,
         })
         await manager.initialize()
         const peerConnection = manager.getPeerConnection()
         if (peerConnection) {
           const id = peerConnection.getPeerId()
+          logger.log('P2P: Connection initialized', {
+            origin: 'P2PConnectionScreen',
+            myPeerId: id,
+            targetPeerId,
+          })
           setMyPeerId(id)
 
           // Listen for connection events
           const handleOpen = (data?: unknown) => {
             const peerId = typeof data === 'string' ? data : ''
-            setConnectionState({
+            logger.log('P2P: Peer connection opened', {
+              origin: 'P2PConnectionScreen',
+              myPeerId: peerId || id,
+            })
+            setConnectionState((prev) => ({
+              ...prev,
               status: 'ready',
               error: null,
               isReconnecting: false,
               lastStatusUpdate: Date.now(),
               signalingServerFailed: false,
-            })
-            setMyPeerId(peerId)
+              signalingConnected: prev.signalingConnected,
+            }))
+            setMyPeerId(peerId || id)
             setIsConnecting(false)
           }
 
           const handlePeerConnected = (data?: unknown) => {
             const peerId = typeof data === 'string' ? data : ''
-            setConnectionState({
+            logger.log('P2P: Peer connected', {
+              origin: 'P2PConnectionScreen',
+              myPeerId: id,
+              connectedPeerId: peerId,
+            })
+            setConnectionState((prev) => ({
+              ...prev,
               status: 'connected',
               error: null,
               isReconnecting: false,
               lastStatusUpdate: Date.now(),
               signalingServerFailed: false,
-            })
+              signalingConnected: prev.signalingConnected,
+            }))
             setConnectedPeerId(peerId)
             setIsConnecting(false)
             // Register connection with global provider
@@ -209,6 +366,11 @@ export const P2PConnectionScreen = () => {
           }
 
           const handleError = (data?: unknown) => {
+            logger.warn('P2P: Connection error received', {
+              origin: 'P2PConnectionScreen',
+              myPeerId: id,
+              error: data,
+            })
             let errorMessage = 'Unknown error'
             let isSignalingError = false
 
@@ -334,13 +496,17 @@ export const P2PConnectionScreen = () => {
             }
 
             const error = data instanceof Error ? data : new Error(errorMessage)
-            setConnectionState({
+            setConnectionState((prev) => ({
+              ...prev,
               status: 'error',
               error: errorMessage,
               isReconnecting: false,
               lastStatusUpdate: Date.now(),
               signalingServerFailed: isSignalingError,
-            })
+              signalingConnected: isSignalingError
+                ? false
+                : prev.signalingConnected,
+            }))
             setIsConnecting(false)
             // Log handled/recoverable errors as warnings
             const isHandledError =
@@ -348,42 +514,70 @@ export const P2PConnectionScreen = () => {
               errorMessage.includes('WebSocket error') ||
               isSignalingError
             if (isHandledError) {
-              logger.warn(errorMessage, {origin: 'P2PConnectionScreen'})
+              logger.warn('P2P: Handled error', {
+                origin: 'P2PConnectionScreen',
+                myPeerId: id,
+                error: errorMessage,
+                isSignalingError,
+              })
             } else {
-              logger.error(error, {origin: 'P2PConnectionScreen'})
+              logger.warn('P2P: Connection error', {
+                origin: 'P2PConnectionScreen',
+                myPeerId: id,
+                error,
+              })
             }
           }
 
           const handleClose = () => {
-            setConnectionState({
+            logger.log('P2P: Connection closed', {
+              origin: 'P2PConnectionScreen',
+              myPeerId: id,
+            })
+            setConnectionState((prev) => ({
+              ...prev,
               status: 'closed',
               error: null,
               isReconnecting: false,
               lastStatusUpdate: Date.now(),
               signalingServerFailed: false,
-            })
+              signalingConnected: false,
+            }))
             setConnectedPeerId(null)
           }
 
           const handleDisconnected = () => {
-            setConnectionState({
+            logger.log('P2P: Disconnected', {
+              origin: 'P2PConnectionScreen',
+              myPeerId: id,
+              connectedPeerId,
+            })
+            setConnectionState((prev) => ({
+              ...prev,
               status: 'disconnected',
               error: null,
               isReconnecting: false,
               lastStatusUpdate: Date.now(),
               signalingServerFailed: false,
-            })
+              signalingConnected: false,
+            }))
             setConnectedPeerId(null)
           }
 
           const handleConnectionClosed = () => {
-            setConnectionState({
+            logger.log('P2P: Connection closed event', {
+              origin: 'P2PConnectionScreen',
+              myPeerId: id,
+            })
+            setConnectionState((prev) => ({
+              ...prev,
               status: 'disconnected',
               error: null,
               isReconnecting: false,
               lastStatusUpdate: Date.now(),
               signalingServerFailed: false,
-            })
+              signalingConnected: false,
+            }))
           }
 
           peerConnection.on('open', handleOpen)
@@ -404,15 +598,47 @@ export const P2PConnectionScreen = () => {
           }
 
           // Connect to target peer if provided
+          // But only if signaling is connected (if signaling URL is configured)
           if (targetPeerId) {
-            setConnectionState({
-              status: 'connecting',
-              error: null,
-              isReconnecting: false,
-              lastStatusUpdate: Date.now(),
-              signalingServerFailed: false,
+            const hasSignaling = !!(
+              signalingUrl ||
+              process.env.EXPO_PUBLIC_P2P_SIGNALING_URL ||
+              'wss://0.peerjs.com/peerjs'
+            )
+            logger.log('P2P: Target peer ID provided', {
+              origin: 'P2PConnectionScreen',
+              myPeerId: id,
+              targetPeerId,
+              hasSignaling,
             })
-            await peerConnection.connectToPeer(targetPeerId)
+            // Wait a bit for signaling to connect if needed
+            if (hasSignaling) {
+              // Don't auto-connect, wait for user to click Connect button
+              // This ensures signaling is connected first
+              logger.log(
+                'P2P: Waiting for signaling connection before auto-connecting',
+                {
+                  origin: 'P2PConnectionScreen',
+                  myPeerId: id,
+                },
+              )
+            } else {
+              // No signaling server, can connect immediately
+              logger.log('P2P: Auto-connecting to peer (no signaling)', {
+                origin: 'P2PConnectionScreen',
+                myPeerId: id,
+                targetPeerId,
+              })
+              setConnectionState((prev) => ({
+                ...prev,
+                status: 'connecting',
+                error: null,
+                isReconnecting: false,
+                lastStatusUpdate: Date.now(),
+                signalingServerFailed: false,
+              }))
+              await peerConnection.connectToPeer(targetPeerId)
+            }
           }
         }
       } catch (error) {
@@ -424,9 +650,19 @@ export const P2PConnectionScreen = () => {
           err.message.includes('Signaling not connected')
         // Log handled/recoverable errors as warnings
         if (isSignalingError) {
-          logger.warn(err.message, {origin: 'P2PConnectionScreen'})
+          logger.warn('P2P: Signaling error during initialization', {
+            origin: 'P2PConnectionScreen',
+            myPeerId: myPeerId || 'unknown',
+            error: err.message,
+            targetPeerId,
+          })
         } else {
-          logger.error(err, {origin: 'P2PConnectionScreen'})
+          logger.error('P2P: Initialization error', {
+            origin: 'P2PConnectionScreen',
+            myPeerId: myPeerId || 'unknown',
+            error: err,
+            targetPeerId,
+          })
         }
         setConnectionState({
           status: 'error',
@@ -434,6 +670,7 @@ export const P2PConnectionScreen = () => {
           isReconnecting: false,
           lastStatusUpdate: Date.now(),
           signalingServerFailed: isSignalingError,
+          signalingConnected: false,
         })
         setIsConnecting(false)
       }
@@ -454,6 +691,9 @@ export const P2PConnectionScreen = () => {
         setConnectionManager(null)
       }
     }
+    // Note: myPeerId and connectedPeerId are state variables set inside this effect,
+    // they don't need to be dependencies as they're not used to determine when to run the effect
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     webrtcAdapter,
     storageAdapter,
@@ -461,9 +701,99 @@ export const P2PConnectionScreen = () => {
     signalingUrl,
     registerConnection,
     unregisterConnection,
+    // connectionManager is NOT in dependencies to prevent infinite loops
+    // Retry is handled via shouldRecreateManager ref
   ])
 
-  // Poll connection status for real-time updates (reduced frequency)
+  // Set up chat message listener
+  React.useEffect(() => {
+    if (!connectionManager || !connectedPeerId) return
+
+    const walletCommunication = connectionManager.getWalletCommunication()
+    if (!walletCommunication) return
+
+    const handleMessage = (message?: unknown) => {
+      const currentPeerId = myPeerId
+      const currentConnectedPeerId = connectedPeerId
+      if (!message || typeof message !== 'object') return
+
+      logger.log('P2P: Message received', {
+        origin: 'P2PConnectionScreen',
+        myPeerId: currentPeerId,
+        connectedPeerId: currentConnectedPeerId,
+        messageType:
+          typeof message === 'object' && 'type' in message
+            ? (message as {type?: unknown}).type
+            : 'unknown',
+      })
+
+      // Handle different message formats
+      const messageObj = message as Record<string, unknown>
+
+      // Check if it's a simple chat message
+      if ('message' in messageObj && typeof messageObj.message === 'string') {
+        logger.log('P2P: Chat message received', {
+          origin: 'P2PConnectionScreen',
+          myPeerId: currentPeerId,
+          connectedPeerId: currentConnectedPeerId,
+          messageLength: messageObj.message.length,
+        })
+        const newMessage = {
+          id: `${Date.now()}-${Math.random()}`,
+          text: messageObj.message,
+          isSent: false,
+          timestamp: Date.now(),
+        }
+        setChatMessages((prev) => [...prev, newMessage])
+
+        // Scroll to bottom when new message arrives
+        if (scrollToEndTimeoutRef.current) {
+          clearTimeout(scrollToEndTimeoutRef.current)
+        }
+        scrollToEndTimeoutRef.current = setTimeout(() => {
+          chatScrollViewRef.current?.scrollToEnd({animated: true})
+        }, 100)
+        return
+      }
+
+      // Handle WalletMessage types that might contain chat data
+      if ('type' in messageObj && messageObj.type === 'request') {
+        const request = messageObj as {method?: string; data?: unknown}
+        if (request.method === 'chat' && request.data) {
+          const data = request.data as Record<string, unknown>
+          if (typeof data.message === 'string') {
+            logger.log('P2P: Chat request message received', {
+              origin: 'P2PConnectionScreen',
+              myPeerId: currentPeerId,
+              connectedPeerId: currentConnectedPeerId,
+              messageLength: data.message.length,
+            })
+            const newMessage = {
+              id: `${Date.now()}-${Math.random()}`,
+              text: data.message,
+              isSent: false,
+              timestamp: Date.now(),
+            }
+            setChatMessages((prev) => [...prev, newMessage])
+            if (scrollToEndTimeoutRef.current) {
+              clearTimeout(scrollToEndTimeoutRef.current)
+            }
+            scrollToEndTimeoutRef.current = setTimeout(() => {
+              chatScrollViewRef.current?.scrollToEnd({animated: true})
+            }, 100)
+          }
+        }
+      }
+    }
+
+    walletCommunication.on('message', handleMessage)
+
+    return () => {
+      walletCommunication.off('message', handleMessage)
+    }
+  }, [connectionManager, connectedPeerId, myPeerId])
+
+  // Poll connection status and signaling status for real-time updates
   React.useEffect(() => {
     if (!connectionManager) return
 
@@ -478,6 +808,22 @@ export const P2PConnectionScreen = () => {
     let intervalId: ReturnType<typeof setInterval> | null = null
 
     const pollStatus = () => {
+      // Get current status without triggering re-render if unchanged
+      const status = peerConnection.getStatus()
+      const currentConnectedId = peerConnection.getConnectedPeerId()
+
+      // Check signaling connection status
+      const hasSignaling = !!(
+        signalingUrl ||
+        process.env.EXPO_PUBLIC_P2P_SIGNALING_URL ||
+        'wss://0.peerjs.com/peerjs'
+      )
+
+      const signalingConnected = hasSignaling
+        ? status === 'ready' || status === 'connected'
+        : true
+
+      // Use functional update to check if we actually need to update
       setConnectionState((prev) => {
         // Stop polling if signaling server failed - clear interval and don't update
         if (prev.signalingServerFailed) {
@@ -488,45 +834,52 @@ export const P2PConnectionScreen = () => {
           return prev
         }
 
-        const status = peerConnection.getStatus()
+        // Only update if something actually changed
+        const statusChanged = prev.status !== status
+        const signalingChanged = prev.signalingConnected !== signalingConnected
+        const isReconnecting =
+          prev.status === 'disconnected' && status === 'connecting'
 
-        // Only update if status changed or it's been more than 2 seconds
         if (
-          prev.status !== status ||
-          Date.now() - prev.lastStatusUpdate > 2000
+          statusChanged ||
+          signalingChanged ||
+          isReconnecting !== prev.isReconnecting
         ) {
           return {
             ...prev,
             status,
-            isReconnecting:
-              prev.status === 'disconnected' && status === 'connecting',
+            signalingConnected,
+            isReconnecting,
             lastStatusUpdate: Date.now(),
           }
         }
+        // Return prev to prevent re-render if nothing changed
         return prev
       })
 
-      const currentConnectedId = peerConnection.getConnectedPeerId()
+      // Only update connectedPeerId if it actually changed
       if (currentConnectedId !== connectedPeerId) {
         setConnectedPeerId(currentConnectedId)
       }
     }
 
-    intervalId = setInterval(pollStatus, 3000) // Poll every 3 seconds
+    intervalId = setInterval(pollStatus, 2000) // Poll every 2 seconds
 
     return () => {
       if (intervalId) {
         clearInterval(intervalId)
       }
     }
-  }, [
-    connectionManager,
-    connectedPeerId,
-    connectionState.signalingServerFailed,
-  ])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [connectionManager, connectionState.signalingServerFailed, signalingUrl])
 
-  const handleDisconnect = () => {
+  const handleDisconnect = React.useCallback(() => {
     if (connectionManager) {
+      logger.log('P2P: Disconnecting', {
+        origin: 'P2PConnectionScreen',
+        myPeerId,
+        connectedPeerId,
+      })
       connectionManager.cleanup()
       unregisterConnection()
       setConnectionState({
@@ -535,11 +888,51 @@ export const P2PConnectionScreen = () => {
         isReconnecting: false,
         lastStatusUpdate: Date.now(),
         signalingServerFailed: false,
+        signalingConnected: false,
       })
       setConnectedPeerId(null)
       setConnectionManager(null)
     }
-  }
+  }, [connectionManager, myPeerId, connectedPeerId, unregisterConnection])
+
+  // Retry connection initialization
+  const handleRetry = React.useCallback(() => {
+    logger.log('P2P: Retrying connection', {
+      origin: 'P2PConnectionScreen',
+      myPeerId,
+      targetPeerId,
+    })
+
+    // Clean up existing connection if any
+    if (connectionManager) {
+      try {
+        connectionManager.cleanup()
+      } catch (error) {
+        logger.warn('P2P: Error during cleanup on retry', {
+          origin: 'P2PConnectionScreen',
+          error,
+        })
+      }
+      unregisterConnection()
+    }
+
+    // Reset all state
+    setMyPeerId('')
+    setConnectedPeerId(null)
+    setIsConnecting(false)
+    setConnectionState({
+      status: 'initializing',
+      error: null,
+      isReconnecting: false,
+      lastStatusUpdate: Date.now(),
+      signalingServerFailed: false,
+      signalingConnected: false,
+    })
+
+    // Set flag to recreate manager and clear current one
+    shouldRecreateManager.current = true
+    setConnectionManager(null)
+  }, [connectionManager, myPeerId, targetPeerId, unregisterConnection])
 
   const getStatusDisplayText = (): string => {
     const {status, error, isReconnecting} = connectionState
@@ -574,6 +967,76 @@ export const P2PConnectionScreen = () => {
     }
   }
 
+  const handleSendMessage = React.useCallback(() => {
+    if (!chatInput.trim() || !connectionManager || !connectedPeerId) return
+
+    const walletCommunication = connectionManager.getWalletCommunication()
+    if (!walletCommunication) {
+      logger.warn(
+        'P2P: Cannot send message - wallet communication not available',
+        {
+          origin: 'P2PConnectionScreen',
+          myPeerId,
+          connectedPeerId,
+        },
+      )
+      return
+    }
+
+    const messageText = chatInput.trim()
+    logger.log('P2P: Sending chat message', {
+      origin: 'P2PConnectionScreen',
+      myPeerId,
+      connectedPeerId,
+      messageLength: messageText.length,
+    })
+
+    // Send message
+    const success = walletCommunication.sendMessage(messageText)
+
+    if (success) {
+      logger.log('P2P: Message sent successfully', {
+        origin: 'P2PConnectionScreen',
+        myPeerId,
+        connectedPeerId,
+        messageLength: messageText.length,
+      })
+      // Add message to local state
+      const newMessage = {
+        id: `${Date.now()}-${Math.random()}`,
+        text: messageText,
+        isSent: true,
+        timestamp: Date.now(),
+      }
+      setChatMessages((prev) => [...prev, newMessage])
+      setChatInput('')
+
+      // Scroll to bottom with debounce
+      if (scrollToEndTimeoutRef.current) {
+        clearTimeout(scrollToEndTimeoutRef.current)
+      }
+      scrollToEndTimeoutRef.current = setTimeout(() => {
+        chatScrollViewRef.current?.scrollToEnd({animated: true})
+      }, 100)
+    } else {
+      logger.warn('P2P: Failed to send message', {
+        origin: 'P2PConnectionScreen',
+        myPeerId,
+        connectedPeerId,
+        messageLength: messageText.length,
+      })
+    }
+  }, [chatInput, connectionManager, connectedPeerId, myPeerId])
+
+  // Cleanup timeout on unmount
+  React.useEffect(() => {
+    return () => {
+      if (scrollToEndTimeoutRef.current) {
+        clearTimeout(scrollToEndTimeoutRef.current)
+      }
+    }
+  }, [])
+
   return (
     <SafeArea>
       <View style={[a.flex_1]}>
@@ -589,6 +1052,12 @@ export const P2PConnectionScreen = () => {
             label="Share Peer ID"
             onPress={() => setActiveTab('share')}
             testID="p2p:tab-share"
+          />
+          <Tab
+            active={activeTab === 'chat'}
+            label="Chat"
+            onPress={() => setActiveTab('chat')}
+            testID="p2p:tab-chat"
           />
         </Tabs>
 
@@ -734,40 +1203,184 @@ export const P2PConnectionScreen = () => {
               )}
             </ScrollView>
           </TabPanel>
+
+          <TabPanel active={activeTab === 'chat'}>
+            <KeyboardAvoidingView
+              style={[a.flex_1]}
+              behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+              keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+            >
+              <ScrollView
+                ref={chatScrollViewRef}
+                contentContainerStyle={[a.px_lg, a.py_md, {flexGrow: 1}]}
+                keyboardShouldPersistTaps="handled"
+                onContentSizeChange={() => {
+                  // Debounce scroll to prevent continuous re-renders
+                  if (scrollToEndTimeoutRef.current) {
+                    clearTimeout(scrollToEndTimeoutRef.current)
+                  }
+                  scrollToEndTimeoutRef.current = setTimeout(() => {
+                    chatScrollViewRef.current?.scrollToEnd({animated: false})
+                  }, 50)
+                }}
+              >
+                {chatMessages.length === 0 ? (
+                  <View
+                    style={[
+                      a.flex_1,
+                      a.justify_center,
+                      a.align_center,
+                      {minHeight: 200},
+                    ]}
+                  >
+                    <Text style={[ta.text_gray_medium, a.body_2_md_regular]}>
+                      {connectedPeerId
+                        ? 'No messages yet. Start a conversation!'
+                        : 'Connect to a peer to start chatting'}
+                    </Text>
+                  </View>
+                ) : (
+                  chatMessages.map((msg) => (
+                    <View
+                      key={msg.id}
+                      style={[
+                        a.pb_md,
+                        a.flex_row,
+                        msg.isSent ? a.justify_end : a.justify_start,
+                      ]}
+                    >
+                      <View
+                        style={[
+                          {
+                            maxWidth: '75%',
+                          },
+                          a.px_md,
+                          a.py_sm,
+                          a.rounded_sm,
+                          {
+                            backgroundColor: msg.isSent
+                              ? p.primary_600
+                              : p.gray_200,
+                          },
+                        ]}
+                      >
+                        <Text
+                          style={[
+                            a.body_2_md_regular,
+                            {
+                              color: msg.isSent ? p.white_static : p.gray_max,
+                            },
+                          ]}
+                        >
+                          {msg.text}
+                        </Text>
+                        <Text
+                          style={[
+                            a.body_3_sm_regular,
+                            {
+                              color: msg.isSent
+                                ? 'rgba(255,255,255,0.7)'
+                                : p.gray_600,
+                              paddingTop: 4,
+                            },
+                          ]}
+                        >
+                          {new Intl.DateTimeFormat('en-US', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: true,
+                          }).format(new Date(msg.timestamp))}
+                        </Text>
+                      </View>
+                    </View>
+                  ))
+                )}
+              </ScrollView>
+
+              {connectedPeerId && (
+                <ChatInput
+                  chatInput={chatInput}
+                  setChatInput={setChatInput}
+                  handleSendMessage={handleSendMessage}
+                />
+              )}
+            </KeyboardAvoidingView>
+          </TabPanel>
         </TabPanels>
       </View>
 
       <SafeArea.Footer>
+        {connectionState.error && (
+          <Text
+            style={[ta.text_error, a.body_3_sm_regular, a.text_center, a.p_lg]}
+          >
+            {connectionState.error}
+          </Text>
+        )}
         {connectedPeerId ? (
           <Button onPress={handleDisconnect} title="Disconnect" />
+        ) : connectionState.signalingServerFailed ? (
+          <View style={[a.gap_sm]}>
+            <Button
+              onPress={handleRetry}
+              title="Retry Connection"
+              type={ButtonType.Primary}
+            />
+          </View>
         ) : (
           <Button
             onPress={() => {
               if (connectionManager && targetPeerId) {
                 const peerConnection = connectionManager.getPeerConnection()
                 if (peerConnection) {
+                  const currentPeerId = peerConnection.getPeerId()
+                  logger.log('P2P: Connecting to peer', {
+                    origin: 'P2PConnectionScreen',
+                    myPeerId: currentPeerId,
+                    targetPeerId,
+                  })
                   setIsConnecting(true)
-                  setConnectionState({
+                  setConnectionState((prev) => ({
+                    ...prev,
                     status: 'connecting',
                     error: null,
                     isReconnecting: false,
                     lastStatusUpdate: Date.now(),
                     signalingServerFailed: false,
-                  })
+                  }))
                   peerConnection
                     .connectToPeer(targetPeerId)
+                    .then(() => {
+                      logger.log('P2P: Successfully initiated connection', {
+                        origin: 'P2PConnectionScreen',
+                        myPeerId: currentPeerId,
+                        targetPeerId,
+                      })
+                    })
                     .catch((error: Error) => {
                       const isSignalingError =
                         error.message.includes('WebSocket') ||
                         error.message.includes('signaling') ||
-                        error.message.includes('Failed to create WebSocket')
-                      setConnectionState({
+                        error.message.includes('Failed to create WebSocket') ||
+                        error.message.includes('Signaling not connected')
+                      logger.warn('P2P: Failed to connect to peer', {
+                        origin: 'P2PConnectionScreen',
+                        myPeerId: currentPeerId,
+                        targetPeerId,
+                        error: error.message,
+                        isSignalingError,
+                      })
+                      setConnectionState((prev) => ({
+                        ...prev,
                         status: 'error',
                         error: error.message,
                         isReconnecting: false,
                         lastStatusUpdate: Date.now(),
                         signalingServerFailed: isSignalingError,
-                      })
+                        signalingConnected: isSignalingError
+                          ? false
+                          : prev.signalingConnected,
+                      }))
                       setIsConnecting(false)
                     })
                 }
@@ -780,7 +1393,16 @@ export const P2PConnectionScreen = () => {
                   ? 'Reconnecting...'
                   : 'Connect'
             }
-            disabled={isConnecting || !targetPeerId}
+            disabled={
+              isConnecting ||
+              !targetPeerId ||
+              (!connectionState.signalingConnected &&
+                !!(
+                  signalingUrl ||
+                  process.env.EXPO_PUBLIC_P2P_SIGNALING_URL ||
+                  'wss://0.peerjs.com/peerjs'
+                ))
+            }
           />
         )}
       </SafeArea.Footer>

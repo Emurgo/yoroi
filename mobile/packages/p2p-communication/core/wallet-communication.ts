@@ -259,15 +259,36 @@ export const walletCommunicationMaker = (
   }
 
   const sendMessage = (message: string): boolean => {
+    const walletId = deps.peerConnection.getPeerId()
     if (!state.connected) {
       getLogger().warn('Cannot send: Not connected to wallet', {
         origin: 'p2p-communication',
+        walletId,
       })
       return false
     }
 
+    getLogger().log('Sending message', {
+      origin: 'p2p-communication',
+      walletId,
+      messageLength: message.length,
+    })
     const messageObj = {message}
-    return deps.peerConnection.send(messageObj)
+    const success = deps.peerConnection.send(messageObj)
+    if (success) {
+      getLogger().log('Message sent successfully', {
+        origin: 'p2p-communication',
+        walletId,
+        messageLength: message.length,
+      })
+    } else {
+      getLogger().warn('Failed to send message', {
+        origin: 'p2p-communication',
+        walletId,
+        messageLength: message.length,
+      })
+    }
+    return success
   }
 
   const callWalletFunction = (

@@ -1152,6 +1152,7 @@
   "menu.airdrop": "Airdrop",
   "menu.mintBurn": "Mint & Burn",
   "menu.importTransaction": "Import transaction",
+  "menu.p2pConnection": "P2P Connection",
   "mintBurn.tabs.mint": "Mint",
   "mintBurn.tabs.myTokens": "My Tokens",
   "mintBurn.mint.tokenType": "Token Type",

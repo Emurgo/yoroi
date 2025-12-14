@@ -3,6 +3,7 @@
  * Handles WebSocket-based signaling for WebRTC peer connections
  * Compatible with PeerJS signaling protocol
  */
+import {getLogger} from '@yoroi/logger'
 
 // Internal message format (normalized)
 export type SignalingMessage =
@@ -28,7 +29,7 @@ export type SignalingMessage =
 
 // PeerJS protocol message format
 type PeerJSMessage =
-  | {type: 'OPEN'; id: string}
+  | {type: 'OPEN'; id?: string} // Server may or may not include id field
   | {
       type: 'OFFER'
       src: string
@@ -116,14 +117,18 @@ export const signalingClientMaker = (
   }
 
   // Convert PeerJS protocol to internal message format
-  const fromPeerJSMessage = (data: string): SignalingMessage | null => {
+  const fromPeerJSMessage = (
+    data: string,
+    peerId: string,
+  ): SignalingMessage | null => {
     try {
       const peerjsMsg = JSON.parse(data) as PeerJSMessage
 
       if (peerjsMsg.type === 'OPEN') {
         // PeerJS server confirms peer registration
-        // The id in OPEN response is our own peer ID
-        return {type: 'peer-id', peerId: peerjsMsg.id}
+        // The server may or may not include the id field in OPEN message
+        // If not provided, we use the peerId that was in the URL
+        return {type: 'peer-id', peerId: peerjsMsg.id || peerId}
       }
       if (peerjsMsg.type === 'OFFER') {
         // src = sender (peer making offer), dst = receiver (us)
@@ -171,25 +176,140 @@ export const signalingClientMaker = (
         )
         return
       }
-      ws = new WebSocket(config.signalingUrl)
+
+      // Ensure PeerJS URL has correct format with query parameters
+      let urlToConnect = config.signalingUrl
+      if (usePeerJSProtocol) {
+        try {
+          const urlObj = new URL(config.signalingUrl)
+
+          // PeerJS format: wss://host:port/pathpeerjs?key=peerjs&id=...&token=...&version=...
+          // From socket.ts line 30: wsProtocol + host + ":" + port + path + "peerjs?key=" + key
+          // From peer.ts lines 247-253: path is normalized to start with "/" and end with "/"
+          // Then socket.ts appends "peerjs" directly (no slash between path and "peerjs")
+
+          let path = urlObj.pathname || '/'
+
+          // Remove any existing "peerjs" from the path (user might have included it)
+          // This handles cases where URL already has "/peerjs" or "/peerjs/"
+          path = path.replace(/\/peerjs\/?$/, '')
+
+          // Normalize path: ensure it starts and ends with "/" (PeerJS expects this)
+          if (!path.startsWith('/')) {
+            path = '/' + path
+          }
+          if (!path.endsWith('/')) {
+            path += '/'
+          }
+
+          // Append "peerjs" directly (no slash between path and "peerjs")
+          // Example: "/" -> "/peerjs", "/custom/" -> "/custom/peerjs"
+          path += 'peerjs'
+
+          urlObj.pathname = path
+
+          // Build query string manually to match PeerJS format exactly
+          // PeerJS uses: ?key=peerjs&id=...&token=...&version=...
+          const params = new URLSearchParams()
+          params.set('key', 'peerjs')
+          params.set('id', config.peerId)
+          // Generate random token like PeerJS does: Math.random().toString(36).slice(2)
+          const token = Math.random().toString(36).slice(2)
+          params.set('token', token)
+          params.set('version', '1.5.4')
+
+          // Construct URL - don't include port if it's the default (443 for wss, 80 for ws)
+          // This matches PeerJS behavior - it doesn't explicitly include default ports
+          let hostPort = urlObj.hostname
+          if (urlObj.port) {
+            // Only include port if it's explicitly set and not the default
+            const isDefaultPort =
+              (urlObj.protocol === 'wss:' && urlObj.port === '443') ||
+              (urlObj.protocol === 'ws:' && urlObj.port === '80')
+            if (!isDefaultPort) {
+              hostPort += ':' + urlObj.port
+            }
+          }
+
+          // Construct final URL with query string
+          urlToConnect = `${urlObj.protocol}//${hostPort}${urlObj.pathname}?${params.toString()}`
+
+          getLogger().log('Constructed PeerJS WebSocket URL', {
+            origin: 'p2p-communication',
+            originalUrl: config.signalingUrl,
+            constructedUrl: urlToConnect,
+            peerId: config.peerId,
+            token,
+          })
+        } catch (error) {
+          getLogger().warn('Failed to construct PeerJS URL, using original', {
+            origin: 'p2p-communication',
+            originalUrl: config.signalingUrl,
+            error,
+          })
+          // If URL parsing fails, use original URL
+        }
+      }
+
+      // Set connection timeout (10 seconds)
+      const connectionTimeout = setTimeout(() => {
+        if (!connected && ws) {
+          getLogger().warn('Signaling connection timeout', {
+            origin: 'p2p-communication',
+            peerId: config.peerId,
+            signalingUrl: config.signalingUrl,
+            urlToConnect,
+            wsReadyState: ws.readyState,
+          })
+          ws.close()
+          config.onError(
+            new Error(
+              'Signaling server connection timeout after 10 seconds. Please check your network connection or try again.',
+            ),
+          )
+        }
+      }, 10000)
+
+      getLogger().log('Attempting WebSocket connection', {
+        origin: 'p2p-communication',
+        peerId: config.peerId,
+        originalUrl: config.signalingUrl,
+        urlToConnect,
+        usePeerJSProtocol,
+      })
+
+      ws = new WebSocket(urlToConnect)
 
       ws.onopen = () => {
+        clearTimeout(connectionTimeout)
         connected = true
-        // Send peer ID registration (PeerJS uses OPEN, custom uses peer-id)
-        if (ws) {
-          if (usePeerJSProtocol) {
-            ws.send(JSON.stringify({type: 'OPEN', id: config.peerId}))
-          } else {
-            ws.send(
-              JSON.stringify({
-                type: 'peer-id',
-                peerId: config.peerId,
-              }),
-            )
-          }
+        getLogger().log('WebSocket opened, waiting for server confirmation', {
+          origin: 'p2p-communication',
+          peerId: config.peerId,
+          signalingUrl: config.signalingUrl,
+          usePeerJSProtocol,
+          urlToConnect,
+        })
+        // IMPORTANT: With PeerJS, the peer ID is already in the URL query string
+        // The server will send us an OPEN message to confirm registration
+        // We should NOT send an OPEN message - just wait for the server's response
+        // For custom signaling servers, we may need to send peer-id
+        if (!usePeerJSProtocol && ws) {
+          ws.send(
+            JSON.stringify({
+              type: 'peer-id',
+              peerId: config.peerId,
+            }),
+          )
           peerIdRegistered = true
+          getLogger().log('Peer ID sent to custom signaling server', {
+            origin: 'p2p-communication',
+            peerId: config.peerId,
+          })
+          // For custom servers, call onOpen immediately
           config.onOpen()
         }
+        // For PeerJS, we wait for the server's OPEN message before calling onOpen
       }
 
       ws.onmessage = (event) => {
@@ -197,15 +317,44 @@ export const signalingClientMaker = (
           let message: SignalingMessage | null = null
 
           if (usePeerJSProtocol) {
-            message = fromPeerJSMessage(event.data)
+            message = fromPeerJSMessage(event.data, config.peerId)
           } else {
             message = JSON.parse(event.data) as SignalingMessage
           }
 
           if (message) {
+            getLogger().log('Signaling message received via WebSocket', {
+              origin: 'p2p-communication',
+              peerId: config.peerId,
+              messageType: message.type,
+              fromPeerId: 'peerId' in message ? message.peerId : undefined,
+              rawData:
+                typeof event.data === 'string'
+                  ? event.data.substring(0, 200)
+                  : 'binary',
+            })
+
+            // Handle PeerJS OPEN message (server confirms registration)
+            if (usePeerJSProtocol && message.type === 'peer-id') {
+              // Server sent OPEN message confirming our registration
+              peerIdRegistered = true
+              getLogger().log('Peer ID registration confirmed by server', {
+                origin: 'p2p-communication',
+                peerId: config.peerId,
+                serverPeerId: message.peerId,
+              })
+              // Now we can call onOpen - server has confirmed we're registered
+              config.onOpen()
+            }
+
             config.onMessage(message)
           }
         } catch (error) {
+          getLogger().error('Failed to parse signaling message', {
+            origin: 'p2p-communication',
+            peerId: config.peerId,
+            error,
+          })
           config.onError(
             new Error(`Failed to parse signaling message: ${error}`),
           )
@@ -213,34 +362,131 @@ export const signalingClientMaker = (
       }
 
       ws.onerror = (error) => {
-        config.onError(new Error(`WebSocket error: ${error}`))
+        clearTimeout(connectionTimeout)
+        getLogger().warn('WebSocket error event', {
+          origin: 'p2p-communication',
+          peerId: config.peerId,
+          signalingUrl: config.signalingUrl,
+          urlToConnect,
+          errorType: error?.type,
+          errorTarget: error?.target ? 'present' : 'absent',
+          wsReadyState: ws?.readyState,
+        })
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : 'WebSocket connection error. Please check your network connection and try again.'
+        config.onError(new Error(errorMessage))
       }
 
-      ws.onclose = () => {
+      ws.onclose = (event) => {
+        clearTimeout(connectionTimeout)
         connected = false
         peerIdRegistered = false
-        config.onClose()
+        getLogger().log('WebSocket closed', {
+          origin: 'p2p-communication',
+          peerId: config.peerId,
+          signalingUrl: config.signalingUrl,
+          closeCode: event.code,
+          closeReason: event.reason || 'none',
+          wasClean: event.wasClean,
+        })
+        // Only call onClose if it was a normal close, not an error
+        if (event.code !== 1006 && event.wasClean) {
+          // 1006 is abnormal closure (no close frame received)
+          config.onClose()
+        } else if (event.code === 1006 || !event.wasClean) {
+          // Abnormal closure - treat as error
+          const closeReason = event.reason || 'none'
+          getLogger().warn('WebSocket abnormal closure', {
+            origin: 'p2p-communication',
+            peerId: config.peerId,
+            closeCode: event.code,
+            closeReason,
+            wasClean: event.wasClean,
+          })
+
+          // Check for specific error reasons
+          let errorMessage = `WebSocket connection closed abnormally (code: ${event.code}).`
+          if (
+            closeReason.includes('525') ||
+            closeReason.includes('SSL') ||
+            closeReason.includes('TLS')
+          ) {
+            errorMessage = `SSL/TLS handshake failed (HTTP 525). This may be due to certificate validation issues in the emulator. Try on a real device or check your network configuration.`
+          } else if (closeReason.includes('403 Forbidden')) {
+            errorMessage = `Signaling server returned 403 Forbidden. The PeerJS server may be rate-limiting or blocking connections. Consider using a custom signaling server or retrying later.`
+          } else if (closeReason.includes('401')) {
+            errorMessage = `Signaling server returned 401 Unauthorized. Authentication may be required.`
+          } else if (closeReason.includes('404')) {
+            errorMessage = `Signaling server returned 404 Not Found. The signaling server URL may be incorrect.`
+          } else if (closeReason) {
+            errorMessage = `WebSocket connection failed: ${closeReason}`
+          } else {
+            errorMessage = `WebSocket connection closed abnormally (code: ${event.code}). Please check your network connection.`
+          }
+
+          config.onError(new Error(errorMessage))
+        }
       }
     } catch (error) {
-      config.onError(new Error(`Failed to create WebSocket: ${error}`))
+      getLogger().warn('Failed to create WebSocket', {
+        origin: 'p2p-communication',
+        peerId: config.peerId,
+        signalingUrl: config.signalingUrl,
+        error,
+      })
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Failed to create WebSocket connection. Please check the signaling server URL.'
+      config.onError(new Error(errorMessage))
     }
   }
 
   const send = (message: SignalingMessage): void => {
     if (!ws || !connected) {
+      getLogger().warn(
+        'Cannot send signaling message - WebSocket not connected',
+        {
+          origin: 'p2p-communication',
+          peerId: config.peerId,
+          messageType: message.type,
+        },
+      )
       config.onError(new Error('WebSocket not connected'))
       return
     }
     if (!peerIdRegistered && message.type !== 'peer-id') {
+      getLogger().warn(
+        'Cannot send signaling message - Peer ID not registered',
+        {
+          origin: 'p2p-communication',
+          peerId: config.peerId,
+          messageType: message.type,
+        },
+      )
       config.onError(new Error('Peer ID not registered. Cannot send messages.'))
       return
     }
 
+    getLogger().log('Sending signaling message', {
+      origin: 'p2p-communication',
+      peerId: config.peerId,
+      messageType: message.type,
+      targetPeerId:
+        'targetPeerId' in message ? message.targetPeerId : undefined,
+    })
     if (usePeerJSProtocol) {
       ws.send(toPeerJSMessage(message))
     } else {
       ws.send(JSON.stringify(message))
     }
+    getLogger().log('Signaling message sent', {
+      origin: 'p2p-communication',
+      peerId: config.peerId,
+      messageType: message.type,
+    })
   }
 
   const close = (): void => {

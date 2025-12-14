@@ -53,4 +53,8 @@ export const menuMessages = defineMessages({
     id: 'menu.importTransaction',
     defaultMessage: '!!!Import transaction',
   },
+  p2pConnection: {
+    id: 'menu.p2pConnection',
+    defaultMessage: '!!!P2P Connection',
+  },
 })

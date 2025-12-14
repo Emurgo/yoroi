@@ -122,6 +122,12 @@ export const Menu = () => {
           left={<Icon.Document size={24} color={p.gray_600} />}
         />
 
+        <P2PConnection
+          label={strings.menu.p2pConnection}
+          onPress={navigateTo.p2pConnection}
+          left={<Icon.Link size={24} color={p.gray_600} />}
+        />
+
         {isAirdropEnabled && !isByronWallet && (
           <Airdrop
             label={strings.menu.airdrop}
@@ -233,6 +239,7 @@ const Governance = Item
 const AppSettings = Item
 const KnowledgeBase = Item
 const Airdrop = Item
+const P2PConnection = Item
 const Catalyst = ({
   label,
   left,
@@ -291,6 +298,7 @@ const useNavigateTo = () => {
     navigateToUtxoList,
     navigateToMessageSigning,
     navigateToAirdrop,
+    navigateToP2PConnection,
   } = useWalletNavigation()
   const {wallet} = useSelectedWallet()
   const navigation = useNavigation()
@@ -316,5 +324,6 @@ const useNavigateTo = () => {
     knowledgeBase: () => Linking.openURL(KNOWLEDGE_BASE_LINK),
     governanceCentre: () => navigateToGovernanceCentre(),
     airdrop: () => navigateToAirdrop(),
+    p2pConnection: () => navigateToP2PConnection({}),
   }
 }
