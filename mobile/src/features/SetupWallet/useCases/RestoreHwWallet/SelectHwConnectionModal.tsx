@@ -7,6 +7,7 @@ import * as React from 'react'
 import {Alert, Platform, Text} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
+import {useBackgroundTimerControl} from '~/common/providers/BackgroundTimerContext'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {Button, ButtonType} from '~/ui/Button/Button'
@@ -65,6 +66,7 @@ const SelectBluetoothSection = () => {
   } = useSetupWallet()
   const navigation = useNavigation<SetupWalletRouteNavigation>()
   const {closeModal} = useModal()
+  const backgroundTimerControl = useBackgroundTimerControl()
 
   const handleOnSuccess = () => {
     USBChanged(false)
@@ -75,13 +77,16 @@ const SelectBluetoothSection = () => {
     closeModal()
   }
 
-  const {request} = useLedgerPermissions({
-    onError: () =>
-      Alert.alert(strings.global.error, strings.setupWallet.bluetoothError),
-    onSuccess: () => {
-      handleOnSuccess()
+  const {request} = useLedgerPermissions(
+    {
+      onError: () =>
+        Alert.alert(strings.global.error, strings.setupWallet.bluetoothError),
+      onSuccess: () => {
+        handleOnSuccess()
+      },
     },
-  })
+    backgroundTimerControl,
+  )
 
   return (
     <Button

@@ -1,6 +1,6 @@
 // Ledger Plutus transaction payload building
 // Functions for building Ledger payloads for Plutus (smart contract) transactions
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
+import {CardanoMobileWrapped} from '@yoroi/common'
 import {getLogger} from '@yoroi/logger'
 
 import {

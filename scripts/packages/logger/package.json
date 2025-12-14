@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/logger",
-  "version": "6.0.0",
+  "version": "7.0.0-beta",
   "description": "The Logger package of Yoroi SDK",
   "keywords": [
     "yoroi",
@@ -90,7 +90,7 @@
     "react-native-builder-bob": "0.40.11",
     "react-test-renderer": "19.0.0",
     "release-it": "19.0.2",
-    "typescript": "5.8.3"
+    "typescript": "^5.8.3"
   },
   "packageManager": "npm@10.9.0",
   "engines": {
@@ -100,4 +100,3 @@
     "registry": "https://registry.npmjs.org/"
   }
 }
-

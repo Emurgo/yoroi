@@ -1,4 +1,5 @@
-import {act, renderHook, waitFor} from '@testing-library/react'
+import {act, renderHook} from '@testing-library/react'
+import {waitFor} from '@testing-library/react-native'
 
 import {wrapperManagerFixture} from '../../../fixtures/manager-wrapper'
 import {resolverManagerMocks} from '../../manager.mocks'

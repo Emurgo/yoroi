@@ -54,6 +54,20 @@ const showsModal = (pendingAction: PendingAction): boolean => {
 }
 
 /**
+ * Check if an action navigates to a screen that uses route params.
+ * These actions should be cleared after navigation completes to prevent
+ * re-triggering when navigating back.
+ */
+const needsDelayedClearing = (pendingAction: PendingAction): boolean => {
+  if (pendingAction.source === 'cardano') {
+    // delegate-drep navigates with route params that persist in navigation state
+    // We need to delay clearing to ensure navigation completes first
+    return pendingAction.action.action === 'delegate-drep'
+  }
+  return false
+}
+
+/**
  * Create a safe action ID without circular references
  */
 const createActionId = (pendingAction: PendingAction | null): string | null => {
@@ -333,12 +347,22 @@ export const ActionHandler = () => {
             try {
               executeActionRef.current(action)
               if (!showsModal(action)) {
-                // For non-modal actions, mark as processed immediately
-                markActionProcessedRef.current()
-                // Clear processing flag after a short delay to prevent rapid re-processing
-                setTimeout(() => {
-                  isProcessingRef.current = false
-                }, 100)
+                if (needsDelayedClearing(action)) {
+                  // For navigation actions that use route params, delay clearing
+                  // to ensure navigation completes before clearing the action
+                  // This prevents re-triggering when navigating back
+                  setTimeout(() => {
+                    markActionProcessedRef.current()
+                    isProcessingRef.current = false
+                  }, 500)
+                } else {
+                  // For non-modal actions, mark as processed immediately
+                  markActionProcessedRef.current()
+                  // Clear processing flag after a short delay to prevent rapid re-processing
+                  setTimeout(() => {
+                    isProcessingRef.current = false
+                  }, 100)
+                }
               } else {
                 // For modal actions, clear processing flag after modal is shown
                 // The modal will call markActionProcessed when it closes

@@ -18,10 +18,10 @@ import {
   SignedTx as SignedTxType,
   StakingKeyBalances as StakingKeyBalancesType,
   TokenEntry as TokenEntryType,
-  TxMetadata as TxMetadataType,
   UnsignedTransaction,
   UnsignedTx as UnsignedTxType,
 } from '@yoroi/tx'
+import type {TransactionMetadata as TxMetadataFromTypes} from '@yoroi/types'
 import {
   Address,
   Api,
@@ -296,7 +296,7 @@ const yoroiWalletKeys: Array<keyof YoroiWallet> = [
 ]
 
 export namespace CardanoTypes {
-  export type TxMetadata = TxMetadataType
+  export type TxMetadata = TxMetadataFromTypes
   export type CardanoAddressedUtxo = CardanoAddressedUtxoType
   export type SignedTx = SignedTxType
   export type UnsignedTx = UnsignedTxType

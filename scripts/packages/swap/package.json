@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/swap",
-  "version": "7.2.0",
+  "version": "7.3.0",
   "description": "The Swap package of Yoroi SDK",
   "keywords": [
     "yoroi",
@@ -88,6 +88,7 @@
     "@types/react-test-renderer": "19.0.0",
     "@yoroi/api": "file:../api",
     "@yoroi/common": "file:../common",
+    "@yoroi/logger": "file:../logger",
     "@yoroi/portfolio": "file:../portfolio",
     "@yoroi/types": "file:../types",
     "axios-mock-adapter": "1.22.0",
@@ -113,9 +114,9 @@
     "@emurgo/cip4-js": "^1.0.7",
     "@react-native-async-storage/async-storage": "2.1.2",
     "@tanstack/react-query": "5.81.5",
-    "@yoroi/api": "file:../api",
-    "@yoroi/common": "file:../common",
-    "@yoroi/portfolio": "file:../portfolio",
+    "@yoroi/api": "^7.0.0-beta",
+    "@yoroi/common": "^7.0.0-beta",
+    "@yoroi/portfolio": "^7.0.0-beta",
     "axios": "1.10.0",
     "bignumber.js": "9.3.0",
     "immer": "10.1.1",

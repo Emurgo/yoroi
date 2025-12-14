@@ -1,5 +1,6 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
+import {useHeaderHeight} from '@react-navigation/elements'
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs'
 import * as React from 'react'
 import {ScrollView as RNScrollView} from 'react-native'
@@ -61,12 +62,14 @@ const TabWrapper = React.memo(
     readOnly: _readOnly,
     showMemo = false,
     showGoToTransactionsButton = false,
+    keyboardVerticalOffset,
   }: {
     children: React.ReactNode
     onConfirm?: () => void
     readOnly?: boolean
     showMemo?: boolean
     showGoToTransactionsButton?: boolean
+    keyboardVerticalOffset?: number
   }) => {
     const {atoms: ta} = useTheme()
     const strings = useStrings()
@@ -75,7 +78,7 @@ const TabWrapper = React.memo(
 
     return (
       <ScrollViewProvider>
-        <SafeArea>
+        <SafeArea keyboardVerticalOffset={keyboardVerticalOffset}>
           <ScrollView ref={scrollViewRef} style={[a.flex_1, ta.bg_color_max]}>
             {children}
           </ScrollView>
@@ -105,6 +108,8 @@ const TabWrapper = React.memo(
     )
   },
 )
+
+const MATERIAL_TAB_BAR_HEIGHT = 48
 
 export const ReviewTx = ({
   formattedTx,
@@ -153,6 +158,8 @@ export const ReviewTx = ({
 }) => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
+  const headerHeight = useHeaderHeight()
+  const keyboardVerticalOffset = headerHeight + MATERIAL_TAB_BAR_HEIGHT
 
   // Tab visibility logic according to proposal
   const showOperationsTab =
@@ -191,6 +198,7 @@ export const ReviewTx = ({
         readOnly={readOnly}
         showMemo={!readOnly}
         showGoToTransactionsButton={readOnly && isReviewFlow && !onConfirm}
+        keyboardVerticalOffset={keyboardVerticalOffset}
       >
         <OverviewTab
           tx={formattedTx}
@@ -223,6 +231,7 @@ export const ReviewTx = ({
       multiparty,
       multisig,
       cbor,
+      keyboardVerticalOffset,
     ],
   )
 

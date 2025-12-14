@@ -20,8 +20,10 @@ import {Space} from '~/ui/Space/Space'
 import {useTxFilter} from './TxFilterProvider'
 import {TxListItem} from './TxListItem'
 
-type Props = Partial<FlashListProps<TransactionSummary>>
-export const TxList = (props: Props) => {
+type Props = Partial<FlashListProps<TransactionSummary>> & {
+  listHeaderComponent?: FlashListProps<TransactionSummary>['ListHeaderComponent']
+}
+export const TxList = ({listHeaderComponent, ...props}: Props) => {
   const {wallet} = useSelectedWallet()
   const {palette: p} = useTheme()
 
@@ -103,6 +105,7 @@ export const TxList = (props: Props) => {
         onEndReached={handleOnEndReached}
         onEndReachedThreshold={0.5}
         estimatedItemSize={72}
+        ListHeaderComponent={listHeaderComponent}
         {...props}
       />
     </View>

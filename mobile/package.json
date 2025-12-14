@@ -1,6 +1,6 @@
 {
   "name": "yoroi-v2",
-  "version": "6.2.1",
+  "version": "7.0.0",
   "main": "index.ts",
   "scripts": {
     "postinstall": "patch-package",

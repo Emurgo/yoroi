@@ -1102,3 +1102,9 @@ export * from './helpers/storage'
 export * from './helpers/types'
 // Export all errors from centralized location
 export * from './errors'
+// Export moved types from tx, staking packages
+export * from './certificate/types'
+export * from './datum/types'
+export * from './staking/certificate'
+export * from './tx/types'
+export * from './tx/validation'

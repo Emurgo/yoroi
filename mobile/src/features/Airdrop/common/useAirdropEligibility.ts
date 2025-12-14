@@ -175,8 +175,20 @@ export const useAirdropEligibility = () => {
                   : 'Manual address'
             }
 
+            // Recalculate numberOfClaimedAllocations from confirmed/confirming thaws
+            // (API sometimes returns incorrect value, so we calculate it ourselves)
+            const numberOfClaimedAllocations =
+              cachedAllocation.schedule.thaws.filter(
+                (thaw) =>
+                  thaw.status === 'confirmed' || thaw.status === 'confirming',
+              ).length
+
             allocations.push({
               ...cachedAllocation,
+              schedule: {
+                ...cachedAllocation.schedule,
+                numberOfClaimedAllocations,
+              },
               isExternal,
               displayName,
               nextThawDate,
@@ -219,9 +231,21 @@ export const useAirdropEligibility = () => {
             continue
           }
 
+          // Recalculate numberOfClaimedAllocations from confirmed/confirming thaws
+          // (API sometimes returns incorrect value, so we calculate it ourselves)
+          const numberOfClaimedAllocations =
+            cachedAllocation.schedule.thaws.filter(
+              (thaw) =>
+                thaw.status === 'confirmed' || thaw.status === 'confirming',
+            ).length
+
           // We have cached data - include it
           allocations.push({
             ...cachedAllocation,
+            schedule: {
+              ...cachedAllocation.schedule,
+              numberOfClaimedAllocations,
+            },
             isExternal: true,
             displayName,
             nextThawDate,
@@ -263,11 +287,10 @@ export const useAirdropEligibility = () => {
             .filter((thaw) => thaw.status === 'redeemable')
             .reduce((sum, thaw) => sum + thaw.amount, 0)
 
-          // Calculate total allocation (sum of all thaws)
-          const totalAllocation = schedule.thaws.reduce(
-            (sum, thaw) => sum + thaw.amount,
-            0,
-          )
+          // Calculate total allocation (sum of all thaws excluding failed ones)
+          const totalAllocation = schedule.thaws
+            .filter((thaw) => thaw.status !== 'failed')
+            .reduce((sum, thaw) => sum + thaw.amount, 0)
 
           // Calculate redeemed so far (sum of confirmed thaws)
           const redeemedSoFar = schedule.thaws
@@ -277,6 +300,7 @@ export const useAirdropEligibility = () => {
             )
             .reduce((sum, thaw) => sum + thaw.amount, 0)
 
+          // Total left to redeem excludes redeemed thaws (failed already excluded from totalAllocation)
           const totalLeftToRedeem = totalAllocation - redeemedSoFar
 
           // Find the next upcoming thaw that hasn't started yet
@@ -297,6 +321,13 @@ export const useAirdropEligibility = () => {
               ? (upcomingThaws[0]?.thawing_period_start ?? null)
               : null
 
+          // Calculate numberOfClaimedAllocations from confirmed/confirming thaws
+          // (API sometimes returns incorrect value, so we calculate it ourselves)
+          const numberOfClaimedAllocations = schedule.thaws.filter(
+            (thaw) =>
+              thaw.status === 'confirmed' || thaw.status === 'confirming',
+          ).length
+
           // Get display name for external address
           const isExternal = externalAddresses.has(address)
           let displayName: string | undefined
@@ -312,7 +343,10 @@ export const useAirdropEligibility = () => {
 
           allocations.push({
             address,
-            schedule,
+            schedule: {
+              ...schedule,
+              numberOfClaimedAllocations,
+            },
             redeemableAmount,
             totalAllocation,
             redeemedSoFar,

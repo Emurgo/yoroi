@@ -1,6 +1,7 @@
 import {App} from '@yoroi/types'
 
-import {act, renderHook, waitFor} from '@testing-library/react'
+import {act, renderHook} from '@testing-library/react'
+import {waitFor} from '@testing-library/react-native'
 
 import {storageKeyMaker} from '../../../storage/helpers/storage-key-maker'
 import {useSyncStorageToState} from './useSyncStorageToState'

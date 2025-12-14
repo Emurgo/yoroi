@@ -47,7 +47,7 @@ export {
   getTokenFingerprint,
 } from './utils/format'
 // Utils - utils (Amounts, Quantities, etc.)
-export {Amounts, asQuantity, Entries, Quantities, Utxos} from './utils/utils'
+export {Amounts, Entries, Quantities, Utxos, asQuantity} from './utils/utils'
 // Utils - timeUtils
 export {delay, formatTimeSpan} from './utils/timeUtils'
 // Utils - validators
@@ -77,8 +77,8 @@ export {
 export {encryptWithPassword, generatePrivateKeyForCatalyst} from './catalyst'
 export {encryptWithPassword as encryptWithPasswordFromCipher} from './catalyst/catalystCipher'
 
-// Wrapped CSL
-export {CardanoMobile, CardanoMobileWrapped} from './wrappedCsl'
+// Wrapped CSL (re-exported from common for backward compatibility)
+export {CardanoMobile, CardanoMobileWrapped} from '@yoroi/common'
 
 // Operations
 export * from './operations'
@@ -113,7 +113,6 @@ export {cip95ExtensionMaker, supportsCIP95} from './cip95/cip95'
 export type {CIP95Extension} from './cip95/cip95'
 
 // UtxoManager
-export {useCollateralInfo} from './utxoManager/useCollateralInfo'
 export {useSetCollateralId} from './utxoManager/useSetCollateralId'
 export {
   collateralConfig,

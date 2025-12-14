@@ -57,7 +57,7 @@ export const ReviewTxNavigator = () => {
             Record<string, unknown>
           >
         }
-        options={{headerShown: false}}
+        options={{headerShown: true}}
       />
     </Stack.Navigator>
   )

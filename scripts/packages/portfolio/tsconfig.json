@@ -7,9 +7,7 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "react",
-    "lib": [
-      "esnext"
-    ],
+    "lib": ["esnext"],
     "module": "esnext",
     "moduleResolution": "node",
     "noFallthroughCasesInSwitch": true,
@@ -23,10 +21,11 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "esnext",
+    "declarationMap": false,
     "paths": {
       "@tanstack/react-query": ["./node_modules/@tanstack/react-query"],
       "@tanstack/query-core": ["./node_modules/@tanstack/query-core"],
       "src/*": ["./src/*"]
     }
-  },
+  }
 }

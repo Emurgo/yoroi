@@ -21,8 +21,11 @@ describe('backoff', () => {
         defaultSyncConfig.maxBackoffDelay,
       )
 
+      // Allow small tolerance (10ms) for timing differences between Date.now() calls
+      const tolerance = 10
+
       expect(delay).toBeGreaterThanOrEqual(expectedDelay)
-      expect(delay).toBeLessThanOrEqual(expectedMaxDelay)
+      expect(delay).toBeLessThanOrEqual(expectedMaxDelay + tolerance)
     })
 
     it('should increase delay with more errors', () => {

@@ -16,7 +16,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
 import {useHasRedeemableThaws} from '~/features/Airdrop/common/useHasRedeemableThaws'
-import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {usePrefetchStakingInfo} from '~/features/Dashboard/ui/shared/StakePoolInfos'
 import {useCanVote} from '~/features/RegisterCatalyst/common/hooks'
 import {NetworkTag} from '~/features/Settings/ui/shared/NetworkTag'
@@ -62,7 +61,6 @@ export const Menu = () => {
   const {atoms: ta, palette: p} = useTheme()
   const navigateTo = useNavigateTo()
   const {isPoolRetiring} = usePoolTransition()
-  const {isAuthDev} = useAuth()
   const {config} = useRemoteConfig()
   const isAirdropEnabled = config?.features?.midnightAirdrop?.enabled ?? false
   const {hasRedeemableThaws} = useHasRedeemableThaws()
@@ -106,13 +104,11 @@ export const Menu = () => {
           />
         )}
 
-        {isAuthDev && (
-          <UtxoList
-            label={strings.menu.utxoList}
-            onPress={navigateTo.utxoList}
-            left={<Icon.Burger size={24} color={p.gray_600} />}
-          />
-        )}
+        <UtxoList
+          label={strings.menu.utxoList}
+          onPress={navigateTo.utxoList}
+          left={<Icon.Burger size={24} color={p.gray_600} />}
+        />
 
         <MessageSigning
           label={strings.menu.messageSigning}

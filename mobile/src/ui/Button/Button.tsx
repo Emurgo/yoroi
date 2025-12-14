@@ -215,7 +215,7 @@ export const Button = (props: ButtonProps) => {
           ...a.flex,
           ...a.flex_grow,
           ...a.flex_row,
-          ...a.align_start,
+          ...a.align_center,
           ...a.justify_center,
           ...shape,
           ...(rightIcon && a.flex_row_reverse),

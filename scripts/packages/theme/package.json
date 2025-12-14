@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/theme",
-  "version": "6.0.0",
+  "version": "7.0.0-beta",
   "description": "The theme package of Yoroi",
   "keywords": [
     "yoroi",
@@ -103,7 +103,7 @@
   "peerDependencies": {
     "@react-native-async-storage/async-storage": "2.1.2",
     "@tanstack/react-query": "5.81.5",
-    "@yoroi/common": "file:../common",
+    "@yoroi/common": "^7.0.0-beta",
     "axios": "1.10.0",
     "immer": "10.1.1",
     "react": "19.0.0",
@@ -120,4 +120,3 @@
     "registry": "https://registry.npmjs.org/"
   }
 }
-  

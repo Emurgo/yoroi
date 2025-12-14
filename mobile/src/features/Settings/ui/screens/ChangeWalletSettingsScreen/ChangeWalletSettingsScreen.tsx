@@ -55,6 +55,7 @@ export const ChangeWalletSettingsScreen = () => {
   const {wallet} = useSelectedWallet()
   const intl = useIntl()
   const {walletIdChanged} = useSetupWallet()
+  const {isAuthDev} = useAuth()
 
   const logout = useLogout()
   const settingsNavigation = useNavigation<SettingsRouteNavigation>()
@@ -147,7 +148,7 @@ export const ChangeWalletSettingsScreen = () => {
           </SettingsItem>
         </SettingsSection>
 
-        {!isPartialReadOnly && (
+        {isAuthDev && !isPartialReadOnly && (
           <SettingsSection title={strings.settings.walletSettings.shareWallet}>
             <NavigatedSettingsItem
               icon={<Icon.Share {...iconProps} />}

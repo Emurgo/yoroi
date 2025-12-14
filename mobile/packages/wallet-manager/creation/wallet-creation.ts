@@ -7,6 +7,7 @@ import {Blockies} from '@yoroi/identicon'
 import {getLogger} from '@yoroi/logger'
 import {Chain, HW, Wallet} from '@yoroi/types'
 
+import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {v4} from 'uuid'
 
 import {createWalletMeta} from '../lifecycle/wallet-lifecycle'
@@ -42,11 +43,12 @@ export const createWalletFromMnemonic = async (
   const walletFactory = getWalletFactory({network, implementation})
   const id = v4()
 
-  const {rootKey, accountPubKeyHex} = CardanoMobileWrapped.cslScope((csl) =>
-    walletFactory.makeKeys({
-      mnemonic,
-      csl,
-    }),
+  const {rootKey, accountPubKeyHex} = CardanoMobileWrapped.cslScope(
+    (csl: WasmModuleProxy) =>
+      walletFactory.makeKeys({
+        mnemonic,
+        csl,
+      }),
   )
 
   const encryptedStorage = makeWalletEncryptedStorage(id)
@@ -167,8 +169,9 @@ export const createWalletFromRootKey = async (
   const id = v4()
 
   // Derive accountPubKeyHex from rootKeyHex
-  const accountPubKeyHex = CardanoMobileWrapped.cslScope((csl) =>
-    deriveAccountFromRootKey(rootKeyHex, accountVisual, implementation, csl),
+  const accountPubKeyHex = CardanoMobileWrapped.cslScope(
+    (csl: WasmModuleProxy) =>
+      deriveAccountFromRootKey(rootKeyHex, accountVisual, implementation, csl),
   )
 
   const encryptedStorage = makeWalletEncryptedStorage(id)
@@ -215,8 +218,9 @@ export const deriveAndStoreAccount = async (
   const rootKeyResult = await encryptedStorage.xpriv.read(password)
   const rootKeyHex = rootKeyResult.value
 
-  const accountPubKeyHex = CardanoMobileWrapped.cslScope((csl) =>
-    deriveAccountFromRootKey(rootKeyHex, accountVisual, implementation, csl),
+  const accountPubKeyHex = CardanoMobileWrapped.cslScope(
+    (csl: WasmModuleProxy) =>
+      deriveAccountFromRootKey(rootKeyHex, accountVisual, implementation, csl),
   )
 
   await encryptedStorage.xpub.write(accountVisual, accountPubKeyHex)

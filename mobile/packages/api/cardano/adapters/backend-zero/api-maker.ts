@@ -1,9 +1,5 @@
 import {getLogger} from '@yoroi/logger'
-import {
-  RemoteCertificateMeta,
-  StakePoolInfoRequest,
-  StakePoolInfosAndHistories,
-} from '@yoroi/staking'
+import {StakePoolInfoRequest, StakePoolInfosAndHistories} from '@yoroi/staking'
 import {
   Address,
   Amount,
@@ -14,6 +10,7 @@ import {
   EpochNumber,
   PolicyId,
   Portfolio,
+  RemoteCertificateMeta,
   SlotNumber,
   TransactionCborBase64,
   TransactionHash,
