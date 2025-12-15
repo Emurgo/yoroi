@@ -353,6 +353,7 @@ export const ThawScheduleScreen = () => {
             index={index}
             totalThaws={totalThaws}
             isLast={index === thaws.length - 1}
+            thaws={thaws}
             onRetryFailed={handleRedeem}
             isReadOnly={isReadOnly}
             isWalletInitialized={isWalletInitialized}
@@ -380,6 +381,7 @@ type ThawItemProps = {
   index: number
   totalThaws: number
   isLast: boolean
+  thaws: ReadonlyArray<Thaw>
   onRetryFailed: () => Promise<void>
   isReadOnly: boolean
   isWalletInitialized: boolean
@@ -391,6 +393,7 @@ const ThawItem = ({
   index,
   totalThaws,
   isLast,
+  thaws,
   onRetryFailed,
   isReadOnly,
   isWalletInitialized,
@@ -457,6 +460,10 @@ const ThawItem = ({
   }
 
   const badge = getStatusBadge()
+
+  // Color the line primary if the current thaw's date has passed
+  // The line comes AFTER the current thaw and connects to the next one
+  const hasCurrentThawDatePassed = hasStarted
 
   return (
     <View style={[a.flex_row]}>
@@ -537,7 +544,9 @@ const ThawItem = ({
             style={{
               width: 2,
               flex: 1,
-              backgroundColor: isCompleted ? p.primary_300 : p.gray_200,
+              backgroundColor: hasCurrentThawDatePassed
+                ? p.primary_500
+                : p.gray_200,
               marginVertical: 4,
             }}
           />
