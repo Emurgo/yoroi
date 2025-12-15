@@ -446,12 +446,23 @@ export function createCIP15VotingMetadata(
     typeof stakingPublicKey === 'string' ? stakingPublicKey : stakingPublicKey
   const rewardAddrStr =
     typeof rewardAddress === 'string' ? rewardAddress : rewardAddress
+  // Add 0x prefix for hex strings to match Cardano metadata format
+  // Remove 0x if already present to avoid double prefix
+  const votingKeyHex = votingKeyStr.startsWith('0x')
+    ? votingKeyStr
+    : `0x${votingKeyStr}`
+  const stakingKeyHex = stakingKeyStr.startsWith('0x')
+    ? stakingKeyStr
+    : `0x${stakingKeyStr}`
+  const rewardAddrHex = rewardAddrStr.startsWith('0x')
+    ? rewardAddrStr
+    : `0x${rewardAddrStr}`
   return {
     label: 61284, // CIP-15 DATA label
     data: {
-      1: votingKeyStr,
-      2: stakingKeyStr,
-      3: rewardAddrStr,
+      1: votingKeyHex,
+      2: stakingKeyHex,
+      3: rewardAddrHex,
       4: nonce,
     },
   }
@@ -459,6 +470,12 @@ export function createCIP15VotingMetadata(
 
 /**
  * Create CIP-36 voting metadata (new Catalyst voting format)
+ * CIP-36 format:
+ * - Field 1: delegations (array of [votingKey, weight])
+ * - Field 2: stake_credential (staking key)
+ * - Field 3: payment_address (payment address for receiving voting rewards)
+ * - Field 4: nonce
+ * - Field 5: voting_purpose (optional, default 0)
  */
 export function createCIP36VotingMetadata(
   votingPublicKey: PublicKeyHex | string,
@@ -471,19 +488,31 @@ export function createCIP36VotingMetadata(
     typeof votingPublicKey === 'string' ? votingPublicKey : votingPublicKey
   const stakingKeyStr =
     typeof stakingPublicKey === 'string' ? stakingPublicKey : stakingPublicKey
-  const rewardAddrStr =
-    typeof rewardAddress === 'string' ? rewardAddress : rewardAddress
-  const metadata: Record<string, unknown> = {
-    1: votingKeyStr,
-    2: stakingKeyStr,
-    3: rewardAddrStr,
-    4: nonce,
-  }
+  // Add 0x prefix for hex strings to match Cardano metadata format
+  // Remove 0x if already present to avoid double prefix
+  const votingKeyHex = votingKeyStr.startsWith('0x')
+    ? votingKeyStr
+    : `0x${votingKeyStr}`
+  const stakingKeyHex = stakingKeyStr.startsWith('0x')
+    ? stakingKeyStr
+    : `0x${stakingKeyStr}`
 
-  if (paymentAddress) {
-    const paymentAddrStr =
-      typeof paymentAddress === 'string' ? paymentAddress : paymentAddress
-    metadata[5] = paymentAddrStr
+  // CIP-36 uses payment_address in field 3, not reward_address
+  // If paymentAddress is provided, use it; otherwise fall back to rewardAddress
+  const addressToUse = paymentAddress || rewardAddress
+  const addressStr =
+    typeof addressToUse === 'string' ? addressToUse : addressToUse
+  const addressHex = addressStr.startsWith('0x')
+    ? addressStr
+    : `0x${addressStr}`
+
+  // CIP-36 format: field 1 is an array of [votingKey, weight]
+  const metadata: Record<string, unknown> = {
+    1: [[votingKeyHex, 1]],
+    2: stakingKeyHex,
+    3: addressHex, // payment_address (field 3 in CIP-36)
+    4: nonce,
+    5: 0, // voting_purpose (default 0 for voting registration)
   }
 
   return {

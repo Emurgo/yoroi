@@ -89,16 +89,17 @@ export async function createVotingRegTx({
   if (!baseAddrObj) {
     throw new Error('Failed to convert base address to Address')
   }
-  const paymentAddressCIP36 = baseAddrObj.toBech32(undefined)
-  if (!paymentAddressCIP36) {
-    throw new Error('Failed to convert payment address to bech32')
+  // Convert addresses to hex format (bech32 strings are too long for metadata)
+  const paymentAddressHex = baseAddrObj.toHex()
+  if (!paymentAddressHex) {
+    throw new Error('Failed to convert payment address to hex')
   }
 
   // Derive reward address from base address
   const rewardAddr = baseAddrObj
-  const rewardAddress = rewardAddr.toBech32(undefined)
-  if (!rewardAddress) {
-    throw new Error('Failed to convert reward address to bech32')
+  const rewardAddressHex = rewardAddr.toHex()
+  if (!rewardAddressHex) {
+    throw new Error('Failed to convert reward address to hex')
   }
 
   // Estimate fee for voting registration transaction
@@ -125,34 +126,26 @@ export async function createVotingRegTx({
   builderState = addInputs(builderState, selectedUtxos)
 
   // Create and add voting metadata
-  const votingPublicKeyBech32 = votingPublicKey.toBech32()
-  if (!votingPublicKeyBech32) {
-    throw new Error('Failed to convert voting public key to bech32')
-  }
-  const stakingPublicKeyBech32 = stakingPublicKey.toBech32()
-  if (!stakingPublicKeyBech32) {
-    throw new Error('Failed to convert staking public key to bech32')
-  }
-  const rewardAddressBranded =
-    typeof rewardAddress === 'string'
-      ? (rewardAddress as Address)
-      : rewardAddress
-  const paymentAddressBranded =
-    typeof paymentAddressCIP36 === 'string'
-      ? (paymentAddressCIP36 as Address)
-      : paymentAddressCIP36
+  // Convert public keys to hex format (bech32 strings are too long for metadata)
+  const votingPublicKeyHex = Buffer.from(votingPublicKey.asBytes()).toString(
+    'hex',
+  )
+  const stakingPublicKeyHex = Buffer.from(stakingPublicKey.asBytes()).toString(
+    'hex',
+  )
+
   const votingMetadata = supportsCIP36
     ? createCIP36VotingMetadata(
-        votingPublicKeyBech32 as PublicKeyHex,
-        stakingPublicKeyBech32 as PublicKeyHex,
-        rewardAddressBranded,
+        votingPublicKeyHex,
+        stakingPublicKeyHex,
+        rewardAddressHex,
         nonce,
-        paymentAddressBranded,
+        paymentAddressHex,
       )
     : createCIP15VotingMetadata(
-        votingPublicKeyBech32 as PublicKeyHex,
-        stakingPublicKeyBech32 as PublicKeyHex,
-        rewardAddressBranded,
+        votingPublicKeyHex,
+        stakingPublicKeyHex,
+        rewardAddressHex,
         nonce,
       )
 
