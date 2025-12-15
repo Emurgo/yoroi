@@ -8,39 +8,38 @@ import {
 import {isAndroid} from '~/kernel/constants'
 import {logger} from '~/kernel/logger/logger'
 
-import type {AddressAllocation, Thaw} from '../types'
+import type {AddressAllocation} from '../types'
 
 const AIRDROP_NOTIFICATION_PREFIX = 'airdrop_thaw_'
 
 /**
- * Creates a unique identifier for a thaw notification based on address and thaw time
+ * Creates a unique identifier for a thaw notification based on thaw date only
  */
-const getThawNotificationId = (address: string, thawDate: Date): string => {
-  // Use address hash and timestamp to create unique ID
-  const addressHash = address.slice(-8) // Last 8 chars of address
+const getThawNotificationId = (thawDate: Date): string => {
+  // Use timestamp to create unique ID per date
   const timestamp = thawDate.getTime()
-  return `${AIRDROP_NOTIFICATION_PREFIX}${addressHash}_${timestamp}`
+  return `${AIRDROP_NOTIFICATION_PREFIX}${timestamp}`
 }
 
 /**
- * Checks if a notification is already scheduled for a specific thaw time
+ * Gets all existing scheduled notification IDs for airdrop thaws
  */
-const isThawNotificationScheduled = async (
-  address: string,
-  thawDate: Date,
-): Promise<boolean> => {
+const getExistingThawNotificationIds = async (): Promise<Set<string>> => {
   try {
     const scheduledNotifications =
       await Notifications.getAllScheduledNotificationsAsync()
-    const expectedId = getThawNotificationId(address, thawDate)
+    const existingIds = new Set<string>()
 
-    return scheduledNotifications.some((notification) => {
-      const notificationId = notification.identifier
-      return notificationId === expectedId
-    })
+    for (const notification of scheduledNotifications) {
+      if (notification.identifier.startsWith(AIRDROP_NOTIFICATION_PREFIX)) {
+        existingIds.add(notification.identifier)
+      }
+    }
+
+    return existingIds
   } catch (error) {
-    logger.error('Failed to check scheduled notifications', {error})
-    return false
+    logger.error('Failed to get existing scheduled notifications', {error})
+    return new Set<string>()
   }
 }
 
@@ -69,17 +68,13 @@ const setupNotificationSystem = async (): Promise<void> => {
 }
 
 /**
- * Gets all upcoming thaws from all allocations
+ * Gets unique upcoming thaw dates from all allocations
  */
-const getUpcomingThaws = (
+const getUniqueUpcomingThawDates = (
   allocations: ReadonlyArray<AddressAllocation>,
-): Array<{allocation: AddressAllocation; thaw: Thaw; thawDate: Date}> => {
+): Array<Date> => {
   const now = new Date()
-  const upcomingThaws: Array<{
-    allocation: AddressAllocation
-    thaw: Thaw
-    thawDate: Date
-  }> = []
+  const thawDates = new Set<number>()
 
   for (const allocation of allocations) {
     for (const thaw of allocation.schedule.thaws) {
@@ -90,7 +85,8 @@ const getUpcomingThaws = (
             thaw.thawing_period_start.replace(/\s/g, ''),
           )
           if (thawDate > now) {
-            upcomingThaws.push({allocation, thaw, thawDate})
+            // Use timestamp as key to ensure uniqueness per date
+            thawDates.add(thawDate.getTime())
           }
         } catch (error) {
           logger.error('Failed to parse thaw date', {
@@ -103,10 +99,10 @@ const getUpcomingThaws = (
     }
   }
 
-  // Sort by date (earliest first)
-  return upcomingThaws.sort(
-    (a, b) => a.thawDate.getTime() - b.thawDate.getTime(),
-  )
+  // Convert back to Date objects and sort by date (earliest first)
+  return Array.from(thawDates)
+    .map((timestamp) => new Date(timestamp))
+    .sort((a, b) => a.getTime() - b.getTime())
 }
 
 /**
@@ -137,10 +133,10 @@ export const scheduleThawNotifications = async (
     // Set up notification system
     await setupNotificationSystem()
 
-    // Get all upcoming thaws
-    const upcomingThaws = getUpcomingThaws(allocations)
+    // Get unique upcoming thaw dates
+    const uniqueThawDates = getUniqueUpcomingThawDates(allocations)
 
-    if (upcomingThaws.length === 0) {
+    if (uniqueThawDates.length === 0) {
       Alert.alert(
         'No Upcoming Thaws',
         'There are no upcoming thaws to schedule notifications for.',
@@ -148,38 +144,29 @@ export const scheduleThawNotifications = async (
       return {scheduled: 0, skipped: 0, errors: 0}
     }
 
-    // Schedule notifications for each thaw
-    for (const {allocation, thaw, thawDate} of upcomingThaws) {
-      try {
-        // Check if already scheduled
-        const alreadyScheduled = await isThawNotificationScheduled(
-          allocation.address,
-          thawDate,
-        )
+    // Get all existing scheduled notification IDs once
+    const existingNotificationIds = await getExistingThawNotificationIds()
 
-        if (alreadyScheduled) {
+    // Schedule one notification per unique date
+    for (const thawDate of uniqueThawDates) {
+      try {
+        // Check if already scheduled using the pre-fetched Set
+        const notificationId = getThawNotificationId(thawDate)
+        if (existingNotificationIds.has(notificationId)) {
           skipped++
           continue
         }
 
         // Schedule the notification
-        const notificationId = getThawNotificationId(
-          allocation.address,
-          thawDate,
-        )
-        const amount = (thaw.amount / Math.pow(10, 6)).toFixed(2) // NIGHT has 6 decimals
-
         await Notifications.scheduleNotificationAsync({
           identifier: notificationId,
           content: {
             title: 'Airdrop Thaw Available',
-            body: `${amount} NIGHT tokens are now available to redeem`,
+            body: 'Thaw available',
             sound: 'default',
             data: {
               type: 'airdrop_thaw',
-              address: allocation.address,
               thawDate: thawDate.toISOString(),
-              amount: thaw.amount,
             },
           },
           trigger: {
@@ -191,7 +178,6 @@ export const scheduleThawNotifications = async (
         scheduled++
       } catch (error) {
         logger.error('Failed to schedule thaw notification', {
-          address: allocation.address,
           thawDate: thawDate.toISOString(),
           error,
         })

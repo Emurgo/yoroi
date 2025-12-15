@@ -61,9 +61,9 @@ describe('transaction builder helpers', () => {
 
       expect(result.label).toBe(61284)
       expect(result.data).toEqual({
-        1: 'voting_key',
-        2: 'staking_key',
-        3: 'reward_addr',
+        1: '0xvoting_key',
+        2: '0xstaking_key',
+        3: '0xreward_addr',
         4: 123,
       })
     })
@@ -80,10 +80,11 @@ describe('transaction builder helpers', () => {
 
       expect(result.label).toBe(61284)
       expect(result.data).toEqual({
-        1: 'voting_key',
-        2: 'staking_key',
-        3: 'reward_addr',
+        1: [['0xvoting_key', 1]],
+        2: '0xstaking_key',
+        3: '0xreward_addr',
         4: 123,
+        5: 0,
       })
     })
 
@@ -96,7 +97,14 @@ describe('transaction builder helpers', () => {
         'payment_addr',
       )
 
-      expect(result.data).toHaveProperty('5', 'payment_addr')
+      expect(result.label).toBe(61284)
+      expect(result.data).toEqual({
+        1: [['0xvoting_key', 1]],
+        2: '0xstaking_key',
+        3: '0xpayment_addr',
+        4: 123,
+        5: 0,
+      })
     })
   })
 
