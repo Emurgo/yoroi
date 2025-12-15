@@ -7,7 +7,10 @@ import * as Haptics from 'expo-haptics'
 import * as React from 'react'
 import {Alert, Text, TouchableOpacity, View} from 'react-native'
 
-import {parseCardanoLink} from '~/features/Links/common/parsers'
+import {
+  parseCardanoLink,
+  parseLegacyPublicKeyQR,
+} from '~/features/Links/common/parsers'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {
   CameraCodeScanner,
@@ -44,6 +47,17 @@ export const ScanCodeScreen = () => {
           setPendingAction({
             source: 'yoroi',
             action: {info: parsedYoroiAction, isTrusted: false},
+          })
+          return
+        }
+
+        // Try legacy yoroi-frontend public key QR format (JSON with publicKeyHex)
+        const legacyAction = parseLegacyPublicKeyQR(event.data)
+        if (legacyAction != null) {
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+          setPendingAction({
+            source: 'cardano',
+            action: legacyAction,
           })
           return
         }
