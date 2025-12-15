@@ -1,5 +1,6 @@
 import {isLeft} from '@yoroi/common'
-import {App, Chain} from '@yoroi/types'
+import {getLogger} from '@yoroi/logger'
+import {App, Branded, Chain} from '@yoroi/types'
 
 import {CardanoTypes} from '../types'
 import {GovernanceApi} from './api'
@@ -12,7 +13,6 @@ export type Config = {
   cardano: CardanoTypes.Wasm
   storage: App.Storage
   api: GovernanceApi
-  logger?: App.Logger.Manager
 }
 
 export type VoteKind = 'abstain' | 'no-confidence'
@@ -78,11 +78,11 @@ class Manager implements GovernanceManager {
   }
 
   async getStakingKeyState(stakeKeyHash: string): Promise<StakingKeyState> {
-    const {api, logger} = this.config
+    const {api} = this.config
     const response = await api.getStakingKeyState(stakeKeyHash)
 
     if (isLeft(response)) {
-      logger?.error('Failed to fetch staking key state', {
+      getLogger().error('Failed to fetch staking key state', {
         stakeKeyHash,
         error: response.error,
       })
@@ -95,13 +95,23 @@ class Manager implements GovernanceManager {
       if (data.drepDelegation.drep === 'no_confidence') {
         const {tx, slot, epoch} = data.drepDelegation
         return {
-          drepDelegation: {action: 'no-confidence', tx, slot, epoch},
+          drepDelegation: {
+            action: 'no-confidence',
+            tx: Branded.asTransactionHash(tx),
+            slot: Branded.asSlotNumber(slot),
+            epoch: Branded.asEpochNumber(epoch),
+          },
         } as const
       }
       if (data.drepDelegation.drep === 'abstain') {
         const {tx, slot, epoch} = data.drepDelegation
         return {
-          drepDelegation: {action: 'abstain', tx, slot, epoch},
+          drepDelegation: {
+            action: 'abstain',
+            tx: Branded.asTransactionHash(tx),
+            slot: Branded.asSlotNumber(slot),
+            epoch: Branded.asEpochNumber(epoch),
+          },
         } as const
       }
 
@@ -109,10 +119,10 @@ class Manager implements GovernanceManager {
       return {
         drepDelegation: {
           action: 'drep',
-          tx,
-          slot,
-          epoch,
-          hash: drep,
+          tx: Branded.asTransactionHash(tx),
+          slot: Branded.asSlotNumber(slot),
+          epoch: Branded.asEpochNumber(epoch),
+          hash: Branded.asDRepId(drep),
           type: drepKind === 'scripthash' ? 'script' : 'key',
         },
       } as const
@@ -160,10 +170,10 @@ class Manager implements GovernanceManager {
 
   async validateDRepID(drepId: string): Promise<boolean> {
     const {hash} = parseDrepId(drepId, this.config.cardano)
-    const response = await this.config.api.getDRepById(hash)
+    const response = await this.config.api.getDRepById(Branded.asDRepId(hash))
 
     if (isLeft(response)) {
-      this.config.logger?.error('DRep validation failed', {
+      getLogger().error('DRep validation failed', {
         drepId,
         error: response.error,
       })

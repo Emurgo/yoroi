@@ -5,6 +5,7 @@ set -euo pipefail
 PACKAGES=(
   "api"
   "blockchains"
+  "cardano-wallet"
   "claim"
   "common"
   "dapp-connector"
@@ -13,6 +14,7 @@ PACKAGES=(
   "identicon"
   "links"
   "notifications"
+  "p2p-communication"
   "portfolio"
   "resolver"
   "setup-wallet"
@@ -20,7 +22,9 @@ PACKAGES=(
   "swap"
   "theme"
   "transfer"
+  "tx"
   "types"
+  "wallet-manager"
 )
 
 echo "Creating src symlinks in scripts/packages/..."

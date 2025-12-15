@@ -1,30 +1,37 @@
 import {isNonNullable} from '@yoroi/common'
 import {
+  GovernanceProvider,
   getYoroiDrepIdHex,
   useDelegationCertificate,
+  useGovernance,
   useStakingKeyState,
   useVotingCertificate,
 } from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
+import {useFocusEffect, useRoute} from '@react-navigation/native'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {useRemoteConfig} from '~/features/RemoteConfig/hooks/useRemoteConfig'
+import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
 import {LearnMoreLink} from '~/features/Staking/Governance/common/LearnMoreLink/LearnMoreLink'
 import {YoroiRecordLink} from '~/features/Staking/Governance/common/YoroiRecordLink/YoroiRecordLink'
 import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
 
 import {Action} from '../../common/Action/Action'
 import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'
 import {useGovernanceVoteFlow} from '../../common/useGovernanceVoteFlow'
-import {useOpenDrepIdModal} from '../EnterDrepIdModal/useOpenDrepIdModal'
+import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
 
 export const ChangeVoteScreen = () => {
+  const route = useRoute()
+  const routeParams = route.params as {drepId?: string} | undefined
+
   const {config} = useRemoteConfig()
   const isYoroiDrepBannerEnabled = Boolean(config?.banners?.yoroiDrep?.display)
   const strings = useStrings()
@@ -35,7 +42,8 @@ export const ChangeVoteScreen = () => {
   const action = stakingStatus
     ? mapStakingKeyStateToGovernanceAction(stakingStatus)
     : null
-  const {openDrepIdModal} = useOpenDrepIdModal()
+  const {openModal} = useModal()
+  const {manager} = useGovernance()
 
   const createDelegationCertificate = useDelegationCertificate()
   const createVotingCertificate = useVotingCertificate()
@@ -54,26 +62,117 @@ export const ChangeVoteScreen = () => {
   if (!isNonNullable(action)) throw new Error('User has never voted')
 
   const isPending = isCreatingTx || pendingVote !== null
+  // Track if we've already opened the modal for this drepId to prevent reopening
+  const hasOpenedModalRef = React.useRef<string | undefined>(undefined)
+  // Store timer in ref to prevent cancellation during re-renders
+  const modalTimerRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  )
 
-  const handleDelegate = () => {
-    if (isPending) return
-    openDrepIdModal(async (options) => {
-      const stakingKey = wallet.getStakingKey()
-
-      const certificate = await createDelegationCertificate({
-        hash: options.hash,
-        type: options.type,
-        stakingKey,
+  // Wrapper to open modal with prefilled DRep ID
+  const openDrepIdModal = React.useCallback(
+    (
+      onSubmit: (options: {
+        hash: string
+        type: 'key' | 'script'
+        CIP105: boolean
+      }) => void,
+      prefilledDrepId?: string,
+    ) => {
+      openModal({
+        title: strings.staking.enterDRepID,
+        content: (
+          <GovernanceProvider manager={manager}>
+            <EnterDrepIdModal
+              onSubmit={onSubmit}
+              initialDrepId={prefilledDrepId}
+            />
+          </GovernanceProvider>
+        ),
+        height: prefilledDrepId ? 340 : 650,
+        canDiscard: true,
       })
+      // Set ref only after modal is actually opened
+      if (prefilledDrepId) {
+        hasOpenedModalRef.current = prefilledDrepId
+      }
+    },
+    [openModal, strings.staking.enterDRepID, manager],
+  )
 
-      submitDelegate([certificate], options)
-    })
-  }
+  const handleDelegate = React.useCallback(
+    (prefilledDrepId?: string) => {
+      if (isPending) {
+        return
+      }
+      openDrepIdModal(async (options) => {
+        const stakingKey = wallet.getStakingKey()
+
+        const certificate = await createDelegationCertificate({
+          hash: options.hash,
+          type: options.type,
+          stakingKey,
+        })
+
+        submitDelegate([certificate], options)
+      }, prefilledDrepId)
+    },
+    [
+      isPending,
+      openDrepIdModal,
+      wallet,
+      createDelegationCertificate,
+      submitDelegate,
+    ],
+  )
+
+  // Check if we have a drepId from route params and open modal automatically
+  // Use useFocusEffect to ensure this only runs when screen is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      const drepId = routeParams?.drepId
+
+      // Clear any existing timer when effect runs
+      if (modalTimerRef.current) {
+        clearTimeout(modalTimerRef.current)
+        modalTimerRef.current = undefined
+      }
+
+      if (drepId && !isPending && hasOpenedModalRef.current !== drepId) {
+        // Store timer in ref so it persists across re-renders
+        modalTimerRef.current = setTimeout(() => {
+          modalTimerRef.current = undefined
+          handleDelegate(drepId)
+        }, 300)
+      }
+
+      // Cleanup: only clear timer if screen loses focus
+      return () => {
+        if (modalTimerRef.current) {
+          clearTimeout(modalTimerRef.current)
+          modalTimerRef.current = undefined
+        }
+      }
+    }, [routeParams?.drepId, isPending, handleDelegate]),
+  )
+
+  // Cleanup timer on unmount
+  React.useEffect(() => {
+    return () => {
+      if (modalTimerRef.current) {
+        clearTimeout(modalTimerRef.current)
+      }
+    }
+  }, [])
+
+  const yoroiDrepIdHex = React.useMemo(
+    () => getYoroiDrepIdHex(wallet.networkManager.network),
+    [wallet.networkManager.network],
+  )
 
   const handleDelegateToYoroi = async () => {
     if (isPending) return
     const stakingKey = wallet.getStakingKey()
-    const yoroiDrepIdHex = getYoroiDrepIdHex(wallet.networkManager.network)
 
     const options = {
       hash: yoroiDrepIdHex,
@@ -118,8 +217,7 @@ export const ChangeVoteScreen = () => {
   const voteHash =
     voteKind === 'delegate' && action != null ? action.hash : undefined
   const isDelegatingNotToYoroiDrep =
-    voteKind === 'delegate' &&
-    voteHash !== getYoroiDrepIdHex(wallet.networkManager.network)
+    voteKind === 'delegate' && voteHash !== yoroiDrepIdHex
 
   return (
     <ScrollView style={[a.flex_1, a.px_lg, ta.bg_color_max]}>
@@ -149,7 +247,7 @@ export const ChangeVoteScreen = () => {
           <Action
             title={strings.staking.actionDelegateToADRepTitle}
             description={strings.staking.actionDelegateToADRepDescription}
-            onPress={handleDelegate}
+            onPress={() => handleDelegate()}
             pending={isCreatingTx && pendingVote === 'delegate-other'}
           />
         )}
@@ -158,7 +256,7 @@ export const ChangeVoteScreen = () => {
           <Action
             title={strings.staking.changeDRep}
             description={strings.staking.actionDelegateToADRepDescription}
-            onPress={handleDelegate}
+            onPress={() => handleDelegate()}
             pending={isCreatingTx && pendingVote === 'delegate-other'}
           />
         )}

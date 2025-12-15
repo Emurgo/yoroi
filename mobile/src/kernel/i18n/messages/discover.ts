@@ -306,23 +306,41 @@ export const discoverMessages = defineMessages({
     defaultMessage: '!!!Disconnect warning',
   },
   collateralNotFoundText: {
-    id: 'components.send.assetselectorscreen.found',
+    id: 'discover.modal.collateralNotFoundText',
     defaultMessage: '!!!Collateral not found text',
   },
   collateralNotFoundTitle: {
-    id: 'components.send.assetselectorscreen.found',
+    id: 'discover.modal.collateralNotFoundTitle',
     defaultMessage: '!!!Collateral not found title',
   },
   collateralNotFoundActionText: {
-    id: 'components.send.assetselectorscreen.found',
+    id: 'discover.modal.collateralNotFoundActionText',
     defaultMessage: '!!!Collateral not found action text',
   },
   collateralTxPendingTitle: {
-    id: 'components.txhistory.txhistorylistitem.assuranceLevelPending',
+    id: 'discover.modal.collateralTxPendingTitle',
     defaultMessage: '!!!Collateral transaction pending title',
   },
   collateralTxPendingText: {
-    id: 'components.txhistory.txhistorylistitem.assuranceLevelPending',
+    id: 'discover.modal.collateralTxPendingText',
     defaultMessage: '!!!Collateral transaction pending text',
+  },
+  collateralCreationTitle: {
+    id: 'discover.modal.collateralCreationTitle',
+    defaultMessage: '!!!Create Collateral for DApp',
+  },
+  collateralCreationDescription: {
+    id: 'discover.modal.collateralCreationDescription',
+    defaultMessage:
+      '!!!This transaction creates collateral required to interact with this dapp. Collateral is needed for smart contract transactions and will be locked in your wallet.',
+  },
+  collateralCreationInfoTitle: {
+    id: 'discover.modal.collateralCreationInfoTitle',
+    defaultMessage: '!!!Why is collateral needed?',
+  },
+  collateralCreationInfoText: {
+    id: 'discover.modal.collateralCreationInfoText',
+    defaultMessage:
+      '!!!This dapp requires collateral to interact with smart contracts. Collateral ensures that Cardano nodes are compensated if a transaction validation fails. Your collateral will be locked but remains yours unless a transaction fails validation.',
   },
 })

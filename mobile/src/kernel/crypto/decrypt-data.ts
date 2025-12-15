@@ -15,7 +15,11 @@ export const decryptData = ({
   try {
     return hex(decrypt_with_password(secretKey.value, encryptedData.value))
   } catch (error) {
-    logger.error(error as Error, {origin: 'decryptData'})
+    // Log as debug since WrongPassword is expected during password validation
+    // and shouldn't be sent to error tracking services
+    logger.debug('Decryption failed (expected during password validation)', {
+      origin: 'decryptData',
+    })
     throw new App.Errors.WrongPassword()
   }
 }

@@ -1,3 +1,5 @@
+import {CardanoAddressedUtxo} from '@yoroi/tx'
+
 import {
   AddressType,
   AssetGroup,
@@ -32,7 +34,6 @@ import {
   WasmModuleProxy,
   Withdrawals,
 } from '@emurgo/cross-csl-core'
-import {CardanoAddressedUtxo} from '@emurgo/yoroi-lib'
 import {decode} from 'cbor2'
 
 function toLedgerTokenBundle(assets?: MultiAsset): Array<AssetGroup> | null {

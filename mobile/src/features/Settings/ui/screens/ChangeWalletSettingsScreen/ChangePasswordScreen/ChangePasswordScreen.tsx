@@ -1,14 +1,15 @@
+import {YoroiWallet} from '@yoroi/cardano-wallet'
+import {useDebouncedValue} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
+import {useWalletManager} from '@yoroi/wallet-manager'
 
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {ScrollView, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useDebouncedValue} from '~/hooks/useDebouncedValue'
-import {usePromise} from '~/hooks/usePromise'
+import {usePromise} from '~/common/hooks/usePromise'
 import {requiredPasswordLength} from '~/kernel/constants'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {isEmptyString} from '~/kernel/utils'
@@ -16,7 +17,6 @@ import {Button} from '~/ui/Button/Button'
 import {KeyboardAvoidingView} from '~/ui/KeyboardAvoidingView/KeyboardAvoidingView'
 import {Text} from '~/ui/Text/Text'
 import {TextInput} from '~/ui/TextInput/TextInput'
-import {YoroiWallet} from '~/wallets/cardano/types'
 
 export const ChangePasswordScreen = () => {
   const strings = useStrings()

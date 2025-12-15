@@ -1,6 +1,7 @@
 import {parseNumberFromText} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Swap} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import _ from 'lodash'
 import * as React from 'react'
@@ -9,7 +10,6 @@ import {Text, View} from 'react-native'
 import {undefinedToken} from '~/features/Swap/common/constants'
 import {useNavigateTo} from '~/features/Swap/common/navigation'
 import {useSwap} from '~/features/Swap/common/useSwap'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
@@ -243,7 +243,7 @@ export const Splits = ({data}: {data: Swap.Split[]}) => {
               {(
                 (100 * (split.expectedOutputWithoutSlippage ?? 0)) /
                 total
-              ).toFixed(2)}{' '}
+              ).toFixed(2)}
               %
             </Text>
           </View>

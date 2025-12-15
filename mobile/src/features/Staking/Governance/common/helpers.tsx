@@ -1,3 +1,4 @@
+import {CardanoMobile, isByron} from '@yoroi/cardano-wallet'
 import {isNonNullable, isString, useAsyncStorage} from '@yoroi/common'
 import {
   type StakingKeyState,
@@ -8,26 +9,17 @@ import {
   useGovernance,
   useLatestGovernanceAction,
   useStakingKeyState,
-  useUpdateLatestGovernanceAction,
   useVotingCertificate,
 } from '@yoroi/staking'
+import {NotEnoughMoneyToSendError} from '@yoroi/tx'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
+import {useWalletEvent} from '@yoroi/wallet-manager'
 
-import {NotEnoughMoneyToSendError} from '@emurgo/yoroi-lib/dist/errors'
 import * as React from 'react'
 
-import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
 import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
-import {useTransactionInfos} from '~/features/Transactions/hooks/useTransactionInfos'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {useWalletEvent} from '~/features/WalletManager/hooks/useWalletEvent'
-import {useStrings} from '~/kernel/i18n/useStrings'
-import {logger} from '~/kernel/logger/logger'
-import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
-import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
-import {TransactionInfo} from '~/wallets/types/other'
-import {YoroiUnsignedTx} from '~/wallets/types/yoroi'
-import {CardanoMobile} from '~/wallets/wallets'
+import {useWalletTransactions} from '~/features/Transactions/hooks/useWalletTransactions'
 
 import {GovernanceVote} from '../types'
 import {formatDrepHashToCIP129Format} from './drep'
@@ -35,7 +27,14 @@ import {useNavigateTo} from './navigation'
 import {useGovernanceVoteFlow} from './useGovernanceVoteFlow'
 
 export const useGovernanceParticipation = () => {
-  const {wallet} = useSelectedWallet()
+  const {wallet, meta} = useSelectedWallet()
+
+  // Skip governance for Byron wallets
+  const isByronWallet = React.useMemo(
+    () => (meta ? isByron(meta.implementation) : false),
+    [meta],
+  )
+
   const stakingKeyHash = useStakingKey(wallet)
   const {
     data: stakingStatus,
@@ -45,8 +44,17 @@ export const useGovernanceParticipation = () => {
 
   useWalletEvent(wallet, 'utxos', refetch)
 
-  const isParticipating = stakingStatus?.drepDelegation != null
-  return {isParticipating, isLoading} as const
+  const isParticipating = React.useMemo(
+    () =>
+      isByronWallet || !stakingKeyHash
+        ? false
+        : stakingStatus?.drepDelegation != null,
+    [isByronWallet, stakingKeyHash, stakingStatus?.drepDelegation],
+  )
+  return {
+    isParticipating,
+    isLoading: isByronWallet ? false : isLoading,
+  } as const
 }
 
 export const useGovernanceStatus = () => {
@@ -76,12 +84,14 @@ export const mapStakingKeyStateToGovernanceAction = (
 }
 
 export const useGovernanceManagerMaker = () => {
+  const selectedWallet = useSelectedWallet()
+
   const {
     wallet: {
       networkManager: {network},
       id: walletId,
     },
-  } = useSelectedWallet()
+  } = selectedWallet
 
   const storage = useAsyncStorage()
   const governanceStorage = storage.join(
@@ -96,119 +106,21 @@ export const useGovernanceManagerMaker = () => {
         api: governanceApiMaker({network}),
         cardano: CardanoMobile,
         storage: governanceStorage,
-        logger,
       }),
     [governanceStorage, network, walletId],
   )
 }
 
-export const useGovernanceActions = () => {
-  const {wallet} = useSelectedWallet()
-  const navigateTo = useNavigateTo()
-  const {unsignedTxChanged} = useReviewTx()
-  const {updateLatestGovernanceAction} = useUpdateLatestGovernanceAction(
-    wallet.id,
-  )
-  const {navigateToTxReview} = useWalletNavigation()
-  const strings = useStrings()
-
-  const handleDelegateAction = ({
-    hash,
-    unsignedTx,
-    type,
-    CIP105 = false,
-  }: {
-    hash: string
-    type: 'key' | 'script'
-    unsignedTx: YoroiUnsignedTx
-    CIP105: boolean
-  }) => {
-    unsignedTxChanged(unsignedTx)
-
-    navigateToTxReview({
-      onSuccess: (args) => {
-        if (args?.signedTx?.signedTx?.id == null)
-          throw new Error('useGovernanceActions:: invalid state')
-        updateLatestGovernanceAction({
-          kind: 'delegate-to-drep',
-          hash,
-          type,
-          txID: args.signedTx.signedTx.id,
-        })
-      },
-      onNotSupportedCIP1694: navigateTo.notSupportedVersion,
-      context: 'delegate vote',
-      ...(CIP105
-        ? {
-            operationsNotice: (
-              <InfoBanner
-                content={
-                  strings.staking.delegateVotingToDRepDeprecatedFormatNotice
-                }
-              />
-            ),
-          }
-        : {}),
-    })
-  }
-
-  const handleAbstainAction = ({unsignedTx}: {unsignedTx: YoroiUnsignedTx}) => {
-    unsignedTxChanged(unsignedTx)
-
-    navigateToTxReview({
-      onSuccess: (args) => {
-        if (args?.signedTx?.signedTx?.id == null)
-          throw new Error('useGovernanceActions:: invalid state')
-        updateLatestGovernanceAction({
-          kind: 'vote',
-          vote: 'abstain',
-          txID: args?.signedTx.signedTx.id,
-        })
-      },
-      onNotSupportedCIP1694: navigateTo.notSupportedVersion,
-      context: 'delegate vote',
-    })
-  }
-
-  const handleNoConfidenceAction = ({
-    unsignedTx,
-  }: {
-    unsignedTx: YoroiUnsignedTx
-  }) => {
-    unsignedTxChanged(unsignedTx)
-
-    navigateToTxReview({
-      onSuccess: (args) => {
-        if (args?.signedTx?.signedTx?.id == null)
-          throw new Error('useGovernanceActions:: invalid state')
-        updateLatestGovernanceAction({
-          kind: 'vote',
-          vote: 'no-confidence',
-          txID: args?.signedTx.signedTx.id,
-        })
-      },
-      onNotSupportedCIP1694: navigateTo.notSupportedVersion,
-      context: 'delegate vote',
-    })
-  }
-
-  return {
-    handleDelegateAction,
-    handleAbstainAction,
-    handleNoConfidenceAction,
-  } as const
-}
-
 const isTxConfirmed = (
   txId: string,
-  txInfos: Record<string, TransactionInfo>,
+  transactions: ReturnType<typeof useWalletTransactions>,
 ) => {
-  return Object.values(txInfos).some((tx) => tx.id === txId)
+  return txId in transactions
 }
 
 export const useHomeScreen = () => {
   const {wallet} = useSelectedWallet()
-  const txInfos = useTransactionInfos({wallet})
+  const transactions = useWalletTransactions({wallet})
   const [
     isPendingRefetchAfterTxConfirmation,
     setIsPendingRefetchAfterTxConfirmation,
@@ -227,7 +139,7 @@ export const useHomeScreen = () => {
   const submittedTxId = lastSubmittedTx?.txID
 
   const isTxPending =
-    isString(submittedTxId) && !isTxConfirmed(submittedTxId, txInfos)
+    isString(submittedTxId) && !isTxConfirmed(submittedTxId, transactions)
 
   React.useEffect(() => {
     if (!isTxPending && submittedTxId !== undefined) {
@@ -313,11 +225,14 @@ export const useParticipatingGovernance = ({
 
   const isPending = isCreatingTx || pendingVote !== null || isTxPending
 
+  const yoroiDrepIdHex = React.useMemo(
+    () => getYoroiDrepIdHex(wallet.networkManager.network),
+    [wallet.networkManager.network],
+  )
   const displayedHash =
     action.kind === 'delegate'
       ? formatDrepHashToCIP129Format(action.hash, action.type)
       : null
-  const yoroiDrepIdHex = getYoroiDrepIdHex(wallet.networkManager.network)
   const isDelegatingToYoroiDrep =
     action.kind === 'delegate' && action.hash === yoroiDrepIdHex
   const isDelegatingToDrep =
@@ -359,7 +274,7 @@ export const useParticipatingGovernance = ({
   }
 }
 
-export const useNeverParticipatedGovernance = () => {
+export const useNeverParticipatedGovernance = (initialDrepId?: string) => {
   const navigateTo = useNavigateTo()
   const {wallet, meta} = useSelectedWallet()
   const {manager} = useGovernance()
@@ -388,10 +303,14 @@ export const useNeverParticipatedGovernance = () => {
 
   const isPending = isCreatingTx || pendingVote !== null
 
+  const yoroiDrepIdHex = React.useMemo(
+    () => getYoroiDrepIdHex(wallet.networkManager.network),
+    [wallet.networkManager.network],
+  )
+
   const handleDelegateToYoroi = async () => {
     if (isPending) return
     const stakingKey = wallet.getStakingKey()
-    const yoroiDrepIdHex = getYoroiDrepIdHex(wallet.networkManager.network)
 
     const options = {
       hash: yoroiDrepIdHex,
@@ -420,6 +339,7 @@ export const useNeverParticipatedGovernance = () => {
     isPending,
     handleDelegateToYoroi,
     handleExploreOtherOptions,
+    initialDrepId,
   }
 }
 
@@ -430,13 +350,12 @@ export const useVotingOptions = () => {
   const stakingInfo = useStakingInfo(wallet)
   const stakingKeyHash = useStakingKey(wallet)
   const {data: stakingStatus} = useStakingKeyState(stakingKeyHash)
-  const txInfos = useTransactionInfos({wallet})
+  const transactions = useWalletTransactions({wallet})
 
   const {data: lastSubmittedTx} = useLatestGovernanceAction(wallet.id)
   const submittedTxId = lastSubmittedTx?.txID
   const isTxPendingConfirmation =
-    isString(submittedTxId) &&
-    !Object.values(txInfos).some((tx) => tx.id === submittedTxId)
+    isString(submittedTxId) && !isTxConfirmed(submittedTxId, transactions)
 
   const action = stakingStatus
     ? mapStakingKeyStateToGovernanceAction(stakingStatus)
@@ -481,6 +400,11 @@ export const useVotingOptions = () => {
       ? action.type
       : 'key'
 
+  const yoroiDrepIdHex = React.useMemo(
+    () => getYoroiDrepIdHex(wallet.networkManager.network),
+    [wallet.networkManager.network],
+  )
+
   const pendingTxHash =
     isTxPendingConfirmation && lastSubmittedTx?.kind === 'delegate-to-drep'
       ? lastSubmittedTx.hash
@@ -490,7 +414,6 @@ export const useVotingOptions = () => {
       ? lastSubmittedTx.type
       : 'key'
 
-  const yoroiDrepIdHex = getYoroiDrepIdHex(wallet.networkManager.network)
   const isPendingDelegateToYoroi = pendingTxHash === yoroiDrepIdHex
   const isPendingDelegateToOther = Boolean(
     pendingTxHash && !isPendingDelegateToYoroi,

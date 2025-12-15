@@ -44,19 +44,13 @@ export const buildPortfolioTokenManagers = () => {
   const preprodPortfolioTokenManager = buildPortfolioTokenManager({
     network: Chain.Network.Preprod,
   })
-  const previewPortfolioTokenManager = buildPortfolioTokenManager({
-    network: Chain.Network.Preview,
-  })
-
   const tokenManagers: Readonly<{
     [Chain.Network.Mainnet]: Portfolio.Manager.Token
     [Chain.Network.Preprod]: Portfolio.Manager.Token
-    [Chain.Network.Preview]: Portfolio.Manager.Token
   }> = freeze(
     {
       [Chain.Network.Mainnet]: mainnetPortfolioTokenManager.tokenManager,
       [Chain.Network.Preprod]: preprodPortfolioTokenManager.tokenManager,
-      [Chain.Network.Preview]: previewPortfolioTokenManager.tokenManager,
     },
     true,
   )
@@ -64,12 +58,10 @@ export const buildPortfolioTokenManagers = () => {
   const tokenStorages: Readonly<{
     [Chain.Network.Mainnet]: App.Storage<false, Portfolio.Token.Id>
     [Chain.Network.Preprod]: App.Storage<false, Portfolio.Token.Id>
-    [Chain.Network.Preview]: App.Storage<false, Portfolio.Token.Id>
   }> = freeze(
     {
       [Chain.Network.Mainnet]: mainnetPortfolioTokenManager.storage,
       [Chain.Network.Preprod]: preprodPortfolioTokenManager.storage,
-      [Chain.Network.Preview]: previewPortfolioTokenManager.storage,
     },
     true,
   )

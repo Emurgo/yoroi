@@ -1,4 +1,11 @@
 import {
+  YoroiWallet,
+  cip30ExtensionMaker,
+  cip95ExtensionMaker,
+  collateralConfig,
+  supportsCIP95,
+} from '@yoroi/cardano-wallet'
+import {
   DappConnector,
   ResolverWallet,
   connectionStorageMaker,
@@ -8,11 +15,6 @@ import {App, Wallet} from '@yoroi/types'
 
 import {Transaction} from '@emurgo/cross-csl-core'
 import BigNumber from 'bignumber.js'
-
-import {cip30ExtensionMaker} from '~/wallets/cardano/cip30/cip30'
-import {cip95ExtensionMaker, supportsCIP95} from '~/wallets/cardano/cip95/cip95'
-import {YoroiWallet} from '~/wallets/cardano/types'
-import {collateralConfig} from '~/wallets/cardano/utxoManager/utxos'
 
 function hasProtocol(url: string) {
   return /^[a-z]*:\/\//i.test(url)
@@ -38,7 +40,10 @@ export const getDomainFromUrl = (url: string) => {
   }
 }
 
-export interface DAppItem {
+export const DAPP_LOGO_BASE_URL =
+  'https://raw.githubusercontent.com/Emurgo/yoroi-config/refs/heads/main/images'
+
+export type DAppItem = {
   id: string
   name: string
   description: string
@@ -151,13 +156,21 @@ type CreateDappConnectorOptions = {
     address: string,
     payload: string,
   ) => Promise<{signature: string; key: string}>
-  sendReorganisationTx: ({manager}: {manager: DappConnector}) => Promise<void>
+  sendReorganisationTx: ({
+    manager,
+    value,
+  }: {
+    manager: DappConnector
+    value?: string
+  }) => Promise<void>
 }
 
 export const createDappConnector = (options: CreateDappConnectorOptions) => {
   const {wallet, meta, appStorage, confirmConnection, signTx, signData} =
     options
-  const cip30 = cip30ExtensionMaker(wallet, meta)
+  const cip30 = cip30ExtensionMaker(wallet, meta, {
+    createCollateralEntry: wallet._dependencies.createCollateralEntry,
+  })
   const cip95 = supportsCIP95(meta.implementation)
     ? cip95ExtensionMaker(wallet, meta)
     : null
@@ -187,8 +200,17 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
     getBalance: (tokenId) => cip30.getBalance(tokenId),
     getChangeAddress: () => cip30.getChangeAddress(),
     getRewardAddresses: () => cip30.getRewardAddresses(),
-    submitTx: async (cbor) => await cip30.submitTx(cbor),
+    submitTx: async (cbor) => {
+      return await cip30.submitTx(cbor)
+    },
     getCollateral: async (value) => await cip30.getCollateral(value),
+    getCollateralInfo: () => {
+      const collateralInfo = wallet.getCollateralInfo()
+      return {
+        collateralId: collateralInfo.collateralId,
+        isConfirmed: collateralInfo.isConfirmed,
+      }
+    },
     getUtxos: async (value, pagination) =>
       await cip30.getUtxos(value, pagination),
     confirmConnection: (origin: string) => confirmConnection(origin, manager),
@@ -203,11 +225,14 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
     signTx: async (cbor: string, partial?: boolean) => {
       if (meta.isHW) {
         const tx = await options.signTxWithHW({cbor, partial})
-        return tx.witnessSet()
+        // Convert Transaction to signed transaction CBOR hex
+        // Transaction is already copied via copyFromCSL, so toBytes() can be called outside scope
+        return Buffer.from(tx.toBytes()).toString('hex')
       }
 
       const rootKey = await signTx({cbor, manager})
-      return cip30.signTx(rootKey, cbor, partial)
+      // Return signed transaction CBOR hex string (CIP-30 spec requirement)
+      return await cip30.signTx(rootKey, cbor, partial)
     },
     // NOTE: amount (value argument) is a CIP-30 requirement for getCollateral method
     // but in Yoroi collateral is generated with minimum amount at the moment
@@ -219,7 +244,7 @@ export const createDappConnector = (options: CreateDappConnectorOptions) => {
         return Promise.reject(new Error('Collateral value is too high'))
       }
 
-      return options.sendReorganisationTx({manager})
+      return options.sendReorganisationTx({manager, value})
     },
     cip95: cip95handler,
   }

@@ -210,6 +210,65 @@ describe('ThemeProvider and useTheme Tests', () => {
     expect(screen.getByTestId('palette')).toHaveTextContent('default-dark')
     expect(screen.getByTestId('base')).toHaveTextContent('dark')
   })
+
+  test('ThemeProvider handles basePaletteInverted correctly', () => {
+    const TestComponent = () => {
+      const theme = useTheme()
+      return (
+        <>
+          <Text testID="base">{theme.basePalette}</Text>
+          <Text testID="inverted">{theme.basePaletteInverted}</Text>
+          <Text testID="isLight">{theme.isLight ? 'true' : 'false'}</Text>
+          <Text testID="isDark">{theme.isDark ? 'true' : 'false'}</Text>
+          <Button
+            onPress={() => theme.selectTheme('default-light')}
+            title="Change to Light"
+          />
+        </>
+      )
+    }
+
+    render(
+      <ThemeProvider storage={mockStorage}>
+        <TestComponent />
+      </ThemeProvider>,
+    )
+
+    // Initial dark theme
+    expect(screen.getByTestId('base')).toHaveTextContent('dark')
+    expect(screen.getByTestId('inverted')).toHaveTextContent('light')
+    expect(screen.getByTestId('isLight')).toHaveTextContent('false')
+    expect(screen.getByTestId('isDark')).toHaveTextContent('true')
+
+    // Change to light theme
+    fireEvent.press(screen.getByText('Change to Light'))
+    expect(screen.getByTestId('base')).toHaveTextContent('light')
+    expect(screen.getByTestId('inverted')).toHaveTextContent('dark')
+    expect(screen.getByTestId('isLight')).toHaveTextContent('true')
+    expect(screen.getByTestId('isDark')).toHaveTextContent('false')
+  })
+
+  test('usePalette returns correct palette', () => {
+    const TestComponent = () => {
+      const palette = usePalette()
+      return (
+        <>
+          <Text testID="black">{palette.black_static}</Text>
+          <Text testID="white">{palette.white_static}</Text>
+        </>
+      )
+    }
+
+    render(
+      <ThemeProvider storage={mockStorage}>
+        <TestComponent />
+      </ThemeProvider>,
+    )
+
+    // Should have palette values
+    expect(screen.getByTestId('black')).toHaveTextContent('#000000')
+    expect(screen.getByTestId('white')).toHaveTextContent('#FFFFFF')
+  })
 })
 
 describe('useThemedAtoms and useBasePalette Tests', () => {

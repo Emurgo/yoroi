@@ -1,10 +1,11 @@
-import {Portfolio} from '@yoroi/types'
+import {Portfolio, TokenId} from '@yoroi/types'
 
+import {primaryTokenId} from '../constants'
 import {queryTokenInfo} from './queries'
 
 describe('queryTokenInfo', () => {
   const primaryTokenInfo: Portfolio.Token.Info = {
-    id: '.',
+    id: primaryTokenId,
     name: 'Cardano',
     decimals: 6,
     symbol: 'ADA',
@@ -22,7 +23,7 @@ describe('queryTokenInfo', () => {
   }
 
   const mockTokenInfo: Portfolio.Token.Info = {
-    id: 'policy.assetName',
+    id: 'policy.assetName' as TokenId,
     name: 'Test Token',
     decimals: 6,
     symbol: 'TEST',
@@ -40,7 +41,7 @@ describe('queryTokenInfo', () => {
   }
 
   const unknownTokenInfo: Portfolio.Token.Info = {
-    id: 'policy.unknown',
+    id: 'policy.unknown' as TokenId,
     name: 'unknown',
     decimals: 0,
     symbol: '',

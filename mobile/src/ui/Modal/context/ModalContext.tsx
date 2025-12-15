@@ -3,8 +3,9 @@ import {App} from '@yoroi/types'
 import * as React from 'react'
 import {Keyboard} from 'react-native'
 
+import {useIsKeyboardOpen} from '~/common/hooks/useIsKeyboardOpen'
 import {useAuth} from '~/features/Auth/context/AuthProvider'
-import {useIsKeyboardOpen} from '~/hooks/useIsKeyboardOpen'
+import {logger} from '~/kernel/logger/logger'
 
 type ModalQueueItem = {
   content: React.ReactNode
@@ -89,22 +90,35 @@ export const ModalProvider = ({children, initialState}: Props) => {
   const isOpenRef = React.useRef(state.isOpen)
   const queueRef = React.useRef(state.queue)
   const prevLoggedOutRef = React.useRef(isLoggedOut)
+  const shouldCloseAfterKeyboardDismissRef = React.useRef(false)
   const isKeyboardOpen = useIsKeyboardOpen()
+  const isKeyboardOpenRef = React.useRef(isKeyboardOpen)
 
   React.useEffect(() => {
     isOpenRef.current = state.isOpen
     queueRef.current = state.queue
-  }, [state.isOpen, state.queue])
+    isKeyboardOpenRef.current = isKeyboardOpen
+  }, [state.isOpen, state.queue, isKeyboardOpen])
+
+  React.useEffect(() => {
+    if (!isKeyboardOpen && shouldCloseAfterKeyboardDismissRef.current) {
+      shouldCloseAfterKeyboardDismissRef.current = false
+      dispatch({
+        type: 'closeAndProcessQueue',
+      })
+    }
+  }, [isKeyboardOpen])
 
   const closeModal = React.useCallback(() => {
-    if (isKeyboardOpen) {
+    if (isKeyboardOpenRef.current) {
+      shouldCloseAfterKeyboardDismissRef.current = true
       Keyboard.dismiss()
       return
     }
     dispatch({
       type: 'closeAndProcessQueue',
     })
-  }, [isKeyboardOpen])
+  }, [])
 
   const openModal = React.useCallback(
     ({
@@ -329,12 +343,17 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
       }
 
     case 'closeAndProcessQueue':
+      // Defer onClose callback to avoid updating other components during render
       if (state.onClose) {
-        try {
-          state.onClose()
-        } catch (error) {
-          console.error('[ModalReducer] Error calling onClose:', error)
-        }
+        // Use setTimeout to defer callback execution until after render completes
+        const onCloseCallback = state.onClose
+        setTimeout(() => {
+          try {
+            onCloseCallback()
+          } catch (error) {
+            logger.error('[ModalReducer] Error calling onClose', {error})
+          }
+        }, 0)
       }
 
       if (state.queue.length > 0) {

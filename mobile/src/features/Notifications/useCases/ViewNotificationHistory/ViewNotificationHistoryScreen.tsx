@@ -2,6 +2,7 @@ import {isString} from '@yoroi/common'
 import {useNotificationManager} from '@yoroi/notifications'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Notifications} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {View} from 'react-native'
@@ -18,8 +19,6 @@ import {
   handlePushAction,
 } from '~/features/Notifications/common/tools'
 import {useWalletNotifications} from '~/features/Notifications/common/useWalletNotifications'
-import {useTransactionInfos} from '~/features/Transactions/hooks/useTransactionInfos'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
@@ -119,7 +118,6 @@ const NotificationItem = React.memo(
     const {languageCode} = useLanguage()
     const {wallet} = useSelectedWallet()
     const strings = useStrings()
-    const transactionInfos = useTransactionInfos({wallet})
 
     const isUnread = !event.isRead
 
@@ -135,12 +133,7 @@ const NotificationItem = React.memo(
 
     const title =
       event.trigger === Notifications.Trigger.TransactionReceived
-        ? getTransactionReceivedNotificationTitle(
-            event,
-            strings,
-            transactionInfos,
-            wallet,
-          )
+        ? getTransactionReceivedNotificationTitle(event, strings, wallet)
         : event.trigger === Notifications.Trigger.Push ||
             event.trigger === Notifications.Trigger.Banner
           ? event.metadata.title
@@ -148,7 +141,7 @@ const NotificationItem = React.memo(
 
     const icon =
       event.trigger === Notifications.Trigger.TransactionReceived ? (
-        getTransactionReceivedNotificationIcon(event, transactionInfos)
+        getTransactionReceivedNotificationIcon(event, wallet)
       ) : (
         <IconPlaceholder />
       )

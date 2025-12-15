@@ -33,7 +33,7 @@ export const PrimaryTokenInfoSchema = CommonTokenInfoSchema.merge(
     nature: z.literal(Portfolio.Token.Nature.Primary),
     type: z.literal(Portfolio.Token.Type.FT),
   }),
-)
+) as z.ZodType<Portfolio.Token.Info>
 
 export const SecondaryTokenInfoSchema = CommonTokenInfoSchema.merge(
   z.object({
@@ -54,7 +54,7 @@ export const SecondaryTokenInfoApiResponseSchema = CommonTokenInfoSchema.merge(
 export const TokenInfoSchema = z.union([
   PrimaryTokenInfoSchema,
   SecondaryTokenInfoSchema,
-])
+]) as z.ZodType<Portfolio.Token.Info>
 
 export const isPrimaryTokenInfo = (
   data: unknown,
@@ -89,8 +89,9 @@ export const parseSecondaryTokenInfoWithCacheRecord = (
   return isSecondaryTokenInfoWithCacheRecord(data) ? data : undefined
 }
 
-export const TokenInfoWithCacheRecordSchema =
-  cacheRecordSchemaMaker(TokenInfoSchema)
+export const TokenInfoWithCacheRecordSchema = cacheRecordSchemaMaker(
+  TokenInfoSchema,
+) as z.ZodType<App.CacheRecord<Portfolio.Token.Info>>
 
 export const isTokenInfoWithCacheRecord = (
   data: unknown,

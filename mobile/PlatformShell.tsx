@@ -7,11 +7,11 @@ import {
   initialWindowMetrics,
 } from 'react-native-safe-area-context'
 
+import {BackgroundTimerProvider} from '~/common/providers/BackgroundTimerContext'
 import {AnalyticsRootProvider} from '~/features/Analytics/context/AnalyticsRootProvider'
 import {routeToEvent} from '~/features/Analytics/events/route-events'
 import {createPosthogClient} from '~/features/Analytics/helpers/createPosthogClient'
 import {useAnalyticsTracking} from '~/features/Analytics/hooks/useAnalyticsTracking'
-import {useScreenCapture} from '~/features/Settings/hooks/useScreenCapture'
 import {RouterContainer} from '~/kernel/navigation/RouterContainer'
 import {
   initInstallationId,
@@ -19,22 +19,14 @@ import {
 } from '~/kernel/storage/storages'
 import {ModalProvider} from '~/ui/Modal/context/ModalContext'
 
-import {BackgroundTimerProvider} from './src/hooks/BackgroundTimerContext'
-
 export function PlatformShell({children}: React.PropsWithChildren) {
   const [metricsEnabled, setMetricsEnabled] = React.useState<boolean>(
     metricsEnabledStorageKeyManager.read(),
   )
 
-  const {init} = useScreenCapture()
-
   const isAndroid = Platform.OS === 'android'
   const platform = isAndroid ? 'Android' : 'IOS'
   const client = usePosthogClient(metricsEnabled)
-
-  React.useEffect(() => {
-    init()
-  })
 
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
@@ -48,9 +40,7 @@ export function PlatformShell({children}: React.PropsWithChildren) {
         <TrackedRouterContainer>
           <ModalProvider>
             <BackgroundTimerProvider active={isAndroid}>
-              <KeyboardProvider statusBarTranslucent>
-                {children}
-              </KeyboardProvider>
+              <KeyboardProvider>{children}</KeyboardProvider>
             </BackgroundTimerProvider>
           </ModalProvider>
         </TrackedRouterContainer>

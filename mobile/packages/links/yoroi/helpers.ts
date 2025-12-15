@@ -1,7 +1,7 @@
 export const convertSearchParamsToObject = (
   params: URLSearchParams,
-): Record<string, any> => {
-  const obj: Record<string, any> = {}
+): Record<string, unknown> => {
+  const obj: Record<string, unknown> = {}
 
   params.forEach((value, key) => {
     const decodedValue = decodeURIComponent(value)
@@ -13,14 +13,24 @@ export const convertSearchParamsToObject = (
       const parsedValue = JSON.parse(decodedValue)
       // check if the key (without index) already exists
       if (obj.hasOwnProperty(normalizedKey)) {
-        obj[normalizedKey].push(parsedValue)
+        const existingValue = obj[normalizedKey]
+        if (Array.isArray(existingValue)) {
+          existingValue.push(parsedValue)
+        } else {
+          obj[normalizedKey] = [existingValue, parsedValue]
+        }
       } else {
         obj[normalizedKey] = isArray ? [parsedValue] : parsedValue
       }
     } catch (e) {
       // it means it's not a JSON string
       if (obj.hasOwnProperty(normalizedKey)) {
-        obj[normalizedKey].push(decodedValue)
+        const existingValue = obj[normalizedKey]
+        if (Array.isArray(existingValue)) {
+          existingValue.push(decodedValue)
+        } else {
+          obj[normalizedKey] = [existingValue, decodedValue]
+        }
       } else {
         obj[normalizedKey] = isArray ? [decodedValue] : decodedValue
       }

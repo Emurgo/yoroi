@@ -13,7 +13,7 @@ export const Rate = ({rate, name}: Props) => {
   return (
     <Text style={[a.flex_row, a.align_center]}>
       <Text style={[a.body_2_md_regular, {color: p.white_static}]}>
-        1 {name} ={' '}
+        1 {name} =
       </Text>
 
       <Text
@@ -28,7 +28,6 @@ export const Rate = ({rate, name}: Props) => {
       </Text>
 
       <Text style={[a.body_3_sm_regular, {color: p.white_static}]}>
-        {' '}
         {currency}
       </Text>
     </Text>

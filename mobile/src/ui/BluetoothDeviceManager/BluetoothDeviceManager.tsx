@@ -3,10 +3,11 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Alert, ScrollView, Text, TouchableOpacity, View} from 'react-native'
 
-import {useBluetooth} from '~/hooks/useBluetooth'
+import {BluetoothDevice, useBluetooth} from '~/common/hooks/useBluetooth'
+import {logger} from '~/kernel/logger/logger'
 import {Button, ButtonType} from '~/ui/Button/Button'
 
-interface BluetoothDeviceManagerProps {
+type BluetoothDeviceManagerProps = {
   onDeviceSelect?: (deviceId: string) => void
   showConnectionStatus?: boolean
 }
@@ -27,7 +28,7 @@ export const BluetoothDeviceManager: React.FC<BluetoothDeviceManagerProps> = ({
   } = useBluetooth()
 
   // Debug logging
-  console.log('BluetoothDeviceManager state:', {
+  logger.debug('BluetoothDeviceManager state', {
     isEnabled: state.isEnabled,
     isScanning: state.isScanning,
     isConnected: state.isConnected,
@@ -258,8 +259,8 @@ export const BluetoothDeviceManager: React.FC<BluetoothDeviceManagerProps> = ({
   )
 }
 
-interface DeviceCardProps {
-  device: any
+type DeviceCardProps = {
+  device: BluetoothDevice
   index: number
   onConnect: (deviceId: string) => void
   isConnected: boolean

@@ -7,7 +7,7 @@ import * as React from 'react'
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useRemoteConfig} from '~/features/RemoteConfig/hooks/useRemoteConfig'
+import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
 import {useSwap} from '~/features/Swap/common/useSwap'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'

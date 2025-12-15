@@ -1,5 +1,6 @@
 import {isLeft} from '@yoroi/common'
-import {Api, Chain, Portfolio, Swap} from '@yoroi/types'
+import {primaryTokenId} from '@yoroi/portfolio'
+import {Api, Chain, Portfolio, Swap, TokenId} from '@yoroi/types'
 
 import {dexhunterApiMaker} from './adapters/api/dexhunter/api-maker'
 import {
@@ -32,7 +33,6 @@ describe('swapManagerMaker', () => {
     network: 'mainnet' as Chain.SupportedNetworks,
     primaryTokenInfo,
     isPrimaryToken: () => false,
-    stakingKey: 'someStakingKey',
     storage: {
       clear: jest.fn(),
       settings: {
@@ -441,9 +441,9 @@ describe('swapManagerMaker', () => {
           placedAt: undefined,
           protocol: 'vyfi-v1',
           status: 'canceled',
-          tokenIn: '.',
+          tokenIn: primaryTokenId,
           tokenOut:
-            '1d7f33bd23d85e1a25d87d86fac4f199c3197a2f7afeb662a0f34e1e.776f726c646d6f62696c65746f6b656e',
+            '1d7f33bd23d85e1a25d87d86fac4f199c3197a2f7afeb662a0f34e1e.776f726c646d6f62696c65746f6b656e' as TokenId,
           txHash:
             '0b2bd77dd3bd670cbbe30cac001af1565c9b807dd666193fd9ac8dad319ab24b',
           updateTxHash:
@@ -460,9 +460,9 @@ describe('swapManagerMaker', () => {
           placedAt: undefined,
           protocol: 'vyfi-v1',
           status: 'canceled',
-          tokenIn: '.',
+          tokenIn: primaryTokenId,
           tokenOut:
-            '1d7f33bd23d85e1a25d87d86fac4f199c3197a2f7afeb662a0f34e1e.776f726c646d6f62696c65746f6b656e',
+            '1d7f33bd23d85e1a25d87d86fac4f199c3197a2f7afeb662a0f34e1e.776f726c646d6f62696c65746f6b656e' as TokenId,
           txHash:
             '8956d68753d718afbaafde0e83dc1cb1d205da3c89fb08c924ab1d63fd953ed2',
           updateTxHash:
@@ -480,9 +480,9 @@ describe('swapManagerMaker', () => {
           placedAt: undefined,
           protocol: 'vyfi-v1',
           status: 'canceled',
-          tokenIn: '.',
+          tokenIn: primaryTokenId,
           tokenOut:
-            '1d7f33bd23d85e1a25d87d86fac4f199c3197a2f7afeb662a0f34e1e.776f726c646d6f62696c65746f6b656e',
+            '1d7f33bd23d85e1a25d87d86fac4f199c3197a2f7afeb662a0f34e1e.776f726c646d6f62696c65746f6b656e' as TokenId,
           txHash:
             '8956d68753d718afbaafde0e83dc1cb1d205da3c89fb08c924ab1d63fd953ed2',
           updateTxHash:
@@ -501,9 +501,9 @@ describe('swapManagerMaker', () => {
           placedAt: 1737538157000,
           protocol: 'minswap-v2',
           status: 'canceled',
-          tokenIn: '.',
+          tokenIn: primaryTokenId,
           tokenOut:
-            '49e423161ef818adc475c783571cb479d5f15ad52a01a240eacc0d3b.434f434b',
+            '49e423161ef818adc475c783571cb479d5f15ad52a01a240eacc0d3b.434f434b' as TokenId,
           txHash:
             '475ffb1f1820eee1790729d86ced473e9f7724ddcd7bf59b477e3293415f16bf',
           updateTxHash:
@@ -519,9 +519,9 @@ describe('swapManagerMaker', () => {
           placedAt: 1722503907000,
           protocol: 'sundaeswap-v1',
           status: 'matched',
-          tokenIn: '.',
+          tokenIn: primaryTokenId,
           tokenOut:
-            '4cb48d60d1f7823d1307c61b9ecf472ff78cf22d1ccc5786d59461f8.4144414d4f4f4e',
+            '4cb48d60d1f7823d1307c61b9ecf472ff78cf22d1ccc5786d59461f8.4144414d4f4f4e' as TokenId,
           txHash:
             '29f51a2a9e46ced05f03abc9b419ae57164dc056534121f041d69e307b9722f8',
           updateTxHash:
@@ -539,8 +539,8 @@ describe('swapManagerMaker', () => {
           protocol: 'sundaeswap-v1',
           status: 'matched',
           tokenIn:
-            'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950',
-          tokenOut: '.',
+            'af2e27f580f7f08e93190a81f72462f153026d06450924726645891b.44524950' as TokenId,
+          tokenOut: primaryTokenId,
           txHash:
             '8751fbef1ebec0d2da9218a69493ef36070012ce24fdbc44ec6df519377b92bf',
           updateTxHash:
@@ -558,8 +558,8 @@ describe('swapManagerMaker', () => {
           protocol: 'muesliswap',
           status: 'matched',
           tokenIn:
-            '1d7f33bd23d85e1a25d87d86fac4f199c3197a2f7afeb662a0f34e1e.776f726c646d6f62696c65746f6b656e',
-          tokenOut: '.',
+            '1d7f33bd23d85e1a25d87d86fac4f199c3197a2f7afeb662a0f34e1e.776f726c646d6f62696c65746f6b656e' as TokenId,
+          tokenOut: primaryTokenId,
           txHash:
             'f7826e21a464939b64274b00033d7ddebbc90924260d30530fdf7a8cd2824d51',
           updateTxHash:
@@ -576,9 +576,9 @@ describe('swapManagerMaker', () => {
           placedAt: undefined,
           protocol: 'vyfi-v1',
           status: 'canceled',
-          tokenIn: '.',
+          tokenIn: primaryTokenId,
           tokenOut:
-            '1d7f33bd23d85e1a25d87d86fac4f199c3197a2f7afeb662a0f34e1e.776f726c646d6f62696c65746f6b656e',
+            '1d7f33bd23d85e1a25d87d86fac4f199c3197a2f7afeb662a0f34e1e.776f726c646d6f62696c65746f6b656e' as TokenId,
           txHash:
             '8956d68753d718afbaafde0e83dc1cb1d205da3c89fb08c924ab1d63fd953ed2',
           updateTxHash:
@@ -595,9 +595,9 @@ describe('swapManagerMaker', () => {
           placedAt: undefined,
           protocol: 'vyfi-v1',
           status: 'canceled',
-          tokenIn: '.',
+          tokenIn: primaryTokenId,
           tokenOut:
-            '1d7f33bd23d85e1a25d87d86fac4f199c3197a2f7afeb662a0f34e1e.776f726c646d6f62696c65746f6b656e',
+            '1d7f33bd23d85e1a25d87d86fac4f199c3197a2f7afeb662a0f34e1e.776f726c646d6f62696c65746f6b656e' as TokenId,
           txHash:
             '0b2bd77dd3bd670cbbe30cac001af1565c9b807dd666193fd9ac8dad319ab24b',
           updateTxHash:
@@ -683,9 +683,9 @@ describe('swapManagerMaker', () => {
         placedAt: 1737538157000,
         protocol: 'minswap-v2' as Swap.Protocol,
         status: 'canceled' as const,
-        tokenIn: '.' as Portfolio.Token.Id,
+        tokenIn: primaryTokenId as Portfolio.Token.Id,
         tokenOut:
-          '49e423161ef818adc475c783571cb479d5f15ad52a01a240eacc0d3b.434f434b' as Portfolio.Token.Id,
+          '49e423161ef818adc475c783571cb479d5f15ad52a01a240eacc0d3b.434f434b' as TokenId as Portfolio.Token.Id,
         txHash:
           '475ffb1f1820eee1790729d86ced473e9f7724ddcd7bf59b477e3293415f16bf',
         updateTxHash:
@@ -703,9 +703,9 @@ describe('swapManagerMaker', () => {
         placedAt: undefined,
         protocol: 'vyfi-v1' as Swap.Protocol,
         status: 'canceled' as const,
-        tokenIn: '.' as Portfolio.Token.Id,
+        tokenIn: primaryTokenId as Portfolio.Token.Id,
         tokenOut:
-          '1d7f33bd23d85e1a25d87d86fac4f199c3197a2f7afeb662a0f34e1e.776f726c646d6f62696c65746f6b656e' as Portfolio.Token.Id,
+          '1d7f33bd23d85e1a25d87d86fac4f199c3197a2f7afeb662a0f34e1e.776f726c646d6f62696c65746f6b656e' as TokenId as Portfolio.Token.Id,
         txHash:
           '475ffb1f1820eee1790729d86ced473e9f7724ddcd7bf59b477e3293415f16bf',
         updateTxHash:
@@ -785,8 +785,8 @@ describe('swapManagerMaker', () => {
       const manager = swapManagerMaker(baseConfig)
       manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
       const result = await manager.api.limitOptions({
-        tokenIn: '.',
-        tokenOut: '.',
+        tokenIn: primaryTokenId,
+        tokenOut: primaryTokenId,
       })
 
       expect(result.tag).toBe('right')
@@ -820,8 +820,8 @@ describe('swapManagerMaker', () => {
       const manager = swapManagerMaker(baseConfig)
       manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
       const result = await manager.api.limitOptions({
-        tokenIn: '.',
-        tokenOut: '.',
+        tokenIn: primaryTokenId,
+        tokenOut: primaryTokenId,
       })
 
       expect(result.tag).toBe('left')
@@ -864,8 +864,8 @@ describe('swapManagerMaker', () => {
       const manager = swapManagerMaker(baseConfig)
       manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
       const result = await manager.api.limitOptions({
-        tokenIn: '.',
-        tokenOut: '.',
+        tokenIn: primaryTokenId,
+        tokenOut: primaryTokenId,
       })
 
       expect(result.tag).toBe('right')
@@ -907,8 +907,8 @@ describe('swapManagerMaker', () => {
       const manager = swapManagerMaker(baseConfig)
       manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
       const result = await manager.api.limitOptions({
-        tokenIn: '.',
-        tokenOut: '.',
+        tokenIn: primaryTokenId,
+        tokenOut: primaryTokenId,
       })
 
       expect(result.tag).toBe('right')
@@ -939,8 +939,8 @@ describe('swapManagerMaker', () => {
       const manager = swapManagerMaker(baseConfig)
       manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
       const result = await manager.api.limitOptions({
-        tokenIn: '.',
-        tokenOut: '.',
+        tokenIn: primaryTokenId,
+        tokenOut: primaryTokenId,
       })
 
       expect(result.tag).toBe('left')
@@ -988,8 +988,8 @@ describe('swapManagerMaker', () => {
       const manager = swapManagerMaker(baseConfig)
       manager.assignSettings({routingPreference: ['dexhunter', 'muesliswap']})
       const result = await manager.api.limitOptions({
-        tokenIn: '.',
-        tokenOut: '.',
+        tokenIn: primaryTokenId,
+        tokenOut: primaryTokenId,
       })
 
       expect(result.tag).toBe('right')
@@ -1178,35 +1178,37 @@ describe('swapManagerMaker', () => {
       })
     })
 
-    it('delegates to the aggregator specified in the order 1', async () => {
+    it('prioritizes minswap first regardless of order aggregator', async () => {
       const manager = swapManagerMaker(baseConfig)
       const result = await manager.api.cancel(dhApiMocks.inputs.cancel)
 
-      expect(mockDexhunterApi.cancel).toHaveBeenCalled()
+      // Should try minswap first (priority order)
+      expect(mockMinswapApi.cancel).toHaveBeenCalled()
+      expect(mockDexhunterApi.cancel).not.toHaveBeenCalled()
       expect(mockMuesliswapApi.cancel).not.toHaveBeenCalled()
-      expect(mockMinswapApi.cancel).not.toHaveBeenCalled()
 
       expect(result.tag).toBe('right')
       if (result.tag === 'right') {
-        expect(result.value.data.cbor).toBe('valid-dexhunter-cbor')
+        expect(result.value.data.cbor).toBe('valid-minswap-cbor')
       }
     })
 
-    it('delegates to the aggregator specified in the order 2', async () => {
+    it('prioritizes minswap first for muesliswap orders', async () => {
       const manager = swapManagerMaker(baseConfig)
       const result = await manager.api.cancel(msApiMocks.inputs.cancel[0]!)
 
-      expect(mockMuesliswapApi.cancel).toHaveBeenCalled()
+      // Should try minswap first (priority order), not muesliswap
+      expect(mockMinswapApi.cancel).toHaveBeenCalled()
       expect(mockDexhunterApi.cancel).not.toHaveBeenCalled()
-      expect(mockMinswapApi.cancel).not.toHaveBeenCalled()
+      expect(mockMuesliswapApi.cancel).not.toHaveBeenCalled()
 
       expect(result.tag).toBe('right')
       if (result.tag === 'right') {
-        expect(result.value.data.cbor).toBe('valid-muesliswap-cbor')
+        expect(result.value.data.cbor).toBe('valid-minswap-cbor')
       }
     })
 
-    it('delegates to minswap for minswap orders', async () => {
+    it('prioritizes minswap first for minswap orders', async () => {
       const manager = swapManagerMaker(baseConfig)
       const minswapCancelRequest = {
         order: {
@@ -1229,11 +1231,11 @@ describe('swapManagerMaker', () => {
       }
     })
 
-    it('tries other adapters when initial adapter returns empty CBOR', async () => {
+    it('tries adapters in priority order when minswap returns empty CBOR', async () => {
       const manager = swapManagerMaker(baseConfig)
 
-      // Mock dexhunter to return empty CBOR
-      mockDexhunterApi.cancel.mockResolvedValue({
+      // Mock minswap to return empty CBOR (first in priority)
+      mockMinswapApi.cancel.mockResolvedValue({
         tag: 'right',
         value: {
           status: Api.HttpStatusCode.Ok,
@@ -1246,49 +1248,61 @@ describe('swapManagerMaker', () => {
 
       const result = await manager.api.cancel(dhApiMocks.inputs.cancel)
 
-      // Should call all adapters
-      expect(mockDexhunterApi.cancel).toHaveBeenCalled()
-      expect(mockMuesliswapApi.cancel).toHaveBeenCalled()
+      // Should try minswap first, then dexhunter (steelswap not configured in tests)
+      // Muesliswap should NOT be called because dexhunter returns valid CBOR and we return early
       expect(mockMinswapApi.cancel).toHaveBeenCalled()
+      expect(mockDexhunterApi.cancel).toHaveBeenCalled()
+      expect(mockMuesliswapApi.cancel).not.toHaveBeenCalled()
 
-      // Should return a valid CBOR from one of the other adapters
+      // Should return a valid CBOR from dexhunter (second in priority after minswap)
       expect(result.tag).toBe('right')
       if (result.tag === 'right') {
-        expect(result.value.data.cbor).toBe('valid-muesliswap-cbor')
+        expect(result.value.data.cbor).toBe('valid-dexhunter-cbor')
       }
     })
 
-    it('tries other adapters when initial adapter returns left error', async () => {
+    it('tries adapters in priority order when minswap returns error', async () => {
       const manager = swapManagerMaker(baseConfig)
 
-      // Mock dexhunter to return an error
-      mockDexhunterApi.cancel.mockResolvedValue({
+      // Mock minswap to return an error (first in priority)
+      mockMinswapApi.cancel.mockResolvedValue({
         tag: 'left',
         error: {
           status: 500,
-          message: 'Dexhunter error',
+          message: 'Minswap error',
           responseData: {},
         },
       })
 
       const result = await manager.api.cancel(dhApiMocks.inputs.cancel)
 
-      // Should call all adapters
-      expect(mockDexhunterApi.cancel).toHaveBeenCalled()
-      expect(mockMuesliswapApi.cancel).toHaveBeenCalled()
+      // Should try minswap first, then dexhunter (steelswap not configured in tests)
+      // Muesliswap should NOT be called because dexhunter returns valid CBOR and we return early
       expect(mockMinswapApi.cancel).toHaveBeenCalled()
+      expect(mockDexhunterApi.cancel).toHaveBeenCalled()
+      expect(mockMuesliswapApi.cancel).not.toHaveBeenCalled()
 
-      // Should return a valid CBOR from one of the other adapters
+      // Should return a valid CBOR from dexhunter (second in priority after minswap)
       expect(result.tag).toBe('right')
       if (result.tag === 'right') {
-        expect(result.value.data.cbor).toBe('valid-muesliswap-cbor')
+        expect(result.value.data.cbor).toBe('valid-dexhunter-cbor')
       }
     })
 
-    it('returns initial response when no valid CBOR is found', async () => {
+    it('returns last response when no valid CBOR is found', async () => {
       const manager = swapManagerMaker(baseConfig)
 
       // Mock all adapters to return empty CBOR
+      mockMinswapApi.cancel.mockResolvedValue({
+        tag: 'right',
+        value: {
+          status: Api.HttpStatusCode.Ok,
+          data: {
+            cbor: '',
+            additionalCancellationFee: undefined,
+          },
+        },
+      })
       mockDexhunterApi.cancel.mockResolvedValue({
         tag: 'right',
         value: {
@@ -1309,25 +1323,15 @@ describe('swapManagerMaker', () => {
           },
         },
       })
-      mockMinswapApi.cancel.mockResolvedValue({
-        tag: 'right',
-        value: {
-          status: Api.HttpStatusCode.Ok,
-          data: {
-            cbor: '',
-            additionalCancellationFee: undefined,
-          },
-        },
-      })
 
       const result = await manager.api.cancel(dhApiMocks.inputs.cancel)
 
-      // Should call all adapters
+      // Should call all adapters in priority order: minswap -> dexhunter -> muesliswap
+      expect(mockMinswapApi.cancel).toHaveBeenCalled()
       expect(mockDexhunterApi.cancel).toHaveBeenCalled()
       expect(mockMuesliswapApi.cancel).toHaveBeenCalled()
-      expect(mockMinswapApi.cancel).toHaveBeenCalled()
 
-      // Should return the initial (dexhunter) response even if it has empty CBOR
+      // Should return the last response (muesliswap) even if it has empty CBOR
       expect(result.tag).toBe('right')
       if (result.tag === 'right') {
         expect(result.value.data.cbor).toBe('')

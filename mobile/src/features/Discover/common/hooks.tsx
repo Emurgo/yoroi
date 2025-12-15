@@ -1,10 +1,10 @@
+import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {DappConnectorManager, useDappConnector} from '@yoroi/dapp-connector'
 
 import * as React from 'react'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
 import {logger} from '~/kernel/logger/logger'
-import {YoroiWallet} from '~/wallets/cardano/types'
 
 import {useWalletNameOverride} from './WalletNameOverrideContext'
 import {walletConfig} from './wallet-config'
@@ -123,6 +123,12 @@ export const useConnectWalletToWebView = (
   }
 }
 
+/**
+ * Generates JavaScript code string to inject into WebView.
+ * Uses IIFE pattern to immediately execute the code when injected.
+ * This is necessary because the code runs in the WebView's JavaScript context,
+ * not React Native's context, so it must be self-executing.
+ */
 const getInjectableMessage = (message: unknown) => {
   const event = JSON.stringify({data: message})
   return `(() => window.dispatchEvent(new MessageEvent('message', ${event})))()`

@@ -1,9 +1,10 @@
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
+import {ErrorBoundary, FallbackProps} from 'react-error-boundary'
 import {BackHandler, Platform, ScrollView, Text, View} from 'react-native'
 
-import {useTranslatedError} from '~/hooks/useTranslatedError'
+import {useTranslatedError} from '~/common/hooks/useTranslatedError'
 import {LocalizableError} from '~/kernel/i18n/LocalizableError'
 import {logger} from '~/kernel/logger/logger'
 import {Button} from '~/ui/Button/Button'
@@ -14,58 +15,49 @@ import {ExpandableItem} from './ExpandableItem'
 
 // TODO: Add error image
 // TODO: Add translations
-interface Props {
+type Props = {
   children: React.ReactNode
   debug?: boolean
   renderError?(error: Error | LocalizableError): React.ReactNode
 }
 
-interface State {
-  error?: Error | LocalizableError
-  details: string
-}
-
 // NOTE: Unrecoverable error boundary
-export class CrashBoundary extends React.Component<Props, State> {
-  public state: State = {
-    error: undefined,
-    details: '',
-  }
-
-  public componentDidCatch(
-    error: Error | LocalizableError,
-    details: React.ErrorInfo,
-  ) {
-    logger.error(error, {details})
-
-    this.setState({
-      error,
-      details: JSON.stringify(details),
-    })
-  }
-
-  public static getDerivedStateFromError(
-    error: Error | LocalizableError,
-    details: React.ErrorInfo,
-  ): State {
-    return {
-      error: error,
-      details: JSON.stringify(details),
-    }
-  }
-
-  render() {
-    if (this.state.error) {
-      if (this.props.renderError) {
-        return this.props.renderError(this.state.error)
+export function CrashBoundary({
+  children,
+  debug,
+  renderError,
+}: Props): React.ReactElement {
+  const FallbackComponent = React.useCallback(
+    ({error}: FallbackProps) => {
+      if (renderError) {
+        return <>{renderError(error as Error | LocalizableError)}</>
       }
-      return <ErrorView state={this.state} debug={this.props.debug} />
-    }
-    return this.props.children
-  }
+      return (
+        <ErrorView error={error as Error | LocalizableError} debug={debug} />
+      )
+    },
+    [debug, renderError],
+  )
+
+  return (
+    <ErrorBoundary
+      FallbackComponent={FallbackComponent}
+      onError={(error, info) => {
+        logger.error(error, {details: info})
+      }}
+    >
+      {children}
+    </ErrorBoundary>
+  )
 }
 
-const ErrorView = ({state, debug}: {state: State; debug?: boolean}) => {
+const ErrorView = ({
+  error,
+  debug,
+}: {
+  error: Error | LocalizableError
+  debug?: boolean
+}) => {
   const {atoms: ta} = useTheme()
 
   return (
@@ -100,14 +92,14 @@ const ErrorView = ({state, debug}: {state: State; debug?: boolean}) => {
 
           <View>
             <View style={[a.flex_row, a.justify_between]}>
-              <MaybeTranslatedError error={state.error} />
+              <MaybeTranslatedError error={error} />
 
-              <Copiable text={`${state.error}:${state.details}`} />
+              <Copiable text={`${error}:${JSON.stringify(error)}`} />
             </View>
 
             <ExpandableItem label="Show error">
               <Text style={[a.body_2_md_regular, ta.text_error]}>
-                {state.details}
+                {error.stack || error.message || String(error)}
               </Text>
             </ExpandableItem>
           </View>

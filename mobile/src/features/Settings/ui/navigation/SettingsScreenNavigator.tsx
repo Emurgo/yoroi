@@ -30,12 +30,14 @@ import {SelectLanguageScreen} from '../screens/ChangeApplicationSettingsScreen/S
 import {SelectNetworkScreen} from '../screens/ChangeApplicationSettingsScreen/SelectNetworkScreen/SelectNetworkScreen'
 import {SelectThemeScreen} from '../screens/ChangeApplicationSettingsScreen/SelectThemeScreen/SelectThemeScreen'
 import {ToggleAnalyticsSettingsScreen} from '../screens/ChangeApplicationSettingsScreen/ToggleAnalyticsSettings/ToggleAnalyticsSettingsScreen'
+import {AdvancedAddressRetrievalScreen} from '../screens/ChangeWalletSettingsScreen/AdvancedAddressRetrievalScreen/AdvancedAddressRetrievalScreen'
 import {ChangePasswordScreen} from '../screens/ChangeWalletSettingsScreen/ChangePasswordScreen/ChangePasswordScreen'
 import {ChangeWalletSettingsScreen} from '../screens/ChangeWalletSettingsScreen/ChangeWalletSettingsScreen'
 import {EnableEasyConfirmationScreen} from '../screens/ChangeWalletSettingsScreen/EnableEasyConfirmationScreen/EnableEasyConfirmationScreen'
 import {ManageCollateralScreen} from '../screens/ChangeWalletSettingsScreen/ManageCollateralScreen/ManageCollateralScreen'
 import {RemoveWalletScreen} from '../screens/ChangeWalletSettingsScreen/RemoveWallet/RemoveWalletScreen'
 import {RenameWalletScreen} from '../screens/ChangeWalletSettingsScreen/RenameWalletScreen/RenameWalletScreen'
+import {ShareWalletScreen} from '../screens/ShareWalletScreen/ShareWalletScreen'
 import {NetworkTag} from '../shared/NetworkTag'
 import {ManageNotificationsNavigator} from './ManageNotificationsNavigator'
 
@@ -200,11 +202,25 @@ export const SettingsScreenNavigator = () => {
         options={{headerShown: false}}
       />
 
+      <Stack.Screen //
+        name="share-wallet"
+        getComponent={() => ShareWalletScreen}
+        options={{title: strings.settings.shareWallet.title}}
+      />
+
       <Stack.Screen
         name="analytics"
         getComponent={() => ToggleAnalyticsSettingsScreen}
         options={{
           title: strings.settings.toggleAnalytics.toggleAnalyticsSettingsTitle,
+        }}
+      />
+
+      <Stack.Screen
+        name="advanced-address-retrieval"
+        getComponent={() => AdvancedAddressRetrievalScreen}
+        options={{
+          title: strings.settings.advancedAddressRetrieval.title,
         }}
       />
     </Stack.Navigator>
@@ -216,17 +232,20 @@ const SettingsTabNavigator = () => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
 
+  // Memoize screenOptions to prevent recreation on every render
+  const screenOptions = React.useCallback(
+    ({route}: {route: {name: string}}) => ({
+      ...defaultMaterialTopTabNavigationOptions(p),
+      tabBarLabel:
+        route.name === 'wallet-settings'
+          ? strings.settings.walletTabTitle
+          : strings.settings.appTabTitle,
+    }),
+    [p, strings.settings.walletTabTitle, strings.settings.appTabTitle],
+  )
+
   return (
-    <Tab.Navigator
-      style={ta.bg_color_max}
-      screenOptions={({route}) => ({
-        ...defaultMaterialTopTabNavigationOptions(p),
-        tabBarLabel:
-          route.name === 'wallet-settings'
-            ? strings.settings.walletTabTitle
-            : strings.settings.appTabTitle,
-      })}
-    >
+    <Tab.Navigator style={ta.bg_color_max} screenOptions={screenOptions}>
       <Tab.Screen
         name="wallet-settings"
         getComponent={() => ChangeWalletSettingsScreen}

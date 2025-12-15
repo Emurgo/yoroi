@@ -1,4 +1,4 @@
-import {Portfolio} from '@yoroi/types'
+import {Branded, Portfolio} from '@yoroi/types'
 
 import {freeze} from 'immer'
 
@@ -16,7 +16,10 @@ const primaryETHBreakdown: Portfolio.PrimaryBreakdown = {
 }
 
 const missingToken: Portfolio.Token.Amount = {
-  info: {...tokenInfoMocks.ftNameless, id: 'dead.fee'},
+  info: {
+    ...tokenInfoMocks.ftNameless,
+    id: Branded.asTokenId('dead.fee'),
+  },
   quantity: BigInt(1),
 }
 
@@ -50,19 +53,21 @@ const storage: {
   >
 } = {
   entries1: [
-    [nftCryptoKitty.info.id, nftCryptoKitty],
-    [rnftWhatever.info.id, rnftWhatever],
-    [ftNoTicker.info.id, ftNoTicker],
-    [ftNameless.info.id, ftNameless],
+    [nftCryptoKitty.info.id as Portfolio.Token.Id, nftCryptoKitty],
+    [rnftWhatever.info.id as Portfolio.Token.Id, rnftWhatever],
+    [ftNoTicker.info.id as Portfolio.Token.Id, ftNoTicker],
+    [ftNameless.info.id as Portfolio.Token.Id, ftNameless],
   ],
   entries1WithPrimary: [
-    [nftCryptoKitty.info.id, nftCryptoKitty],
-    [rnftWhatever.info.id, rnftWhatever],
-    [ftNoTicker.info.id, ftNoTicker],
-    [ftNameless.info.id, ftNameless],
-    [primaryETH.info.id, primaryETH],
+    [nftCryptoKitty.info.id as Portfolio.Token.Id, nftCryptoKitty],
+    [rnftWhatever.info.id as Portfolio.Token.Id, rnftWhatever],
+    [ftNoTicker.info.id as Portfolio.Token.Id, ftNoTicker],
+    [ftNameless.info.id as Portfolio.Token.Id, ftNameless],
+    [primaryETH.info.id as Portfolio.Token.Id, primaryETH],
   ],
-  missingInApiResponse: [[missingToken.info.id, missingToken]],
+  missingInApiResponse: [
+    [missingToken.info.id as Portfolio.Token.Id, missingToken],
+  ],
 }
 
 export const tokenBalanceMocks = freeze({

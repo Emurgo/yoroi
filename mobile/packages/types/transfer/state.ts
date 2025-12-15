@@ -1,10 +1,10 @@
-import {Datum as DatumType} from '@emurgo/yoroi-lib'
-
+import {Address} from '../branded'
+import {Datum as DatumType} from '../datum/types'
 import {PortfolioTokenAmount} from '../portfolio/amount'
 import {PortfolioTokenId} from '../portfolio/token'
 import {ResolverReceiver} from '../resolver/receiver'
 
-export type TransferAddress = string
+export type TransferAddress = Address
 
 export type TransferEntry = {
   address: TransferAddress

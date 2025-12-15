@@ -1,54 +1,74 @@
+import {
+  createCombinedDelegationTxFromWallet,
+  createDelegationTxFromWallet,
+} from '@yoroi/cardano-wallet'
+import {getYoroiDrepIdHex} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {Branded, KeyHash} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 import * as React from 'react'
-import {useIntl} from 'react-intl'
 import {Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
-import {useStakingTx} from '~/features/Dashboard/ui/shared/StakePoolInfos'
-import {useReviewTx} from '~/features/ReviewTx/common/ReviewTxProvider'
+import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
+import {useGovernanceParticipation} from '~/features/Staking/Governance/common/helpers'
+import {useNavigateTo} from '~/features/Staking/Governance/common/navigation'
+import {isInsufficientBalanceError} from '~/features/Staking/Governance/common/transactionErrorHandling'
 import {PoolDetailScreen} from '~/features/Staking/Staking/PoolDetails/PoolDetailScreen'
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
-import {showConfirmationDialog, showErrorDialog} from '~/kernel/dialogs'
-import {useLanguage} from '~/kernel/i18n/LanguageProvider'
+import {PoolList} from '~/features/Staking/Staking/PoolList/PoolList'
+import {usePrefetchPoolList} from '~/features/Staking/Staking/PoolList/usePoolList'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
+import {GovernanceRequiredModal} from '~/ui/GovernanceRequiredModal/GovernanceRequiredModal'
 import {LoadingOverlay} from '~/ui/LoadingOverlay/LoadingOverlay'
-import {Space} from '~/ui/Space/Space'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 
 export const StakingCenter = () => {
   const strings = useStrings()
-  const {isDark, atoms: ta} = useTheme()
+  const {atoms: ta} = useTheme()
   const queryClient = useQueryClient()
 
-  const {languageCode} = useLanguage()
   const {wallet, meta} = useSelectedWallet()
-  const {walletManager} = useWalletManager()
-  const intl = useIntl()
-  const {plate} = walletManager.checksum(wallet.publicKeyHex)
   const {navigateToTxReview} = useWalletNavigation()
-  const {unsignedTxChanged} = useReviewTx()
+  const navigateTo = useNavigateTo()
+  const prefetchPoolList = usePrefetchPoolList()
+  const {isParticipating: isGovernanceParticipating} =
+    useGovernanceParticipation()
+  const {openModal, closeModal} = useModal()
 
-  const [selectedPoolId, setSelectedPoolId] = React.useState<string | null>(
-    null,
+  // Add search to navigation header
+  useSearchOnNavBar({
+    title: strings.dashboard.stakingCenterTitle,
+    placeholder: strings.staking.searchPools,
+  })
+
+  // Prefetch pool list (pages 1 and 2) when screen is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      prefetchPoolList()
+    }, [prefetchPoolList]),
   )
-  const [isContentLoaded, setIsContentLoaded] = React.useState(false)
-  const [url, setUrl] = React.useState<null | string>(null)
-  const [showLoadingModal, setShowLoadingModal] = React.useState(false)
+
+  const [pendingPoolId, setPendingPoolId] = React.useState<string | null>(null)
+  const [isBuildingTx, setIsBuildingTx] = React.useState(false)
+  const [_buildError, setBuildError] = React.useState<Error | null>(null)
+
+  const {clearSearch, hideSearch} = useSearch()
 
   useFocusEffect(
     React.useCallback(() => {
-      setUrl(prepareStakingURL(languageCode, plate))
+      // Clear search when leaving the screen
       return () => {
-        setUrl(null) // force rerender, so the list's CTAs are reset
-        setSelectedPoolId(null) // any pool can be reselected once go back from signing
+        setIsBuildingTx(false)
+        setBuildError(null)
+        clearSearch()
+        hideSearch()
       }
-    }, [languageCode, plate]),
+    }, [clearSearch, hideSearch]),
   )
 
   const onSuccess = React.useCallback(() => {
@@ -56,80 +76,129 @@ export const StakingCenter = () => {
   }, [queryClient, wallet.id])
 
   const onError = React.useCallback(() => {
-    setSelectedPoolId(null)
+    setIsBuildingTx(false)
+    setBuildError(null)
     queryClient.resetQueries({queryKey: [wallet.id, 'stakingInfo']})
   }, [queryClient, wallet.id])
 
-  const {stakingTx} = useStakingTx(
-    {wallet, poolId: selectedPoolId ?? undefined, meta},
-    {queryKey: [wallet.id, 'stakingTx'], enabled: selectedPoolId != null},
+  // Build transaction when pool is selected
+  const buildDelegationTransaction = React.useCallback(
+    async (poolId: string, includeGovernance: boolean) => {
+      setIsBuildingTx(true)
+      setBuildError(null)
+
+      try {
+        logger.debug('building delegation transaction', {
+          poolId,
+          includeGovernance,
+        })
+
+        let stakingTx: {cbor: string}
+
+        if (includeGovernance) {
+          // Create combined transaction with both stake pool and DRep delegation
+          const yoroiDrepIdHex = getYoroiDrepIdHex(
+            wallet.networkManager.network,
+          )
+          const drepValue: {KeyHash: KeyHash} = {
+            KeyHash: Branded.asKeyHash(yoroiDrepIdHex),
+          }
+          stakingTx = await createCombinedDelegationTxFromWallet(wallet, {
+            poolId,
+            drepValue,
+            addressMode: meta.addressMode,
+          })
+        } else {
+          // Create stake-only delegation transaction
+          stakingTx = await createDelegationTxFromWallet(wallet, {
+            poolId,
+            addressMode: meta.addressMode,
+          })
+        }
+
+        setIsBuildingTx(false)
+
+        navigateToTxReview({
+          cbor: stakingTx.cbor,
+          onSuccess,
+          onError,
+          context: 'delegate',
+        })
+      } catch (error) {
+        const err = error instanceof Error ? error : new Error(String(error))
+        logger.error(err, {origin: 'staking', operation: 'buildDelegationTx'})
+
+        if (isInsufficientBalanceError(error)) {
+          navigateTo.noFunds()
+          setIsBuildingTx(false)
+          setPendingPoolId(null)
+          return
+        }
+
+        setBuildError(err)
+        setIsBuildingTx(false)
+        setPendingPoolId(null)
+      }
+    },
+    [wallet, meta, navigateToTxReview, navigateTo, onSuccess, onError],
   )
 
+  // Handle pool selection - check if governance modal is needed
   React.useEffect(() => {
-    if (!stakingTx) return
-    if (selectedPoolId == null) return
-    unsignedTxChanged(stakingTx)
-    navigateToTxReview({onSuccess, onError, context: 'delegate'})
-  }, [
-    stakingTx,
-    selectedPoolId,
-    unsignedTxChanged,
-    navigateToTxReview,
-    onSuccess,
-    onError,
-  ])
+    if (!pendingPoolId) return
 
-  const handleOnMessage = async (event: WebViewMessageEvent) => {
-    const selectedPoolHashes = JSON.parse(decodeURI(event.nativeEvent.data))
-    if (!Array.isArray(selectedPoolHashes) || selectedPoolHashes.length < 1) {
-      await showErrorDialog(
-        // LEGACY
-        {
-          title: {
-            id: 'components.stakingcenter.noPoolDataDialog.title',
-            defaultMessage: strings.staking.noPoolDataDialog.title,
-          },
-          message: {
-            id: 'components.stakingcenter.noPoolDataDialog.message',
-            defaultMessage: strings.staking.noPoolDataDialog.message,
-          },
-        },
-        intl,
-      )
+    // If user is already participating in governance, proceed directly without modal
+    if (isGovernanceParticipating) {
+      const poolIdToUse = pendingPoolId
+      setPendingPoolId(null)
+      buildDelegationTransaction(poolIdToUse, false)
       return
     }
-    logger.debug('selected pools from explorer', {selectedPoolHashes})
 
-    // Show confirmation dialog before proceeding
-    const confirmed = await showConfirmationDialog(
-      {
-        title: {
-          id: 'components.stakingcenter.confirmDelegation.title',
-          defaultMessage: strings.staking.confirmDelegation.title,
-        },
-        message: {
-          id: 'components.stakingcenter.confirmDelegation.message',
-          defaultMessage: strings.staking.confirmDelegation.message,
-        },
-        btnYesLabel: {
-          id: 'components.stakingcenter.confirmDelegation.delegateButtonLabel',
-          defaultMessage: strings.staking.confirmDelegation.delegateButtonLabel,
-        },
-        btnNoLabel: {
-          id: 'global.cancel',
-          defaultMessage: strings.staking.confirmDelegation.cancelButtonLabel,
-        },
-      },
-      intl,
-    )
-    if (confirmed === 'Yes') {
-      setShowLoadingModal(true)
-      setSelectedPoolId(selectedPoolHashes[0])
-    }
+    // If user is not participating in governance, show modal
+    const poolIdToUse = pendingPoolId
+    setPendingPoolId(null) // Clear immediately to prevent re-triggering
+
+    openModal({
+      title: strings.staking.governanceRequiredTitle,
+      content: <GovernanceRequiredModal.Content />,
+      footer: (
+        <GovernanceRequiredModal.Footer
+          onDelegateToYoroiDRep={() => {
+            closeModal()
+            // Build transaction with governance delegation
+            buildDelegationTransaction(poolIdToUse, true)
+          }}
+          onDelegateStakeOnly={() => {
+            closeModal()
+            // Build transaction without governance delegation
+            buildDelegationTransaction(poolIdToUse, false)
+          }}
+        />
+      ),
+      height: 680,
+    })
+  }, [
+    pendingPoolId,
+    isGovernanceParticipating,
+    openModal,
+    closeModal,
+    strings.staking.governanceRequiredTitle,
+    buildDelegationTransaction,
+  ])
+
+  const handlePoolSelect = async (poolHash: string) => {
+    logger.debug('selected pool from native list', {poolHash})
+    setPendingPoolId(poolHash)
   }
 
+  const handlePoolDetailDelegate = React.useCallback((poolId: string) => {
+    logger.debug('selected pool from detail screen', {poolId})
+    setPendingPoolId(poolId)
+  }, [])
+
   const shouldDisplayPoolIDInput = !wallet.isMainnet
-  const shouldDisplayPoolList = wallet.isMainnet && url != null
+  const shouldDisplayPoolList = wallet.isMainnet
 
   return (
     <SafeAreaView
@@ -137,35 +206,12 @@ export const StakingCenter = () => {
       style={[a.flex_1, a.px_lg, ta.bg_color_max]}
     >
       {shouldDisplayPoolIDInput && (
-        <PoolDetailScreen onPressDelegate={setSelectedPoolId} />
+        <PoolDetailScreen onPressDelegate={handlePoolDetailDelegate} />
       )}
 
-      {shouldDisplayPoolList && (
-        <View style={a.flex_1}>
-          <Space.Height.sm />
-          <WebView
-            style={{opacity: isContentLoaded ? 1 : 0}}
-            originWhitelist={['*']}
-            androidLayerType="software"
-            source={{uri: url}}
-            onMessage={(event) => handleOnMessage(event)}
-            onLoadEnd={() => setTimeout(() => setIsContentLoaded(true), 250)}
-            {...(isDark && {
-              injectedJavaScript: `
-              document.documentElement.style.overscrollBehavior = 'none'
-              document.body.style.backgroundColor = "#222"
-              document.body.style.filter = "invert(0.9) hue-rotate(180deg)"
-              document.body.style.caretColor = "#FFFFFF"
-              setTimeout(() =>
-                [...document.images].forEach(i => i.style = 'filter:invert(1) hue-rotate(180deg)')
-              , 1000)
-            `,
-            })}
-          />
-        </View>
-      )}
+      {shouldDisplayPoolList && <PoolList onPoolSelect={handlePoolSelect} />}
 
-      {showLoadingModal && (
+      {isBuildingTx && (
         <LoadingOverlay
           isLoading
           content={
@@ -181,16 +227,4 @@ export const StakingCenter = () => {
       )}
     </SafeAreaView>
   )
-}
-
-const prepareStakingURL = (locale: string, plate: string): string => {
-  // source=mobile is constant and already included
-  let finalURL = 'https://adapools.yoroiwallet.com/?source=mobile'
-
-  const lang = locale.slice(0, 2)
-  finalURL += `&lang=${lang}`
-
-  finalURL += `&bias=${plate}`
-
-  return finalURL
 }

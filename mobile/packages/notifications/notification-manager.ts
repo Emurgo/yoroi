@@ -180,7 +180,15 @@ const shouldNotify = (
   event: Notifications.Event,
   config: Notifications.Config,
 ): boolean => {
-  return config[event.trigger].notify
+  const triggerConfig = config[event.trigger as keyof typeof config]
+  if (
+    triggerConfig &&
+    typeof triggerConfig === 'object' &&
+    'notify' in triggerConfig
+  ) {
+    return triggerConfig.notify
+  }
+  return false
 }
 
 const buildUnreadCounterDefaultValue = (): Readonly<

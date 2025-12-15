@@ -1,10 +1,9 @@
 import {invalid} from '@yoroi/common'
+import {useWalletManager} from '@yoroi/wallet-manager'
 
 import {produce} from 'immer'
 import * as React from 'react'
 import WebView from 'react-native-webview'
-
-import {useWalletManager} from '~/features/WalletManager/context/WalletManagerProvider'
 
 import {WalletNameOverrideProvider} from './WalletNameOverrideContext'
 

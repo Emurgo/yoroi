@@ -536,7 +536,7 @@ describe('DappConnector', () => {
         trustedUrl,
         sendMessage,
       )
-      expect(sendMessage).toHaveBeenCalledWith('1', 'a0')
+      expect(sendMessage).toHaveBeenCalledWith('1', 'mock-signed-tx-hex')
     })
 
     it('should resolve signTx with mocked data if partial sign is known', async () => {
@@ -547,7 +547,7 @@ describe('DappConnector', () => {
         trustedUrl,
         sendMessage,
       )
-      expect(sendMessage).toHaveBeenCalledWith('1', 'a0')
+      expect(sendMessage).toHaveBeenCalledWith('1', 'mock-signed-tx-hex')
     })
 
     it('should throw in signTx with when incorrect arguments are presented', async () => {
@@ -711,6 +711,80 @@ describe('DappConnector', () => {
       )
     })
 
+    it('should return null for getCollateral when there is pending collateral', async () => {
+      const walletWithPendingCollateral = {
+        ...mockWallet,
+        getCollateral: () => Promise.resolve(null),
+        getCollateralInfo: () => ({
+          collateralId: 'pending-tx-id',
+          isConfirmed: false,
+        }),
+        sendReorganisationTx: jest.fn(),
+      }
+      const dappConnector = getDappConnector(walletWithPendingCollateral)
+      const sendMessage = jest.fn()
+      await dappConnector.addConnection({
+        walletId,
+        dappOrigin: 'https://yoroi-wallet.com',
+      })
+      await dappConnector.handleEvent(
+        createEvent('api.getCollateral', {args: ['10000000']}),
+        trustedUrl,
+        sendMessage,
+      )
+      expect(sendMessage).toHaveBeenCalledWith('1', null)
+      expect(
+        walletWithPendingCollateral.sendReorganisationTx,
+      ).not.toHaveBeenCalled()
+    })
+
+    it('should not send reorganisation tx when balance is not greater than value', async () => {
+      const walletWithLowBalance = {
+        ...mockWallet,
+        getCollateral: () => Promise.resolve(null),
+        getCollateralInfo: () => ({
+          collateralId: '',
+          isConfirmed: false,
+        }),
+        getBalance: () => CSL.Value.fromHex('0000000000'), // Zero balance
+        sendReorganisationTx: jest.fn(),
+      }
+      const dappConnector = getDappConnector(walletWithLowBalance)
+      const sendMessage = jest.fn()
+      await dappConnector.addConnection({
+        walletId,
+        dappOrigin: 'https://yoroi-wallet.com',
+      })
+      await dappConnector.handleEvent(
+        createEvent('api.getCollateral', {args: ['10000000']}),
+        trustedUrl,
+        sendMessage,
+      )
+      expect(sendMessage).toHaveBeenCalledWith('1', null)
+      expect(walletWithLowBalance.sendReorganisationTx).not.toHaveBeenCalled()
+    })
+
+    it('should return collateral UTXOs when available', async () => {
+      const utxo1 = {toHex: () => 'utxo1'} as any
+      const utxo2 = {toHex: () => 'utxo2'} as any
+      const walletWithCollateral = {
+        ...mockWallet,
+        getCollateral: () => Promise.resolve([utxo1, utxo2]),
+      }
+      const dappConnector = getDappConnector(walletWithCollateral)
+      const sendMessage = jest.fn()
+      await dappConnector.addConnection({
+        walletId,
+        dappOrigin: 'https://yoroi-wallet.com',
+      })
+      await dappConnector.handleEvent(
+        createEvent('api.getCollateral', {args: ['10000000']}),
+        trustedUrl,
+        sendMessage,
+      )
+      expect(sendMessage).toHaveBeenCalledWith('1', ['utxo1', 'utxo2'])
+    })
+
     it('should resolve getUnusedAddresses with mocked data', async () => {
       const dappConnector = getDappConnector({
         ...mockWallet,
@@ -742,6 +816,25 @@ describe('DappConnector', () => {
         sendMessage,
       )
       expect(sendMessage).toHaveBeenCalledWith('1', [{cip: 30}, {cip: 95}])
+    })
+
+    it('should filter CIP95 from extensions when wallet does not support it', async () => {
+      const walletWithoutCIP95 = {
+        ...mockWallet,
+        cip95: undefined,
+      }
+      const dappConnector = getDappConnector(walletWithoutCIP95)
+      const sendMessage = jest.fn()
+      await dappConnector.addConnection({
+        walletId,
+        dappOrigin: 'https://yoroi-wallet.com',
+      })
+      await dappConnector.handleEvent(
+        createEvent('api.getExtensions'),
+        trustedUrl,
+        sendMessage,
+      )
+      expect(sendMessage).toHaveBeenCalledWith('1', [{cip: 30}])
     })
 
     it('should resolve getUtxos with mocked data', async () => {
@@ -993,7 +1086,7 @@ const walletId = 'b5d94758-26c5-48b0-af2b-6e68c3ef2dbf'
 
 const CSL = init('test')
 const mockWallet: ResolverWallet = {
-  signTx: () => Promise.resolve(CSL.TransactionWitnessSet.new()),
+  signTx: () => Promise.resolve('mock-signed-tx-hex'),
   signData: () => Promise.resolve({key: '', signature: ''}),
   id: walletId,
   network: Chain.Network.Mainnet,
@@ -1013,6 +1106,10 @@ const mockWallet: ResolverWallet = {
   ],
   getUtxos: () => Promise.resolve([]),
   getCollateral: () => Promise.resolve([]),
+  getCollateralInfo: () => ({
+    collateralId: '',
+    isConfirmed: false,
+  }),
   submitTx: () => Promise.resolve('tx-id'),
   sendReorganisationTx: async () => {
     throw new Error('Not implemented')

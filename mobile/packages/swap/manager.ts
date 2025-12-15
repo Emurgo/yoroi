@@ -1,4 +1,5 @@
 import {isLeft, isRight} from '@yoroi/common'
+import {getLogger} from '@yoroi/logger'
 import {Api, Portfolio, Swap} from '@yoroi/types'
 
 import {freeze} from 'immer'
@@ -16,7 +17,6 @@ export const swapManagerMaker: Swap.ManagerMaker = ({
   network,
   primaryTokenInfo,
   isPrimaryToken,
-  stakingKey,
   storage,
   partners,
 }) => {
@@ -32,7 +32,6 @@ export const swapManagerMaker: Swap.ManagerMaker = ({
     addressHex,
     network,
     primaryTokenInfo,
-    stakingKey,
     isPrimaryToken,
     partner: partners?.[Swap.Aggregator.Muesliswap],
   })
@@ -113,7 +112,7 @@ const apiManagerMaker = (
 
   return freeze(
     {
-      async tokens() {
+      async tokens(): Promise<Api.Response<Portfolio.Token.Info[]>> {
         const enabledAggregators = getEnabledAggregators()
 
         const settledResults = await Promise.allSettled(
@@ -136,12 +135,16 @@ const apiManagerMaker = (
         })
 
         if (errors.length > 0) {
-          console.warn('Some aggregators failed:', errors)
+          getLogger().warn('Some aggregators failed', {
+            origin: 'swap',
+            errors,
+          })
         }
 
         warnAllLeft(...responses)
 
-        if (responses.every(isLeft)) return invalid
+        if (responses.every(isLeft))
+          return invalid as Api.Response<Portfolio.Token.Info[]>
 
         const merged: Record<Portfolio.Token.Id, Portfolio.Token.Info> = {}
         const append = (tokenInfo: Portfolio.Token.Info) => {
@@ -163,7 +166,7 @@ const apiManagerMaker = (
         }
       },
 
-      async orders() {
+      async orders(): Promise<Api.Response<Swap.Order[]>> {
         const enabledAggregators = Object.keys(adapters).filter(
           (agg) => adapters[agg as Swap.Aggregator] !== undefined,
         ) as Swap.Aggregator[]
@@ -176,7 +179,8 @@ const apiManagerMaker = (
 
         warnAllLeft(...responses)
 
-        if (responses.every(isLeft)) return invalid
+        if (responses.every(isLeft))
+          return invalid as Api.Response<Swap.Order[]>
 
         const merged: Record<Swap.Order['txHash'], Swap.Order> = {}
         const append = (order: Swap.Order) => {
@@ -213,7 +217,9 @@ const apiManagerMaker = (
         }
       },
 
-      async limitOptions(body: Swap.LimitOptionsRequest) {
+      async limitOptions(
+        body: Swap.LimitOptionsRequest,
+      ): Promise<Api.Response<Swap.LimitOptionsResponse>> {
         const enabledAggregators = getEnabledAggregators()
 
         const responses: Array<Api.Response<Swap.LimitOptionsResponse>> =
@@ -226,13 +232,15 @@ const apiManagerMaker = (
         warnAllLeft(...responses)
 
         if (responses.every(isLeft))
-          return responses.find((res) => res.error.status !== -3) ?? invalid
+          return (responses.find((res) => res.error.status !== -3) ??
+            invalid) as Api.Response<Swap.LimitOptionsResponse>
 
         const validResponses = responses
           .filter(isRight)
           .map(({value}) => value.data)
 
-        if (validResponses.length === 0) return invalid
+        if (validResponses.length === 0)
+          return invalid as Api.Response<Swap.LimitOptionsResponse>
 
         const mergedOptions: Partial<
           Record<Swap.Protocol, Swap.LimitOptionsResponse['options'][number]>
@@ -262,7 +270,9 @@ const apiManagerMaker = (
         }
       },
 
-      async estimate(body: Swap.EstimateRequest) {
+      async estimate(
+        body: Swap.EstimateRequest,
+      ): Promise<Api.Response<Swap.EstimateResponse>> {
         const enabledAggregators = getEnabledAggregators()
 
         const settledResults = await Promise.allSettled(
@@ -287,7 +297,10 @@ const apiManagerMaker = (
         })
 
         if (errors.length > 0) {
-          console.warn('Some aggregators failed during estimate:', errors)
+          getLogger().warn('Some aggregators failed during estimate', {
+            origin: 'swap',
+            errors,
+          })
         }
 
         warnAllLeft(...responses)
@@ -300,14 +313,14 @@ const apiManagerMaker = (
                 res.error.message !== '' &&
                 !res.error.message.includes('DOCTYPE html'),
             ) ?? invalid,
-          )
+          ) as Api.Response<Swap.EstimateResponse>
 
         const estimates = responses
           .filter(isRight)
           .flatMap(({value}) => value.data)
 
         if (estimates.length === 0) {
-          return invalid
+          return invalid as Api.Response<Swap.EstimateResponse>
         }
 
         const bestEstimate = estimates.reduce(
@@ -324,13 +337,16 @@ const apiManagerMaker = (
         }
       },
 
-      async create(body: Swap.CreateRequest) {
+      async create(
+        body: Swap.CreateRequest,
+      ): Promise<Api.Response<Swap.CreateResponse>> {
         // Feature flag: single adapter create (default true)
         const singleAdapterCreate = true
 
         if (singleAdapterCreate && body.routeHint?.aggregator != null) {
           const adapter = adapters[body.routeHint.aggregator]
-          if (adapter == null) return invalid
+          if (adapter == null)
+            return invalid as Api.Response<Swap.CreateResponse>
 
           const response = await adapter.create(body)
           if (isLeft(response)) return standarizeError(response)
@@ -357,7 +373,7 @@ const apiManagerMaker = (
                 res.error.message !== '' &&
                 !res.error.message.includes('DOCTYPE html'),
             ) ?? invalid,
-          )
+          ) as Api.Response<Swap.CreateResponse>
 
         const creates = responses.filter(isRight).map(({value}) => value.data)
 
@@ -375,7 +391,9 @@ const apiManagerMaker = (
         }
       },
 
-      async cancel(body: Swap.CancelRequest) {
+      async cancel(
+        body: Swap.CancelRequest,
+      ): Promise<Api.Response<Swap.CancelResponse>> {
         // Helper function to check if response has valid CBOR
         const hasValidCbor = (
           response: Api.Response<Swap.CancelResponse>,
@@ -383,46 +401,40 @@ const apiManagerMaker = (
           return isRight(response) && response.value.data.cbor.trim() !== ''
         }
 
-        // First, try the appropriate adapter based on aggregator
-        const initialAdapter =
-          body.order.aggregator === Swap.Aggregator.Muesliswap
-            ? adapters[Swap.Aggregator.Muesliswap]
-            : body.order.aggregator === Swap.Aggregator.Minswap
-              ? adapters[Swap.Aggregator.Minswap]
-              : body.order.aggregator === Swap.Aggregator.Steelswap
-                ? adapters[Swap.Aggregator.Steelswap]
-                : adapters[Swap.Aggregator.Dexhunter]
+        // Priority order for cancel APIs: minswap -> steelswap -> dexhunter -> muesliswap
+        // Muesliswap is last due to issues with malformed CBORs
+        const priorityOrder: Swap.Aggregator[] = [
+          Swap.Aggregator.Minswap,
+          Swap.Aggregator.Steelswap,
+          Swap.Aggregator.Dexhunter,
+          Swap.Aggregator.Muesliswap,
+        ]
 
-        if (!initialAdapter) return invalid
+        let lastResponse: Api.Response<Swap.CancelResponse> | undefined
 
-        const initialResponse = await initialAdapter.cancel(body)
+        // Try adapters in priority order, stopping at the first valid CBOR
+        for (const aggregator of priorityOrder) {
+          const adapter = adapters[aggregator]
+          if (!adapter) continue
 
-        // If we got a valid CBOR, return it
-        if (hasValidCbor(initialResponse)) {
-          return initialResponse
+          const response = await adapter.cancel(body)
+          lastResponse = response
+
+          // If we got a valid CBOR, return it immediately
+          if (hasValidCbor(response)) {
+            return response
+          }
         }
 
-        // If not, try all other adapters in parallel
-        const otherAggregators = Object.entries(adapters).filter(
-          ([_, adapter]) => adapter !== initialAdapter,
-        )
-
-        const alternativeResponses = await Promise.all(
-          otherAggregators.map(([_, adapter]) => adapter.cancel(body)),
-        )
-
-        // Find the first response with valid CBOR
-        const validResponse = alternativeResponses.find(hasValidCbor)
-
-        // If found, return it; otherwise return the initial response
-        return validResponse ?? initialResponse
+        // If no adapter returned a valid CBOR, return the last response or invalid
+        return lastResponse ?? (invalid as Api.Response<Swap.CancelResponse>)
       },
     },
     true,
   )
 }
 
-const invalid: Api.Response<any> = freeze(
+const invalid: Api.Response<unknown> = freeze(
   {
     tag: 'left',
     error: {
@@ -434,12 +446,13 @@ const invalid: Api.Response<any> = freeze(
   true,
 )
 
-const warnAllLeft = (...responses: Array<Api.Response<any>>) => {
-  if (responses.every(isLeft))
-    console.warn(
-      'Swap Manager all left >> ',
-      responses.map((response) => response.error.message),
-    )
+const warnAllLeft = (...responses: Array<Api.Response<unknown>>) => {
+  if (responses.every(isLeft)) {
+    getLogger().debug('Swap Manager all left', {
+      origin: 'swap',
+      errors: responses.map((response) => response.error.message),
+    })
+  }
 }
 
 export const standarizeError = <T>(input: Api.Response<T>): Api.Response<T> => {

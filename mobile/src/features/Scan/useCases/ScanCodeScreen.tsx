@@ -1,42 +1,29 @@
+import {linksYoroiParser, useLinks} from '@yoroi/links'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {Scan} from '@yoroi/types'
 
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useCameraPermissions} from 'expo-camera'
 import * as Haptics from 'expo-haptics'
 import * as React from 'react'
 import {Alert, Text, TouchableOpacity, View} from 'react-native'
-import {z} from 'zod'
 
-import {useTriggerScanAction} from '~/features/Scan/common/useTriggerScanAction'
+import {
+  parseCardanoLink,
+  parseLegacyPublicKeyQR,
+} from '~/features/Links/common/parsers'
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {useParams} from '~/kernel/navigation/hooks/useParams'
-import {ScanRoutes} from '~/kernel/navigation/types'
 import {
   CameraCodeScanner,
   CameraCodeScannerMethods,
 } from '~/ui/CameraCodeScanner/CameraCodeScanner'
 
-import {parseScanAction} from '../common/parsers'
 import {useScanErrorResolver} from '../common/useScanErrorResolver'
-
-const scanParamsSchema = z.object({
-  insideFeature: z.enum(['scan', 'send']).optional(),
-})
 
 export const ScanCodeScreen = () => {
   const {atoms: ta} = useTheme()
   const strings = useStrings()
   const navigation = useNavigation()
-  const params = useParams<ScanRoutes['scan-start']>(
-    (params): params is Readonly<{insideFeature: Scan.Feature}> => {
-      return params && typeof params === 'object' && 'insideFeature' in params
-    },
-  )
-  const {insideFeature} = scanParamsSchema.parse(params)
-  const triggerScanAction = useTriggerScanAction({
-    insideFeature: insideFeature as 'scan' | 'send',
-  })
+  const {setPendingAction} = useLinks()
   const scanErrorResolver = useScanErrorResolver()
   const [permission, requestPermission] = useCameraPermissions()
   const [scanned, setScanned] = React.useState(false)
@@ -53,9 +40,35 @@ export const ScanCodeScreen = () => {
       setScanned(true)
 
       try {
-        const parsedScanAction = parseScanAction(event.data)
+        // Try Yoroi links first (yoroi://)
+        const parsedYoroiAction = linksYoroiParser(event.data)
+        if (parsedYoroiAction != null) {
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+          setPendingAction({
+            source: 'yoroi',
+            action: {info: parsedYoroiAction, isTrusted: false},
+          })
+          return
+        }
+
+        // Try legacy yoroi-frontend public key QR format (JSON with publicKeyHex)
+        const legacyAction = parseLegacyPublicKeyQR(event.data)
+        if (legacyAction != null) {
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+          setPendingAction({
+            source: 'cardano',
+            action: legacyAction,
+          })
+          return
+        }
+
+        // Try Cardano links (web+cardano://)
+        const cardanoAction = parseCardanoLink(event.data)
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
-        triggerScanAction(parsedScanAction)
+        setPendingAction({
+          source: 'cardano',
+          action: cardanoAction,
+        })
       } catch (error) {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
         const errorDialog = scanErrorResolver(error as Error)
@@ -69,7 +82,7 @@ export const ScanCodeScreen = () => {
     },
     [
       scanned,
-      triggerScanAction,
+      setPendingAction,
       scanErrorResolver,
       strings.scan,
       handleScanAgain,

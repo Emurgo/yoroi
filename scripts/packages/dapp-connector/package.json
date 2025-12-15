@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/dapp-connector",
-  "version": "6.0.1",
+  "version": "7.0.0-beta",
   "description": "The Dapp Connector package of Yoroi SDK",
   "keywords": [
     "yoroi",
@@ -89,8 +89,11 @@
     "@types/jest": "29.5.12",
     "@types/react": "19.0.10",
     "@types/react-test-renderer": "19.0.0",
+    "@yoroi/cardano-wallet": "file:../cardano-wallet",
     "@yoroi/common": "file:../common",
+    "@yoroi/logger": "file:../logger",
     "@yoroi/types": "file:../types",
+    "@yoroi/cardano-wallet": "file:../cardano-wallet",
     "axios-mock-adapter": "1.22.0",
     "babel-jest": "29.7.0",
     "commitlint": "17.0.2",
@@ -112,7 +115,7 @@
   "peerDependencies": {
     "@react-native-async-storage/async-storage": "2.1.2",
     "@tanstack/react-query": "5.81.5",
-    "@yoroi/common": "file:../common",
+    "@yoroi/common": "^7.0.0-beta",
     "axios": "^1.10.0",
     "bignumber.js": "9.3.0",
     "immer": "10.1.1",

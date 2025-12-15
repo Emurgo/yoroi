@@ -1,13 +1,14 @@
 import {isLeft, isRight} from '@yoroi/common'
-import {Chain, Portfolio} from '@yoroi/types'
+import {primaryTokenId} from '@yoroi/portfolio'
+import {Address, Chain, Portfolio, TokenId} from '@yoroi/types'
 
 import {minswapApiMaker} from './api-maker'
 
 const mockConfig = {
-  address: 'addr1test',
+  address: 'addr1test' as Address,
   network: Chain.Network.Mainnet as Chain.SupportedNetworks,
   primaryTokenInfo: {
-    id: '.' as const,
+    id: primaryTokenId,
     name: 'Cardano',
     ticker: 'ADA',
     decimals: 6,
@@ -116,7 +117,7 @@ describe('minswapApiMaker', () => {
         data: {
           orders: [
             {
-              owner_address: 'addr1test',
+              owner_address: 'addr1test' as Address,
               protocol: 'MinswapV2',
               token_in: {
                 token_id: 'lovelace',
@@ -129,7 +130,7 @@ describe('minswapApiMaker', () => {
               },
               token_out: {
                 token_id:
-                  'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441',
+                  'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as TokenId,
                 logo: null,
                 ticker: 'TEST',
                 is_verified: true,
@@ -201,9 +202,9 @@ describe('minswapApiMaker', () => {
 
     const result = await api.estimate({
       amountIn: 10,
-      tokenIn: '.' as const,
+      tokenIn: primaryTokenId,
       tokenOut:
-        'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as const,
+        'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as TokenId,
       slippage: 1,
     })
 
@@ -231,9 +232,9 @@ describe('minswapApiMaker', () => {
 
     const result = await api.create({
       amountIn: 10,
-      tokenIn: '.' as const,
+      tokenIn: primaryTokenId,
       tokenOut:
-        'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as const,
+        'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as TokenId,
       slippage: 1,
     })
 
@@ -248,9 +249,9 @@ describe('minswapApiMaker', () => {
     const api = minswapApiMaker(mockConfig)
 
     const result = await api.limitOptions({
-      tokenIn: '.' as const,
+      tokenIn: primaryTokenId,
       tokenOut:
-        'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as const,
+        'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as TokenId,
     })
 
     expect(isLeft(result)).toBe(true)
@@ -264,9 +265,9 @@ describe('minswapApiMaker', () => {
     const api = minswapApiMaker(mockConfig)
 
     const result = await api.limitOptions({
-      tokenIn: '.' as const,
+      tokenIn: primaryTokenId,
       tokenOut:
-        'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as const,
+        'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as TokenId,
     })
 
     expect(isLeft(result)).toBe(true)
@@ -296,9 +297,9 @@ describe('minswapApiMaker', () => {
         protocol: 'minswap-v2' as const,
         txHash: 'txhash',
         outputIndex: 0,
-        tokenIn: '.' as const,
+        tokenIn: primaryTokenId,
         tokenOut:
-          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as const,
+          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as TokenId,
         amountIn: 10,
         actualAmountOut: 8,
         expectedAmountOut: 8,
@@ -349,8 +350,8 @@ describe('minswapApiMaker', () => {
     const api = minswapApiMaker(mockConfig)
 
     const result = await api.limitOptions({
-      tokenIn: '.' as const,
-      tokenOut: 'test-token.' as const,
+      tokenIn: primaryTokenId,
+      tokenOut: 'test-token.' as TokenId,
     })
 
     expect(result.tag).toBe('left')
@@ -364,8 +365,8 @@ describe('minswapApiMaker', () => {
     const api = minswapApiMaker(mockConfig)
 
     const result = await api.limitOptions({
-      tokenIn: '.' as const,
-      tokenOut: 'test-token.' as const,
+      tokenIn: primaryTokenId,
+      tokenOut: 'test-token.' as TokenId,
     })
 
     expect(result.tag).toBe('left')

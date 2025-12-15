@@ -1,3 +1,4 @@
+import {TokenId} from '../branded'
 import {
   PortfolioTokenApplication,
   PortfolioTokenId,
@@ -27,14 +28,14 @@ type CommonTokenInfo = {
 }
 
 type PrimaryTokenInfo = {
-  id: '.'
-  nature: PortfolioTokenNature.Primary
-  type: PortfolioTokenType.FT
+  id: TokenId // Primary token ID (typically '.')
+  nature: typeof PortfolioTokenNature.Primary
+  type: typeof PortfolioTokenType.FT
 }
 
 type SecondaryTokenInfo = {
   id: PortfolioTokenId
-  nature: PortfolioTokenNature.Secondary
+  nature: typeof PortfolioTokenNature.Secondary
   type: PortfolioTokenType
 }
 

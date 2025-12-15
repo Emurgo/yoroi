@@ -1,13 +1,13 @@
-import {App} from '@yoroi/types'
+import {App, TokenId} from '@yoroi/types'
 
 import {MMKV} from 'react-native-mmkv'
 
 import {parseSafe} from '../../utils/parsers'
 import {mountMMKVMultiStorage, mountMMKVStorage} from './mmkv-storage'
 
-const mmkv = new MMKV({id: 'test.mmkv'})
+const mmkv = new MMKV({id: 'test.mmkv' as TokenId})
 const rootStorage = mountMMKVStorage(
-  {path: '/', id: 'test.mmkv'},
+  {path: '/', id: 'test.mmkv' as TokenId},
   {instance: mmkv},
 )
 

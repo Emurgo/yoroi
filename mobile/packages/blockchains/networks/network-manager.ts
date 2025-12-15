@@ -1,11 +1,7 @@
-import {CardanoApi} from '@yoroi/api'
-import {
-  mountAsyncStorage,
-  mountMMKVStorage,
-  observableStorageMaker,
-} from '@yoroi/common'
+import {mountMMKVStorage, observableStorageMaker} from '@yoroi/common'
 import {explorerManager} from '@yoroi/explorers'
-import {Api, App, Chain, Network} from '@yoroi/types'
+import {getLogger} from '@yoroi/logger'
+import {Api, Chain, Network} from '@yoroi/types'
 
 import {freeze} from 'immer'
 
@@ -15,12 +11,10 @@ import {networkConfigs} from './network-configs'
 
 export function buildNetworkManagers({
   tokenManagers,
-  logger,
-  apiMaker = CardanoApi.cardanoApiMaker,
+  apiMaker,
 }: {
   tokenManagers: TokenManagerByNetwork
-  logger: App.Logger.Manager
-  apiMaker?: ({network}: {network: Chain.SupportedNetworks}) => Api.Cardano.Api
+  apiMaker: ({network}: {network: Chain.SupportedNetworks}) => Api.Cardano.Api
 }): Readonly<Record<Chain.SupportedNetworks, Network.Manager>> {
   const managers = Object.entries(networkConfigs).reduce<
     Record<Chain.SupportedNetworks, Network.Manager>
@@ -32,16 +26,13 @@ export function buildNetworkManagers({
         id: `${network}.manager.v1`,
       })
       const rootStorage = observableStorageMaker(networkRootStorage)
-      const legacyRootStorage = observableStorageMaker(
-        mountAsyncStorage({path: `/legacy/${network}/v1/`}),
-      )
       const {getProtocolParams, getBestBlock, getUtxoData} = apiMaker({
         network: config.network,
       })
       const api = {
         protocolParams: () =>
           getProtocolParams().catch((error) => {
-            logger.error(
+            getLogger().error(
               `networkManager: ${network} protocolParams has failed, using hardcoded`,
               {error},
             )
@@ -58,9 +49,6 @@ export function buildNetworkManagers({
         tokenManager,
 
         explorers: explorerManager[network as Chain.SupportedNetworks],
-
-        // NOTE: it can't use the new rootStorage cuz all modules are async now 🥹
-        legacyRootStorage,
       }
       networkManagers[network as Chain.SupportedNetworks] = networkManager
 

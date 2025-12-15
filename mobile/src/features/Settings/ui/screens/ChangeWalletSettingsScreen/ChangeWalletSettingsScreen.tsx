@@ -1,6 +1,7 @@
 import {useSetupWallet} from '@yoroi/setup-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Wallet} from '@yoroi/types'
+import {useAddressMode, useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
@@ -8,11 +9,9 @@ import {useIntl} from 'react-intl'
 import {ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useDisableEasyConfirmation} from '~/common/hooks/useDisableEasyConfirmation'
 import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {useAuthSetting} from '~/features/Auth/hooks/useAuthSetting'
-import {useAddressMode} from '~/features/WalletManager/hooks/useAddressMode'
-import {useDisableEasyConfirmation} from '~/features/WalletManager/hooks/useDisableEasyConfirmation'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {DIALOG_BUTTONS, showConfirmationDialog} from '~/kernel/dialogs'
 import {confirmationMessages} from '~/kernel/i18n/messages/global'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -22,6 +21,7 @@ import {SettingsRouteNavigation} from '~/kernel/navigation/types'
 import {Icon} from '~/ui/Icon'
 import {SettingsSwitch} from '~/ui/SettingsSwitch/SettingsSwitch'
 
+import {useIsPartialReadOnlyWallet} from '../../../hooks/useIsPartialReadOnlyWallet'
 import {useNavigateTo} from '../../../hooks/useNavigateTo'
 import {SettingsCollateralItem} from '../../navigation/SettingsCollateralItem'
 import {
@@ -49,13 +49,13 @@ const dialogOptions = {
 export const ChangeWalletSettingsScreen = () => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
-  const {resetToWalletSelection, navigateToNotificationSettings} =
-    useWalletNavigation()
+  const {resetToWalletSelection} = useWalletNavigation()
   const authSetting = useAuthSetting()
   const addressMode = useAddressMode()
   const {wallet} = useSelectedWallet()
   const intl = useIntl()
   const {walletIdChanged} = useSetupWallet()
+  const {isAuthDev} = useAuth()
 
   const logout = useLogout()
   const settingsNavigation = useNavigation<SettingsRouteNavigation>()
@@ -65,6 +65,7 @@ export const ChangeWalletSettingsScreen = () => {
   const navigateTo = useNavigateTo()
   const walletType = useWalletType(implementation)
   const {disableEasyConfirmation} = useDisableEasyConfirmation()
+  const isPartialReadOnly = useIsPartialReadOnlyWallet()
 
   const handleOnToggleEasyConfirmation = () => {
     if (isEasyConfirmationEnabled) {
@@ -131,7 +132,27 @@ export const ChangeWalletSettingsScreen = () => {
           </SettingsItem>
         </SettingsSection>
 
+        {isAuthDev && !isPartialReadOnly && (
+          <SettingsSection title={strings.settings.walletSettings.shareWallet}>
+            <NavigatedSettingsItem
+              icon={<Icon.Share {...iconProps} />}
+              label={strings.settings.walletSettings.shareWallet}
+              onNavigate={() => navigateTo.shareWallet()}
+            />
+          </SettingsSection>
+        )}
+
         <SettingsSection title={strings.settings.walletSettings.actions}>
+          {!isReadOnly && (
+            <NavigatedSettingsItem
+              icon={<Icon.Wallet {...iconProps} />}
+              label={strings.settings.advancedAddressRetrieval.title}
+              onNavigate={() =>
+                settingsNavigation.navigate('advanced-address-retrieval')
+              }
+            />
+          )}
+
           <NavigatedSettingsItem
             icon={<Icon.CrossCircle {...iconProps} />}
             label={strings.settings.walletSettings.removeWallet}
@@ -171,14 +192,6 @@ export const ChangeWalletSettingsScreen = () => {
           >
             <AddressModeSwitcher isSingle={addressMode.isSingle} />
           </SettingsItem>
-        </SettingsSection>
-
-        <SettingsSection title={strings.settings.notifications}>
-          <NavigatedSettingsItem
-            icon={<Icon.Bell {...iconProps} />}
-            label={strings.settings.notifications}
-            onNavigate={() => navigateToNotificationSettings()}
-          />
         </SettingsSection>
 
         <SettingsSection title={strings.settings.walletSettings.about}>

@@ -1,4 +1,4 @@
-import {AppApi, AppFrontendFeeTier, AppFrontendFeesResponse} from './api/app'
+import {AppApi} from './api/app'
 import {
   ApiRequestRecordWithCache,
   ApiResponseRecordWithCache,
@@ -29,38 +29,9 @@ import {
   ApiUtxoDataAsset,
   ApiUtxoDataRequest,
 } from './api/cardano'
-import {
-  ApiErrorBadRequest,
-  ApiErrorConflict,
-  ApiErrorForbidden,
-  ApiErrorGone,
-  ApiErrorInvalidState,
-  ApiErrorNetwork,
-  ApiErrorNotFound,
-  ApiErrorResponseMalformed,
-  ApiErrorServerSide,
-  ApiErrorTooEarly,
-  ApiErrorTooManyRequests,
-  ApiErrorUnauthorized,
-  ApiErrorUnknown,
-} from './api/errors'
 import {ApiResponse, ApiResponseError, ApiResponseSuccess} from './api/response'
 import {ApiHttpStatusCode} from './api/status-code'
 import {AppCacheInfo, AppCacheRecord, AppCacheRow} from './app/cache'
-import {
-  AppErrorInvalidState,
-  AppErrorLibraryFailed,
-  AppErrorWrongPassword,
-} from './app/errors'
-import {
-  AppLoggerEntry,
-  AppLoggerLevel,
-  AppLoggerManager,
-  AppLoggerMessage,
-  AppLoggerMetadata,
-  AppLoggerTransporter,
-  AppLoggerTransporterOptions,
-} from './app/logger'
 import {AppMultiStorage, AppMultiStorageOptions} from './app/multi-storage'
 import {
   AppObservableMultiStorage,
@@ -84,6 +55,9 @@ import {
   BalanceQuantity,
   BalanceToken,
 } from './balance/token'
+// Import validation functions for re-export
+import {ZERO_QUANTITY as ZERO_QUANTITY_CONST} from './branded/amount'
+import * as BrandedValidation from './branded/validation'
 import {
   CardanoAddress,
   CardanoMetadata,
@@ -103,22 +77,51 @@ import {
 } from './claim/api'
 import {ClaimInfo, ClaimManager, ClaimStatus} from './claim/claim'
 import {
+  ApiErrorBadRequest,
+  ApiErrorConflict,
+  ApiErrorForbidden,
+  ApiErrorGone,
+  ApiErrorInvalidState,
+  ApiErrorNetwork,
+  ApiErrorNotFound,
+  ApiErrorResponseMalformed,
+  ApiErrorServerSide,
+  ApiErrorTooEarly,
+  ApiErrorTooManyRequests,
+  ApiErrorUnauthorized,
+  ApiErrorUnknown,
+  AppErrorInvalidState,
+  AppErrorLibraryFailed,
+  AppErrorWrongPassword,
   ClaimApiErrorsAlreadyClaimed,
   ClaimApiErrorsExpired,
   ClaimApiErrorsInvalidRequest,
   ClaimApiErrorsNotFound,
   ClaimApiErrorsRateLimited,
   ClaimApiErrorsTooEarly,
-} from './claim/errors'
+  ExchangeProviderNotFoundError,
+  ExchangeUnknownError,
+  ExchangeValidationError,
+  LinksErrorExtraParamsDenied,
+  LinksErrorForbiddenParamsProvided,
+  LinksErrorParamsValidationFailed,
+  LinksErrorRequiredParamsMissing,
+  LinksErrorSchemeNotImplemented,
+  LinksErrorUnsupportedAuthority,
+  LinksErrorUnsupportedVersion,
+  NumbersErrorInvalidAtomicValue,
+  ResolverErrorInvalidDomain,
+  ResolverErrorInvalidResponse,
+  ResolverErrorNotFound,
+  ResolverErrorUnsupportedTld,
+  ResolverErrorWrongBlockchain,
+  ScanErrorUnknown,
+  ScanErrorUnknownContent,
+} from './errors'
 import {ExchangeApi} from './exchange/api'
 import {ExchangeBlockchainCode} from './exchange/blockchain'
 import {ExchangeManagerOptions} from './exchange/build'
 import {ExchangeCoin} from './exchange/coin'
-import {
-  ExchangeProviderNotFoundError,
-  ExchangeUnknownError,
-  ExchangeValidationError,
-} from './exchange/errors'
 import {ExchangeFiat} from './exchange/fiat'
 import {ExchangeManager} from './exchange/manager'
 import {ExchangeOrderType} from './exchange/order-type'
@@ -136,14 +139,22 @@ import {
   LinksWebCardanoUriConfig,
 } from './links/cardano'
 import {
-  LinksErrorExtraParamsDenied,
-  LinksErrorForbiddenParamsProvided,
-  LinksErrorParamsValidationFailed,
-  LinksErrorRequiredParamsMissing,
-  LinksErrorSchemeNotImplemented,
-  LinksErrorUnsupportedAuthority,
-  LinksErrorUnsupportedVersion,
-} from './links/errors'
+  CardanoActionBrowseDapp as CardanoActionBrowseDappType,
+  CardanoActionClaim as CardanoActionClaimType,
+  CardanoActionDelegateDrep as CardanoActionDelegateDrepType,
+  CardanoActionLaunchUrl as CardanoActionLaunchUrlType,
+  CardanoActionP2PConnect as CardanoActionP2PConnectType,
+  CardanoActionPayRequest as CardanoActionPayRequestType,
+  CardanoActionRestoreWallet as CardanoActionRestoreWalletType,
+  CardanoActionSendOnlyReceiver as CardanoActionSendOnlyReceiverType,
+  CardanoActionSendSinglePt as CardanoActionSendSinglePtType,
+  CardanoActionStakePool as CardanoActionStakePoolType,
+  CardanoAction as CardanoActionType,
+  CardanoActionViewAddress as CardanoActionViewAddressType,
+  CardanoActionViewBlock as CardanoActionViewBlockType,
+  CardanoActionViewTransaction as CardanoActionViewTransactionType,
+  ScanFeature,
+} from './links/cardano-actions'
 import {
   LinksBrowserLaunchDappUrlParams,
   LinksExchangeShowCreateResultParams,
@@ -178,7 +189,6 @@ import {
   PushNotificationEvent,
 } from './notifications/manager'
 import {NumbersAtomicValue} from './numbers/atomic-value'
-import {NumbersErrorInvalidAtomicValue} from './numbers/errors'
 import {NumbersRatio} from './numbers/ratio'
 import {
   PortfolioTokenActivity,
@@ -249,26 +259,10 @@ import {
   ResolverApi,
   ResolverStrategy,
 } from './resolver/api'
-import {
-  ResolverErrorInvalidDomain,
-  ResolverErrorInvalidResponse,
-  ResolverErrorNotFound,
-  ResolverErrorUnsupportedTld,
-  ResolverErrorWrongBlockchain,
-} from './resolver/errors'
 import {ResolverManager} from './resolver/manager'
 import {ResolverNameServer} from './resolver/name-server'
 import {ResolverReceiver} from './resolver/receiver'
 import {ResolverStorage} from './resolver/storage'
-import {
-  ScanAction,
-  ScanActionClaim,
-  ScanActionLaunchUrl,
-  ScanActionSendOnlyReceiver,
-  ScanActionSendSinglePt,
-  ScanFeature,
-} from './scan/actions'
-import {ScanErrorUnknown, ScanErrorUnknownContent} from './scan/errors'
 import {SwapAggregator} from './swap/aggregator'
 import {
   SwapApi,
@@ -293,7 +287,30 @@ import {SwapProtocol} from './swap/protocol'
 import {SwapStorage} from './swap/storage'
 import {TransferEntry, TransferTarget, TransferTargets} from './transfer/state'
 import {WalletMeta} from './wallet/meta'
+import {
+  BaseAsset,
+  TRANSACTION_DIRECTION,
+  TRANSACTION_STATUS,
+  TRANSACTION_TYPE,
+  TransactionAssurance,
+  TransactionDirection,
+  TransactionStatus,
+  TransactionToken,
+  TransactionType,
+  Transactions,
+  TxMetadata,
+  TxMetadataInfo,
+  WalletTransaction,
+} from './wallet/transactions'
 import {WalletAddressMode, WalletImplementation} from './wallet/wallet'
+
+// Type aliases to reference imported transaction types (avoid circular references in namespace)
+type ImportedTransactionAssurance = TransactionAssurance
+type ImportedWalletTransaction = WalletTransaction
+type ImportedTransactions = Transactions
+type ImportedTxMetadata = TxMetadata
+type ImportedTxMetadataInfo = TxMetadataInfo
+type ImportedBaseAsset = BaseAsset
 
 export namespace App {
   export namespace Errors {
@@ -302,31 +319,125 @@ export namespace App {
     export class LibraryError extends AppErrorLibraryFailed {}
   }
 
-  export interface Storage<
+  /**
+   * Remote configuration for Yoroi app
+   */
+  export type Config = Readonly<{
+    pushLinkKeys?: Readonly<{
+      internal?: Readonly<{
+        catalystRegistration?: Readonly<{
+          mobile?: string
+          extension?: string
+        }>
+      }>
+      external?: Readonly<{
+        yoroiWebsite?: string
+      }>
+    }>
+    banners?: Readonly<{
+      midnightAnnouncement?: Readonly<{
+        display?: boolean
+      }>
+      midnightPhase2Announcement?: Readonly<{
+        display?: boolean
+      }>
+      yoroiDrep?: Readonly<{
+        display?: boolean
+      }>
+    }>
+    popups?: Readonly<{
+      midnightDistribution?: Readonly<{
+        display?: boolean
+      }>
+      generalFeaturesAnnouncement?: Readonly<{
+        display?: boolean
+      }>
+      poolTransitionDialog?: Readonly<{
+        display?: boolean
+      }>
+      cardanoCardAnnouncement?: Readonly<{
+        display?: boolean
+      }>
+      firefoxSupportAnnouncement?: Readonly<{
+        display?: boolean
+      }>
+      stakingUpdate?: Readonly<{
+        display?: boolean
+        affectedPools?: ReadonlyArray<string>
+      }>
+    }>
+    features?: Readonly<{
+      midnightAirdrop?: Readonly<{
+        enabled: boolean
+      }>
+      [key: string]: unknown
+    }>
+    dapps?: Readonly<{
+      banned?: ReadonlyArray<string>
+      recommended?: ReadonlyArray<App.ConfigRecommendedDapp>
+      filters?: Readonly<{
+        Media?: ReadonlyArray<string>
+        Investment?: ReadonlyArray<string>
+        Trading?: ReadonlyArray<string>
+        Community?: ReadonlyArray<string>
+      }>
+    }>
+    swap?: Readonly<{
+      initialPair?: Readonly<{
+        tokenIn?: Portfolio.Token.Id
+        tokenOut?: Portfolio.Token.Id
+      }>
+      excludedTokens?: ReadonlyArray<Portfolio.Token.Id>
+      verifiedTokens?: ReadonlyArray<Portfolio.Token.Id>
+      partners?: Readonly<{
+        dexhunter?: string
+        muesliswap?: string
+        minswap?: string
+        steelswap?: string
+      }>
+    }>
+    enableTrezorAirdrop?: boolean
+  }>
+
+  /**
+   * Recommended DApp configuration
+   */
+  export type ConfigRecommendedDapp = {
+    id: string
+    name: string
+    description: string
+    category: string
+    logo: string
+    uri: string
+    origins: ReadonlyArray<string>
+    isSingleAddress?: boolean
+  }
+
+  export type Storage<
     IsAsync extends boolean = true,
     K extends string = string,
-  > extends AppStorage<IsAsync, K> {}
+  > = AppStorage<IsAsync, K>
   export type StorageKeyManager<
     T = unknown,
     R = T,
     Key extends string = string,
   > = AppStorageKeyManager<T, R, Key>
   export type StorageFolderName = AppStorageFolderName
-  export interface MultiStorage<
+  export type MultiStorage<
     T,
     IsAsync extends boolean = true,
     K extends string = string,
-  > extends AppMultiStorage<T, IsAsync, K> {}
+  > = AppMultiStorage<T, IsAsync, K>
 
-  export interface ObservableStorage<
+  export type ObservableStorage<
     IsAsync extends boolean = true,
     K extends string = string,
-  > extends AppObservableStorage<IsAsync, K> {}
-  export interface ObservableMultiStorage<
+  > = AppObservableStorage<IsAsync, K>
+  export type ObservableMultiStorage<
     T,
     IsAsync extends boolean = true,
     K extends string = string,
-  > extends AppObservableMultiStorage<T, IsAsync, K> {}
+  > = AppObservableMultiStorage<T, IsAsync, K>
 
   export type MultiStorageOptions<
     T,
@@ -342,25 +453,10 @@ export namespace App {
   export type QueueTaskManager = AppQueueTaskManager
 
   export type CacheInfo = AppCacheInfo
-  export interface CacheRecord<T> extends AppCacheRecord<T> {}
-  export interface CacheRow<T, K extends string = string>
-    extends AppCacheRow<T, K> {}
+  export type CacheRecord<T> = AppCacheRecord<T>
+  export type CacheRow<T, K extends string = string> = AppCacheRow<T, K>
 
-  export interface Api extends AppApi {}
-
-  export type FrontendFeeTier = AppFrontendFeeTier
-  export type FrontendFeesResponse = AppFrontendFeesResponse
-
-  export namespace Logger {
-    export type Level = AppLoggerLevel
-    export const Level = AppLoggerLevel
-    export type Message = AppLoggerMessage
-    export type Metadata = AppLoggerMetadata
-    export type Transporter = AppLoggerTransporter
-    export type TransporterOptions = AppLoggerTransporterOptions
-    export type Entry = AppLoggerEntry
-    export type Manager = AppLoggerManager
-  }
+  export type Api = AppApi
 }
 
 export namespace Swap {
@@ -401,11 +497,122 @@ export namespace Balance {
   export type Amounts = BalanceAmounts
 }
 
+// Re-export branded types
+export type {
+  Address,
+  AddressBase58,
+  AddressBech32,
+  AddressHex,
+  Amount,
+  AmountFormatted,
+  AmountRaw,
+  AmountSanitized,
+  AnchorHash,
+  AnchorUrl,
+  AssetName,
+  AssetNameUtf8,
+  BalanceQuantity,
+  Blake2bHash,
+  BlockHash,
+  CborHex,
+  CborHexValidated,
+  DRepId,
+  DatumCbor,
+  DatumHash,
+  EpochNumber,
+  GovernanceActionId,
+  KeyHash,
+  Lovelace,
+  MetadataCbor,
+  PaymentAddress,
+  PolicyId,
+  PortfolioTokenId,
+  PrivateKeyBech32,
+  PrivateKeyHex,
+  PublicKeyHex,
+  ScriptCbor,
+  ScriptHash,
+  Sha256Hash,
+  SignatureHex,
+  SlotNumber,
+  StakingAddress,
+  TokenFingerprint,
+  TokenId,
+  TransactionCbor,
+  TransactionCborBase64,
+  TransactionCborHex,
+  TransactionHash,
+  TransactionId,
+  UtxoId,
+} from './branded'
+
+export namespace Branded {
+  // Re-export validation functions
+  export const asAddress = BrandedValidation.asAddress
+  export const asAddressBech32 = BrandedValidation.asAddressBech32
+  export const asAddressHex = BrandedValidation.asAddressHex
+  export const asAddressBase58 = BrandedValidation.asAddressBase58
+  export const asPaymentAddress = BrandedValidation.asPaymentAddress
+  export const asStakingAddress = BrandedValidation.asStakingAddress
+  export const addressToBech32 = BrandedValidation.addressToBech32
+  export const addressToHex = BrandedValidation.addressToHex
+  export const addressToBase58 = BrandedValidation.addressToBase58
+  export const bech32ToAddress = BrandedValidation.bech32ToAddress
+  export const hexToAddress = BrandedValidation.hexToAddress
+  export const base58ToAddress = BrandedValidation.base58ToAddress
+  export const addressToPayment = BrandedValidation.addressToPayment
+  export const addressToStaking = BrandedValidation.addressToStaking
+  export const paymentToAddress = BrandedValidation.paymentToAddress
+  export const stakingToAddress = BrandedValidation.stakingToAddress
+  export const asTokenId = BrandedValidation.asTokenId
+  export const asPortfolioTokenId = BrandedValidation.asPortfolioTokenId
+  export const asPolicyId = BrandedValidation.asPolicyId
+  export const asAssetName = BrandedValidation.asAssetName
+  export const asTokenFingerprint = BrandedValidation.asTokenFingerprint
+  export const asAmount = BrandedValidation.asAmount
+  export const asAmountRaw = BrandedValidation.asAmountRaw
+  export const asAmountSanitized = BrandedValidation.asAmountSanitized
+  export const asAmountFormatted = BrandedValidation.asAmountFormatted
+  export const asBalanceQuantity = BrandedValidation.asBalanceQuantity
+  export const asTransactionHash = BrandedValidation.asTransactionHash
+  export const asUtxoId = BrandedValidation.asUtxoId
+  export const asUtxoIdFromParts = BrandedValidation.asUtxoIdFromParts
+  export const asBlockHash = BrandedValidation.asBlockHash
+  export const asSlotNumber = BrandedValidation.asSlotNumber
+  export const asEpochNumber = BrandedValidation.asEpochNumber
+  export const asPublicKeyHex = BrandedValidation.asPublicKeyHex
+  export const asPrivateKeyHex = BrandedValidation.asPrivateKeyHex
+  export const asKeyHash = BrandedValidation.asKeyHash
+  export const asSignatureHex = BrandedValidation.asSignatureHex
+  export const asBlake2bHash = BrandedValidation.asBlake2bHash
+  export const asSha256Hash = BrandedValidation.asSha256Hash
+  export const asDatumHash = BrandedValidation.asDatumHash
+  export const asScriptHash = BrandedValidation.asScriptHash
+  export const asCborHex = BrandedValidation.asCborHex
+  export const asMetadataCbor = BrandedValidation.asMetadataCbor
+  export const asScriptCbor = BrandedValidation.asScriptCbor
+  export const asDatumCbor = BrandedValidation.asDatumCbor
+  export const asTransactionCbor = BrandedValidation.asTransactionCbor
+  export const asTransactionCborHex = BrandedValidation.asTransactionCborHex
+  export const asTransactionCborBase64 =
+    BrandedValidation.asTransactionCborBase64
+  export const asDRepId = BrandedValidation.asDRepId
+  export const asGovernanceActionId = BrandedValidation.asGovernanceActionId
+  export const asAnchorUrl = BrandedValidation.asAnchorUrl
+  export const asAnchorHash = BrandedValidation.asAnchorHash
+
+  // Re-export constants
+  export const ZERO_QUANTITY = ZERO_QUANTITY_CONST
+}
+
+// Also export ZERO_QUANTITY at top level for convenience
+export {ZERO_QUANTITY} from './branded/amount'
+
 export namespace Links {
   export type YoroiModule = LinksYoroiModule
-  export interface UriConfig extends LinksUriConfig {}
-  export interface WebCardanoUriConfig extends LinksWebCardanoUriConfig {}
-  export interface YoroiUriConfig extends LinksYoroiUriConfig {}
+  export type UriConfig = LinksUriConfig
+  export type WebCardanoUriConfig = LinksWebCardanoUriConfig
+  export type YoroiUriConfig = LinksYoroiUriConfig
   export type PartnerInfoSchema = LinksPartnerInfoParams
   export type ExchangeShowCreateResultParams =
     LinksExchangeShowCreateResultParams
@@ -416,20 +623,81 @@ export namespace Links {
   export type YoroiActionInfo = LinksYoroiActionInfo
   export type YoroiAction = LinksYoroiAction
 
-  export interface Rules extends LinksUriRules {}
+  export type Rules = LinksUriRules
 
   export type Link<T extends LinksUriConfig> = LinksLink<T>
 
   export type Module<T extends LinksUriConfig> = LinksModule<T>
 
+  // Cardano link actions (multichain-ready: future BitcoinAction, EthereumAction, etc.)
+  export namespace CardanoAction {
+    export type Action = CardanoActionType
+    export type Claim = CardanoActionClaimType
+    export type SendOnlyReceiver = CardanoActionSendOnlyReceiverType
+    export type SendSinglePt = CardanoActionSendSinglePtType
+    export type LaunchUrl = CardanoActionLaunchUrlType
+    export type BrowseDapp = CardanoActionBrowseDappType
+    export type PayRequest = CardanoActionPayRequestType
+    export type StakePool = CardanoActionStakePoolType
+    export type DelegateDrep = CardanoActionDelegateDrepType
+    export type ViewTransaction = CardanoActionViewTransactionType
+    export type ViewBlock = CardanoActionViewBlockType
+    export type ViewAddress = CardanoActionViewAddressType
+    export type P2PConnect = CardanoActionP2PConnectType
+    export type RestoreWallet = CardanoActionRestoreWalletType
+  }
+  export type CardanoAction = CardanoActionType
+  export type CardanoActionClaim = CardanoActionClaimType
+  export type CardanoActionSendOnlyReceiver = CardanoActionSendOnlyReceiverType
+  export type CardanoActionSendSinglePt = CardanoActionSendSinglePtType
+  export type CardanoActionLaunchUrl = CardanoActionLaunchUrlType
+  export type CardanoActionBrowseDapp = CardanoActionBrowseDappType
+  export type CardanoActionPayRequest = CardanoActionPayRequestType
+  export type CardanoActionStakePool = CardanoActionStakePoolType
+  export type CardanoActionDelegateDrep = CardanoActionDelegateDrepType
+  export type CardanoActionViewTransaction = CardanoActionViewTransactionType
+  export type CardanoActionViewBlock = CardanoActionViewBlockType
+  export type CardanoActionViewAddress = CardanoActionViewAddressType
+  export type CardanoActionP2PConnect = CardanoActionP2PConnectType
+  export type CardanoActionRestoreWallet = CardanoActionRestoreWalletType
+
   export namespace Errors {
-    export class ExtraParamsDenied extends LinksErrorExtraParamsDenied {}
-    export class ForbiddenParamsProvided extends LinksErrorForbiddenParamsProvided {}
-    export class RequiredParamsMissing extends LinksErrorRequiredParamsMissing {}
-    export class ParamsValidationFailed extends LinksErrorParamsValidationFailed {}
-    export class UnsupportedAuthority extends LinksErrorUnsupportedAuthority {}
-    export class UnsupportedVersion extends LinksErrorUnsupportedVersion {}
-    export class SchemeNotImplemented extends LinksErrorSchemeNotImplemented {}
+    export class ExtraParamsDenied extends LinksErrorExtraParamsDenied {
+      constructor(message?: string) {
+        super(message)
+      }
+    }
+    export class ForbiddenParamsProvided extends LinksErrorForbiddenParamsProvided {
+      constructor(message?: string) {
+        super(message)
+      }
+    }
+    export class RequiredParamsMissing extends LinksErrorRequiredParamsMissing {
+      constructor(message?: string) {
+        super(message)
+      }
+    }
+    export class ParamsValidationFailed extends LinksErrorParamsValidationFailed {
+      constructor(message?: string) {
+        super(message)
+      }
+    }
+    export class UnknownContent extends ScanErrorUnknownContent {}
+    export class UnsupportedAuthority extends LinksErrorUnsupportedAuthority {
+      constructor(message?: string) {
+        super(message)
+      }
+    }
+    export class UnsupportedVersion extends LinksErrorUnsupportedVersion {
+      constructor(message?: string) {
+        super(message)
+      }
+    }
+    export class SchemeNotImplemented extends LinksErrorSchemeNotImplemented {
+      constructor(message?: string) {
+        super(message)
+      }
+    }
   }
 }
 
@@ -480,12 +748,12 @@ export namespace Api {
 
     export type FtMetadata = ApiFtMetadata
     export type FtMetadataRecord = ApiFtMetadataRecord
-    export interface FtRecords extends ApiFtRecords {}
+    export type FtRecords = ApiFtRecords
     export type TokenRegistryEntry = ApiTokenRegistryEntry
 
     export type NftMetadata = ApiNftMetadata
     export type NftMetadataRecord = ApiNftMetadataRecord
-    export interface NftRecords extends ApiNftRecords {}
+    export type NftRecords = ApiNftRecords
 
     export type MetadataFile = ApiMetadataFile
     export type TokenId = ApiTokenId
@@ -497,7 +765,7 @@ export namespace Api {
     export type UtxoDataAsset = ApiUtxoDataAsset
     export type UtxoData = ApiUtxoData
 
-    export interface Api {
+    export type Api = {
       getProtocolParams: () => Promise<ChainCardanoProtocolParams>
       getBestBlock: () => Promise<ChainCardanoBestBlock>
       getUtxoData: (request: UtxoDataRequest) => Promise<ApiUtxoData>
@@ -516,7 +784,7 @@ export namespace Numbers {
 }
 
 export namespace Resolver {
-  export interface Api extends ResolverApi {}
+  export type Api = ResolverApi
   export type Manager = ResolverManager
 
   export type NameServer = ResolverNameServer
@@ -667,6 +935,42 @@ export namespace Wallet {
   export type Implementation = WalletImplementation
   export type AddressMode = WalletAddressMode
   export type Meta = WalletMeta
+
+  // Transaction types - use imported types directly to avoid circular references
+  export const TransactionStatus = TRANSACTION_STATUS
+  export type TransactionStatus =
+    (typeof TRANSACTION_STATUS)[keyof typeof TRANSACTION_STATUS]
+  export const TransactionDirection = TRANSACTION_DIRECTION
+  export type TransactionDirection =
+    (typeof TRANSACTION_DIRECTION)[keyof typeof TRANSACTION_DIRECTION]
+  export const TransactionType = TRANSACTION_TYPE
+  export type TransactionType =
+    (typeof TRANSACTION_TYPE)[keyof typeof TRANSACTION_TYPE]
+  // Reference imported types via intermediate aliases to avoid circular references
+  export type TransactionAssurance = ImportedTransactionAssurance
+  export type WalletTransaction = ImportedWalletTransaction
+  export type Transactions = ImportedTransactions
+  export type TxMetadata = ImportedTxMetadata
+  export type TxMetadataInfo = ImportedTxMetadataInfo
+  export type BaseAsset = ImportedBaseAsset
+}
+
+// Re-export BaseAsset at top level
+export type {BaseAsset} from './wallet/transactions'
+
+// Re-export transaction types at top level for convenience
+export type {TransactionInfo} from './wallet/transactions'
+export {TRANSACTION_DIRECTION, TRANSACTION_STATUS, TRANSACTION_TYPE}
+export type {
+  TransactionAssurance,
+  TransactionDirection,
+  TransactionStatus,
+  TransactionToken,
+  TransactionType,
+  Transactions,
+  TxMetadata,
+  TxMetadataInfo,
+  WalletTransaction,
 }
 
 export namespace Exchange {
@@ -679,11 +983,23 @@ export namespace Exchange {
   export type Provider = ExchangeProvider
   export type ReferralUrlQueryStringParams =
     ExchangeReferralUrlQueryStringParams
-  export interface Api extends ExchangeApi {}
+  export type Api = ExchangeApi
   export namespace Errors {
-    export class Validation extends ExchangeValidationError {}
-    export class Unknown extends ExchangeUnknownError {}
-    export class ProviderNotFound extends ExchangeProviderNotFoundError {}
+    export class Validation extends ExchangeValidationError {
+      constructor(message?: string) {
+        super(message)
+      }
+    }
+    export class Unknown extends ExchangeUnknownError {
+      constructor(message?: string) {
+        super(message)
+      }
+    }
+    export class ProviderNotFound extends ExchangeProviderNotFoundError {
+      constructor(message?: string) {
+        super(message)
+      }
+    }
   }
 }
 
@@ -716,27 +1032,34 @@ export namespace Notifications {
 
 export namespace Scan {
   export namespace Errors {
-    export class UnknownContent extends ScanErrorUnknownContent {}
     export class Unknown extends ScanErrorUnknown {}
+    export class UnknownContent extends ScanErrorUnknownContent {}
   }
 
   export type Feature = ScanFeature
-  export type Action = ScanAction
-  export type ActionClaim = ScanActionClaim
-  export type ActionSendOnlyReceiver = ScanActionSendOnlyReceiver
-  export type ActionSendSinglePt = ScanActionSendSinglePt
-  export type ActionScanLaunchUrl = ScanActionLaunchUrl
 }
 
 export namespace Claim {
   export namespace Api {
     export namespace Errors {
-      export class AlreadyClaimed extends ClaimApiErrorsAlreadyClaimed {}
-      export class Expired extends ClaimApiErrorsExpired {}
-      export class InvalidRequest extends ClaimApiErrorsInvalidRequest {}
-      export class NotFound extends ClaimApiErrorsNotFound {}
-      export class RateLimited extends ClaimApiErrorsRateLimited {}
-      export class TooEarly extends ClaimApiErrorsTooEarly {}
+      export class AlreadyClaimed extends ClaimApiErrorsAlreadyClaimed {
+        static readonly statusCode = ClaimApiErrorsAlreadyClaimed.statusCode
+      }
+      export class Expired extends ClaimApiErrorsExpired {
+        static readonly statusCode = ClaimApiErrorsExpired.statusCode
+      }
+      export class InvalidRequest extends ClaimApiErrorsInvalidRequest {
+        static readonly statusCode = ClaimApiErrorsInvalidRequest.statusCode
+      }
+      export class NotFound extends ClaimApiErrorsNotFound {
+        static readonly statusCode = ClaimApiErrorsNotFound.statusCode
+      }
+      export class RateLimited extends ClaimApiErrorsRateLimited {
+        static readonly statusCode = ClaimApiErrorsRateLimited.statusCode
+      }
+      export class TooEarly extends ClaimApiErrorsTooEarly {
+        static readonly statusCode = ClaimApiErrorsTooEarly.statusCode
+      }
     }
 
     export type ClaimTokensRequestPayload = ClaimApiClaimTokensRequestPayload
@@ -748,6 +1071,14 @@ export namespace Claim {
   export type Manager = ClaimManager
 }
 
-export * from './helpers/types'
-export * from './helpers/storage'
 export * from './api/cardano'
+export * from './helpers/storage'
+export * from './helpers/types'
+// Export all errors from centralized location
+export * from './errors'
+// Export moved types from tx, staking packages
+export * from './certificate/types'
+export * from './datum/types'
+export * from './staking/certificate'
+export * from './tx/types'
+export * from './tx/validation'

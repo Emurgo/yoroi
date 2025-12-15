@@ -8,6 +8,7 @@ import {useIntl} from 'react-intl'
 
 import {
   actionMessages,
+  airdropMessages,
   authMessages,
   claimMessages,
   confirmationMessages,
@@ -180,6 +181,14 @@ export const useStrings = () => {
         ),
         continue: f(scanMessages.continue),
         openAppSettings: f(scanMessages.openAppSettings),
+        transactionTitle: f(scanMessages.transactionTitle),
+        transactionNotFound: f(scanMessages.transactionNotFound),
+        blockTitle: f(scanMessages.blockTitle),
+        addressTitle: f(scanMessages.addressTitle),
+        stakePoolTitle: f(scanMessages.stakePoolTitle),
+        p2pConnectTitle: f(scanMessages.p2pConnectTitle),
+        p2pConnectionTitle: f(scanMessages.p2pConnectionTitle),
+        cancel: f(scanMessages.cancel),
       },
 
       // Wallet Manager strings
@@ -264,6 +273,88 @@ export const useStrings = () => {
         apiErrorTooEarly: f(claimMessages.apiErrorTooEarly),
         apiErrorRateLimited: f(claimMessages.apiErrorRateLimited),
         continue: f(claimMessages.continue),
+      },
+
+      // Airdrop strings
+      airdrop: {
+        bannerTitle: f(airdropMessages.bannerTitle),
+        bannerBody: f(airdropMessages.bannerBody),
+        title: f(airdropMessages.title),
+        noAllocations: f(airdropMessages.noAllocations),
+        noAllocationsDescription: f(airdropMessages.noAllocationsDescription),
+        loading: f(airdropMessages.loading),
+        error: f(airdropMessages.error),
+        address: f(airdropMessages.address),
+        destinationAddress: f(airdropMessages.destinationAddress),
+        totalAllocation: f(airdropMessages.totalAllocation),
+        redeemedSoFar: f(airdropMessages.redeemedSoFar),
+        totalLeftToRedeem: f(airdropMessages.totalLeftToRedeem),
+        redeemableNow: f(airdropMessages.redeemableNow),
+        currentThaw: f(airdropMessages.currentThaw),
+        nextThaw: f(airdropMessages.nextThaw),
+        endsIn: f(airdropMessages.endsIn),
+        startsIn: f(airdropMessages.startsIn),
+        active: f(airdropMessages.active),
+        thawInfo: f(airdropMessages.thawInfo),
+        numberOfClaimedAllocations: f(
+          airdropMessages.numberOfClaimedAllocations,
+        ),
+        destinationAddressTitle: f(airdropMessages.destinationAddressTitle),
+        destinationAddressNumber: f(airdropMessages.destinationAddressNumber),
+        redeemableNowInfoTitle: f(airdropMessages.redeemableNowInfoTitle),
+        redeemableNowInfoMessage: f(airdropMessages.redeemableNowInfoMessage),
+        destinationAddressInfoTitle: f(
+          airdropMessages.destinationAddressInfoTitle,
+        ),
+        destinationAddressInfoMessage: f(
+          airdropMessages.destinationAddressInfoMessage,
+        ),
+        apply: f(airdropMessages.apply),
+        thawSchedule: f(airdropMessages.thawSchedule),
+        thawScheduleDescription: f(airdropMessages.thawScheduleDescription),
+        thawNumber: f(airdropMessages.thawNumber),
+        phaseAnnouncement: f(airdropMessages.phaseAnnouncement),
+        moreDetails: f(airdropMessages.moreDetails),
+        allocationSize: f(airdropMessages.allocationSize),
+        noAvailableYet: f(airdropMessages.noAvailableYet),
+        redeemed: f(airdropMessages.redeemed),
+        detailsOn: f(airdropMessages.detailsOn),
+        redeem: f(airdropMessages.redeem),
+        redeeming: f(airdropMessages.redeeming),
+        viewTransactions: f(airdropMessages.viewTransactions),
+        details: f(airdropMessages.details),
+        enterPassword: f(airdropMessages.enterPassword),
+        redeemSuccess: f(airdropMessages.redeemSuccess),
+        redeemError: f(airdropMessages.redeemError),
+        insufficientFunds: f(airdropMessages.insufficientFunds),
+        redeemableThaws: f(airdropMessages.redeemableThaws),
+        readOnlyWallet: f(airdropMessages.readOnlyWallet),
+        noRedeemableThaws: f(airdropMessages.noRedeemableThaws),
+        manualAddress: f(airdropMessages.manualAddress),
+        manualAddressTitle: f(airdropMessages.manualAddressTitle),
+        manualAddressDescription: f(airdropMessages.manualAddressDescription),
+        checkEligibility: f(airdropMessages.checkEligibility),
+        externalAddress: f(airdropMessages.externalAddress),
+        scheduleThawNotifications: f(airdropMessages.scheduleThawNotifications),
+        schedulingNotifications: f(airdropMessages.schedulingNotifications),
+        allNotificationsAlreadyScheduled: f(
+          airdropMessages.allNotificationsAlreadyScheduled,
+        ),
+        viewNotifications: f(airdropMessages.viewNotifications),
+        notificationsScheduledBody: f(
+          airdropMessages.notificationsScheduledBody,
+        ),
+        status: {
+          upcoming: f(airdropMessages.statusUpcoming),
+          redeemable: f(airdropMessages.statusRedeemable),
+          submitted: f(airdropMessages.statusSubmitted),
+          confirming: f(airdropMessages.statusConfirming),
+          confirmed: f(airdropMessages.statusConfirmed),
+          failed: f(airdropMessages.statusFailed),
+          queued: f(airdropMessages.statusQueued),
+          skipped: f(airdropMessages.statusSkipped),
+        },
+        tryAgain: f(airdropMessages.tryAgain),
       },
 
       // Portfolio strings
@@ -459,6 +550,8 @@ export const useStrings = () => {
         releases: f(menuMessages.releases),
         governanceCentre: f(menuMessages.governanceCentre),
         utxoList: f(transactionsMessages.utxoListTitle),
+        messageSigning: f(menuMessages.messageSigning),
+        airdrop: f(menuMessages.airdrop),
       },
 
       // Dashboard strings
@@ -510,6 +603,142 @@ export const useStrings = () => {
           ),
           cancel: f(globalMessages.cancel),
           switch: f(globalMessages.switch),
+        },
+        advancedAddressRetrieval: {
+          title: f(settingsMessages.advancedAddressRetrievalTitle),
+          description: f(settingsMessages.advancedAddressRetrievalDescription),
+          numberOfAccounts: f(
+            settingsMessages.advancedAddressRetrievalNumberOfAccounts,
+          ),
+          numberOfAccountsPlaceholder: f(
+            settingsMessages.advancedAddressRetrievalNumberOfAccountsPlaceholder,
+          ),
+          numberOfAccountsHelper: f(
+            settingsMessages.advancedAddressRetrievalNumberOfAccountsHelper,
+          ),
+          addressesPerAccount: f(
+            settingsMessages.advancedAddressRetrievalAddressesPerAccount,
+          ),
+          addressesPerAccountPlaceholder: f(
+            settingsMessages.advancedAddressRetrievalAddressesPerAccountPlaceholder,
+          ),
+          addressesPerAccountHelper: f(
+            settingsMessages.advancedAddressRetrievalAddressesPerAccountHelper,
+          ),
+          invalidInputTitle: f(
+            settingsMessages.advancedAddressRetrievalInvalidInputTitle,
+          ),
+          invalidInputMessage: f(
+            settingsMessages.advancedAddressRetrievalInvalidInputMessage,
+          ),
+          discoveringProgress: f(
+            settingsMessages.advancedAddressRetrievalDiscoveringProgress,
+          ),
+          exportingCsv: f(
+            settingsMessages.advancedAddressRetrievalExportingCsv,
+          ),
+          discoveryCompleteTitle: f(
+            settingsMessages.advancedAddressRetrievalDiscoveryCompleteTitle,
+          ),
+          discoveryCompleteMessage: f(
+            settingsMessages.advancedAddressRetrievalDiscoveryCompleteMessage,
+          ),
+          skip: f(settingsMessages.advancedAddressRetrievalSkip),
+          checkAddresses: f(
+            settingsMessages.advancedAddressRetrievalCheckAddresses,
+          ),
+          errorTitle: f(settingsMessages.advancedAddressRetrievalErrorTitle),
+          discoveryError: f(
+            settingsMessages.advancedAddressRetrievalDiscoveryError,
+          ),
+          checkingAddresses: f(
+            settingsMessages.advancedAddressRetrievalCheckingAddresses,
+          ),
+          checkedProgress: f(
+            settingsMessages.advancedAddressRetrievalCheckedProgress,
+          ),
+          paused: f(settingsMessages.advancedAddressRetrievalPaused),
+          verificationCompleteTitle: f(
+            settingsMessages.advancedAddressRetrievalVerificationCompleteTitle,
+          ),
+          verificationCompleteMessage: f(
+            settingsMessages.advancedAddressRetrievalVerificationCompleteMessage,
+          ),
+          verificationError: f(
+            settingsMessages.advancedAddressRetrievalVerificationError,
+          ),
+          enterPasswordTitle: f(
+            settingsMessages.advancedAddressRetrievalEnterPasswordTitle,
+          ),
+          enterPasswordSummary: f(
+            settingsMessages.advancedAddressRetrievalEnterPasswordSummary,
+          ),
+          hardwareWalletTitle: f(
+            settingsMessages.advancedAddressRetrievalHardwareWalletTitle,
+          ),
+          hardwareWalletContent: f(
+            settingsMessages.advancedAddressRetrievalHardwareWalletContent,
+          ),
+          firstAccountOnlyTitle: f(
+            settingsMessages.advancedAddressRetrievalFirstAccountOnlyTitle,
+          ),
+          firstAccountOnlyContent: f(
+            settingsMessages.advancedAddressRetrievalFirstAccountOnlyContent,
+          ),
+          importantTitle: f(
+            settingsMessages.advancedAddressRetrievalImportantTitle,
+          ),
+          importantContent: f(
+            settingsMessages.advancedAddressRetrievalImportantContent,
+          ),
+          discovering: f(settingsMessages.advancedAddressRetrievalDiscovering),
+          discover: f(settingsMessages.advancedAddressRetrievalDiscover),
+          exportCsv: f(settingsMessages.advancedAddressRetrievalExportCsv),
+          exportCompleteTitle: f(
+            settingsMessages.advancedAddressRetrievalExportCompleteTitle,
+          ),
+          exportError: f(settingsMessages.advancedAddressRetrievalExportError),
+          discoveryCompleteDescription: f(
+            settingsMessages.advancedAddressRetrievalDiscoveryCompleteDescription,
+          ),
+          resumeChecking: f(
+            settingsMessages.advancedAddressRetrievalResumeChecking,
+          ),
+          pause: f(settingsMessages.advancedAddressRetrievalPause),
+          startOver: f(settingsMessages.advancedAddressRetrievalStartOver),
+          checkingAddressesFor: f(
+            settingsMessages.advancedAddressRetrievalCheckingAddressesFor,
+          ),
+          progress: f(settingsMessages.advancedAddressRetrievalProgress),
+          processComplete: f(
+            settingsMessages.advancedAddressRetrievalProcessComplete,
+          ),
+          addressesSavedToWallet: f(
+            settingsMessages.advancedAddressRetrievalAddressesSavedToWallet,
+          ),
+          withUtxos: f(settingsMessages.advancedAddressRetrievalWithUtxos),
+          withHistory: f(settingsMessages.advancedAddressRetrievalWithHistory),
+          eligibleForAirdrop: f(
+            settingsMessages.advancedAddressRetrievalEligibleForAirdrop,
+          ),
+          noStoredAccountKeys: f(
+            settingsMessages.advancedAddressRetrievalNoStoredAccountKeys,
+          ),
+          rootKeyRequired: f(
+            settingsMessages.advancedAddressRetrievalRootKeyRequired,
+          ),
+          csvHeaderAccount: f(
+            settingsMessages.advancedAddressRetrievalCsvHeaderAccount,
+          ),
+          csvHeaderAddressIndex: f(
+            settingsMessages.advancedAddressRetrievalCsvHeaderAddressIndex,
+          ),
+          csvHeaderAddress: f(
+            settingsMessages.advancedAddressRetrievalCsvHeaderAddress,
+          ),
+          csvHeaderDerivationPath: f(
+            settingsMessages.advancedAddressRetrievalCsvHeaderDerivationPath,
+          ),
         },
         appSettingsTitle: f(settingsMessages.appSettingsTitle),
         aboutTitle: f(settingsMessages.aboutTitle),
@@ -663,6 +892,28 @@ export const useStrings = () => {
           ),
           displayDuration: f(settingsMessages.walletSettingsDisplayDuration),
           notifications: f(settingsMessages.walletSettingsNotifications),
+          shareWallet: f(settingsMessages.walletSettingsShareWallet),
+        },
+        shareWallet: {
+          title: f(settingsMessages.shareWalletTitle),
+          description: f(settingsMessages.shareWalletDescription),
+          fullWallet: f(settingsMessages.shareWalletFullWallet),
+          readOnlyWallet: f(settingsMessages.shareWalletReadOnlyWallet),
+          enterPassword: f(settingsMessages.shareWalletEnterPassword),
+          password: f(settingsMessages.shareWalletPassword),
+          confirm: f(settingsMessages.shareWalletConfirm),
+          wrongPassword: f(settingsMessages.shareWalletWrongPassword),
+          error: f(settingsMessages.shareWalletError),
+          walletLinkGenerated: f(
+            settingsMessages.shareWalletWalletLinkGenerated,
+          ),
+          walletLink: f(settingsMessages.shareWalletWalletLink),
+          copyLink: f(settingsMessages.shareWalletCopyLink),
+          linkCopied: f(settingsMessages.shareWalletLinkCopied),
+          close: f(settingsMessages.shareWalletClose),
+          shareQRCode: f(settingsMessages.shareWalletShareQRCode),
+          fullWalletLink: f(settingsMessages.shareWalletFullWalletLink),
+          readOnlyWalletLink: f(settingsMessages.shareWalletReadOnlyWalletLink),
         },
         applicationSettings: {
           general: f(settingsMessages.applicationSettingsGeneral),
@@ -693,10 +944,6 @@ export const useStrings = () => {
           ),
           analytics: f(settingsMessages.applicationSettingsAnalytics),
           privacyPolicy: f(settingsMessages.applicationSettingsPrivacyPolicy),
-          screenSharing: f(settingsMessages.applicationSettingsScreenSharing),
-          screenSharingInfo: f(
-            settingsMessages.applicationSettingsScreenSharingInfo,
-          ),
           network: f(settingsMessages.applicationSettingsNetwork),
         },
       },
@@ -774,6 +1021,7 @@ export const useStrings = () => {
         failedTxButton: f(sendMessages.failedTxButton),
         failedTxText: f(sendMessages.failedTxText),
         failedTxTitle: f(sendMessages.failedTxTitle),
+        favoriteContacts: f(sendMessages.favoriteContacts),
         feeLabel: f(sendMessages.feeLabel),
         feeNotAvailable: f(sendMessages.feeNotAvailable),
         found: f(sendMessages.found),
@@ -958,6 +1206,16 @@ export const useStrings = () => {
         ),
         collateralTxPendingTitle: f(discoverMessages.collateralTxPendingTitle),
         collateralTxPendingText: f(discoverMessages.collateralTxPendingText),
+        collateralCreationTitle: f(discoverMessages.collateralCreationTitle),
+        collateralCreationDescription: f(
+          discoverMessages.collateralCreationDescription,
+        ),
+        collateralCreationInfoTitle: f(
+          discoverMessages.collateralCreationInfoTitle,
+        ),
+        collateralCreationInfoText: f(
+          discoverMessages.collateralCreationInfoText,
+        ),
       },
 
       // Swap strings
@@ -1171,6 +1429,11 @@ export const useStrings = () => {
 
       // Staking/PoolTransition strings
       staking: {
+        earnRewardsBannerTitle: f(stakingMessages.earnRewardsBannerTitle),
+        earnRewardsBannerDescription: f(
+          stakingMessages.earnRewardsBannerDescription,
+        ),
+        earnRewardsBannerCta: f(stakingMessages.earnRewardsBannerCta),
         title: f(stakingMessages.title),
         warning: f(stakingMessages.warning),
         finalWarning: f(stakingMessages.finalWarning),
@@ -1184,6 +1447,10 @@ export const useStrings = () => {
         skipNoRewards: f(stakingMessages.skipNoRewards),
         updateKeepEarning: f(stakingMessages.updateKeepEarning),
         update: f(stakingMessages.update),
+        stakingUpdatesTitle: f(stakingMessages.stakingUpdatesTitle),
+        stakingUpdateHeading: f(stakingMessages.stakingUpdateHeading),
+        stakingUpdateDescription: f(stakingMessages.stakingUpdateDescription),
+        skip: f(stakingMessages.skip),
         governanceCentreTitle: f(stakingMessages.governanceCentreTitle),
         confirmTxTitle: f(stakingMessages.confirmTxTitle),
         learnMoreAboutGovernance: f(stakingMessages.learnMoreAboutGovernance),
@@ -1218,13 +1485,16 @@ export const useStrings = () => {
         reviewActions: f(stakingMessages.reviewActions),
         actionYouHaveSelectedTxPending: (
           action: string,
-          formattingOptions: any,
+          formattingOptions: Record<string, unknown>,
         ) =>
           f(stakingMessages.actionYouHaveSelectedTxPending, {
             ...formattingOptions,
             action,
           }),
-        actionYouHaveSelected: (action: string, formattingOptions: any) =>
+        actionYouHaveSelected: (
+          action: string,
+          formattingOptions: Record<string, unknown>,
+        ) =>
           f(stakingMessages.actionYouHaveSelected, {
             ...formattingOptions,
             action,
@@ -1250,6 +1520,8 @@ export const useStrings = () => {
           stakingMessages.withdrawWarningDescription,
         ),
         withdrawWarningButton: f(stakingMessages.withdrawWarningButton),
+        delegateAndWithdraw: f(stakingMessages.delegateAndWithdraw),
+        goToGovernanceCenter: f(stakingMessages.goToGovernanceCenter),
         enterDRepID: f(stakingMessages.enterDRepID),
         signTransaction: f(txLabels.signingTx),
         password: f(txLabels.password),
@@ -1315,6 +1587,9 @@ export const useStrings = () => {
         orDelegateToYoroiDrepBelow: f(
           stakingMessages.orDelegateToYoroiDrepBelow,
         ),
+        failedToLoadPools: f(stakingMessages.failedToLoadPools),
+        poolStake: f(stakingMessages.poolStake),
+        poweredBy: f(stakingMessages.poweredBy),
         // Add missing strings
         delegationSuccess: f(stakingMessages.delegationSuccess),
         delegationFailed: f(stakingMessages.delegationFailed),
@@ -1340,6 +1615,7 @@ export const useStrings = () => {
           title: f(stakingMessages.noPoolDataDialogTitle),
           message: f(stakingMessages.noPoolDataDialogMessage),
         },
+        searchPools: f(stakingMessages.searchPools),
         confirmDelegation: {
           title: f(stakingMessages.confirmDelegationTitle),
           message: f(stakingMessages.confirmDelegationMessage),
@@ -1350,6 +1626,15 @@ export const useStrings = () => {
             stakingMessages.confirmDelegationCancelButtonLabel,
           ),
         },
+        governanceRequiredTitle: f(stakingMessages.governanceRequiredTitle),
+        governanceRequiredDescription: f(
+          stakingMessages.governanceRequiredDescription,
+        ),
+        delegateToYoroiDRep: f(stakingMessages.delegateToYoroiDRep),
+        delegateStakeOnly: f(stakingMessages.delegateStakeOnly),
+        poolROA: f(stakingMessages.poolROA),
+        poolSaturation: f(stakingMessages.poolSaturation),
+        resolvedDrepId: f(stakingMessages.resolvedDrepId),
       },
 
       // ReviewTx strings
@@ -1363,10 +1648,20 @@ export const useStrings = () => {
           mint: f(txReviewMessages.tabLabelMint),
           referenceInputs: f(txReviewMessages.tabLabelReferenceInputs),
           metadataTab: f(txReviewMessages.tabLabelMetadataTab),
+          datum: f(txReviewMessages.tabLabelDatum),
+          governance: f(txReviewMessages.tabLabelGovernance),
+          operations: f(txReviewMessages.tabLabelOperations),
+          smartContracts: f(txReviewMessages.tabLabelSmartContracts),
+          signatures: f(txReviewMessages.tabLabelSignatures),
+          details: f(txReviewMessages.tabLabelDetails),
         },
         metadata: {
           metadataHash: f(txReviewMessages.metadataMetadataHash),
           metadataJsonLabel: f(txReviewMessages.metadataMetadataJsonLabel),
+          allMetadataLabels: f(txReviewMessages.metadataAllMetadataLabels),
+          scripts: f(txReviewMessages.metadataScripts),
+          scriptHash: f(txReviewMessages.metadataScriptHash),
+          scriptBytes: f(txReviewMessages.metadataScriptBytes),
         },
         overview: {
           wallet: f(txReviewMessages.overviewWallet),
@@ -1391,8 +1686,127 @@ export const useStrings = () => {
           operationsNoticeTitle: f(
             txReviewMessages.overviewOperationsNoticeTitle,
           ),
+          validationErrorsTitle: f(
+            txReviewMessages.overviewValidationErrorsTitle,
+          ),
+          validationWarningsTitle: f(
+            txReviewMessages.overviewValidationWarningsTitle,
+          ),
+          chainInfoTitle: f(txReviewMessages.overviewChainInfoTitle),
+          chainInfoDescription: f(
+            txReviewMessages.overviewChainInfoDescription,
+          ),
+          chainOrderLabel: f(txReviewMessages.overviewChainOrderLabel),
+          contractInteractionsTitle: f(
+            txReviewMessages.overviewContractInteractionsTitle,
+          ),
+          contractInteractionDatum: (count: number) =>
+            f(txReviewMessages.overviewContractInteractionDatum, {count}),
+          contractInteractionScript: (count: number) =>
+            f(txReviewMessages.overviewContractInteractionScript, {count}),
+          collateralSummary: f(txReviewMessages.overviewCollateralSummary),
+          collateralAtRisk: f(txReviewMessages.overviewCollateralAtRisk),
+          signaturesSummary: f(txReviewMessages.overviewSignaturesSummary),
+          withdrawalsSummary: f(txReviewMessages.overviewWithdrawalsSummary),
+          withdrawingRewards: f(txReviewMessages.overviewWithdrawingRewards),
+          notices: f(txReviewMessages.overviewNotices),
         },
         fee: f(txReviewMessages.fee),
+        mint: {
+          mintLabel: f(txReviewMessages.mintMintLabel),
+          burnLabel: f(txReviewMessages.mintBurnLabel),
+        },
+        datum: {
+          noDatums: f(txReviewMessages.datumNoDatums),
+          outputLabel: f(txReviewMessages.datumOutputLabel),
+          addressLabel: f(txReviewMessages.datumAddressLabel),
+          typeLabel: f(txReviewMessages.datumTypeLabel),
+          hashLabel: f(txReviewMessages.datumHashLabel),
+          decodedLabel: f(txReviewMessages.datumDecodedLabel),
+          jsonLabel: f(txReviewMessages.datumJsonLabel),
+          rawDataLabel: f(txReviewMessages.datumRawDataLabel),
+        },
+        governance: {
+          noGovernanceActions: f(
+            txReviewMessages.governanceNoGovernanceActions,
+          ),
+          proposalsLabel: f(txReviewMessages.governanceProposalsLabel),
+          votesLabel: f(txReviewMessages.governanceVotesLabel),
+          proposalLabel: f(txReviewMessages.governanceProposalLabel),
+          voteLabel: f(txReviewMessages.governanceVoteLabel),
+          actionTypeLabel: f(txReviewMessages.governanceActionTypeLabel),
+          actionIdLabel: f(txReviewMessages.governanceActionIdLabel),
+          anchorUrlLabel: f(txReviewMessages.governanceAnchorUrlLabel),
+          anchorHashLabel: f(txReviewMessages.governanceAnchorHashLabel),
+          depositLabel: f(txReviewMessages.governanceDepositLabel),
+          rewardAccountLabel: f(txReviewMessages.governanceRewardAccountLabel),
+          parametersLabel: f(txReviewMessages.governanceParametersLabel),
+          voterTypeLabel: f(txReviewMessages.governanceVoterTypeLabel),
+          voterCredentialLabel: f(
+            txReviewMessages.governanceVoterCredentialLabel,
+          ),
+          voteChoiceLabel: f(txReviewMessages.governanceVoteChoiceLabel),
+        },
+        referenceInputs: {
+          scriptsLabel: f(txReviewMessages.referenceInputsScriptsLabel),
+          scriptLabel: f(txReviewMessages.referenceInputsScriptLabel),
+          scriptTypeLabel: f(txReviewMessages.referenceInputsScriptTypeLabel),
+          scriptHashLabel: f(txReviewMessages.referenceInputsScriptHashLabel),
+          scriptSizeLabel: f(txReviewMessages.referenceInputsScriptSizeLabel),
+          utxoLabel: f(txReviewMessages.referenceInputsUtxoLabel),
+        },
+        withdrawals: {
+          label: f(txReviewMessages.withdrawalsLabel),
+        },
+        withdrawal: {
+          address: f(txReviewMessages.withdrawalAddress),
+          amount: f(txReviewMessages.withdrawalAmount),
+        },
+        collateral: {
+          label: f(txReviewMessages.collateralLabel),
+          inputs: f(txReviewMessages.collateralInputs),
+          return: f(txReviewMessages.collateralReturn),
+          total: f(txReviewMessages.collateralTotal),
+        },
+        scripts: {
+          label: f(txReviewMessages.scriptsLabel),
+          dataHash: f(txReviewMessages.scriptsDataHash),
+          plutusScripts: f(txReviewMessages.scriptsPlutusScripts),
+          nativeScripts: f(txReviewMessages.scriptsNativeScripts),
+          size: f(txReviewMessages.scriptsSize),
+        },
+        smartContracts: {
+          noSmartContractInteractions: f(
+            txReviewMessages.smartContractsNoSmartContractInteractions,
+          ),
+        },
+        redeemers: {
+          label: f(txReviewMessages.redeemersLabel),
+          redeemer: f(txReviewMessages.redeemersRedeemer),
+        },
+        signatures: {
+          requiredSigners: f(txReviewMessages.signaturesRequiredSigners),
+          witnesses: f(txReviewMessages.signaturesWitnesses),
+          signer: f(txReviewMessages.signaturesSigner),
+          vkeyWitnesses: f(txReviewMessages.signaturesVkeyWitnesses),
+          publicKey: f(txReviewMessages.signaturesPublicKey),
+          signature: f(txReviewMessages.signaturesSignature),
+          bootstrapWitnesses: f(txReviewMessages.signaturesBootstrapWitnesses),
+          nativeScriptWitnesses: f(
+            txReviewMessages.signaturesNativeScriptWitnesses,
+          ),
+          noSignaturesInfo: f(txReviewMessages.signaturesNoSignaturesInfo),
+        },
+        details: {
+          timing: f(txReviewMessages.detailsTiming),
+          network: f(txReviewMessages.detailsNetwork),
+          ttl: f(txReviewMessages.detailsTtl),
+          validityIntervalStart: f(
+            txReviewMessages.detailsValidityIntervalStart,
+          ),
+          networkId: f(txReviewMessages.detailsNetworkId),
+          noDetailsAvailable: f(txReviewMessages.detailsNoDetailsAvailable),
+        },
         utxos: {
           utxosInputsLabel: f(txReviewMessages.utxosUtxosInputsLabel),
           utxosOutputsLabel: f(txReviewMessages.utxosUtxosOutputsLabel),
@@ -1501,13 +1915,18 @@ export const useStrings = () => {
         title: f(transactionsMessages.title),
         warningTitle: f(transactionsMessages.warningTitle),
         warningMessage: f(transactionsMessages.message),
+        byronWalletNoticeTitle: f(transactionsMessages.byronWalletNoticeTitle),
+        byronWalletNoticeMessage: f(
+          transactionsMessages.byronWalletNoticeMessage,
+        ),
         transactions: f(txLabels.transactions),
         assets: (qty: number) => f(globalMessages.assets, {qty}),
         sendLabel: f(actionMessages.send),
         receiveLabel: f(actionMessages.receive),
         buyLabel: f(actionMessages.buy),
         buyTitle: f(actionMessages.buyTitle),
-        buyInfo: (options: any) => f(actionMessages.buyInfo, options),
+        buyInfo: (options: {b: (text: React.ReactNode) => React.ReactNode}) =>
+          f(actionMessages.buyInfo, options),
         proceed: f(actionMessages.proceed),
         swapLabel: f(actionMessages.swap),
         messageBuy: f(actionMessages.soon),
@@ -1521,14 +1940,67 @@ export const useStrings = () => {
           globalMessages.syncErrorBannerTextWithoutRefresh,
         ),
         noTransactions: f(transactionsMessages.noTransactions),
-        direction: (direction: any) => {
+        direction: (direction: {
+          direction: 'SENT' | 'RECEIVED' | 'SELF' | 'MULTI'
+        }) => {
           const directionMap = {
             SENT: transactionsMessages.directionMessagesSENT,
             RECEIVED: transactionsMessages.directionMessagesRECEIVED,
             SELF: transactionsMessages.directionMessagesSELF,
             MULTI: transactionsMessages.directionMessagesMULTI,
           }
-          return f(directionMap[direction as keyof typeof directionMap])
+          return f(directionMap[direction.direction])
+        },
+        operation: {
+          stakeRegistration: f(transactionsMessages.operationStakeRegistration),
+          stakeDeregistration: f(
+            transactionsMessages.operationStakeDeregistration,
+          ),
+          stakeDelegation: f(transactionsMessages.operationStakeDelegation),
+          stakingDelegated: f(transactionsMessages.operationStakingDelegated),
+          stakeUndelegation: f(transactionsMessages.operationStakeUndelegation),
+          poolRegistration: f(transactionsMessages.operationPoolRegistration),
+          poolRetirement: f(transactionsMessages.operationPoolRetirement),
+          genesisKeyDelegation: f(
+            transactionsMessages.operationGenesisKeyDelegation,
+          ),
+          moveInstantaneousRewards: f(
+            transactionsMessages.operationMoveInstantaneousRewards,
+          ),
+          committeeHotAuth: f(transactionsMessages.operationCommitteeHotAuth),
+          committeeColdResign: f(
+            transactionsMessages.operationCommitteeColdResign,
+          ),
+          drepDeregistration: f(
+            transactionsMessages.operationDrepDeregistration,
+          ),
+          drepRegistration: f(transactionsMessages.operationDrepRegistration),
+          drepUpdate: f(transactionsMessages.operationDrepUpdate),
+          stakeAndVoteDelegation: f(
+            transactionsMessages.operationStakeAndVoteDelegation,
+          ),
+          stakeRegistrationAndDelegation: f(
+            transactionsMessages.operationStakeRegistrationAndDelegation,
+          ),
+          stakeVoteRegistrationAndDelegation: f(
+            transactionsMessages.operationStakeVoteRegistrationAndDelegation,
+          ),
+          voteDelegation: f(transactionsMessages.operationVoteDelegation),
+          voteRegistrationAndDelegation: f(
+            transactionsMessages.operationVoteRegistrationAndDelegation,
+          ),
+          withdrawal: f(transactionsMessages.operationWithdrawal),
+          swap: f(transactionsMessages.operationSwap),
+          swapCreated: f(transactionsMessages.operationSwapCreated),
+          swapResolved: f(transactionsMessages.operationSwapResolved),
+          swapCancel: f(transactionsMessages.operationSwapCancel),
+          smartContract: f(transactionsMessages.operationSmartContract),
+          nightRedemption: f(transactionsMessages.operationNightRedemption),
+          collateralCreation: f(
+            transactionsMessages.operationCollateralCreation,
+          ),
+          mint: f(transactionsMessages.operationMint),
+          burn: f(transactionsMessages.operationBurn),
         },
         unknownAssetName: f(transactionsMessages.unknownAssetName),
         walletAddress: f(transactionsMessages.walletAddress),
@@ -1547,6 +2019,7 @@ export const useStrings = () => {
         fromAddresses: f(transactionsMessages.fromAddresses),
         toAddresses: f(transactionsMessages.toAddresses),
         memo: f(transactionsMessages.memo),
+        date: f(transactionsMessages.date),
         transactionId: f(transactionsMessages.transactionId),
         txAssuranceLevel: f(transactionsMessages.txAssuranceLevel),
         confirmations: (cnt: number) =>
@@ -1572,8 +2045,25 @@ export const useStrings = () => {
           historyTitle: f(transactionsMessages.historyTitle),
           txDetailsTitle: f(transactionsMessages.txDetailsTitle),
         },
+        addressDetailsTitle: f(transactionsMessages.addressDetailsTitle),
+        blockDetailsTitle: f(transactionsMessages.blockDetailsTitle),
+        address: f(transactionsMessages.address),
+        sent: f(transactionsMessages.sent),
+        received: f(transactionsMessages.received),
+        filterModalTitle: f(transactionsMessages.filterModalTitle),
+        filterOperations: f(transactionsMessages.filterOperations),
+        filterMetadataMemo: f(transactionsMessages.filterMetadataMemo),
+        filterMetadataMemoPlaceholder: f(
+          transactionsMessages.filterMetadataMemoPlaceholder,
+        ),
+        filterAdaAmount: f(transactionsMessages.filterAdaAmount),
+        filterMinAda: f(transactionsMessages.filterMinAda),
+        filterMaxAda: f(transactionsMessages.filterMaxAda),
+        filterApply: f(transactionsMessages.filterApply),
+        filterClear: f(transactionsMessages.filterClear),
         utxo: {
           utxoListTitle: f(transactionsMessages.utxoListTitle),
+          noUtxos: f(transactionsMessages.noUtxos),
           utxoConsolidationTitle: f(
             transactionsMessages.utxoConsolidationTitle,
           ),
@@ -1581,6 +2071,83 @@ export const useStrings = () => {
             transactionsMessages.utxoConsolidationWarning,
           ),
           organizeWalletButton: f(transactionsMessages.organizeWalletButton),
+        },
+        messageSigning: {
+          messageSigningTitle: f(transactionsMessages.messageSigningTitle),
+          messageSigningInputLabel: f(
+            transactionsMessages.messageSigningInputLabel,
+          ),
+          messageSigningPlaceholder: f(
+            transactionsMessages.messageSigningPlaceholder,
+          ),
+          messageSigningSignButton: f(
+            transactionsMessages.messageSigningSignButton,
+          ),
+          messageSigningMaxLengthError: f(
+            transactionsMessages.messageSigningMaxLengthError,
+          ),
+          messageSigningLengthInfo: (current: string, max: string) =>
+            intl.formatMessage(transactionsMessages.messageSigningLengthInfo, {
+              current,
+              max,
+            }),
+          messageSigningResultTitle: f(
+            transactionsMessages.messageSigningResultTitle,
+          ),
+          messageSigningSignatureLabel: f(
+            transactionsMessages.messageSigningSignatureLabel,
+          ),
+          messageSigningKeyLabel: f(
+            transactionsMessages.messageSigningKeyLabel,
+          ),
+          messageSigningCopied: f(transactionsMessages.messageSigningCopied),
+          messageSigningSignatureDescription: f(
+            transactionsMessages.messageSigningSignatureDescription,
+          ),
+          messageSigningKeyDescription: f(
+            transactionsMessages.messageSigningKeyDescription,
+          ),
+          messageSigningPublicKeyLabel: f(
+            transactionsMessages.messageSigningPublicKeyLabel,
+          ),
+          messageSigningPublicKeyDescription: f(
+            transactionsMessages.messageSigningPublicKeyDescription,
+          ),
+          messageSigningTabSign: f(transactionsMessages.messageSigningTabSign),
+          messageSigningTabVerify: f(
+            transactionsMessages.messageSigningTabVerify,
+          ),
+          messageSigningPayloadFormatText: f(
+            transactionsMessages.messageSigningPayloadFormatText,
+          ),
+          messageSigningPayloadFormatJson: f(
+            transactionsMessages.messageSigningPayloadFormatJson,
+          ),
+          messageSigningPayloadFormatHex: f(
+            transactionsMessages.messageSigningPayloadFormatHex,
+          ),
+          messageSigningVerifyButton: f(
+            transactionsMessages.messageSigningVerifyButton,
+          ),
+          messageSigningVerifySuccess: f(
+            transactionsMessages.messageSigningVerifySuccess,
+          ),
+          messageSigningVerifyError: f(
+            transactionsMessages.messageSigningVerifyError,
+          ),
+          messageSigningVerifySignatureLabel: f(
+            transactionsMessages.messageSigningVerifySignatureLabel,
+          ),
+          messageSigningVerifyKeyLabel: f(
+            transactionsMessages.messageSigningVerifyKeyLabel,
+          ),
+          messageSigningVerifyAddressLabel: f(
+            transactionsMessages.messageSigningVerifyAddressLabel,
+          ),
+          messageSigningVerifyAddressPlaceholder: f(
+            transactionsMessages.messageSigningVerifyAddressPlaceholder,
+          ),
+          error: f(transactionsMessages.messageSigningError),
         },
         submitted: {
           submittedTxTitle: f(transactionsMessages.submittedTxTitle),
@@ -1629,7 +2196,7 @@ export const useStrings = () => {
       // ManageNotifications strings
       manageNotifications: {
         manageDisplayDurationScreenTitle: f(
-          manageNotificationsMessages.displayDuration,
+          manageNotificationsMessages.manageDisplayDurationScreenTitle,
         ),
         inAppNotifications: f(manageNotificationsMessages.inAppNotifications),
         displayDuration: f(manageNotificationsMessages.displayDuration),
@@ -1639,6 +2206,29 @@ export const useStrings = () => {
           manageNotificationsMessages.enableNotificationsThroughSettings,
         ),
         notifications: f(manageNotificationsMessages.notifications),
+        scheduledNotifications: f(
+          manageNotificationsMessages.scheduledNotifications,
+        ),
+        removeNotificationTitle: f(
+          manageNotificationsMessages.removeNotificationTitle,
+        ),
+        removeNotificationMessage: f(
+          manageNotificationsMessages.removeNotificationMessage,
+        ),
+        remove: f(manageNotificationsMessages.remove),
+        removeNotificationError: f(
+          manageNotificationsMessages.removeNotificationError,
+        ),
+        loadingScheduledNotifications: f(
+          manageNotificationsMessages.loadingScheduledNotifications,
+        ),
+        noScheduledNotifications: f(
+          manageNotificationsMessages.noScheduledNotifications,
+        ),
+        scheduledFor: f(manageNotificationsMessages.scheduledFor),
+        loadNotificationError: f(
+          manageNotificationsMessages.loadNotificationError,
+        ),
       },
 
       // ManageNotificationDisplayDuration strings
@@ -1731,8 +2321,9 @@ export const useStrings = () => {
           setupWalletMessages.walletChecksumModalCardTitle,
         ),
         stepWalletDetails: f(setupWalletMessages.stepWalletDetails),
-        walletDetailsTitle: (bold: any) =>
-          f(setupWalletMessages.walletDetailsTitle, {b: bold.b}),
+        walletDetailsTitle: (bold: {
+          b: (text: React.ReactNode) => React.ReactNode
+        }) => f(setupWalletMessages.walletDetailsTitle, {b: bold.b}),
         walletDetailsPasswordHelper: f(
           setupWalletMessages.walletDetailsPasswordHelper,
         ),
@@ -1757,8 +2348,9 @@ export const useStrings = () => {
         hwModalUsbButton: f(setupWalletMessages.hwModalUsbButton),
         hwModalBtButton: f(setupWalletMessages.hwModalBtButton),
         hwModalIosWarning: f(setupWalletMessages.hwModalIosWarning),
-        hwWalletDetailsTitle: (bold: any) =>
-          f(setupWalletMessages.hwWalletDetailsTitle, {b: bold.b}),
+        hwWalletDetailsTitle: (bold: {
+          b: (text: React.ReactNode) => React.ReactNode
+        }) => f(setupWalletMessages.hwWalletDetailsTitle, {b: bold.b}),
         hwExportKey: f(setupWalletMessages.hwExportKey),
         bluetoothError: f(setupWalletMessages.bluetoothError),
         hwIntroTitle: f(setupWalletMessages.hwIntroTitle),
@@ -1783,25 +2375,37 @@ export const useStrings = () => {
         importReadOnlyWalletDescription: f(
           setupWalletMessages.importReadOnlyWalletDescription,
         ),
-        aboutRecoveryPhraseTitle: (bold: any) =>
-          f(setupWalletMessages.aboutRecoveryPhraseTitle, {b: bold.b}),
-        aboutRecoveryPhraseCardFirstItem: (bold: any) =>
+        aboutRecoveryPhraseTitle: (bold: {
+          b: (text: React.ReactNode) => React.ReactNode
+        }) => f(setupWalletMessages.aboutRecoveryPhraseTitle, {b: bold.b}),
+        aboutRecoveryPhraseCardFirstItem: (bold: {
+          b: (text: React.ReactNode) => React.ReactNode
+        }) =>
           f(setupWalletMessages.aboutRecoveryPhraseCardFirstItem, {b: bold.b}),
-        aboutRecoveryPhraseCardSecondItem: (bold: any) =>
+        aboutRecoveryPhraseCardSecondItem: (bold: {
+          b: (text: React.ReactNode) => React.ReactNode
+        }) =>
           f(setupWalletMessages.aboutRecoveryPhraseCardSecondItem, {b: bold.b}),
-        aboutRecoveryPhraseCardThirdItem: (bold: any) =>
+        aboutRecoveryPhraseCardThirdItem: (bold: {
+          b: (text: React.ReactNode) => React.ReactNode
+        }) =>
           f(setupWalletMessages.aboutRecoveryPhraseCardThirdItem, {b: bold.b}),
-        aboutRecoveryPhraseCardFourthItem: (bold: any) =>
+        aboutRecoveryPhraseCardFourthItem: (bold: {
+          b: (text: React.ReactNode) => React.ReactNode
+        }) =>
           f(setupWalletMessages.aboutRecoveryPhraseCardFourthItem, {b: bold.b}),
-        aboutRecoveryPhraseCardFifthItem: (bold: any) =>
+        aboutRecoveryPhraseCardFifthItem: (bold: {
+          b: (text: React.ReactNode) => React.ReactNode
+        }) =>
           f(setupWalletMessages.aboutRecoveryPhraseCardFifthItem, {b: bold.b}),
         stepAboutRecoveryPhrase: f(setupWalletMessages.stepAboutRecoveryPhrase),
         next: f(setupWalletMessages.next),
         restoreDuplicatedWalletModalTitle: f(
           setupWalletMessages.restoreDuplicatedWalletModalTitle,
         ),
-        restoreWalletScreenTitle: (bold: any) =>
-          f(setupWalletMessages.restoreWalletScreenTitle, {b: bold.b}),
+        restoreWalletScreenTitle: (bold: {
+          b: (text: React.ReactNode) => React.ReactNode
+        }) => f(setupWalletMessages.restoreWalletScreenTitle, {b: bold.b}),
         wordNotFound: f(setupWalletMessages.wordNotFound),
         learnMore: f(setupWalletMessages.learnMore),
         logoTitle: f(setupWalletMessages.logoTitle),
@@ -1827,16 +2431,18 @@ export const useStrings = () => {
           setupWalletMessages.recoveryPhraseCardFifthItem,
         ),
         stepRecoveryPhrase: f(setupWalletMessages.stepRecoveryPhrase),
-        recoveryPhraseTitle: (bold: any) =>
-          f(setupWalletMessages.recoveryPhraseTitle, {b: bold.b}),
+        recoveryPhraseTitle: (bold: {
+          b: (text: React.ReactNode) => React.ReactNode
+        }) => f(setupWalletMessages.recoveryPhraseTitle, {b: bold.b}),
         hideRecoveryPhraseButton: f(
           setupWalletMessages.hideRecoveryPhraseButton,
         ),
         showRecoveryPhraseButton: f(
           setupWalletMessages.showRecoveryPhraseButton,
         ),
-        verifyRecoveryPhraseTitle: (bold: any) =>
-          f(setupWalletMessages.verifyRecoveryPhraseTitle, {b: bold.b}),
+        verifyRecoveryPhraseTitle: (bold: {
+          b: (text: React.ReactNode) => React.ReactNode
+        }) => f(setupWalletMessages.verifyRecoveryPhraseTitle, {b: bold.b}),
         stepVerifyRecoveryPhrase: f(
           setupWalletMessages.stepVerifyRecoveryPhrase,
         ),
@@ -1848,6 +2454,7 @@ export const useStrings = () => {
         ),
         clearAll: f(setupWalletMessages.clearAll),
         preparingWallet: f(setupWalletMessages.preparingWallet),
+        continueInBackground: f(setupWalletMessages.continueInBackground),
         restoreDuplicatedWalletModalText: f(
           setupWalletMessages.restoreDuplicatedWalletModalText,
         ),
@@ -1857,6 +2464,7 @@ export const useStrings = () => {
         connectWalletButtonCard: f(setupWalletMessages.connectWalletButtonCard),
         createWalletButtonCard: f(setupWalletMessages.createWalletButtonCard),
         restoreWalletButtonCard: f(setupWalletMessages.restoreWalletButtonCard),
+        scanQrCodeTitle: f(setupWalletMessages.scanQrCodeTitle),
         passwordStrengthRequirement: (values: number) =>
           f(setupWalletMessages.passwordStrengthRequirement, {
             requiredPasswordLength: values,
@@ -1885,6 +2493,15 @@ export const useStrings = () => {
         ),
         walletPasswordModalCardSecondItem: f(
           setupWalletMessages.walletPasswordModalCardSecondItem,
+        ),
+        restoreWalletFromLinkSecurityWarningTitle: f(
+          setupWalletMessages.restoreWalletFromLinkSecurityWarningTitle,
+        ),
+        restoreWalletFromLinkSecurityWarningDescription: f(
+          setupWalletMessages.restoreWalletFromLinkSecurityWarningDescription,
+        ),
+        restoreWalletFromLinkContinueButton: f(
+          setupWalletMessages.restoreWalletFromLinkContinueButton,
         ),
       },
 

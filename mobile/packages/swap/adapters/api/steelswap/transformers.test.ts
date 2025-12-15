@@ -1,4 +1,5 @@
-import {Chain, Portfolio, Swap} from '@yoroi/types'
+import {primaryTokenId} from '@yoroi/portfolio'
+import {Address, Chain, Portfolio, Swap, TokenId} from '@yoroi/types'
 
 import {transformersMaker} from './transformers'
 import {
@@ -10,10 +11,10 @@ import {
 } from './types'
 
 const mockConfig = {
-  address: 'addr1test',
+  address: 'addr1test' as Address,
   network: Chain.Network.Mainnet as Chain.SupportedNetworks,
   primaryTokenInfo: {
-    id: '.' as const,
+    id: primaryTokenId,
     name: 'Cardano',
     ticker: 'ADA',
     decimals: 6,
@@ -67,7 +68,7 @@ describe('transformersMaker', () => {
 
       expect(result).toHaveLength(1) // Primary token is filtered out
       expect(result[0]).toMatchObject({
-        id: 'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441',
+        id: 'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as TokenId,
         ticker: 'USDA',
         name: 'USDA',
         decimals: 6,
@@ -139,9 +140,9 @@ describe('transformersMaker', () => {
         txHash:
           '0788552a7f0bfe547d47be51e36f579cda23b4adfccefeb7f74ea90e395c8bd2',
         outputIndex: 0,
-        tokenIn: '.',
+        tokenIn: primaryTokenId,
         tokenOut:
-          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441',
+          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as TokenId,
         amountIn: 13200000, // Already in decimal format (isFloat=true)
         expectedAmountOut: 15000000, // Already in decimal format (isFloat=true)
         actualAmountOut: 15000000, // Already in decimal format (isFloat=true)
@@ -199,9 +200,9 @@ describe('transformersMaker', () => {
   describe('estimate', () => {
     it('should transform estimate request correctly', () => {
       const request = transformers.estimate.request({
-        tokenIn: '.' as const,
+        tokenIn: primaryTokenId,
         tokenOut:
-          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as const,
+          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as TokenId,
         amountIn: 2, // 2 ADA in decimal
         slippage: 0.5,
         blockedProtocols: [Swap.Protocol.Minswap_v1],
@@ -220,9 +221,9 @@ describe('transformersMaker', () => {
 
     it('should handle amountOut instead of amountIn', () => {
       const request = transformers.estimate.request({
-        tokenIn: '.' as const,
+        tokenIn: primaryTokenId,
         tokenOut:
-          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as const,
+          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as TokenId,
         amountOut: 1, // 1 token in decimal
         slippage: 0.5,
       })
@@ -352,9 +353,9 @@ describe('transformersMaker', () => {
   describe('create', () => {
     it('should transform create request correctly', () => {
       const request = transformers.create.request({
-        tokenIn: '.' as const,
+        tokenIn: primaryTokenId,
         tokenOut:
-          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as const,
+          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as TokenId,
         amountIn: 2, // 2 ADA in decimal
         slippage: 0.5,
         inputs: ['test-utxo-1', 'test-utxo-2'],
@@ -366,7 +367,7 @@ describe('transformersMaker', () => {
         tokenB:
           'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae45655534441',
         quantity: 2, // Already in decimal format (isFloat=true)
-        address: 'addr1test',
+        address: 'addr1test' as Address,
         utxos: ['test-utxo-1', 'test-utxo-2'],
         slippage: 50, // 0.5% = 50 basis points
         partner: 'yoroi-aggregator',
@@ -376,9 +377,9 @@ describe('transformersMaker', () => {
 
     it('should handle zero slippage', () => {
       const request = transformers.create.request({
-        tokenIn: '.' as const,
+        tokenIn: primaryTokenId,
         tokenOut:
-          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as const,
+          'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as TokenId,
         amountIn: 2000000,
         inputs: [],
       })
@@ -419,9 +420,9 @@ describe('transformersMaker', () => {
           aggregator: Swap.Aggregator.Steelswap,
           protocol: Swap.Protocol.Minswap_v1,
           status: 'open',
-          tokenIn: '.' as const,
+          tokenIn: primaryTokenId,
           tokenOut:
-            'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as const,
+            'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441' as TokenId,
           amountIn: 1000000,
           expectedAmountOut: 2000000,
           actualAmountOut: 2000000,
@@ -458,8 +459,8 @@ describe('transformersMaker', () => {
       const transformers = transformersMaker(mockConfig)
       // Test through estimate request
       const request = transformers.estimate.request({
-        tokenIn: '.' as const,
-        tokenOut: '.' as const,
+        tokenIn: primaryTokenId,
+        tokenOut: primaryTokenId,
         amountIn: 1, // Already in decimal format (isFloat=true)
         slippage: 0.5,
       })
@@ -470,13 +471,13 @@ describe('transformersMaker', () => {
 
     it('should convert hex token ID to portfolio format', () => {
       const hexTokenId =
-        'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae45655534441'
+        'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae45655534441' as TokenId
       const expectedPortfolioId =
         'fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456.55534441'
 
       const request = transformers.estimate.request({
         tokenIn: expectedPortfolioId as Portfolio.Token.Id,
-        tokenOut: '.' as const,
+        tokenOut: primaryTokenId,
         amountIn: 1, // Already in decimal format (isFloat=true)
         slippage: 0.5,
       })

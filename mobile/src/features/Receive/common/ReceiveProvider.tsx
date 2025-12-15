@@ -1,6 +1,8 @@
 import {produce} from 'immer'
 import * as React from 'react'
 
+import {logger} from '~/kernel/logger/logger'
+
 export const useReceive = () => React.useContext(ReceiveContext)
 
 export const ReceiveProvider = ({
@@ -68,7 +70,7 @@ const defaultState: ReceiveState = Object.freeze({
 })
 
 function missingInit() {
-  console.error('[ReceiveContext] missing initialization')
+  logger.error('[ReceiveContext] missing initialization')
 }
 
 const initialReceiveContext: ReceiveContext = {

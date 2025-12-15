@@ -1,14 +1,17 @@
+import {App} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
+
 import * as React from 'react'
 
 import {ConfirmRawTxWithOs} from '~/features/Swap/common/ConfirmRawTx/ConfirmRawTxWithOs'
 import {ConfirmRawTxWithPassword} from '~/features/Swap/common/ConfirmRawTx/ConfirmRawTxWithPassword'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {logger} from '~/kernel/logger/logger'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 
 type PromptRootKeyOptions = {
-  onSuccess: (rootKey: string) => void
+  onSuccess: (rootKey: string) => void | Promise<void>
   onError?: (error: unknown) => void
   onClose?: () => void
   title?: string
@@ -23,10 +26,39 @@ export const usePromptRootKey = () => {
 
   const promptRootKey = React.useCallback(
     ({onSuccess, onError, onClose, title, summary}: PromptRootKeyOptions) => {
-      const handleOnConfirm = (rootKey: string) => {
-        const result = onSuccess(rootKey)
+      const handleOnConfirm = async (rootKey: string) => {
         closeModal()
-        return result
+
+        try {
+          await onSuccess(rootKey)
+        } catch (error) {
+          logger.error('usePromptRootKey: onSuccess callback failed', {
+            walletId: meta.id,
+            error: error instanceof Error ? error.message : String(error),
+          })
+          closeModal()
+          onError?.(error)
+        }
+      }
+
+      const handleOnError = (error?: unknown) => {
+        // Don't call onError for wrong password errors - they're handled inline
+        if (error instanceof App.Errors.WrongPassword) {
+          logger.debug(
+            'usePromptRootKey: Wrong password error (handled inline)',
+            {
+              walletId: meta.id,
+            },
+          )
+          return
+        }
+
+        logger.error('usePromptRootKey: Root key prompt error', {
+          walletId: meta.id,
+          error: error instanceof Error ? error.message : String(error),
+        })
+        closeModal()
+        onError?.(error)
       }
 
       if (meta.isEasyConfirmationEnabled) {
@@ -36,7 +68,7 @@ export const usePromptRootKey = () => {
             <Modal.Content>
               <ConfirmRawTxWithOs
                 onSuccess={handleOnConfirm}
-                onError={onError}
+                onError={handleOnError}
               />
             </Modal.Content>
           ),
@@ -53,6 +85,7 @@ export const usePromptRootKey = () => {
             <ConfirmRawTxWithPassword
               summary={summary}
               onConfirm={handleOnConfirm}
+              onError={handleOnError}
             />
           </Modal.Content>
         ),
@@ -63,6 +96,7 @@ export const usePromptRootKey = () => {
     [
       closeModal,
       meta.isEasyConfirmationEnabled,
+      meta.id,
       openModal,
       strings.discover.confirmTx,
     ],

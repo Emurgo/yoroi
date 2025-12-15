@@ -58,23 +58,28 @@ export const cacheManageMultiRequest = async <K extends string, V>({
   if (toFetch.length > 0) {
     const apiResponse = await request(toFetch)
     // if the request fails, we will show unknown tokens and wont block the user
-    if (isRight(apiResponse)) recordsFromApi = apiResponse.value.data
+    if (isRight(apiResponse) && apiResponse.value) {
+      recordsFromApi = (
+        apiResponse.value as {data: Record<K, Api.ResponseWithCache<V>>}
+      ).data
+    }
   }
   // to make same request time for all records, to avoid ms of difference
   const baseDate = Date.now()
 
-  toFetch.forEach(([id]) => {
+  toFetch.forEach((requestWithCache) => {
+    const id = requestWithCache[0] as K
     const recordFromApi = recordsFromApi[id]
     if (!recordFromApi) {
       toResolveLocally.add(id)
       return
     }
 
-    const [statusCode] = recordFromApi
+    const statusCode = recordFromApi[0]
 
     // when not-modified add to revalidate cache by updating expires
     if (statusCode === Api.HttpStatusCode.NotModified) {
-      const [, maxAge] = recordFromApi
+      const maxAge = recordFromApi[1] as number
       toRevalidateCache.set(id, baseDate + maxAge * 1_000)
       return
     }
@@ -85,7 +90,10 @@ export const cacheManageMultiRequest = async <K extends string, V>({
       return
     }
 
-    const [, record, eTag, maxAge] = recordFromApi
+    // statusCode === Api.HttpStatusCode.Ok
+    const record = recordFromApi[1] as V
+    const eTag = recordFromApi[2] as string
+    const maxAge = recordFromApi[3] as number
     toSaveNewFromApi.set(id, {
       hash: eTag,
       expires: baseDate + maxAge * 1_000,

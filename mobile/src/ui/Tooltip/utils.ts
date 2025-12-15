@@ -137,10 +137,10 @@ export const getTooltipPosition = (
 export function addEventListener<
   T extends {
     addEventListener: (
-      ...args: any
+      ...args: unknown[]
     ) => NativeEventSubscription | EmitterSubscription
-  } & {removeEventListener?: (...args: any) => void} & {
-    remove?: (...args: any) => void
+  } & {removeEventListener?: (...args: unknown[]) => void} & {
+    remove?: (...args: unknown[]) => void
   },
 >(Module: T, ...rest: Parameters<typeof Module.addEventListener>) {
   const [eventName, handler] = rest

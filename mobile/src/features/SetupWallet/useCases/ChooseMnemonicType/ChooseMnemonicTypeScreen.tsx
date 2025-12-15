@@ -8,6 +8,7 @@ import {View} from 'react-native'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {SetupWalletRouteNavigation} from '~/kernel/navigation/types'
 import {LogoBanner} from '~/ui/LogoBanner/LogoBanner'
+import QRsIllustration from '~/ui/QRsIllustration/QRsIllustration'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 
@@ -28,6 +29,10 @@ export const ChooseMnemonicTypeScreen = () => {
   const handle24Words = () => {
     mnemonicTypeChanged(24)
     navigation.navigate('setup-wallet-restore-form')
+  }
+
+  const handleScanQrCode = () => {
+    navigation.navigate('setup-wallet-scan-qr-code')
   }
 
   return (
@@ -51,6 +56,19 @@ export const ChooseMnemonicTypeScreen = () => {
           icon={<Mnemonic24Words style={[a.absolute, {right: 0}]} />}
           onPress={handle24Words}
           testID="mnemonic-24-word"
+        />
+
+        <ButtonCard
+          title={strings.setupWallet.scanQrCodeTitle}
+          icon={
+            <QRsIllustration
+              width={128}
+              height={120}
+              style={[a.absolute, {right: 0}]}
+            />
+          }
+          onPress={handleScanQrCode}
+          testID="scan-qr-code-restore"
         />
       </View>
     </SafeArea>

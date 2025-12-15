@@ -1,9 +1,6 @@
 {
   "extends": "expo/tsconfig.base",
-  "include": [
-    "**/*.ts",
-    "**/*.tsx"
-  ],
+  "include": ["**/*.ts", "**/*.tsx"],
   "compilerOptions": {
     "strict": true,
     "baseUrl": ".",
@@ -17,86 +14,40 @@
     "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "typeRoots": [
-      "./src/types",
-      "./node_modules/@types"
-    ],
+    // Note: noImplicitAny is already enabled by "strict": true
+    "typeRoots": ["./src/types", "./node_modules/@types"],
     "paths": {
-      "~/ui/*": [
-        "./src/ui/*"
-      ],
-      "~/features/*": [
-        "./src/features/*"
-      ],
-      "~/hooks/*": [
-        "./src/hooks/*"
-      ],
-      "~/kernel/*": [
-        "./src/kernel/*"
-      ],
-      "~/wallets/*": [
-        "./src/wallets/*"
-      ],
-      "~/components/*": [
-        "./src/ui/*"
-      ],
-      "~/assets/*": [
-        "./assets/*"
-      ],
-      "@yoroi/api": [
-        "./packages/api"
-      ],
-      "@yoroi/blockchains": [
-        "./packages/blockchains"
-      ],
-      "@yoroi/claim": [
-        "./packages/claim"
-      ],
-      "@yoroi/common": [
-        "./packages/common"
-      ],
-      "@yoroi/dapp-connector": [
-        "./packages/dapp-connector"
-      ],
-      "@yoroi/exchange": [
-        "./packages/exchange"
-      ],
-      "@yoroi/explorers": [
-        "./packages/explorers"
-      ],
-      "@yoroi/identicon": [
-        "./packages/identicon"
-      ],
-      "@yoroi/links": [
-        "./packages/links"
-      ],
-      "@yoroi/notifications": [
-        "./packages/notifications"
-      ],
-      "@yoroi/portfolio": [
-        "./packages/portfolio"
-      ],
-      "@yoroi/resolver": [
-        "./packages/resolver"
-      ],
-      "@yoroi/setup-wallet": [
-        "./packages/setup-wallet"
-      ],
-      "@yoroi/staking": [
-        "./packages/staking"
-      ],
-      "@yoroi/swap": [
-        "./packages/swap"
-      ],
-      "@yoroi/theme": [
-        "./packages/theme"
-      ],
-      "@yoroi/transfer": [
-        "./packages/transfer"
-      ],
-      "@yoroi/types": [
-        "./packages/types"
-      ]
+      "~/ui/*": ["./src/ui/*"],
+      "~/features/*": ["./src/features/*"],
+      "~/common/*": ["./src/common/*"],
+      "~/hooks/*": ["./src/hooks/*"],
+      "~/kernel/*": ["./src/kernel/*"],
+      "~/wallets/*": ["./src/wallets/*"],
+      "~/components/*": ["./src/ui/*"],
+      "~/assets/*": ["./assets/*"],
+      "@yoroi/api": ["./packages/api"],
+      "@yoroi/blockchains": ["./packages/blockchains"],
+      "@yoroi/claim": ["./packages/claim"],
+      "@yoroi/common": ["./packages/common"],
+      "@yoroi/dapp-connector": ["./packages/dapp-connector"],
+      "@yoroi/logger": ["./packages/logger"],
+      "@yoroi/exchange": ["./packages/exchange"],
+      "@yoroi/explorers": ["./packages/explorers"],
+      "@yoroi/identicon": ["./packages/identicon"],
+      "@yoroi/links": ["./packages/links"],
+      "@yoroi/notifications": ["./packages/notifications"],
+      "@yoroi/portfolio": ["./packages/portfolio"],
+      "@yoroi/resolver": ["./packages/resolver"],
+      "@yoroi/setup-wallet": ["./packages/setup-wallet"],
+      "@yoroi/staking": ["./packages/staking"],
+      "@yoroi/swap": ["./packages/swap"],
+      "@yoroi/theme": ["./packages/theme"],
+      "@yoroi/transfer": ["./packages/transfer"],
+      "@yoroi/types": ["./packages/types"],
+      "@yoroi/p2p-communication": ["./packages/p2p-communication"],
+      "@yoroi/tx": ["./packages/tx"],
+      "@yoroi/cardano-wallet": ["./packages/cardano-wallet"],
+      "@yoroi/wallet-manager": ["./packages/wallet-manager"]
     }
   }
 }

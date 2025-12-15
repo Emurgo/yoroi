@@ -1,5 +1,6 @@
 import {infoExtractName} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
@@ -8,7 +9,6 @@ import {View} from 'react-native'
 import {usePairing} from '~/features/Pairing/context/PairingProvider'
 import {aggregatePrimaryAmount} from '~/features/Portfolio/common/helpers/aggregatePrimaryAmount'
 import {usePortfolioTokenActivity} from '~/features/Portfolio/context/PortfolioTokenActivityProvider'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {BalanceCardSkeleton} from '~/ui/BalanceCardSkeleton/BalanceCardSkeleton'
 import {BalanceHeaderCard} from '~/ui/BalanceHeaderCard/BalanceHeaderCard'
 
@@ -18,8 +18,10 @@ export const BalanceCard = () => {
   const {palette: p} = useTheme()
 
   const {
-    wallet: {balances, portfolioPrimaryTokenInfo},
+    wallet: {portfolioPrimaryTokenInfo},
+    wallet,
   } = useSelectedWallet()
+  const balances = wallet.balances()
   const {tokenActivity, isLoading} = usePortfolioTokenActivity()
 
   const amount = React.useMemo(

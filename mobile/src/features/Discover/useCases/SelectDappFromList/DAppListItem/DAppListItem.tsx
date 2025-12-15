@@ -41,7 +41,7 @@ type Props = {
   connected: boolean
   onPress?: () => void
 }
-export const DAppListItem = ({dApp, connected, onPress}: Props) => {
+const DAppListItemComponent = ({dApp, connected, onPress}: Props) => {
   const {palette: p, atoms: ta} = useTheme()
   const {addTabAndSetActive} = useBrowser()
   const navigateTo = useNavigateTo()
@@ -169,7 +169,7 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
         {isGoogleSearchItem(dApp) ? (
           <Icon.Google />
         ) : isDirectUrlItem(dApp) ? (
-          <Icon.Globe />
+          <Icon.Globe color={p.gray_max} />
         ) : (
           <Image
             source={{uri: logo}}
@@ -214,6 +214,20 @@ export const DAppListItem = ({dApp, connected, onPress}: Props) => {
     </TouchableWithoutFeedback>
   )
 }
+
+export const DAppListItem = React.memo(
+  DAppListItemComponent,
+  (prevProps, nextProps) => {
+    // Re-render if dApp ID, name, uri, connected status, or onPress callback changes
+    return (
+      prevProps.dApp.id === nextProps.dApp.id &&
+      prevProps.dApp.name === nextProps.dApp.name &&
+      prevProps.dApp.uri === nextProps.dApp.uri &&
+      prevProps.connected === nextProps.connected &&
+      prevProps.onPress === nextProps.onPress
+    )
+  },
+)
 
 const walletsCompatibilityLink = 'https://help.yoroi-wallet.com/en/'
 

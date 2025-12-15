@@ -49,6 +49,10 @@ export const setupWalletMessages = defineMessages({
     id: 'components.walletinit.walletinitmenu.restorewalletbutton.title',
     defaultMessage: '!!!Restore wallet',
   },
+  scanQrCodeTitle: {
+    id: 'components.walletinit.walletinitmenu.scanqrcodebutton.title',
+    defaultMessage: '!!!Scan QR code',
+  },
   connectHardwareWalletButtonCard: {
     id: 'components.walletinit.connectnanox.savenanoxscreen.title',
     defaultMessage: '!!!Connect hardware wallet',
@@ -250,6 +254,10 @@ export const setupWalletMessages = defineMessages({
     id: 'components.walletinit.restorewallet.restorewalletscreen.preparingWallet',
     defaultMessage: '!!!Preparing wallet',
   },
+  continueInBackground: {
+    id: 'components.walletinit.restorewallet.restorewalletscreen.continueInBackground',
+    defaultMessage: '!!!Continue in background',
+  },
   wordNotFound: {
     id: 'components.walletinit.restorewallet.restorewalletscreen.wordNotFound',
     defaultMessage: '!!!Word not found',
@@ -425,5 +433,18 @@ export const setupWalletMessages = defineMessages({
   checkNanoXTitle: {
     id: 'components.walletinit.connectnanox.checknanoxscreen.title',
     defaultMessage: '!!!Check hardware wallet',
+  },
+  restoreWalletFromLinkSecurityWarningTitle: {
+    id: 'components.walletinit.restorewalletfromlink.securityWarning.title',
+    defaultMessage: '!!!Security Warning',
+  },
+  restoreWalletFromLinkSecurityWarningDescription: {
+    id: 'components.walletinit.restorewalletfromlink.securityWarning.description',
+    defaultMessage:
+      '!!!You are about to restore a wallet from a link or QR code. Verify the source of this link/QR code. Malicious links could steal your funds. Only restore from trusted sources. By continuing, you acknowledge these risks.',
+  },
+  restoreWalletFromLinkContinueButton: {
+    id: 'components.walletinit.restorewalletfromlink.securityWarning.continueButton',
+    defaultMessage: '!!!I Understand, Continue',
   },
 })

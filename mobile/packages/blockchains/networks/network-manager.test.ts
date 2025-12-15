@@ -1,26 +1,38 @@
 import {createTokenManagerMock} from '@yoroi/portfolio'
-import {App, Chain} from '@yoroi/types'
+import {Chain} from '@yoroi/types'
 
 import {protocolParamsPlaceholder} from '../cardano/constants'
 import {networkConfigs} from './network-configs'
 import {buildNetworkManagers} from './network-manager'
+
+// Mock the shared logger
+const mockLogger = {
+  error: jest.fn(),
+  level: 'Debug' as const,
+  debug: jest.fn(),
+  log: jest.fn(),
+  info: jest.fn(),
+  warn: jest.fn(),
+  enable: jest.fn(),
+  disable: jest.fn(),
+  addTransport: jest.fn(),
+  trail: [],
+  filter: null,
+}
+
+jest.mock('@yoroi/logger', () => {
+  const actual = jest.requireActual('@yoroi/logger')
+  return {
+    ...actual,
+    getLogger: jest.fn(() => mockLogger),
+  }
+})
 
 describe('buildNetworkManagers', () => {
   const mockTokenManagers = {
     [Chain.Network.Mainnet]: createTokenManagerMock(),
     [Chain.Network.Preprod]: createTokenManagerMock(),
     [Chain.Network.Preview]: createTokenManagerMock(),
-  }
-  const mockLogger = {
-    error: jest.fn(),
-    level: App.Logger.Level.Debug,
-    debug: jest.fn(),
-    log: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    enable: jest.fn(),
-    disable: jest.fn(),
-    addTransport: jest.fn(),
   }
   const mockApiMaker = jest.fn().mockReturnValue({
     getProtocolParams: jest.fn().mockResolvedValue({}),
@@ -31,7 +43,6 @@ describe('buildNetworkManagers', () => {
   it('should build network managers correctly', async () => {
     const managers = buildNetworkManagers({
       tokenManagers: mockTokenManagers,
-      logger: mockLogger,
       apiMaker: mockApiMaker,
     })
 
@@ -55,7 +66,6 @@ describe('buildNetworkManagers', () => {
 
     const managers = buildNetworkManagers({
       tokenManagers: mockTokenManagers,
-      logger: mockLogger,
       apiMaker: mockApiMaker,
     })
 
@@ -65,11 +75,21 @@ describe('buildNetworkManagers', () => {
     expect(mockLogger.error).toHaveBeenCalled()
   })
 
-  it('coverage only - should use default cardanoApiMaker', () => {
+  it('coverage only - should use provided apiMaker', () => {
     const managers = buildNetworkManagers({
       tokenManagers: mockTokenManagers,
-      logger: mockLogger,
+      apiMaker: mockApiMaker,
     })
     expect(managers).toBeDefined()
+  })
+
+  it('should return frozen managers object', () => {
+    const managers = buildNetworkManagers({
+      tokenManagers: mockTokenManagers,
+      apiMaker: mockApiMaker,
+    })
+
+    // Verify managers are frozen (readonly) - Object.freeze prevents modifications
+    expect(Object.isFrozen(managers)).toBe(true)
   })
 })

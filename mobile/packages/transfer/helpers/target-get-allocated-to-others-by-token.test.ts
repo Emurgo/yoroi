@@ -1,5 +1,5 @@
 import {tokenBalanceMocks} from '@yoroi/portfolio'
-import {Transfer} from '@yoroi/types'
+import {Address, Transfer} from '@yoroi/types'
 
 import {targetGetAllocatedToOthersByToken} from './target-get-allocated-to-others-by-token'
 
@@ -14,7 +14,7 @@ describe('targetGetAllocatedToOthersByToken', () => {
           addressRecords: undefined,
         },
         entry: {
-          address: '',
+          address: '' as Address,
           amounts: {
             [tokenBalanceMocks.ftNoTicker.info.id]: {
               ...tokenBalanceMocks.ftNoTicker,
@@ -31,7 +31,7 @@ describe('targetGetAllocatedToOthersByToken', () => {
           selectedNameServer: undefined,
         },
         entry: {
-          address: 'address2',
+          address: 'address2' as Address as Address,
           amounts: {
             [tokenBalanceMocks.ftNoTicker.info.id]: {
               ...tokenBalanceMocks.ftNoTicker,
@@ -65,7 +65,7 @@ describe('targetGetAllocatedToOthersByToken', () => {
           addressRecords: undefined,
         },
         entry: {
-          address: '',
+          address: '' as Address,
           amounts: {
             [tokenBalanceMocks.ftNoTicker.info.id]: {
               ...tokenBalanceMocks.ftNoTicker,
@@ -95,7 +95,7 @@ describe('targetGetAllocatedToOthersByToken', () => {
           addressRecords: undefined,
         },
         entry: {
-          address: '',
+          address: '' as Address,
           amounts: {
             [tokenBalanceMocks.ftNoTicker.info.id]: {
               ...tokenBalanceMocks.ftNoTicker,
@@ -112,7 +112,7 @@ describe('targetGetAllocatedToOthersByToken', () => {
           addressRecords: undefined,
         },
         entry: {
-          address: '',
+          address: '' as Address,
           amounts: {
             [tokenBalanceMocks.ftNoTicker.info.id]: {
               ...tokenBalanceMocks.ftNoTicker,
@@ -144,7 +144,7 @@ describe('targetGetAllocatedToOthersByToken', () => {
           addressRecords: undefined,
         },
         entry: {
-          address: '',
+          address: '' as Address,
           amounts: {
             [tokenBalanceMocks.primaryETH.info.id]: {
               ...tokenBalanceMocks.ftNoTicker,
@@ -161,7 +161,7 @@ describe('targetGetAllocatedToOthersByToken', () => {
           selectedNameServer: undefined,
         },
         entry: {
-          address: 'address2',
+          address: 'address2' as Address as Address,
           amounts: {
             [tokenBalanceMocks.ftNoTicker.info.id]: {
               ...tokenBalanceMocks.ftNoTicker,

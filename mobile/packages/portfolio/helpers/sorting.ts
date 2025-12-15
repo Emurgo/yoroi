@@ -33,6 +33,8 @@ export const sortTokenInfos = ({
           }
           case Portfolio.Token.Type.NFT:
             return tokenInfo.name.toLocaleLowerCase()
+          default:
+            return ''
         }
       }),
     )
@@ -43,6 +45,8 @@ export const sortTokenInfos = ({
           case Portfolio.Token.Status.Invalid:
           case Portfolio.Token.Status.Scam:
             return true
+          default:
+            break
         }
 
         switch (tokenInfo.type) {
@@ -50,6 +54,8 @@ export const sortTokenInfos = ({
             return !tokenInfo.ticker && !tokenInfo.name
           case Portfolio.Token.Type.NFT:
             return !tokenInfo.name
+          default:
+            return false
         }
       }),
     )
@@ -73,6 +79,8 @@ export const sortTokenAmountsByInfo = ({
           }
           case Portfolio.Token.Type.NFT:
             return tokenBalance.info.name.toLocaleLowerCase()
+          default:
+            return ''
         }
       }),
     )
@@ -83,6 +91,8 @@ export const sortTokenAmountsByInfo = ({
           case Portfolio.Token.Status.Invalid:
           case Portfolio.Token.Status.Scam:
             return true
+          default:
+            break
         }
 
         switch (tokenBalance.info.type) {
@@ -90,6 +100,8 @@ export const sortTokenAmountsByInfo = ({
             return !tokenBalance.info.ticker && !tokenBalance.info.name
           case Portfolio.Token.Type.NFT:
             return !tokenBalance.info.name
+          default:
+            return false
         }
       }),
     )

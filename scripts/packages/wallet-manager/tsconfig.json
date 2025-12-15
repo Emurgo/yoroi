@@ -1,0 +1,40 @@
+{
+  "exclude": [
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.mock.ts",
+    "**/mocks/**",
+    "**/__tests__/**",
+    "**/__fixtures__/**",
+    "**/*.mock.ts",
+    "src/wallet.mock.ts",
+    "src/**/*.mock.ts"
+  ],
+  "compilerOptions": {
+    "declaration": true,
+    "baseUrl": ".",
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "react",
+    "lib": ["esnext"],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noImplicitUseStrict": false,
+    "noStrictGenericChecks": false,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "esnext",
+    "paths": {
+      "@tanstack/react-query": ["./node_modules/@tanstack/react-query"],
+      "@tanstack/query-core": ["./node_modules/@tanstack/query-core"]
+    }
+  }
+}

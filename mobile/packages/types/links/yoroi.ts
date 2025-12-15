@@ -1,4 +1,4 @@
-export interface LinksYoroiUriConfig {
+export type LinksYoroiUriConfig = {
   readonly scheme: 'yoroi' | 'https'
   readonly authority: 'yoroi-wallet.com'
   readonly version: 'w1'

@@ -5,6 +5,7 @@ import {
 } from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Portfolio} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {useFocusEffect} from '@react-navigation/native'
 import {FlashList} from '@shopify/flash-list'
@@ -18,7 +19,6 @@ import {usePortfolio} from '~/features/Portfolio/context/PortfolioProvider'
 import {usePortfolioTokenActivity} from '~/features/Portfolio/context/PortfolioTokenActivityProvider'
 import {TokenEmptyList} from '~/features/Portfolio/ui/TokenEmptyList/TokenEmptyList'
 import {useSearch} from '~/features/Search/SearchContext'
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {makeList} from '~/kernel/utils'
 import {Line} from '~/ui/Line/Line'
@@ -35,8 +35,10 @@ export const PortfolioWalletTokenList = () => {
   const isZeroADABalance = useZeroBalance()
   const {resetTabs} = usePortfolio()
   const {
-    wallet: {balances, portfolioPrimaryTokenInfo},
+    wallet: {portfolioPrimaryTokenInfo},
+    wallet,
   } = useSelectedWallet()
+  const balances = wallet.balances()
   const {tokenActivity, isLoading} = usePortfolioTokenActivity()
 
   const amount = React.useMemo(

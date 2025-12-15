@@ -1,3 +1,4 @@
+import {useDebouncedCallback} from '@yoroi/common'
 import {supportedPrefixes} from '@yoroi/links'
 import {useTheme} from '@yoroi/theme'
 
@@ -20,14 +21,38 @@ type Props = React.PropsWithChildren<{
 
 export function RouterContainer({children, onRouteChange}: Props) {
   const {palette, isDark} = useTheme()
+  const paletteRef = React.useRef(palette)
+  const isDarkRef = React.useRef(isDark)
+
+  // Keep refs in sync with theme values
+  React.useEffect(() => {
+    paletteRef.current = palette
+    isDarkRef.current = isDark
+  }, [palette, isDark])
+
+  // Debounce navigation state changes to prevent rapid-fire status bar updates
+  const stateChangeRef = React.useRef(0)
+
+  const handleStateChangeDebounced = React.useCallback(() => {
+    const routeName = navRef.current?.getCurrentRoute()?.name
+    // Use refs to avoid dependency on palette/isDark in callback
+    applyStatusBarForRoute(routeName, paletteRef.current, isDarkRef.current)
+    if (onRouteChange) onRouteChange(routeName)
+  }, [onRouteChange])
 
   const handleStateChange = React.useCallback(
     (_state: NavigationState | undefined) => {
-      const routeName = navRef.current?.getCurrentRoute()?.name
-      applyStatusBarForRoute(routeName, palette, isDark)
-      if (onRouteChange) onRouteChange(routeName)
+      // Increment ref to trigger debounced callback
+      stateChangeRef.current += 1
     },
-    [onRouteChange, palette, isDark],
+    [],
+  )
+
+  useDebouncedCallback(
+    handleStateChangeDebounced,
+    stateChangeRef.current,
+    100,
+    false, // Don't skip first render - we want initial route to be processed
   )
 
   return (

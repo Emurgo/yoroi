@@ -290,7 +290,7 @@ export const portfolioMessages = defineMessages({
     defaultMessage: '!!!Total dApps value tooltip',
   },
   portfolioSwapTokensTitle: {
-    id: 'components.txhistory.txnavigationbuttons.sendButton',
+    id: 'portfolio.portfolioDashboardScreen.portfolioSwapTokensTitle',
     defaultMessage: '!!!Portfolio Swap Tokens Title',
   },
   portfolioSwapTokensDescription: {

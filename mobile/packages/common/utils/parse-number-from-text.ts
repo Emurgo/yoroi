@@ -1,4 +1,10 @@
-import {Balance, Numbers} from '@yoroi/types'
+import {
+  AmountFormatted,
+  AmountRaw,
+  AmountSanitized,
+  Balance,
+  Numbers,
+} from '@yoroi/types'
 
 import {BigNumber} from 'bignumber.js'
 
@@ -12,8 +18,8 @@ export const asQuantity = (value: BigNumber | number | string) => {
 }
 
 export type ParseNumberFromTextOptions = {
-  /** The input text to parse */
-  text: string
+  /** The input text to parse - unvalidated user input */
+  text: AmountRaw | string
   /** Token denomination (e.g., 6 for ADA) - optional for unitless numbers */
   denomination?: number
   /** Locale format for decimal separator - optional, defaults to English locale for sanitization */
@@ -23,13 +29,13 @@ export type ParseNumberFromTextOptions = {
 }
 
 export type ParseNumberFromTextResult = {
-  /** The sanitizedInput input string */
-  sanitizedInput: string
-  /** The formatted input string to display (undefined when format is not provided) */
-  formattedValue: string | undefined
-  /** Number in valid JS number format */
+  /** The sanitized input string - cleaned but still user-facing (for display in input field) */
+  sanitizedInput: AmountSanitized
+  /** The formatted input string to display (undefined when format is not provided) - locale-formatted for display */
+  formattedValue: AmountFormatted | undefined
+  /** Number in valid JS number format - for calculations */
   numericValue: number
-  /** The parsed quantity in atomic units (undefined for unitless numbers) */
+  /** The parsed quantity in atomic units (undefined for unitless numbers) - validated and ready for blockchain */
   quantity?: Balance.Quantity
 }
 
@@ -113,10 +119,11 @@ export const parseNumberFromText = ({
 
   if (sanitizedInput === '')
     return {
-      sanitizedInput,
-      formattedValue: format ? '' : undefined,
+      sanitizedInput: sanitizedInput as AmountSanitized,
+      formattedValue: format ? ('' as AmountFormatted) : undefined,
       numericValue: 0,
-      quantity: denomination !== undefined ? '0' : undefined,
+      quantity:
+        denomination !== undefined ? ('0' as Balance.Quantity) : undefined,
     }
   let workingInput = sanitizedInput
   if (workingInput.startsWith(decimalSeparator)) {
@@ -154,8 +161,10 @@ export const parseNumberFromText = ({
     const sanitizedInput = workingInput
 
     return {
-      sanitizedInput,
-      formattedValue: formattedValue?.replace(/[,|.]$/, ''),
+      sanitizedInput: sanitizedInput as AmountSanitized,
+      formattedValue: formattedValue?.replace(/[,|.]$/, '') as
+        | AmountFormatted
+        | undefined,
       numericValue: bnValue.toNumber(),
       quantity,
     }
@@ -203,8 +212,10 @@ export const parseNumberFromText = ({
   }
 
   return {
-    sanitizedInput: finalSanitizedInput,
-    formattedValue: formattedValue?.replace(/[,|.]$/, ''),
+    sanitizedInput: finalSanitizedInput as AmountSanitized,
+    formattedValue: formattedValue?.replace(/[,|.]$/, '') as
+      | AmountFormatted
+      | undefined,
     numericValue: bnValue.toNumber(),
     quantity,
   }

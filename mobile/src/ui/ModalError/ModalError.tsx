@@ -1,3 +1,10 @@
+import {
+  AdaAppClosedError,
+  BluetoothDisabledError,
+  GeneralConnectionError,
+  LedgerUserError,
+  RejectedByUserError,
+} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
@@ -6,15 +13,9 @@ import {View} from 'react-native'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
+import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Space} from '~/ui/Space/Space'
 import {Text} from '~/ui/Text/Text'
-import {
-  AdaAppClosedError,
-  BluetoothDisabledError,
-  GeneralConnectionError,
-  LedgerUserError,
-  RejectedByUserError,
-} from '~/wallets/hw/hw'
 
 type Props = {
   error: Error
@@ -25,7 +26,16 @@ type Props = {
 export const ModalError = ({error, resetErrorBoundary, onCancel}: Props) => {
   const strings = useStrings()
   const {palette: p} = useTheme()
+  const {closeModal} = useModal()
   const message = getErrorMessage(error, strings)
+
+  const handleCancel = React.useCallback(() => {
+    if (onCancel) {
+      onCancel()
+    } else {
+      closeModal()
+    }
+  }, [onCancel, closeModal])
 
   return (
     <>
@@ -49,8 +59,9 @@ export const ModalError = ({error, resetErrorBoundary, onCancel}: Props) => {
         <Button
           size="S"
           type={ButtonType.Secondary}
-          onPress={onCancel}
+          onPress={handleCancel}
           title={strings.global.cancel}
+          disabled={false}
         />
 
         <Space.Width.lg />

@@ -1,19 +1,19 @@
+import {formatTokenWithText} from '@yoroi/cardano-wallet'
+import {isEmptyString} from '@yoroi/cardano-wallet'
+import {Quantities, asQuantity} from '@yoroi/cardano-wallet'
+import {FullPoolInfo} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
 
-import {FullPoolInfo} from '@emurgo/yoroi-lib'
 import {Image} from 'expo-image'
 import * as React from 'react'
 import {Text, View} from 'react-native'
 
-import {useSelectedWallet} from '~/features/WalletManager/hooks/useSelectedWallet'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {ExplorerInfoLinks} from '~/ui/ExplorerInfoLinks/ExplorerInfoLinks'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
-import {formatTokenWithText} from '~/wallets/utils/format'
-import {isEmptyString} from '~/wallets/utils/string'
-import {Quantities, asQuantity} from '~/wallets/utils/utils'
 
 import {generatePoolName} from './poolUtils'
 
@@ -75,7 +75,11 @@ export const PoolDetails = ({poolInfo}: {poolInfo: FullPoolInfo}) => {
 
       <Info
         label={strings.txReview.poolDetails.poolSaturation}
-        value={`${explorer?.saturation ?? '-'}%`}
+        value={
+          explorer?.saturation != null
+            ? `${(Number(explorer.saturation) * 100).toFixed(2)}%`
+            : '-'
+        }
       />
 
       <Space.Height.sm />

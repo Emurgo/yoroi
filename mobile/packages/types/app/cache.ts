@@ -3,11 +3,10 @@ export type AppCacheInfo = {
   hash: string
 }
 
-export interface AppCacheRecord<T> extends AppCacheInfo {
+export type AppCacheRecord<T> = AppCacheInfo & {
   record: T
 }
 
-export interface AppCacheRow<T, K extends string = string>
-  extends AppCacheRecord<T> {
+export type AppCacheRow<T, K extends string = string> = AppCacheRecord<T> & {
   key: K
 }

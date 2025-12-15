@@ -54,6 +54,6 @@ describe('fetcher', () => {
     ).rejects.toThrow(Error)
     await expect(
       fetcher({url: '/unknown-error', method: 'GET'}),
-    ).rejects.toHaveProperty('message', 'An unknown error occurred')
+    ).rejects.toHaveProperty('message', 'Some unknown error')
   })
 })

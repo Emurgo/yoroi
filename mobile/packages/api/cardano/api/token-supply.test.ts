@@ -1,3 +1,5 @@
+import {Branded} from '@yoroi/types'
+
 import {getTokenSupply, isTokenSupplyResponse} from './token-supply'
 
 describe('isTokenSupplyResponse', () => {
@@ -38,8 +40,12 @@ describe('getTokenSupply', () => {
     })
     const tokenSupply = getTokenSupply('https://localhost', fetch)
     const result = await tokenSupply([
-      '1f7a58a1aa1e6b047a42109ade331ce26c9c2cce027d043ff264fb1f.30',
-      '1f7a58a1aa1e6b047a42109ade331ce26c9c2cce027d043ff264fb1f.31',
+      Branded.asTokenId(
+        '1f7a58a1aa1e6b047a42109ade331ce26c9c2cce027d043ff264fb1f.30',
+      ),
+      Branded.asTokenId(
+        '1f7a58a1aa1e6b047a42109ade331ce26c9c2cce027d043ff264fb1f.31',
+      ),
     ])
     expect(result).toEqual({
       '1f7a58a1aa1e6b047a42109ade331ce26c9c2cce027d043ff264fb1f.30': '1',
@@ -66,8 +72,12 @@ describe('getTokenSupply', () => {
     const tokenSupply = getTokenSupply('https://localhost', fetch)
     await expect(
       tokenSupply([
-        '1f7a58a1aa1e6b047a42109ade331ce26c9c2cce027d043ff264fb1f.b',
-        '1f7a58a1aa1e6b047a42109ade331ce26c9c2cce027d043ff264fb1f.d',
+        Branded.asTokenId(
+          '1f7a58a1aa1e6b047a42109ade331ce26c9c2cce027d043ff264fb1f.b',
+        ),
+        Branded.asTokenId(
+          '1f7a58a1aa1e6b047a42109ade331ce26c9c2cce027d043ff264fb1f.d',
+        ),
       ]),
     ).rejects.toThrow('Invalid asset supplies')
   })
@@ -78,8 +88,12 @@ describe('getTokenSupply', () => {
     const tokenSupply = getTokenSupply('https://localhost', fetch)
     await expect(
       tokenSupply([
-        '1f7a58a1aa1e6b047a42109ade331ce26c9c2cce027d043ff264fb1f.b',
-        '1f7a58a1aa1e6b047a42109ade331ce26c9c2cce027d043ff264fb1f.d',
+        Branded.asTokenId(
+          '1f7a58a1aa1e6b047a42109ade331ce26c9c2cce027d043ff264fb1f.b',
+        ),
+        Branded.asTokenId(
+          '1f7a58a1aa1e6b047a42109ade331ce26c9c2cce027d043ff264fb1f.d',
+        ),
       ]),
     ).rejects.toEqual(networkError)
   })
