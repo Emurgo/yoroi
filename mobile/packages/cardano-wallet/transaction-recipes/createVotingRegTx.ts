@@ -103,8 +103,9 @@ export async function createVotingRegTx({
   }
 
   // Estimate fee for voting registration transaction
-  // Voting registration transactions are typically small (~400-600 bytes)
-  const estimatedTxSize = 600 // bytes - conservative estimate
+  // CIP-36 metadata with hex addresses can be larger (~600-800 bytes)
+  // Use a more conservative estimate to account for metadata size
+  const estimatedTxSize = supportsCIP36 ? 800 : 600 // bytes - CIP-36 has larger metadata
   const estimatedFee =
     BigInt(protocolParams.linearFee.constant) +
     BigInt(protocolParams.linearFee.coefficient) * BigInt(estimatedTxSize)
@@ -113,7 +114,8 @@ export async function createVotingRegTx({
   // 1. Fee for the transaction
   // 2. Minimum UTXO value for the change output (at least 1 ADA)
   const minUtxoValue = BigInt(protocolParamsConfig.minimumUtxoVal || '1000000') // Base min UTXO (1 ADA)
-  const feeBuffer = BigInt('100000') // 0.1 ADA buffer for fee estimation variance
+  // Increase fee buffer for CIP-36 to account for larger metadata and fee calculation variance
+  const feeBuffer = supportsCIP36 ? BigInt('200000') : BigInt('100000') // 0.2 ADA for CIP-36, 0.1 ADA for CIP-15
   const requiredAda = (estimatedFee + minUtxoValue + feeBuffer).toString()
 
   // Select only necessary UTXOs to cover fees
