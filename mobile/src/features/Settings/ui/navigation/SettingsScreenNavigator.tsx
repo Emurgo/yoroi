@@ -55,7 +55,10 @@ export const SettingsScreenNavigator = () => {
   const navOptions = React.useMemo(() => defaultStackNavigationOptions(p), [p])
 
   return (
-    <Stack.Navigator screenOptions={navOptions} initialRouteName="main-settings">
+    <Stack.Navigator
+      screenOptions={navOptions}
+      initialRouteName="main-settings"
+    >
       <Stack.Screen //
         name="app-settings"
         getComponent={() => ApplicationSettingsScreen}
