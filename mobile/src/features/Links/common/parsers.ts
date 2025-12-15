@@ -229,6 +229,74 @@ export const parseCardanoLink = (codeContent: string): Links.CardanoAction => {
   ) as Links.CardanoAction
 }
 
+/**
+ * Parse legacy yoroi-frontend public key QR code format.
+ * Legacy format is a JSON object: { publicKeyHex: string, path: Array<number> }
+ * This format was used in yoroi-frontend before the web+cardano:// link format.
+ */
+export const parseLegacyPublicKeyQR = (
+  codeContent: string,
+): Links.CardanoAction | null => {
+  try {
+    // Try to parse as JSON
+    const parsed = JSON.parse(codeContent)
+
+    // Check if it matches the legacy format
+    if (
+      typeof parsed === 'object' &&
+      parsed !== null &&
+      typeof parsed.publicKeyHex === 'string' &&
+      parsed.publicKeyHex.length > 0
+    ) {
+      // Validate that publicKeyHex looks like a valid hex string
+      // Account public keys are typically 128 hex characters (64 bytes)
+      if (!/^[0-9a-fA-F]+$/.test(parsed.publicKeyHex)) {
+        return null
+      }
+
+      // Extract accountVisual from path if present
+      // The path is a BIP44 derivation path array: [purpose', coinType', account']
+      // The last element is the hardened account index
+      // To get accountVisual, subtract the hardened offset (0x80000000 = 2147483648)
+      let accountVisual: number | undefined
+      if (
+        Array.isArray(parsed.path) &&
+        parsed.path.length > 0 &&
+        typeof parsed.path[parsed.path.length - 1] === 'number'
+      ) {
+        const hardenedAccountIndex = parsed.path[parsed.path.length - 1]
+        const HARDENED_OFFSET = 0x80000000 // 2147483648
+        // Extract unhardened account index
+        accountVisual = hardenedAccountIndex - HARDENED_OFFSET
+        // Validate it's a reasonable account index (non-negative)
+        if (accountVisual < 0) {
+          accountVisual = undefined
+        }
+      }
+
+      // Convert legacy format to CardanoAction restore-wallet format
+      return freeze({
+        action: 'restore-wallet',
+        type: 'readonly',
+        accountPubKey: parsed.publicKeyHex,
+        encryption: 'plain',
+        accountVisual:
+          accountVisual !== undefined ? String(accountVisual) : undefined,
+        implementation: undefined,
+        addressMode: undefined,
+        name: undefined,
+        mnemonic: undefined,
+        rootKey: undefined,
+      } as const)
+    }
+  } catch {
+    // Not valid JSON, return null to indicate it's not the legacy format
+    return null
+  }
+
+  return null
+}
+
 const nonProtocolRegex = /^[a-zA-Z0-9_\-.$]+$/
 const isOpenableLink = (content: string) => {
   return content.startsWith('yoroi') || content.startsWith('https')

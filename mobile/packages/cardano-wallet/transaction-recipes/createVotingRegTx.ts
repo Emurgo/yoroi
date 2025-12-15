@@ -89,21 +89,23 @@ export async function createVotingRegTx({
   if (!baseAddrObj) {
     throw new Error('Failed to convert base address to Address')
   }
-  const paymentAddressCIP36 = baseAddrObj.toBech32(undefined)
-  if (!paymentAddressCIP36) {
-    throw new Error('Failed to convert payment address to bech32')
+  // Convert addresses to hex format (bech32 strings are too long for metadata)
+  const paymentAddressHex = baseAddrObj.toHex()
+  if (!paymentAddressHex) {
+    throw new Error('Failed to convert payment address to hex')
   }
 
   // Derive reward address from base address
   const rewardAddr = baseAddrObj
-  const rewardAddress = rewardAddr.toBech32(undefined)
-  if (!rewardAddress) {
-    throw new Error('Failed to convert reward address to bech32')
+  const rewardAddressHex = rewardAddr.toHex()
+  if (!rewardAddressHex) {
+    throw new Error('Failed to convert reward address to hex')
   }
 
   // Estimate fee for voting registration transaction
-  // Voting registration transactions are typically small (~400-600 bytes)
-  const estimatedTxSize = 600 // bytes - conservative estimate
+  // CIP-36 metadata with hex addresses can be larger (~600-800 bytes)
+  // Use a more conservative estimate to account for metadata size
+  const estimatedTxSize = supportsCIP36 ? 800 : 600 // bytes - CIP-36 has larger metadata
   const estimatedFee =
     BigInt(protocolParams.linearFee.constant) +
     BigInt(protocolParams.linearFee.coefficient) * BigInt(estimatedTxSize)
@@ -112,7 +114,8 @@ export async function createVotingRegTx({
   // 1. Fee for the transaction
   // 2. Minimum UTXO value for the change output (at least 1 ADA)
   const minUtxoValue = BigInt(protocolParamsConfig.minimumUtxoVal || '1000000') // Base min UTXO (1 ADA)
-  const feeBuffer = BigInt('100000') // 0.1 ADA buffer for fee estimation variance
+  // Increase fee buffer for CIP-36 to account for larger metadata and fee calculation variance
+  const feeBuffer = supportsCIP36 ? BigInt('200000') : BigInt('100000') // 0.2 ADA for CIP-36, 0.1 ADA for CIP-15
   const requiredAda = (estimatedFee + minUtxoValue + feeBuffer).toString()
 
   // Select only necessary UTXOs to cover fees
@@ -125,34 +128,26 @@ export async function createVotingRegTx({
   builderState = addInputs(builderState, selectedUtxos)
 
   // Create and add voting metadata
-  const votingPublicKeyBech32 = votingPublicKey.toBech32()
-  if (!votingPublicKeyBech32) {
-    throw new Error('Failed to convert voting public key to bech32')
-  }
-  const stakingPublicKeyBech32 = stakingPublicKey.toBech32()
-  if (!stakingPublicKeyBech32) {
-    throw new Error('Failed to convert staking public key to bech32')
-  }
-  const rewardAddressBranded =
-    typeof rewardAddress === 'string'
-      ? (rewardAddress as Address)
-      : rewardAddress
-  const paymentAddressBranded =
-    typeof paymentAddressCIP36 === 'string'
-      ? (paymentAddressCIP36 as Address)
-      : paymentAddressCIP36
+  // Convert public keys to hex format (bech32 strings are too long for metadata)
+  const votingPublicKeyHex = Buffer.from(votingPublicKey.asBytes()).toString(
+    'hex',
+  )
+  const stakingPublicKeyHex = Buffer.from(stakingPublicKey.asBytes()).toString(
+    'hex',
+  )
+
   const votingMetadata = supportsCIP36
     ? createCIP36VotingMetadata(
-        votingPublicKeyBech32 as PublicKeyHex,
-        stakingPublicKeyBech32 as PublicKeyHex,
-        rewardAddressBranded,
+        votingPublicKeyHex,
+        stakingPublicKeyHex,
+        rewardAddressHex,
         nonce,
-        paymentAddressBranded,
+        paymentAddressHex,
       )
     : createCIP15VotingMetadata(
-        votingPublicKeyBech32 as PublicKeyHex,
-        stakingPublicKeyBech32 as PublicKeyHex,
-        rewardAddressBranded,
+        votingPublicKeyHex,
+        stakingPublicKeyHex,
+        rewardAddressHex,
         nonce,
       )
 
