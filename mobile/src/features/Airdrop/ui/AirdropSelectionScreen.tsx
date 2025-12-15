@@ -92,13 +92,33 @@ export const AirdropSelectionScreen = () => {
         // Also remove from eligible cache if it exists there
         await addressCache.removeEligibleAddress(address)
 
-        // Invalidate and refetch queries to update the list
-        await queryClient.invalidateQueries({
-          queryKey: [persistPrefixKeyword, 'airdropEligibility'],
+        // Update React Query cache directly to avoid network calls
+        // Invalidate with partial key to match all wallets, then update cache directly
+        const partialQueryKey = [
+          persistPrefixKeyword,
+          'airdropEligibility',
+        ] as const
+
+        // Get all matching queries and update them
+        const queryCache = queryClient.getQueryCache()
+        const matchingQueries = queryCache.findAll({
+          queryKey: partialQueryKey,
         })
-        await queryClient.refetchQueries({
-          queryKey: [persistPrefixKeyword, 'airdropEligibility'],
-        })
+
+        for (const query of matchingQueries) {
+          const currentData = query.state.data as
+            | AddressAllocation[]
+            | undefined
+
+          if (currentData && Array.isArray(currentData)) {
+            // Remove the address from allocations array
+            const updatedData = currentData.filter(
+              (allocation) => allocation.address !== address,
+            )
+            // Update cache directly without network call
+            queryClient.setQueryData(query.queryKey, updatedData)
+          }
+        }
       } catch (error) {
         logger.error('Failed to remove external address', {address, error})
       }

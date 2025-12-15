@@ -1210,7 +1210,7 @@ export const makeWalletManager = (
               internal: [],
               external: [firstAddress],
               rewardAddressHex,
-              enableDiscovery: true, // Enable discovery to find more addresses
+              enableDiscovery: false, // Disable comprehensive discovery for full read-only wallets (they have accountPubKeyHex to derive addresses)
               accountVisual,
             })
 
