@@ -393,7 +393,6 @@ const ThawItem = ({
   index,
   totalThaws,
   isLast,
-  thaws,
   onRetryFailed,
   isReadOnly,
   isWalletInitialized,
