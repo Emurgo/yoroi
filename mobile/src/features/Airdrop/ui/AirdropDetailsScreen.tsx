@@ -72,34 +72,43 @@ const getCurrentThawIndex = (thaws: ReadonlyArray<Thaw>): number | null => {
 
   const now = new Date()
 
-  // First, try to find an active/redeemable thaw (started but not confirmed and not failed)
+  // Find the next upcoming thaw based on date (not redemption status)
+  // This represents which thaw we're currently waiting for
   for (let i = 0; i < thaws.length; i++) {
     const thaw = thaws[i]
     if (!thaw) continue
     const thawDate = new Date(thaw.thawing_period_start.replace(/\s/g, ''))
-    // Active thaw: started and not confirmed and not failed
-    if (
-      thawDate <= now &&
-      thaw.status !== 'confirmed' &&
-      thaw.status !== 'failed'
-    ) {
+    // If this thaw hasn't started yet, this is the current one we're waiting for
+    if (thawDate > now) {
       return i
     }
   }
 
-  // If no active thaw, find the first upcoming thaw (next one to start, not failed)
-  for (let i = 0; i < thaws.length; i++) {
-    const thaw = thaws[i]
-    if (!thaw) continue
-    const thawDate = new Date(thaw.thawing_period_start.replace(/\s/g, ''))
-    if (thawDate > now && thaw.status === 'upcoming') {
-      return i
-    }
-  }
-
-  // If all thaws are confirmed, return the last one
-  // This shouldn't normally happen, but handle it gracefully
+  // If all thaws have started, return the last one (all 4 are active)
   return thaws.length - 1
+}
+
+const getNextUpcomingThawIndex = (
+  thaws: ReadonlyArray<Thaw>,
+): number | null => {
+  if (thaws.length === 0) {
+    return null
+  }
+
+  const now = new Date()
+
+  // Find the next thaw that hasn't started yet
+  for (let i = 0; i < thaws.length; i++) {
+    const thaw = thaws[i]
+    if (!thaw) continue
+    const thawDate = new Date(thaw.thawing_period_start.replace(/\s/g, ''))
+    if (thawDate > now) {
+      return i
+    }
+  }
+
+  // All thaws have started
+  return null
 }
 
 export const AirdropDetailsScreen = () => {
@@ -128,8 +137,7 @@ export const AirdropDetailsScreen = () => {
   const [timerLabel, setTimerLabel] = React.useState(strings.airdrop.startsIn)
 
   // Get fresh allocation data from query instead of static route params
-  const {allocations: freshAllocations, refetch: refetchEligibility} =
-    useAirdropEligibility()
+  const {allocations: freshAllocations} = useAirdropEligibility()
   const allocationFromQuery = freshAllocations.find(
     (a) => a.address === allocation.address,
   )
@@ -141,6 +149,15 @@ export const AirdropDetailsScreen = () => {
       ? currentAllocation.schedule.thaws[currentThawIndex]
       : null
   const totalThaws = currentAllocation.schedule.thaws.length
+
+  // Get the next upcoming thaw for countdown (always show countdown for next one)
+  const nextUpcomingThawIndex = getNextUpcomingThawIndex(
+    currentAllocation.schedule.thaws,
+  )
+  const nextUpcomingThaw =
+    nextUpcomingThawIndex !== null
+      ? currentAllocation.schedule.thaws[nextUpcomingThawIndex]
+      : null
 
   // Calculate thaws that can be redeemed right now
   // Use backend's 'redeemable' status if available, otherwise include thaws that have started
@@ -170,65 +187,39 @@ export const AirdropDetailsScreen = () => {
   const canRedeem =
     redeemableThaws.length > 0 && !isReadOnly && isWalletInitialized
 
+  // Countdown timer for next upcoming thaw (always show if there's a next one)
   React.useEffect(() => {
-    if (!currentThaw) {
+    if (!nextUpcomingThaw) {
+      // All thaws have started - hide countdown
       setTimeRemaining('')
+      setTimerLabel('')
       return
     }
 
-    let lastRefetchTime = 0
-    const REFETCH_INTERVAL_MS = 30000 // Refetch every 30 seconds when thaw has started
-
     const updateTimer = () => {
       const startDate = new Date(
-        currentThaw.thawing_period_start.replace(/\s/g, ''),
+        nextUpcomingThaw.thawing_period_start.replace(/\s/g, ''),
       )
       const now = new Date()
       const diff = startDate.getTime() - now.getTime()
 
       if (diff <= 0) {
-        // Thaw has started - show status instead
-        if (currentThaw.status === 'redeemable') {
-          setTimeRemaining(strings.airdrop.status.redeemable)
-          setTimerLabel(strings.airdrop.active)
-        } else if (currentThaw.status === 'confirmed') {
-          setTimeRemaining(strings.airdrop.redeemed)
-          setTimerLabel('')
-        } else {
-          setTimeRemaining(strings.airdrop.active)
-          setTimerLabel('')
-        }
-
-        // Periodically refetch eligibility when thaw period has started
-        // to get updated status (in case backend hasn't marked it as redeemable yet)
-        const timeSinceLastRefetch = now.getTime() - lastRefetchTime
-        if (
-          currentThaw.status !== 'redeemable' &&
-          currentThaw.status !== 'confirmed' &&
-          timeSinceLastRefetch >= REFETCH_INTERVAL_MS
-        ) {
-          lastRefetchTime = now.getTime()
-          refetchEligibility().catch((error) => {
-            logger.error('Failed to refetch eligibility when thaw started', {
-              error,
-            })
-          })
-        }
+        // This shouldn't happen since we filter for upcoming thaws, but handle it
+        setTimeRemaining('')
+        setTimerLabel('')
       } else {
-        // Thaw hasn't started yet - show countdown
+        // Show countdown for next upcoming thaw
         setTimeRemaining(
-          calculateTimeRemaining(currentThaw.thawing_period_start),
+          calculateTimeRemaining(nextUpcomingThaw.thawing_period_start),
         )
         setTimerLabel(strings.airdrop.startsIn)
-        // Reset refetch time if thaw hasn't started yet
-        lastRefetchTime = 0
       }
     }
 
     updateTimer()
     const interval = setInterval(updateTimer, 1000)
     return () => clearInterval(interval)
-  }, [currentThaw, strings, refetchEligibility])
+  }, [nextUpcomingThaw, strings])
 
   const handleRedeem = async () => {
     if (!canRedeem || isRedeeming) {
@@ -421,10 +412,21 @@ export const AirdropDetailsScreen = () => {
 
             <Space.Height.xs />
 
-            {timerLabel && timeRemaining && (
+            {redeemableThaws.length > 0 && (
               <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
-                {timerLabel}: {timeRemaining}
+                {strings.airdrop.allocationsRedeemableNow
+                  .replace('{count}', redeemableThaws.length.toString())
+                  .replace('{plural}', redeemableThaws.length === 1 ? '' : 's')}
               </Text>
+            )}
+
+            {timerLabel && timeRemaining && (
+              <>
+                {redeemableThaws.length > 0 && <Space.Height.xs />}
+                <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
+                  {timerLabel}: {timeRemaining}
+                </Text>
+              </>
             )}
 
             <Space.Height.lg />
@@ -508,6 +510,7 @@ const ThawProgressIndicator = ({
   redeemableThaws: ReadonlyArray<Thaw>
 }) => {
   const {palette: p} = useTheme()
+  const now = new Date()
 
   if (currentIndex === null) {
     return null
@@ -522,14 +525,25 @@ const ThawProgressIndicator = ({
     )
   }
 
+  // Check if a thaw's date has passed
+  const hasThawDatePassed = (thaw: Thaw) => {
+    const thawDate = new Date(thaw.thawing_period_start.replace(/\s/g, ''))
+    return thawDate <= now
+  }
+
   return (
     <View style={[a.flex_row, a.align_center]}>
       {thaws.map((thaw, index) => {
         const isCompleted = thaw.status === 'confirmed'
-        // Only highlight as current if it's actually redeemable (not just started)
         const isRedeemable = isThawRedeemable(thaw)
-        const isCurrent =
-          index === currentIndex && thaw.status !== 'confirmed' && isRedeemable
+        const hasStarted = hasThawDatePassed(thaw)
+        // Highlight as active if it's redeemable (started and not redeemed)
+        const isActive = hasStarted && !isCompleted && isRedeemable
+
+        // For the line before this thaw: color it primary if the previous thaw's date has passed
+        const previousThaw = index > 0 ? thaws[index - 1] : undefined
+        const shouldColorLinePrimary =
+          previousThaw !== undefined && hasThawDatePassed(previousThaw)
 
         return (
           <React.Fragment key={index}>
@@ -538,8 +552,9 @@ const ThawProgressIndicator = ({
                 style={{
                   flex: 1,
                   height: 2,
-                  backgroundColor:
-                    isCompleted || isCurrent ? p.primary_500 : p.gray_300,
+                  backgroundColor: shouldColorLinePrimary
+                    ? p.primary_500
+                    : p.gray_300,
                 }}
               />
             )}
@@ -559,7 +574,7 @@ const ThawProgressIndicator = ({
               >
                 <Icon.Check size={14} color={p.white_static} />
               </View>
-            ) : isCurrent ? (
+            ) : isActive ? (
               <View
                 style={[
                   a.align_center,

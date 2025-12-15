@@ -7,15 +7,9 @@ import {useHeaderHeight} from '@react-navigation/elements'
 import {useNavigation} from '@react-navigation/native'
 import {validateMnemonic} from 'bip39'
 import * as React from 'react'
-import {
-  Dimensions,
-  Keyboard,
-  Platform,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {Keyboard, Platform, Text, TouchableOpacity, View} from 'react-native'
 import {FlatList, ScrollView} from 'react-native-gesture-handler'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {useBold} from '~/common/hooks/useBold'
 import {WalletDuplicatedModal} from '~/features/SetupWallet/common/WalletDuplicatedModal/WalletDuplicatedModal'
@@ -288,169 +282,94 @@ export const RestoreWalletScreen = () => {
             </Text>
           </View>
         )}
-      </SafeArea>
 
-      {suggestedWords.length > 0 && !hasFocusedInputError && (
-        <WordSuggestionList
-          data={suggestedWords}
-          index={focusedIndex}
-          onSelect={onSelect}
-        />
-      )}
+        {suggestedWords.length > 0 && !hasFocusedInputError && (
+          <WordSuggestionList
+            data={suggestedWords}
+            index={focusedIndex}
+            onSelect={onSelect}
+          />
+        )}
+      </SafeArea>
     </>
   )
 }
 
-const WordSuggestionList = React.memo(
-  ({
-    data,
-    index,
-    onSelect,
-  }: {
-    data: Array<string>
-    index: number
-    onSelect: (index: number, word: string) => void
-  }) => {
-    const {palette: p, atoms: ta} = useTheme()
-    const getScreenHeight = React.useCallback(
-      () => Dimensions.get('window').height,
-      [],
-    )
+const WordSuggestionList = ({
+  data,
+  index,
+  onSelect,
+}: {
+  data: Array<string>
+  index: number
+  onSelect: (index: number, word: string) => void
+}) => {
+  const {palette: p, atoms: ta} = useTheme()
+  const {bottom} = useSafeAreaInsets()
 
-    const [keyboardTop, setKeyboardTop] = React.useState(() => {
-      // Try to get initial keyboard position if keyboard is already open
-      if (Platform.OS === 'android' && Keyboard.metrics) {
-        const metrics = Keyboard.metrics()
-        if (metrics) {
-          const screenHeight = getScreenHeight()
-          return (
-            screenHeight - (metrics.screenY ?? screenHeight - metrics.height)
-          )
-        }
-      }
-      return 0
-    })
+  return (
+    <View
+      style={[
+        ta.bg_color_max,
+        a.border_t,
+        {
+          borderColor: p.gray_200,
+          ...android(a.pb_sm),
+          marginBottom: Platform.OS === 'ios' ? -bottom + 8 : -bottom,
+        },
+        a.flex_row,
+        a.align_center,
+        a.pt_sm,
+      ]}
+    >
+      <FlatList
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        data={data}
+        keyboardShouldPersistTaps="always"
+        renderItem={({item: word, index: wordIndex}) => (
+          <>
+            {wordIndex === 0 && <Space.Width.lg />}
 
-    React.useEffect(() => {
-      const showEvent =
-        Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow'
-      const hideEvent =
-        Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide'
+            <WordSuggestionButton
+              onPress={() => {
+                onSelect(index, word)
+              }}
+              title={word}
+            />
 
-      const keyboardDidShowListener = Keyboard.addListener(showEvent, (e) => {
-        // Use screenY (top of keyboard) to calculate distance from bottom
-        const screenHeight = getScreenHeight()
-        const distanceFromBottom = screenHeight - e.endCoordinates.screenY
-        setKeyboardTop(distanceFromBottom)
-      })
-      const keyboardDidHideListener = Keyboard.addListener(hideEvent, () => {
-        setKeyboardTop(0)
-      })
+            {wordIndex === data.length - 1 && <Space.Width.lg />}
+          </>
+        )}
+        ItemSeparatorComponent={() => <Space.Width.sm />}
+      />
+    </View>
+  )
+}
 
-      return () => {
-        keyboardDidShowListener.remove()
-        keyboardDidHideListener.remove()
-      }
-    }, [getScreenHeight])
-
-    // Check keyboard position when suggestions appear (in case keyboard was already open)
-    React.useEffect(() => {
-      if (data.length > 0 && keyboardTop === 0) {
-        // Small delay to ensure keyboard metrics are available
-        const timeout = setTimeout(() => {
-          if (Platform.OS === 'android' && Keyboard.metrics) {
-            const metrics = Keyboard.metrics()
-            if (metrics) {
-              const screenHeight = getScreenHeight()
-              const distanceFromBottom =
-                screenHeight -
-                (metrics.screenY ?? screenHeight - metrics.height)
-              setKeyboardTop(distanceFromBottom)
-            }
-          }
-        }, 100)
-        return () => {
-          clearTimeout(timeout)
-        }
-      }
-      return undefined
-    }, [data.length, keyboardTop, getScreenHeight])
-
-    const renderItem = React.useCallback(
-      ({item: word, index: wordIndex}: {item: string; index: number}) => (
-        <>
-          {wordIndex === 0 && <Space.Width.lg />}
-
-          <WordSuggestionButton
-            onPress={() => {
-              onSelect(index, word)
-            }}
-            title={word}
-          />
-
-          {wordIndex === data.length - 1 && <Space.Width.lg />}
-        </>
-      ),
-      [index, onSelect, data.length],
-    )
-
-    const ItemSeparator = React.useCallback(() => <Space.Width.sm />, [])
-
-    return (
-      <View
-        style={[
-          ta.bg_color_max,
-          a.border_t,
-          {
-            borderColor: p.gray_200,
-            ...android(a.pb_sm),
-            ...(keyboardTop > 0 && {
-              position: 'absolute' as const,
-              bottom: keyboardTop,
-              left: 0,
-              right: 0,
-              zIndex: 1000,
-            }),
-          },
-          a.flex_row,
-          a.align_center,
-          a.pt_sm,
-        ]}
-      >
-        <FlatList
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          data={data}
-          keyboardShouldPersistTaps="always"
-          renderItem={renderItem}
-          ItemSeparatorComponent={ItemSeparator}
-        />
-      </View>
-    )
-  },
-)
-
-const WordSuggestionButton = React.memo(
-  ({title, onPress}: {title: string; onPress: () => void}) => {
-    const {palette: p, atoms: ta} = useTheme()
-    return (
-      <TouchableOpacity
-        style={[
-          a.px_lg,
-          a.py_sm,
-          a.bg_transparent,
-          a.rounded_sm,
-          {
-            borderColor: p.primary_300,
-            borderWidth: 2,
-          },
-        ]}
-        onPress={onPress}
-      >
-        <Text style={[ta.text_primary_medium, a.body_1_lg_regular]}>
-          {title}
-        </Text>
-      </TouchableOpacity>
-    )
-  },
-)
+const WordSuggestionButton = ({
+  title,
+  onPress,
+}: {
+  title: string
+  onPress: () => void
+}) => {
+  const {palette: p, atoms: ta} = useTheme()
+  return (
+    <TouchableOpacity
+      style={[
+        a.px_lg,
+        a.py_sm,
+        a.bg_transparent,
+        a.rounded_sm,
+        {
+          borderColor: p.primary_300,
+          borderWidth: 2,
+        },
+      ]}
+      onPress={onPress}
+    >
+      <Text style={[ta.text_primary_medium, a.body_1_lg_regular]}>{title}</Text>
+    </TouchableOpacity>
+  )
+}
