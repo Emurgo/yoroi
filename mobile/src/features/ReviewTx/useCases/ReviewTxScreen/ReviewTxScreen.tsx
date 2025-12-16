@@ -6,7 +6,6 @@ import * as React from 'react'
 
 import {useAnalyticsTracking} from '~/features/Analytics/hooks/useAnalyticsTracking'
 import {AnalyticsEventEnum} from '~/features/Analytics/types/analytics-event-enum'
-import {useAuth} from '~/features/Auth/context/AuthProvider'
 import {ReviewTxMemoProvider} from '~/features/ReviewTx/common/context/ReviewTxMemoContext'
 import {useFormattedMetadata} from '~/features/ReviewTx/common/hooks/useFormattedMetadata'
 import {useFormattedTx} from '~/features/ReviewTx/common/hooks/useFormattedTx'
@@ -91,7 +90,6 @@ const ReviewTxContent = ({
   trackEvent: ReturnType<typeof useAnalyticsTracking>['trackEvent']
 }) => {
   const {meta} = useSelectedWallet()
-  const {isAuthDev} = useAuth()
   const {onConfirm} = useOnConfirm({
     cbor: params?.cbor,
     partial: params?.partial,
@@ -133,7 +131,7 @@ const ReviewTxContent = ({
       receiverCustomTitle={params?.receiverCustomTitle}
       createdBy={params?.createdBy}
       validationResult={validationResult}
-      cbor={params?.cbor != null && isAuthDev ? params.cbor : null}
+      cbor={params?.cbor != null && params.cbor ? params.cbor : null}
       multiparty={params?.multiparty}
       multisig={params?.multisig}
       onConfirm={meta.isReadOnly ? undefined : handleOnConfirm}
