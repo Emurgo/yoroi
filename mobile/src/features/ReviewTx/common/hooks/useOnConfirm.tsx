@@ -498,6 +498,7 @@ const signTx = async (
 ): Promise<{
   signedTx: (csl: WasmModuleProxy) => Transaction
   txId: string
+  signedTxBytes: Uint8Array
 } | null> => {
   const result = await CardanoMobileWrapped.cslScope(async (csl) => {
     const signers = await getTransactionSigners(cbor, wallet, meta)
@@ -541,7 +542,11 @@ const signTx = async (
     return tx
   }
 
-  return {signedTx, txId: result.txId}
+  return {
+    signedTx,
+    txId: result.txId,
+    signedTxBytes: result.signedTxBytes, // Include bytes directly to avoid re-serialization
+  }
 }
 
 /**
@@ -597,11 +602,9 @@ const submitTx = async (
     return null
   }
 
-  // Get signed transaction bytes for submission
-  const signedTxBytes = await CardanoMobileWrapped.cslScope(async (csl) => {
-    const tx = signResult.signedTx(csl)
-    return tx.toBytes()
-  })
+  // Use the bytes directly from signRawTransaction to avoid re-serialization
+  // Re-serializing through Transaction.toBytes() might change the CBOR structure
+  const signedTxBytes = signResult.signedTxBytes
 
   // Submit the transaction (convert to base64 for API)
   const signedTxBase64 = Branded.asTransactionCborBase64(

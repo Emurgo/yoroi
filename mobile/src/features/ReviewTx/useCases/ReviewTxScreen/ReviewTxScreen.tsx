@@ -131,7 +131,7 @@ const ReviewTxContent = ({
       receiverCustomTitle={params?.receiverCustomTitle}
       createdBy={params?.createdBy}
       validationResult={validationResult}
-      cbor={params?.cbor != null && params.cbor ? params.cbor : null}
+      cbor={params?.cbor ?? null}
       multiparty={params?.multiparty}
       multisig={params?.multisig}
       onConfirm={meta.isReadOnly ? undefined : handleOnConfirm}
