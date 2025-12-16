@@ -158,7 +158,13 @@ const getRequiredSignersAddressing = async ({
   const addressingArray: Addressing[] = []
 
   for (const signer of signersArray) {
-    if (stakingKeyPath) {
+    // Check if this required signer matches the wallet's staking key hash
+    const signerKeyHashHex = signer.toHex()
+    const walletStakingKeyHashHex = stakeVKHash.toHex()
+    const isStakingKeySigner = signerKeyHashHex === walletStakingKeyHashHex
+
+    if (stakingKeyPath && isStakingKeySigner) {
+      // Only add staking key signer if the required signer actually matches our staking key
       addressingArray.push({
         path: stakingKeyPath,
         startLevel: 1,
@@ -166,6 +172,7 @@ const getRequiredSignersAddressing = async ({
       continue
     }
 
+    // For payment key signers, construct the address and check if wallet controls it
     const paymentStakeCredential = wasm.Credential.fromKeyhash(signer)
     const stakeCredential = wasm.Credential.fromKeyhash(stakeVKHash)
     const baseAddress = wasm.BaseAddress.new(
@@ -175,14 +182,18 @@ const getRequiredSignersAddressing = async ({
     )
     const bech32Address = baseAddress.toAddress().toBech32(undefined)
     const addressing = getAddressAddressing(bech32Address)
+
+    // Only include if we can get addressing AND the address is actually controlled by the wallet
     if (!addressing) {
       if (!partial) {
         throw new Error(
           `Could not find addressing for required signer: ${signer.toHex()}`,
         )
       }
+      // Skip if we don't control this address (partial mode)
       continue
     }
+
     addressingArray.push(addressing)
   }
 

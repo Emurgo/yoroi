@@ -71,24 +71,31 @@ export const createLedgerPlutusPayload = async (
 
     const originalRequiredSigners = getRequiredSigners(body)
 
-    const requiredSigners = originalRequiredSigners.map((s) => {
-      const paymentStakeCredential = csl.Credential.fromKeyhash(s)
-      const stakeCredential = csl.Credential.fromKeyhash(stakeVKHash)
-      const baseAddress = csl.BaseAddress.new(
-        networkId,
-        paymentStakeCredential,
-        stakeCredential,
-      )
-      const addressing = getAddressAddressing(
-        baseAddress.toAddress().toBech32(undefined),
-      )
-      if (!addressing)
-        throw new Error(
-          `Could not find addressing for required signer: ${s.toHex()}`,
+    // Only include required signers that the wallet actually controls
+    // Skip signers we don't control (e.g., Minswap's payment key + our staking key)
+    const requiredSigners = originalRequiredSigners
+      .map((s) => {
+        const paymentStakeCredential = csl.Credential.fromKeyhash(s)
+        const stakeCredential = csl.Credential.fromKeyhash(stakeVKHash)
+        const baseAddress = csl.BaseAddress.new(
+          networkId,
+          paymentStakeCredential,
+          stakeCredential,
         )
-      const path = addressing.path
-      return {type: TxRequiredSignerType.PATH as const, path}
-    })
+        const addressing = getAddressAddressing(
+          baseAddress.toAddress().toBech32(undefined),
+        )
+        if (!addressing) {
+          // Skip if wallet doesn't control this address
+          return null
+        }
+        const path = addressing.path
+        return {type: TxRequiredSignerType.PATH as const, path}
+      })
+      .filter(
+        (s): s is {type: TxRequiredSignerType.PATH; path: number[]} =>
+          s !== null,
+      )
 
     const inputs = body.inputs()
     const inputsArray: TxInput[] = []
