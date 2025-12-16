@@ -319,7 +319,7 @@ export const getOperationDisplayText = (
       return strings.transactions.operation.swapResolved
     }
   }
-
+  /*
   // 4.5. Check for NIGHT redemption transactions
   // Pattern: Smart contract interaction where NIGHT tokens are being spent/redeemed
   // Redemption pattern: NIGHT tokens in inputs (being spent) + smart contract address present
@@ -353,7 +353,7 @@ export const getOperationDisplayText = (
       return strings.transactions.operation.nightRedemption
     }
   }
-
+*/
   // 5. Check for smart contracts (only if no certificate matched, no mint/burn, and not a swap)
   if (
     !swapInfo.isSwap &&

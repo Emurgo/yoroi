@@ -182,6 +182,7 @@ export const getOperationTypeKey = (
     if (direction === 'RECEIVED') return 'swapResolved'
   }
 
+  /*
   // 4.5. Check for NIGHT redemption transactions
   // Pattern: Smart contract interaction where NIGHT tokens are being spent/redeemed
   // NIGHT token: policyId '0691b2fecca1ac4f53cb6dfb00b7013e561d1f34403b957cbb5af1fa', name '4e49474854'
@@ -229,7 +230,7 @@ export const getOperationTypeKey = (
       return 'nightRedemption'
     }
   }
-
+*/
   // 5. Check for smart contracts
   if (
     !swapInfo.isSwap &&
