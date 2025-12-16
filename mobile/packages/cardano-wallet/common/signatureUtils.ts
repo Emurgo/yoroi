@@ -104,6 +104,23 @@ const getRequiredSigners = async (
     })
 
   const getAddressAddressing = (bech32Address: string) => {
+    // Check if wallet actually controls this address (payment key)
+    const addressBranded = Branded.asAddress(bech32Address)
+    const internalIndex = wallet.internalAddresses().indexOf(addressBranded)
+    const externalIndex = wallet.externalAddresses().indexOf(addressBranded)
+    const walletControlsAddress = internalIndex !== -1 || externalIndex !== -1
+
+    // If wallet doesn't control the address and we're in strict mode, return null
+    if (!walletControlsAddress && !partial) {
+      return null
+    }
+
+    // If wallet doesn't control the address, don't return addressing even in partial mode
+    // This prevents signing for addresses we don't control (e.g., Minswap payment key + our staking key)
+    if (!walletControlsAddress) {
+      return null
+    }
+
     const path = getDerivationPathForAddress(
       bech32Address,
       wallet,
