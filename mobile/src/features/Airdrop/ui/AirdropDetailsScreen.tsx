@@ -8,7 +8,6 @@ import {
   useRoute,
 } from '@react-navigation/native'
 import {StackNavigationProp} from '@react-navigation/stack'
-import {BigNumber} from 'bignumber.js'
 import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {
@@ -30,21 +29,25 @@ import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation
 import {Accordion} from '~/ui/Accordion/Accordion'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 
+import {
+  getThawStatusInfo,
+  isThawCompleted,
+  isThawFailed,
+  isThawInProgress,
+} from '../common/thawStatusUtils'
 import {useAirdropEligibility} from '../common/useAirdropEligibility'
 import {useRedeemThaw} from '../common/useRedeemThaw'
+import {
+  calculateRedeemableAmount,
+  formatAmount,
+  isThawRedeemable,
+} from '../common/utils'
 import type {Thaw} from '../types'
 import {useRedeemableNowInfoModal} from './InfoModals'
 import type {AirdropRoutes} from './types'
-
-const NIGHT_DECIMALS = 6
-
-const formatAmount = (amount: number): string => {
-  const normalizationFactor = Math.pow(10, NIGHT_DECIMALS)
-  const normalized = new BigNumber(amount).dividedBy(normalizationFactor)
-  return normalized.toFormat(2)
-}
 
 const calculateTimeRemaining = (startDate: string): string => {
   try {
@@ -159,29 +162,14 @@ export const AirdropDetailsScreen = () => {
       ? currentAllocation.schedule.thaws[nextUpcomingThawIndex]
       : null
 
-  // Calculate thaws that can be redeemed right now
-  // Use backend's 'redeemable' status if available, otherwise include thaws that have started
-  // but aren't confirmed/submitted/failed yet (in case backend hasn't updated status yet)
-  const now = new Date()
-  const redeemableThaws = currentAllocation.schedule.thaws.filter((thaw) => {
-    const thawDate = new Date(thaw.thawing_period_start.replace(/\s/g, ''))
-    const hasStarted = thawDate <= now
-    const isRedeemable = thaw.status === 'redeemable'
-    const isPendingRedeemable =
-      thaw.status === 'upcoming' || thaw.status === 'queued'
-    const isNotRedeemed =
-      thaw.status !== 'confirmed' &&
-      thaw.status !== 'confirming' &&
-      thaw.status !== 'submitted' &&
-      thaw.status !== 'failed'
-
-    return isRedeemable || (hasStarted && isPendingRedeemable && isNotRedeemed)
-  })
+  // Calculate thaws that can be redeemed right now using shared utility
+  const redeemableThaws = currentAllocation.schedule.thaws.filter((thaw) =>
+    isThawRedeemable(thaw),
+  )
 
   // Calculate amount that can be redeemed right now
-  const currentlyRedeemableAmount = redeemableThaws.reduce(
-    (sum, thaw) => sum + thaw.amount,
-    0,
+  const currentlyRedeemableAmount = calculateRedeemableAmount(
+    currentAllocation.schedule.thaws,
   )
 
   const canRedeem =
@@ -457,13 +445,10 @@ export const AirdropDetailsScreen = () => {
           <DetailRow
             label={strings.airdrop.allocationSize}
             value={`${formatAmount(
-              currentAllocation.schedule.numberOfClaimedAllocations > 0
+              currentAllocation.schedule.thaws.length > 0
                 ? currentAllocation.totalAllocation /
-                    currentAllocation.schedule.numberOfClaimedAllocations
-                : currentAllocation.schedule.thaws.length > 0
-                  ? currentAllocation.totalAllocation /
                     currentAllocation.schedule.thaws.length
-                  : currentAllocation.totalAllocation,
+                : currentAllocation.totalAllocation,
             )} NIGHT`}
           />
           <DetailRow
@@ -486,7 +471,7 @@ export const AirdropDetailsScreen = () => {
       </ScrollView>
 
       {/* Bottom Button */}
-      <View style={[a.p_lg, {paddingBottom: 24}]}>
+      <SafeArea.Footer style={[a.px_lg]}>
         <Button
           title={
             isRedeeming ? strings.airdrop.redeeming : strings.airdrop.redeem
@@ -495,7 +480,7 @@ export const AirdropDetailsScreen = () => {
           disabled={isRedeeming || !canRedeem}
           size="M"
         />
-      </View>
+      </SafeArea.Footer>
     </SafeAreaView>
   )
 }
@@ -510,6 +495,7 @@ const ThawProgressIndicator = ({
   redeemableThaws: ReadonlyArray<Thaw>
 }) => {
   const {palette: p} = useTheme()
+  const strings = useStrings()
   const now = new Date()
 
   if (currentIndex === null) {
@@ -517,7 +503,7 @@ const ThawProgressIndicator = ({
   }
 
   // Check if a thaw is redeemable by checking if it's in the redeemableThaws array
-  const isThawRedeemable = (thaw: Thaw) => {
+  const isThawRedeemableLocal = (thaw: Thaw) => {
     return redeemableThaws.some(
       (rt) =>
         rt.thawing_period_start === thaw.thawing_period_start &&
@@ -534,11 +520,16 @@ const ThawProgressIndicator = ({
   return (
     <View style={[a.flex_row, a.align_center]}>
       {thaws.map((thaw, index) => {
-        const isCompleted = thaw.status === 'confirmed'
-        const isRedeemable = isThawRedeemable(thaw)
+        const isCompleted = isThawCompleted(thaw.status)
+        const isFailed = isThawFailed(thaw.status)
+        const isInProgress = isThawInProgress(thaw.status)
+        const isRedeemable = isThawRedeemableLocal(thaw)
         const hasStarted = hasThawDatePassed(thaw)
         // Highlight as active if it's redeemable (started and not redeemed)
         const isActive = hasStarted && !isCompleted && isRedeemable
+
+        // Get status info for consistent colors and icons
+        const statusInfo = getThawStatusInfo(thaw.status, strings, p)
 
         // For the line before this thaw: color it primary if the previous thaw's date has passed
         const previousThaw = index > 0 ? thaws[index - 1] : undefined
@@ -568,11 +559,64 @@ const ThawProgressIndicator = ({
                   {
                     width: 24,
                     height: 24,
-                    backgroundColor: p.primary_300,
+                    backgroundColor: statusInfo.backgroundColor,
                   },
                 ]}
               >
                 <Icon.Check size={14} color={p.white_static} />
+              </View>
+            ) : isFailed ? (
+              <View
+                style={[
+                  a.align_center,
+                  a.justify_center,
+                  a.rounded_full,
+                  {
+                    width: 24,
+                    height: 24,
+                    backgroundColor: statusInfo.backgroundColor,
+                  },
+                ]}
+              >
+                <Icon.Close size={14} color={p.white_static} />
+              </View>
+            ) : isInProgress ? (
+              // Show filled circle with clock icon for submitted/confirming statuses
+              <View
+                style={[
+                  a.align_center,
+                  a.justify_center,
+                  a.rounded_full,
+                  {
+                    width: 24,
+                    height: 24,
+                    backgroundColor: statusInfo.backgroundColor,
+                  },
+                ]}
+              >
+                {statusInfo.icon === 'clock' ? (
+                  <Icon.Clock size={14} color={p.white_static} />
+                ) : (
+                  <Text style={[a.body_3_sm_medium, {color: p.white_static}]}>
+                    {index + 1}
+                  </Text>
+                )}
+              </View>
+            ) : thaw.status === 'queued' ? (
+              // Show clock icon for queued status
+              <View
+                style={[
+                  a.align_center,
+                  a.justify_center,
+                  a.rounded_full,
+                  {
+                    width: 24,
+                    height: 24,
+                    backgroundColor: statusInfo.backgroundColor,
+                  },
+                ]}
+              >
+                <Icon.Clock size={14} color={p.white_static} />
               </View>
             ) : isActive ? (
               <View
@@ -602,6 +646,7 @@ const ThawProgressIndicator = ({
                     height: 24,
                     borderWidth: 2,
                     borderColor: p.gray_300,
+                    backgroundColor: p.gray_min,
                   },
                 ]}
               >

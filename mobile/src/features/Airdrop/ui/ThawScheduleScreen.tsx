@@ -8,10 +8,9 @@ import {
   useRoute,
 } from '@react-navigation/native'
 import {StackNavigationProp} from '@react-navigation/stack'
-import {BigNumber} from 'bignumber.js'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
-import {Pressable, ScrollView, Text, View} from 'react-native'
+import {Linking, Pressable, ScrollView, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useNavigateTo} from '~/features/ReviewTx/common/hooks/useNavigateTo'
@@ -21,22 +20,23 @@ import {logger} from '~/kernel/logger/logger'
 import {useResultNavigation} from '~/kernel/navigation/hooks/useResultNavigation'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Badge} from '~/ui/Badge/Badge'
-import {Button} from '~/ui/Button/Button'
+import {Button, ButtonType} from '~/ui/Button/Button'
+import {Copiable} from '~/ui/Copiable/Copiable'
 import {Icon} from '~/ui/Icon'
+import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
 
+import {
+  getThawStatusInfo,
+  isThawCompleted,
+  isThawFailed,
+  isThawInProgress,
+} from '../common/thawStatusUtils'
 import {useAirdropEligibility} from '../common/useAirdropEligibility'
 import {useRedeemThaw} from '../common/useRedeemThaw'
+import {formatAmount, isThawRedeemable} from '../common/utils'
 import type {Thaw} from '../types'
 import type {AirdropRoutes} from './types'
-
-const NIGHT_DECIMALS = 6
-
-const formatAmount = (amount: number): string => {
-  const normalizationFactor = Math.pow(10, NIGHT_DECIMALS)
-  const normalized = new BigNumber(amount).dividedBy(normalizationFactor)
-  return normalized.toFormat(2)
-}
 
 /**
  * Parse error message to extract and format POSIX timestamps into human-readable dates
@@ -150,27 +150,20 @@ export const ThawScheduleScreen = () => {
   const thaws = allocation.schedule.thaws
   const totalThaws = thaws.length
 
-  // Calculate thaws that can be redeemed right now
-  // Use backend's 'redeemable' status if available, otherwise include thaws that have started
-  // but aren't confirmed/submitted/failed yet (in case backend hasn't updated status yet)
-  const now = new Date()
-  const redeemableThaws = thaws.filter((thaw) => {
-    const thawDate = new Date(thaw.thawing_period_start.replace(/\s/g, ''))
-    const hasStarted = thawDate <= now
-    const isRedeemable = thaw.status === 'redeemable'
-    const isPendingRedeemable =
-      thaw.status === 'upcoming' || thaw.status === 'queued'
-    const isNotRedeemed =
-      thaw.status !== 'confirmed' &&
-      thaw.status !== 'confirming' &&
-      thaw.status !== 'submitted' &&
-      thaw.status !== 'failed'
-
-    return isRedeemable || (hasStarted && isPendingRedeemable && isNotRedeemed)
-  })
+  // Calculate thaws that can be redeemed right now using shared utility
+  const redeemableThaws = thaws.filter((thaw) => isThawRedeemable(thaw))
 
   const canRedeem =
     redeemableThaws.length > 0 && !isReadOnly && isWalletInitialized
+
+  // Check if any thaw has a problematic status (submitted, failed, queued, skipped)
+  const hasProblematicStatus = thaws.some(
+    (thaw) =>
+      thaw.status === 'submitted' ||
+      thaw.status === 'failed' ||
+      thaw.status === 'queued' ||
+      thaw.status === 'skipped',
+  )
 
   // Periodically refetch eligibility when there are thaws that should be redeemable
   // but haven't been marked as such yet
@@ -362,7 +355,28 @@ export const ThawScheduleScreen = () => {
         ))}
       </ScrollView>
 
-      <View style={[a.p_lg, {paddingBottom: 24}]}>
+      <SafeArea.Footer style={[a.px_lg]}>
+        {/* Support link - show only if there are problematic statuses */}
+        {hasProblematicStatus && (
+          <>
+            <View
+              style={[a.align_center, a.flex_row, a.gap_sm, a.justify_center]}
+            >
+              <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
+                {strings.airdrop.havingIssues}
+              </Text>
+              <Button
+                type={ButtonType.Link}
+                style={[a.p_0, a.self_start, {flexGrow: 0}]}
+                title={strings.airdrop.contactMidnightSupport}
+                onPress={() =>
+                  Linking.openURL('https://midnight.network/contact')
+                }
+              />
+            </View>
+            <Space.Height.lg />
+          </>
+        )}
         <Button
           title={
             isRedeeming ? strings.airdrop.redeeming : strings.airdrop.redeem
@@ -371,7 +385,7 @@ export const ThawScheduleScreen = () => {
           disabled={isRedeeming || !canRedeem}
           size="M"
         />
-      </View>
+      </SafeArea.Footer>
     </SafeAreaView>
   )
 }
@@ -406,22 +420,10 @@ const ThawItem = ({
   const thawDate = new Date(thaw.thawing_period_start.replace(/\s/g, ''))
   const hasStarted = thawDate <= now
 
-  const isCompleted =
-    thaw.status === 'confirmed' || thaw.status === 'confirming'
-  const isRedeemableBackend = thaw.status === 'redeemable'
-  const isPendingRedeemable =
-    thaw.status === 'upcoming' || thaw.status === 'queued'
-  const isNotRedeemed =
-    thaw.status !== 'confirmed' &&
-    thaw.status !== 'confirming' &&
-    thaw.status !== 'submitted' &&
-    thaw.status !== 'failed'
-
-  // Thaw is redeemable if:
-  // 1. Backend marked it as 'redeemable', OR
-  // 2. Thaw period has started and status suggests it should be redeemable
-  const isRedeemable =
-    isRedeemableBackend || (hasStarted && isPendingRedeemable && isNotRedeemed)
+  const isCompleted = isThawCompleted(thaw.status)
+  const isFailed = isThawFailed(thaw.status)
+  const isInProgress = isThawInProgress(thaw.status)
+  const isRedeemable = isThawRedeemable(thaw, now)
 
   const formattedDate = intl.formatDate(thawDate, {
     year: 'numeric',
@@ -431,34 +433,8 @@ const ThawItem = ({
     minute: '2-digit',
   })
 
-  const isFailed = thaw.status === 'failed'
-
-  const getStatusBadge = () => {
-    if (isCompleted) {
-      return {
-        label: strings.airdrop.redeemed,
-        color: p.secondary_600,
-      }
-    }
-    if (isFailed) {
-      return {
-        label: strings.airdrop.status.failed,
-        color: p.sys_magenta_500,
-      }
-    }
-    if (isRedeemable) {
-      return {
-        label: strings.airdrop.status.redeemable,
-        color: p.bg_gradient_4,
-      }
-    }
-    return {
-      label: strings.airdrop.noAvailableYet,
-      color: p.gray_600,
-    }
-  }
-
-  const badge = getStatusBadge()
+  // Get status badge info using shared utility
+  const statusInfo = getThawStatusInfo(thaw.status, strings, p)
 
   // Color the line primary if the current thaw's date has passed
   // The line comes AFTER the current thaw and connects to the next one
@@ -468,7 +444,7 @@ const ThawItem = ({
     <View style={[a.flex_row]}>
       {/* Timeline indicator */}
       <View style={[a.align_center, {width: 32}]}>
-        {/* Circle or checkmark */}
+        {/* Circle or checkmark with status-specific styling */}
         {isCompleted ? (
           <View
             style={[
@@ -478,7 +454,7 @@ const ThawItem = ({
               {
                 width: 28,
                 height: 28,
-                backgroundColor: '#A0B3F2',
+                backgroundColor: statusInfo.backgroundColor,
               },
             ]}
           >
@@ -493,11 +469,49 @@ const ThawItem = ({
               {
                 width: 28,
                 height: 28,
-                backgroundColor: p.sys_magenta_500,
+                backgroundColor: statusInfo.backgroundColor,
               },
             ]}
           >
             <Icon.Close size={16} color={p.white_static} />
+          </View>
+        ) : isInProgress ? (
+          // Show clock icon for submitted/confirming statuses
+          <View
+            style={[
+              a.align_center,
+              a.justify_center,
+              a.rounded_full,
+              {
+                width: 28,
+                height: 28,
+                backgroundColor: statusInfo.backgroundColor,
+              },
+            ]}
+          >
+            {statusInfo.icon === 'clock' ? (
+              <Icon.Clock size={16} color={p.white_static} />
+            ) : (
+              <Text style={[a.body_2_md_medium, {color: p.white_static}]}>
+                {index + 1}
+              </Text>
+            )}
+          </View>
+        ) : thaw.status === 'queued' ? (
+          // Show clock icon for queued status
+          <View
+            style={[
+              a.align_center,
+              a.justify_center,
+              a.rounded_full,
+              {
+                width: 28,
+                height: 28,
+                backgroundColor: statusInfo.backgroundColor,
+              },
+            ]}
+          >
+            <Icon.Clock size={16} color={p.white_static} />
           </View>
         ) : isRedeemable ? (
           <View
@@ -577,9 +591,31 @@ const ThawItem = ({
 
         <Space.Height.sm />
 
+        {/* Transaction ID if available */}
+        {thaw.transaction_id && (
+          <>
+            <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+              <Text style={[a.body_2_md_regular, ta.text_gray_medium]}>
+                Transaction ID
+              </Text>
+              <Space.Width.sm />
+              <Copiable text={thaw.transaction_id} style={a.flex_1}>
+                <Text
+                  style={[a.flex_1, a.body_2_md_regular, ta.text_gray_medium]}
+                  numberOfLines={1}
+                  ellipsizeMode="middle"
+                >
+                  {thaw.transaction_id}
+                </Text>
+              </Copiable>
+            </View>
+            <Space.Height.sm />
+          </>
+        )}
+
         {/* Status badge and Try again button for failed thaws */}
         <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-          <Badge label={badge.label} color={badge.color} />
+          <Badge label={statusInfo.label} color={statusInfo.color} />
           {isFailed && !isReadOnly && isWalletInitialized && (
             <Pressable
               onPress={onRetryFailed}

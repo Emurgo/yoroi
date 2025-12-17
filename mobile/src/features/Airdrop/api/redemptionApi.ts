@@ -184,8 +184,11 @@ export const redemptionApi = {
       request: {
         changeAddress: request.change_address,
         fundingUtxosCount: request.funding_utxos.length,
-        collateralUtxosCount: request.collateral_utxos.length,
         fundingUtxosPreview: request.funding_utxos
+          .slice(0, 2)
+          .map((utxo) => `${utxo.substring(0, 32)}...`),
+        collateralUtxosCount: request.collateral_utxos.length,
+        collateralUtxosPreview: request.collateral_utxos
           .slice(0, 2)
           .map((utxo) => `${utxo.substring(0, 32)}...`),
       },
