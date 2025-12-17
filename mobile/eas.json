@@ -106,7 +106,8 @@
       "ios": {
         "appleId": "amurmurmur@gmail.com",
         "ascAppId": "1447326389",
-        "appleTeamId": "F8NVT2G2L4"
+        "appleTeamId": "F8NVT2G2L4",
+        "bundleIdentifier": "com.emurgo.yoroi"
       }
     }
   }
