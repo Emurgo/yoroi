@@ -1,6 +1,6 @@
 // Ledger signing functions
 // Functions for building signed transactions from Ledger signatures
-import {CardanoMobileWrapped} from '@yoroi/common'
+import {CardanoMobile} from '@yoroi/cardano-wallet'
 import {Address, PublicKeyHex} from '@yoroi/types'
 
 import {
@@ -59,8 +59,8 @@ function derivePublicByAddressing(
 /**
  * Build signed transaction from Ledger signature response
  *
- * NOTE: This function expects to be called within a cslScope.
- * The unsignedTx parameter must contain CSL objects valid within that same scope.
+ * NOTE: Pass CardanoMobile as the csl parameter.
+ * With wrappedCSL mode, memory management is automatic.
  */
 export async function buildLedgerSignedTx(
   csl: WasmModuleProxy,
@@ -307,51 +307,51 @@ export async function createSignedLedgerTxFromCbor(
   purpose: number,
   publicKeyHex: string,
 ): Promise<Uint8Array> {
-  return CardanoMobileWrapped.cslScope((csl) => {
-    const fixedTx = csl.FixedTransaction.fromHex(cbor)
-    if (!fixedTx) throw new Error('invalid tx hex')
+  const fixedTx = CardanoMobile.FixedTransaction.fromHex(cbor)
+  if (!fixedTx) throw new Error('invalid tx hex')
 
-    const addressing: Addressing = {
-      path: [
-        purpose,
-        2147485463, // CARDANO
-        2147483648,
-      ],
-      startLevel: 1,
-    }
+  const addressing: Addressing = {
+    path: [
+      purpose,
+      2147485463, // CARDANO
+      2147483648,
+    ],
+    startLevel: 1,
+  }
 
-    const key = csl.Bip32PublicKey.fromBytes(Buffer.from(publicKeyHex, 'hex'))
-    const keyLevel = addressing.startLevel + addressing.path.length - 1
+  const key = CardanoMobile.Bip32PublicKey.fromBytes(
+    Buffer.from(publicKeyHex, 'hex'),
+  )
+  const keyLevel = addressing.startLevel + addressing.path.length - 1
 
-    for (let i = 0; i < signedData.witnesses.length; i++) {
-      const witnessData = signedData.witnesses[i]
-      if (!witnessData) continue
+  for (let i = 0; i < signedData.witnesses.length; i++) {
+    const witnessData = signedData.witnesses[i]
+    if (!witnessData) continue
 
-      const addressKey = derivePublicByAddressing(
-        {startLevel: 1, path: witnessData.path},
-        {level: keyLevel, key},
-      )
-      const witness = csl.Vkeywitness.new(
-        csl.Vkey.new(addressKey.toRawKey()),
-        csl.Ed25519Signature.fromBytes(
-          Buffer.from(witnessData.witnessSignatureHex, 'hex'),
-        ),
-      )
-      if (!witness)
-        throw new Error('invalid tx hex, could not generate vkey witness')
-      fixedTx.addVkeyWitness(witness)
-    }
+    const addressKey = derivePublicByAddressing(
+      {startLevel: 1, path: witnessData.path},
+      {level: keyLevel, key},
+    )
+    const witness = CardanoMobile.Vkeywitness.new(
+      CardanoMobile.Vkey.new(addressKey.toRawKey()),
+      CardanoMobile.Ed25519Signature.fromBytes(
+        Buffer.from(witnessData.witnessSignatureHex, 'hex'),
+      ),
+    )
+    if (!witness)
+      throw new Error('invalid tx hex, could not generate vkey witness')
+    fixedTx.addVkeyWitness(witness)
+  }
 
-    const txHashHex = fixedTx.transactionHash().toHex()
+  const txHashHex = fixedTx.transactionHash().toHex()
 
-    if (txHashHex !== signedData.txHashHex) {
-      throw new Error(
-        `createSignedLedgerTxFromCbor: TxId mismatch. Ledger: ${signedData.txHashHex} Reconstructed: ${txHashHex}`,
-      )
-    }
+  if (txHashHex !== signedData.txHashHex) {
+    throw new Error(
+      `createSignedLedgerTxFromCbor: TxId mismatch. Ledger: ${signedData.txHashHex} Reconstructed: ${txHashHex}`,
+    )
+  }
 
-    return fixedTx.toBytes()
-  })
+  return fixedTx.toBytes()
 }
 
 /**
@@ -361,16 +361,14 @@ export async function signRawTransaction(
   cbor: string,
   pKeys: PrivateKey[],
 ): Promise<Uint8Array> {
-  return CardanoMobileWrapped.cslScope((csl) => {
-    const fixedTx = csl.FixedTransaction.fromHex(cbor)
-    if (!fixedTx) throw new Error('invalid tx hex')
+  const fixedTx = CardanoMobile.FixedTransaction.fromHex(cbor)
+  if (!fixedTx) throw new Error('invalid tx hex')
 
-    for (let i = 0; i < pKeys.length; i++) {
-      const pKey = pKeys[i]
-      if (!pKey) continue
-      fixedTx.signAndAddVkeySignature(pKey)
-    }
+  for (let i = 0; i < pKeys.length; i++) {
+    const pKey = pKeys[i]
+    if (!pKey) continue
+    fixedTx.signAndAddVkeySignature(pKey)
+  }
 
-    return fixedTx.toBytes()
-  })
+  return fixedTx.toBytes()
 }

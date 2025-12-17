@@ -1,4 +1,5 @@
 import type {AccountStateResponse} from '@yoroi/api'
+import {CardanoMobile} from '@yoroi/cardano-wallet'
 import {isHex} from '@yoroi/common'
 import {getLogger} from '@yoroi/logger'
 import {
@@ -26,8 +27,6 @@ import {
 
 import type {PublicKey} from '@emurgo/cross-csl-core'
 import BigNumber from 'bignumber.js'
-
-import {CardanoMobileWrapped} from '../wrappedCsl'
 
 export type CreateWithdrawalWithGovernanceTxParams = {
   utxos: ModernUtxo[]
@@ -109,31 +108,27 @@ export async function createWithdrawalWithGovernanceTx({
   }
 
   // Extract stake credential key hash from staking key
-  const stakeKeyHashHex = CardanoMobileWrapped.cslScope(() => {
-    const keyHash = getStakingKey().hash()
-    return keyHash.toHex()
-  })
+  const keyHash = getStakingKey().hash()
+  const stakeKeyHashHex = keyHash.toHex()
 
   // Extract reward address bech32 if we have rewards
   let rewardAddressBech32: string | undefined
 
   if (BigInt(rewards) > 0n) {
-    rewardAddressBech32 = CardanoMobileWrapped.cslScope((csl) => {
-      let address
-      if (csl.ByronAddress.isValid(rewardAddressHex)) {
-        const byronAddr = csl.ByronAddress.fromBase58(rewardAddressHex)
-        address = byronAddr.toAddress()
-      } else {
-        const isHexAddr = isHex(rewardAddressHex)
-        address = isHexAddr
-          ? csl.Address.fromHex(rewardAddressHex)
-          : csl.Address.fromBech32(rewardAddressHex)
-      }
-      if (!address || address.isMalformed()) {
-        throw new Error(`Invalid reward address: ${rewardAddressHex}`)
-      }
-      return address.toBech32(undefined) as Address
-    })
+    let address
+    if (CardanoMobile.ByronAddress.isValid(rewardAddressHex)) {
+      const byronAddr = CardanoMobile.ByronAddress.fromBase58(rewardAddressHex)
+      address = byronAddr.toAddress()
+    } else {
+      const isHexAddr = isHex(rewardAddressHex)
+      address = isHexAddr
+        ? CardanoMobile.Address.fromHex(rewardAddressHex)
+        : CardanoMobile.Address.fromBech32(rewardAddressHex)
+    }
+    if (!address || address.isMalformed()) {
+      throw new Error(`Invalid reward address: ${rewardAddressHex}`)
+    }
+    rewardAddressBech32 = address.toBech32(undefined) as Address
   }
 
   // Helper function to calculate required ADA based on fee estimate

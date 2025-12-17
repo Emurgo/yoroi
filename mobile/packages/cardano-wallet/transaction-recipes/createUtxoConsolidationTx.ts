@@ -1,4 +1,5 @@
 import {cardanoConfig} from '@yoroi/blockchains'
+import {CardanoMobile} from '@yoroi/cardano-wallet'
 import {isHex} from '@yoroi/common'
 import {getLogger} from '@yoroi/logger'
 import {
@@ -18,7 +19,6 @@ import {Address, App, Balance, Branded, Portfolio, Wallet} from '@yoroi/types'
 import type {Address as CSLAddress} from '@emurgo/cross-csl-core'
 
 import {cardanoValueFromAmounts} from '../cardanoValueFromAmounts'
-import {CardanoMobileWrapped} from '../wrappedCsl'
 
 export type CreateUtxoConsolidationTxParams = {
   utxos: ModernUtxo[]
@@ -134,105 +134,108 @@ export async function createUtxoConsolidationTx({
   let actualMinUtxoValue = baseMinUtxoValue
   if (hasTokens) {
     try {
-      actualMinUtxoValue = await CardanoMobileWrapped.cslScope(async (csl) => {
-        // Normalize address
-        let normalizedAddress: CSLAddress | null = null
-        if (csl.ByronAddress.isValid(firstAddress)) {
-          const byronAddr = csl.ByronAddress.fromBase58(firstAddress)
-          normalizedAddress = byronAddr.toAddress()
-        } else {
-          const isHexAddr = isHex(firstAddress)
-          normalizedAddress = isHexAddr
-            ? csl.Address.fromHex(firstAddress)
-            : csl.Address.fromBech32(firstAddress)
-        }
+      // Normalize address
+      let normalizedAddress: CSLAddress | null = null
+      if (CardanoMobile.ByronAddress.isValid(firstAddress)) {
+        const byronAddr = CardanoMobile.ByronAddress.fromBase58(firstAddress)
+        normalizedAddress = byronAddr.toAddress()
+      } else {
+        const isHexAddr = isHex(firstAddress)
+        normalizedAddress = isHexAddr
+          ? CardanoMobile.Address.fromHex(firstAddress)
+          : CardanoMobile.Address.fromBech32(firstAddress)
+      }
 
-        if (!normalizedAddress || normalizedAddress.isMalformed()) {
+      if (!normalizedAddress || normalizedAddress.isMalformed()) {
+        getLogger().error(
+          'createUtxoConsolidationTx: Failed to normalize address for minAda calculation',
+          {
+            address: firstAddress,
+          },
+        )
+        throw new Error(`Invalid address: ${firstAddress}`)
+      }
+
+      // Create value with tokens (using 0 ADA initially to calculate minimum)
+      const tempAmounts: Balance.Amounts = {
+        ...consolidatedAmounts,
+        [primaryTokenId]: '0',
+      }
+
+      let value
+      try {
+        value = cardanoValueFromAmounts(
+          CardanoMobile,
+          tempAmounts,
+          primaryTokenId,
+        )
+        if (!value) {
           getLogger().error(
-            'createUtxoConsolidationTx: Failed to normalize address for minAda calculation',
-            {
-              address: firstAddress,
-            },
-          )
-          throw new Error(`Invalid address: ${firstAddress}`)
-        }
-
-        // Create value with tokens (using 0 ADA initially to calculate minimum)
-        const tempAmounts: Balance.Amounts = {
-          ...consolidatedAmounts,
-          [primaryTokenId]: '0',
-        }
-
-        let value
-        try {
-          value = cardanoValueFromAmounts(csl, tempAmounts, primaryTokenId)
-          if (!value) {
-            getLogger().error(
-              'createUtxoConsolidationTx: cardanoValueFromAmounts returned null',
-              {
-                address: firstAddress,
-                amounts: consolidatedAmounts,
-              },
-            )
-            throw new Error(
-              'Failed to create Value for minAda calculation: cardanoValueFromAmounts returned null',
-            )
-          }
-        } catch (error) {
-          getLogger().error(
-            'createUtxoConsolidationTx: Error creating Value for minAda calculation',
+            'createUtxoConsolidationTx: cardanoValueFromAmounts returned null',
             {
               address: firstAddress,
               amounts: consolidatedAmounts,
-              error: error instanceof Error ? error.message : String(error),
-              errorStack: error instanceof Error ? error.stack : undefined,
-            },
-          )
-          throw error
-        }
-
-        const txOutput = csl.TransactionOutput.new(normalizedAddress, value)
-        if (!txOutput) {
-          const errorValueCoin = value.coin()
-          const errorMultiasset = value.multiasset()
-          getLogger().error(
-            'createUtxoConsolidationTx: Failed to create TransactionOutput for minAda calculation',
-            {
-              address: firstAddress,
-              valueCoin: errorValueCoin ? errorValueCoin.toStr() : '0',
-              hasMultiasset: errorMultiasset
-                ? errorMultiasset.len() > 0
-                : false,
             },
           )
           throw new Error(
-            `Failed to create TransactionOutput for minAda calculation: Pointer is NULL for address ${firstAddress}`,
+            'Failed to create Value for minAda calculation: cardanoValueFromAmounts returned null',
           )
         }
-
-        const dataCost = csl.DataCost.newCoinsPerByte(
-          csl.BigNum.fromStr(protocolParams.coinsPerUtxoByte),
+      } catch (error) {
+        getLogger().error(
+          'createUtxoConsolidationTx: Error creating Value for minAda calculation',
+          {
+            address: firstAddress,
+            amounts: consolidatedAmounts,
+            error: error instanceof Error ? error.message : String(error),
+            errorStack: error instanceof Error ? error.stack : undefined,
+          },
         )
-        if (!dataCost) {
-          getLogger().error(
-            'createUtxoConsolidationTx: Failed to create DataCost for minAda calculation',
-          )
-          throw new Error('Failed to create DataCost for minAda calculation')
-        }
+        throw error
+      }
 
-        const minAda = csl.minAdaForOutput(txOutput, dataCost)
-        if (!minAda) {
-          getLogger().error(
-            'createUtxoConsolidationTx: Failed to calculate minAdaForOutput',
-            {
-              address: firstAddress,
-            },
-          )
-          throw new Error('Failed to calculate minAdaForOutput')
-        }
+      const txOutput = CardanoMobile.TransactionOutput.new(
+        normalizedAddress,
+        value,
+      )
+      if (!txOutput) {
+        const errorValueCoin = value.coin()
+        const errorMultiasset = value.multiasset()
+        getLogger().error(
+          'createUtxoConsolidationTx: Failed to create TransactionOutput for minAda calculation',
+          {
+            address: firstAddress,
+            valueCoin: errorValueCoin ? errorValueCoin.toStr() : '0',
+            hasMultiasset: errorMultiasset ? errorMultiasset.len() > 0 : false,
+          },
+        )
+        throw new Error(
+          `Failed to create TransactionOutput for minAda calculation: Pointer is NULL for address ${firstAddress}`,
+        )
+      }
 
-        return BigInt(minAda.toStr())
-      })
+      const dataCost = CardanoMobile.DataCost.newCoinsPerByte(
+        CardanoMobile.BigNum.fromStr(protocolParams.coinsPerUtxoByte),
+      )
+      if (!dataCost) {
+        getLogger().error(
+          'createUtxoConsolidationTx: Failed to create DataCost for minAda calculation',
+        )
+        throw new Error('Failed to create DataCost for minAda calculation')
+      }
+
+      const minAda = CardanoMobile.minAdaForOutput(txOutput, dataCost)
+      if (!minAda) {
+        getLogger().error(
+          'createUtxoConsolidationTx: Failed to calculate minAdaForOutput',
+          {
+            address: firstAddress,
+          },
+        )
+        throw new Error('Failed to calculate minAdaForOutput')
+      }
+
+      actualMinUtxoValue = BigInt(minAda.toStr())
     } catch (error) {
       getLogger().error(
         'createUtxoConsolidationTx: Failed to calculate actual min UTXO value, using base minimum',

@@ -1,4 +1,5 @@
 import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
+import {CardanoMobile} from '@yoroi/cardano-wallet'
 import {isNonNullable} from '@yoroi/common'
 import type {Datum, UnsignedTransaction} from '@yoroi/tx'
 import {signTransaction} from '@yoroi/tx'
@@ -6,8 +7,6 @@ import {Wallet} from '@yoroi/types'
 
 import * as CSL from '@emurgo/cross-csl-core'
 import {Buffer} from 'buffer'
-
-import {CardanoMobile, CardanoMobileWrapped} from '../wrappedCsl'
 
 /**
  * Sign a transaction with a decrypted master key
@@ -93,17 +92,13 @@ export const signWalletTransaction = (
     )
 
   // Sign the transaction using the new signing function
-  return CardanoMobileWrapped.cslScope((csl) => {
-    const signedTx = signTransaction(
-      csl,
-      unsignedTx,
-      accountPrivateKeyHex,
-      stakingKeysForSigning,
-      datumDatas.length > 0
-        ? datumDatas.map((d) => ({data: d.data}))
-        : undefined,
-    )
+  const signedTx = signTransaction(
+    CardanoMobile,
+    unsignedTx,
+    accountPrivateKeyHex,
+    stakingKeysForSigning,
+    datumDatas.length > 0 ? datumDatas.map((d) => ({data: d.data})) : undefined,
+  )
 
-    return signedTx
-  })
+  return signedTx
 }

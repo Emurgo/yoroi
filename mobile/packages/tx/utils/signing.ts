@@ -7,8 +7,8 @@ import {UnsignedTransaction} from '../transaction-builder/types'
  * Sign an unsigned transaction with private keys
  * Returns a CSL Transaction object
  *
- * NOTE: This function expects to be called within a cslScope.
- * The returned Transaction object will be valid within that same scope.
+ * NOTE: Pass CardanoMobile as the csl parameter.
+ * With wrappedCSL mode, memory management is automatic.
  */
 export function signTransaction(
   csl: WasmModuleProxy,

@@ -1,4 +1,5 @@
 import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
+import {CardanoMobile} from '@yoroi/cardano-wallet'
 import {getLogger, throwLoggedError} from '@yoroi/logger'
 import {Addressing, createLedgerPlutusPayload, getAllSigners} from '@yoroi/tx'
 import {Balance, Branded, Wallet} from '@yoroi/types'
@@ -9,7 +10,6 @@ import {Buffer} from 'buffer'
 import {uniqWith} from 'lodash'
 
 import {CardanoTypes, YoroiWallet} from '../types'
-import {CardanoMobile} from '../wrappedCsl'
 
 export const createSwapCancellationLedgerPayload = async (
   cbor: string,

@@ -8,6 +8,7 @@ import type {
 } from '@yoroi/api'
 import {AppApi} from '@yoroi/api'
 import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
+import {CardanoMobile} from '@yoroi/cardano-wallet'
 import {isNonNullable} from '@yoroi/common'
 import {getLogger, throwLoggedError} from '@yoroi/logger'
 import {StakePoolInfoRequest, StakingInfo, StakingStatus} from '@yoroi/staking'
@@ -111,7 +112,6 @@ import {
 } from './utils'
 import {UtxoManager, makeUtxoManager} from './utxoManager/utxoManager'
 import {utxosMaker} from './utxoManager/utxos'
-import {CardanoMobileWrapped} from './wrappedCsl'
 
 const logger = getLogger()
 
@@ -296,10 +296,8 @@ export const makeCardanoWallet = (
               externalAddr,
               chainId,
             )
-            finalRewardAddressHex = CardanoMobileWrapped.cslScope((csl) => {
-              const addr = csl.Address.fromBech32(rewardAddressBech32)
-              return Buffer.from(addr.toBytes()).toString('hex')
-            })
+            const addr = CardanoMobile.Address.fromBech32(rewardAddressBech32)
+            finalRewardAddressHex = Buffer.from(addr.toBytes()).toString('hex')
           } catch (error) {
             getLogger().warn(
               'Failed to derive reward address for read-only wallet',
@@ -334,10 +332,8 @@ export const makeCardanoWallet = (
               knownAddr,
               chainId,
             )
-            finalRewardAddressHex = CardanoMobileWrapped.cslScope((csl) => {
-              const addr = csl.Address.fromBech32(rewardAddressBech32)
-              return Buffer.from(addr.toBytes()).toString('hex')
-            })
+            const addr = CardanoMobile.Address.fromBech32(rewardAddressBech32)
+            finalRewardAddressHex = Buffer.from(addr.toBytes()).toString('hex')
           } catch (error) {
             getLogger().warn(
               'Failed to derive reward address for read-only wallet',
@@ -593,16 +589,14 @@ function createWalletObject(
       return addressedUtxos.filter(
         (utxo: CardanoTypes.CardanoAddressedUtxo) => {
           try {
-            return CardanoMobileWrapped.cslScope((csl) => {
-              const addr = csl.Address.fromBech32(utxo.receiver)
-              if (!addr) return false
-              const baseAddr = csl.BaseAddress.fromAddress(addr)
-              if (!baseAddr) return false
-              const stakeCred = baseAddr.stakeCred()
-              const keyHash = stakeCred.toKeyhash()
-              if (!keyHash) return false
-              return keyHash.toHex() === stakingKeyHashHex
-            })
+            const addr = CardanoMobile.Address.fromBech32(utxo.receiver)
+            if (!addr) return false
+            const baseAddr = CardanoMobile.BaseAddress.fromAddress(addr)
+            if (!baseAddr) return false
+            const stakeCred = baseAddr.stakeCred()
+            const keyHash = stakeCred.toKeyhash()
+            if (!keyHash) return false
+            return keyHash.toHex() === stakingKeyHashHex
           } catch {
             return false
           }
@@ -833,19 +827,17 @@ function createWalletObject(
       state.rewardAddressHex,
       stakingAddressing,
     )
-    const payload = await CardanoMobileWrapped.cslScope(async (csl) => {
-      return await state.dependencies.toLedgerSignRequest(
-        csl,
-        cbor,
-        networkManager.chainId,
-        networkManager.protocolMagic,
-        addressingMap,
-        stakeAddressMap,
-        modernUtxosToCardanoAddressedUtxos(getAddressedUtxos()),
-        [],
-        stakingAddressing,
-      )
-    })
+    const payload = await state.dependencies.toLedgerSignRequest(
+      CardanoMobile,
+      cbor,
+      networkManager.chainId,
+      networkManager.protocolMagic,
+      addressingMap,
+      stakeAddressMap,
+      modernUtxosToCardanoAddressedUtxos(getAddressedUtxos()),
+      [],
+      stakingAddressing,
+    )
 
     const signedLedgerTx = await signTxWithLedgerHW(
       payload,
@@ -909,45 +901,45 @@ function createWalletObject(
         }
 
         // Convert UnsignedTransaction to LedgerUnsignedTx format
-        return CardanoMobileWrapped.cslScope(async (csl) => {
-          const ledgerUnsignedTx = adaptToLedgerUnsignedTx(csl, unsignedTx, [
-            changeAddr,
-          ])
+        const ledgerUnsignedTx = adaptToLedgerUnsignedTx(
+          CardanoMobile,
+          unsignedTx,
+          [changeAddr],
+        )
 
-          const ledgerPayload = await buildVotingLedgerPayloadV5(
-            csl,
-            ledgerUnsignedTx,
-            networkManager.chainId,
-            networkManager.protocolMagic,
-            Array.from(stakingConfig.addressing),
-          )
+        const ledgerPayload = await buildVotingLedgerPayloadV5(
+          CardanoMobile,
+          ledgerUnsignedTx,
+          networkManager.chainId,
+          networkManager.protocolMagic,
+          Array.from(stakingConfig.addressing),
+        )
 
-          const signedLedgerTx = await signTxWithLedgerHW(
-            ledgerPayload,
-            hwDeviceInfo,
-            useUSB,
-          )
+        const signedLedgerTx = await signTxWithLedgerHW(
+          ledgerPayload,
+          hwDeviceInfo,
+          useUSB,
+        )
 
-          const signedTxResult = await buildLedgerSignedTx(
-            csl,
-            {
-              senderUtxos: ledgerUnsignedTx.senderUtxos,
-              txBuilder: ledgerUnsignedTx.txBuilder,
-              auxiliaryData: ledgerUnsignedTx.auxiliaryData,
-            },
-            signedLedgerTx,
-            implementationConfig.derivations.base.harden.purpose,
-            state.publicKeyHex,
-            false,
-          )
+        const signedTxResult = await buildLedgerSignedTx(
+          CardanoMobile,
+          {
+            senderUtxos: ledgerUnsignedTx.senderUtxos,
+            txBuilder: ledgerUnsignedTx.txBuilder,
+            auxiliaryData: ledgerUnsignedTx.auxiliaryData,
+          },
+          signedLedgerTx,
+          implementationConfig.derivations.base.harden.purpose,
+          state.publicKeyHex,
+          false,
+        )
 
-          // Convert signed transaction bytes to Transaction object
-          const signedTx = await CardanoMobileWrapped.cslScope(async (csl) => {
-            return await csl.Transaction.fromBytes(signedTxResult.encodedTx)
-          })
+        // Convert signed transaction bytes to Transaction object
+        const signedTx = await CardanoMobile.Transaction.fromBytes(
+          signedTxResult.encodedTx,
+        )
 
-          return signedTx
-        })
+        return signedTx
       }
 
       throwLoggedError(getLogger())(
@@ -973,62 +965,62 @@ function createWalletObject(
     }
 
     // Convert UnsignedTransaction to LedgerUnsignedTx format
-    return CardanoMobileWrapped.cslScope(async (csl) => {
-      const ledgerUnsignedTx = adaptToLedgerUnsignedTx(csl, unsignedTx, [
-        changeAddr,
-      ])
+    const ledgerUnsignedTx = adaptToLedgerUnsignedTx(
+      CardanoMobile,
+      unsignedTx,
+      [changeAddr],
+    )
 
-      let stakingAddressing: number[] | undefined
-      if (implementationConfig.features.staking) {
-        stakingAddressing = Array.from(
-          implementationConfig.features.staking.addressing,
-        ) as number[]
-      }
+    let stakingAddressing: number[] | undefined
+    if (implementationConfig.features.staking) {
+      stakingAddressing = Array.from(
+        implementationConfig.features.staking.addressing,
+      ) as number[]
+    }
 
-      const ledgerPayload = await buildLedgerPayload(
-        csl,
-        ledgerUnsignedTx,
-        networkManager.chainId,
-        networkManager.protocolMagic,
-        stakingAddressing,
+    const ledgerPayload = await buildLedgerPayload(
+      CardanoMobile,
+      ledgerUnsignedTx,
+      networkManager.chainId,
+      networkManager.protocolMagic,
+      stakingAddressing,
+    )
+
+    const signedLedgerTx = await signTxWithLedgerHW(
+      ledgerPayload,
+      hwDeviceInfo,
+      useUSB,
+    )
+
+    // Extract datum data from outputs
+    const datumDatas = unsignedTx.outputs
+      .map((output: UnsignedTransaction['outputs'][number]) => output.datum)
+      .filter(isNonNullable)
+      .filter(
+        (datum: Datum): datum is Exclude<Datum, {hash: string}> =>
+          'data' in datum,
       )
 
-      const signedLedgerTx = await signTxWithLedgerHW(
-        ledgerPayload,
-        hwDeviceInfo,
-        useUSB,
-      )
+    const signedTxResult = await buildLedgerSignedTx(
+      CardanoMobile,
+      {
+        senderUtxos: ledgerUnsignedTx.senderUtxos,
+        txBuilder: ledgerUnsignedTx.txBuilder,
+        auxiliaryData: ledgerUnsignedTx.auxiliaryData,
+      },
+      signedLedgerTx,
+      implementationConfig.derivations.base.harden.purpose,
+      state.publicKeyHex,
+      true,
+      datumDatas.length > 0 ? datumDatas : undefined,
+    )
 
-      // Extract datum data from outputs
-      const datumDatas = unsignedTx.outputs
-        .map((output: UnsignedTransaction['outputs'][number]) => output.datum)
-        .filter(isNonNullable)
-        .filter(
-          (datum: Datum): datum is Exclude<Datum, {hash: string}> =>
-            'data' in datum,
-        )
+    // Convert signed transaction bytes to Transaction object
+    const signedTx = await CardanoMobile.Transaction.fromBytes(
+      signedTxResult.encodedTx,
+    )
 
-      const signedTxResult = await buildLedgerSignedTx(
-        csl,
-        {
-          senderUtxos: ledgerUnsignedTx.senderUtxos,
-          txBuilder: ledgerUnsignedTx.txBuilder,
-          auxiliaryData: ledgerUnsignedTx.auxiliaryData,
-        },
-        signedLedgerTx,
-        implementationConfig.derivations.base.harden.purpose,
-        state.publicKeyHex,
-        true,
-        datumDatas.length > 0 ? datumDatas : undefined,
-      )
-
-      // Convert signed transaction bytes to Transaction object
-      const signedTx = await CardanoMobileWrapped.cslScope(async (csl) => {
-        return await csl.Transaction.fromBytes(signedTxResult.encodedTx)
-      })
-
-      return signedTx
-    })
+    return signedTx
   }
 
   // =================== backend API =================== //

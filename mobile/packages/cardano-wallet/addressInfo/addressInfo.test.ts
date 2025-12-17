@@ -1,4 +1,5 @@
-import {CardanoMobile} from '../wrappedCsl'
+import {CardanoMobile} from '@yoroi/cardano-wallet'
+
 import {getSpendingKey, getStakingKey, toWasmAddress} from './addressInfo'
 
 // base

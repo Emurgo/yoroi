@@ -1,4 +1,4 @@
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
+import {CardanoMobile} from '@yoroi/cardano-wallet'
 
 import {Buffer} from 'buffer'
 import {decode, encode} from 'cbor2'
@@ -140,14 +140,11 @@ export const useMessageVerification = () => {
         const dataToSign = Buffer.from(encode(sigStructure))
 
         // Verify using CSL
-        const isValid = CardanoMobileWrapped.cslScope((csl) => {
-          const publicKey = csl.PublicKey.fromBytes(publicKeyBuffer)
-          const signature = csl.Ed25519Signature.fromBytes(
-            Buffer.from(signatureBytes),
-          )
-
-          return publicKey.verify(dataToSign, signature)
-        })
+        const publicKey = CardanoMobile.PublicKey.fromBytes(publicKeyBuffer)
+        const signature = CardanoMobile.Ed25519Signature.fromBytes(
+          Buffer.from(signatureBytes),
+        )
+        const isValid = publicKey.verify(dataToSign, signature)
 
         // Verify address if provided
         let addressMatches: boolean | undefined

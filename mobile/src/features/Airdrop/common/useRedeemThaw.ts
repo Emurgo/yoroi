@@ -1,5 +1,5 @@
 import {RawUtxo} from '@yoroi/api'
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
+import {CardanoMobile} from '@yoroi/cardano-wallet'
 import type {SelectionStrategy} from '@yoroi/tx'
 import {rawUtxoToModernUtxo, selectUtxos} from '@yoroi/tx'
 import {Balance} from '@yoroi/types'
@@ -57,51 +57,47 @@ export const useRedeemThaw = () => {
         [primaryTokenId]: '5000000' as Balance.Quantity, // 5 ADA in lovelace
       }
 
-      const fundingUtxosHex = await CardanoMobileWrapped.cslScope(
-        async (csl) => {
-          // Convert RawUtxo[] to ModernUtxo[] using current pattern
-          const rawUtxos = wallet.utxos()
+      // Convert RawUtxo[] to ModernUtxo[] using current pattern
+      const rawUtxos = wallet.utxos()
 
-          const modernUtxos = rawUtxos.map((rawUtxo: RawUtxo) => {
-            const addressing = wallet.getAddressing(rawUtxo.receiver)
-            return rawUtxoToModernUtxo(
-              rawUtxo as Parameters<typeof rawUtxoToModernUtxo>[0],
-              addressing,
-              undefined, // derivationPath
-              primaryTokenId,
-            )
-          })
+      const modernUtxos = rawUtxos.map((rawUtxo: RawUtxo) => {
+        const addressing = wallet.getAddressing(rawUtxo.receiver)
+        return rawUtxoToModernUtxo(
+          rawUtxo as Parameters<typeof rawUtxoToModernUtxo>[0],
+          addressing,
+          undefined, // derivationPath
+          primaryTokenId,
+        )
+      })
 
-          // Select UTXOs using keepRelevant strategy (same as swap)
-          const selection = selectUtxos(
-            feeAmount,
-            modernUtxos,
-            'keepRelevant' as SelectionStrategy,
-            primaryTokenId,
-          )
-
-          if (
-            selection.selected.length === 0 ||
-            Object.keys(selection.missingAmounts).length > 0
-          ) {
-            logger.info('useRedeemThaw: Insufficient UTXOs', {
-              selectedCount: selection.selected.length,
-              missingAmounts: selection.missingAmounts,
-            })
-            throw new Error('No UTXOs available with sufficient funds')
-          }
-
-          // Convert ModernUtxo to hex strings using toTransactionUnspentOutput
-          const utxoHexStrings = await Promise.all(
-            selection.selected.map(async (utxo) => {
-              const cslUtxo = utxo.toTransactionUnspentOutput(csl)
-              return Buffer.from(cslUtxo.toBytes()).toString('hex')
-            }),
-          )
-
-          return utxoHexStrings
-        },
+      // Select UTXOs using keepRelevant strategy (same as swap)
+      const selection = selectUtxos(
+        feeAmount,
+        modernUtxos,
+        'keepRelevant' as SelectionStrategy,
+        primaryTokenId,
       )
+
+      if (
+        selection.selected.length === 0 ||
+        Object.keys(selection.missingAmounts).length > 0
+      ) {
+        logger.info('useRedeemThaw: Insufficient UTXOs', {
+          selectedCount: selection.selected.length,
+          missingAmounts: selection.missingAmounts,
+        })
+        throw new Error('No UTXOs available with sufficient funds')
+      }
+
+      // Convert ModernUtxo to hex strings using toTransactionUnspentOutput
+      const utxoHexStrings = await Promise.all(
+        selection.selected.map(async (utxo) => {
+          const cslUtxo = utxo.toTransactionUnspentOutput(CardanoMobile)
+          return Buffer.from(cslUtxo.toBytes()).toString('hex')
+        }),
+      )
+
+      const fundingUtxosHex = utxoHexStrings
 
       // Get change address
       const changeAddress = wallet.getChangeAddress('multiple')
@@ -167,31 +163,26 @@ export const useRedeemThaw = () => {
       }
 
       // Get signed transaction bytes
-      const signedTxBytes = await CardanoMobileWrapped.cslScope((csl) => {
-        const tx = typeof signedTx === 'function' ? signedTx(csl) : signedTx
-        return tx.toBytes()
-      })
+      const tx =
+        typeof signedTx === 'function' ? signedTx(CardanoMobile) : signedTx
+      const signedTxBytes = tx.toBytes()
 
       const signedTxHex = Buffer.from(signedTxBytes).toString('hex')
 
       // Extract witness set from signed transaction
-      const witnessSetHex = CardanoMobileWrapped.cslScope((csl) => {
-        const tx = csl.Transaction.fromBytes(signedTxBytes)
-        const witnessSet = tx.witnessSet()
-        if (!witnessSet) {
-          logger.error(
-            'useRedeemThaw.submitTransaction: Failed to extract witness set',
-            {
-              destAddress,
-            },
-          )
-          throw new Error(
-            'Failed to extract witness set from signed transaction',
-          )
-        }
-        const witnessSetBytes = witnessSet.toBytes()
-        return Buffer.from(witnessSetBytes).toString('hex')
-      })
+      const tx2 = CardanoMobile.Transaction.fromBytes(signedTxBytes)
+      const witnessSet = tx2.witnessSet()
+      if (!witnessSet) {
+        logger.error(
+          'useRedeemThaw.submitTransaction: Failed to extract witness set',
+          {
+            destAddress,
+          },
+        )
+        throw new Error('Failed to extract witness set from signed transaction')
+      }
+      const witnessSetBytes = witnessSet.toBytes()
+      const witnessSetHex = Buffer.from(witnessSetBytes).toString('hex')
 
       // Submit transaction to redemption API
       const submitResponse = await redemptionApi.submitTransaction(

@@ -1,6 +1,6 @@
 import {Api, Resolver} from '@yoroi/types'
 
-import {WasmModuleProxy, freeContext} from '@emurgo/cross-csl-core'
+import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {AxiosRequestConfig} from 'axios'
 
 import {handleZodErrors} from '../zod-errors'
@@ -8,32 +8,29 @@ import {resolveAddress} from './api-helpers'
 import {makeCnsCardanoApi} from './cardano-api-maker'
 
 export const cnsCryptoAddress = (
-  cslFactory: (scope: string) => WasmModuleProxy,
+  _cslFactory: (scope: string) => WasmModuleProxy,
   isMainnet: boolean = true,
 ) => {
   return async (receiver: string, fetcherConfig?: AxiosRequestConfig) => {
     if (!receiver.includes('.')) throw new Resolver.Errors.InvalidDomain()
     if (!isCnsDomain(receiver)) throw new Resolver.Errors.UnsupportedTld()
 
-    const cslScopeId = String(Math.random())
-    const csl = cslFactory(cslScopeId)
+    const cnsCardanoApi = makeCnsCardanoApi(
+      isMainnet ? cnsApiConfig.mainnet.baseUrl : cnsApiConfig.preprod.baseUrl,
+    )
     try {
-      const cnsCardanoApi = makeCnsCardanoApi(
-        isMainnet ? cnsApiConfig.mainnet.baseUrl : cnsApiConfig.preprod.baseUrl,
-      )
+      const {CardanoMobile} = await import('@yoroi/cardano-wallet')
       const address = await resolveAddress(
         receiver,
         isMainnet ? cnsApiConfig.mainnet : cnsApiConfig.preprod,
         cnsCardanoApi,
-        csl,
+        CardanoMobile,
         fetcherConfig,
       )
 
       return address
     } catch (error: unknown) {
       return handleCnsApiError(error)
-    } finally {
-      await freeContext(cslScopeId)
     }
   }
 }

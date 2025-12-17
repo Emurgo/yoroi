@@ -48,8 +48,8 @@ type LedgerUnsignedTxAdapterResult = {
  * Convert UnsignedTransaction to LedgerUnsignedTx format
  * This adapter allows Ledger functions to work with the new format
  *
- * NOTE: This function expects to be called within a cslScope.
- * The returned CSL objects (withdrawals, certificates, txBody) will be valid within that same scope.
+ * NOTE: Pass CardanoMobile as the csl parameter.
+ * With wrappedCSL mode, memory management is automatic.
  */
 export function adaptToLedgerUnsignedTx(
   csl: WasmModuleProxy,

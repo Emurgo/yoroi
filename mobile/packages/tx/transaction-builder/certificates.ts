@@ -41,7 +41,7 @@ function createDRepFromValue(
 
 /**
  * Create CSL Certificate from certificate data
- * NOTE: This function expects to be called within a cslScope.
+ * NOTE: Pass CardanoMobile as the csl parameter.
  * All CSL objects are created within the provided csl instance to avoid mixing.
  */
 export function createCertificateFromData(

@@ -227,7 +227,7 @@ describe('ledger signing', () => {
 
   describe('createSignedLedgerTxFromCbor', () => {
     it('should have correct function signature', () => {
-      // This function uses CardanoMobileWrapped.cslScope internally
+      // This function uses CardanoMobile internally
       // which requires real CSL. We verify the function exists and has correct signature
       expect(typeof createSignedLedgerTxFromCbor).toBe('function')
     })
@@ -235,7 +235,7 @@ describe('ledger signing', () => {
 
   describe('signRawTransaction', () => {
     it('should have correct function signature', () => {
-      // This function uses CardanoMobileWrapped.cslScope internally
+      // This function uses CardanoMobile internally
       // which requires real CSL. We verify the function exists and has correct signature
       expect(typeof signRawTransaction).toBe('function')
     })

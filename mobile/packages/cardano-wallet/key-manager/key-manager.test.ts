@@ -1,4 +1,5 @@
-import {CardanoMobileWrapped} from '../wrappedCsl'
+import {CardanoMobile} from '@yoroi/cardano-wallet'
+
 import {keyManager} from './key-manager'
 
 describe('makeKeys', () => {
@@ -9,9 +10,7 @@ describe('makeKeys', () => {
       'slide assault bus',
     ].join(' ')
 
-    const keys = CardanoMobileWrapped.cslScope((csl) =>
-      keyManager('cardano-cip1852')({csl, mnemonic}),
-    )
+    const keys = keyManager('cardano-cip1852')({csl: CardanoMobile, mnemonic})
 
     expect(keys).toEqual({
       accountPubKeyHex:
@@ -28,9 +27,7 @@ describe('makeKeys', () => {
       'slide assault bus',
     ].join(' ')
 
-    const keys = CardanoMobileWrapped.cslScope((csl) =>
-      keyManager('cardano-bip44')({csl, mnemonic}),
-    )
+    const keys = keyManager('cardano-bip44')({csl: CardanoMobile, mnemonic})
 
     expect(keys).toEqual({
       accountPubKeyHex:

@@ -1,5 +1,6 @@
 import type {AccountStateResponse} from '@yoroi/api'
 import {cardanoConfig} from '@yoroi/blockchains'
+import {CardanoMobile} from '@yoroi/cardano-wallet'
 import type {StakingInfo} from '@yoroi/staking'
 import {isByronAddress} from '@yoroi/tx'
 import {Balance, Branded, Portfolio, Wallet} from '@yoroi/types'
@@ -10,7 +11,6 @@ import {getDelegationStatus} from '../delegationUtils'
 import type {TimestampedCertMeta} from '../transactionManager/transactionManager'
 import type {CardanoTypes, YoroiWallet} from '../types'
 import {Quantities} from '../utils/utils'
-import {CardanoMobile} from '../wrappedCsl'
 
 /**
  * Get staking key for a wallet

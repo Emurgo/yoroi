@@ -12,6 +12,7 @@ import {
   cardanoConfig,
   protocolParamsPlaceholder,
 } from '@yoroi/blockchains'
+import {CardanoMobile} from '@yoroi/cardano-wallet'
 import {createPrimaryTokenInfo, primaryTokenId} from '@yoroi/portfolio'
 import {
   StakePoolInfoAndHistory,
@@ -48,7 +49,6 @@ import {buildPortfolioTokenManagers} from '~/features/Portfolio/common/helpers/b
 import type {ManualAddress} from '../../storage/manual-address-storage'
 import type {CardanoTypes, WalletSubscription, YoroiWallet} from '../../types'
 import {getTokenFingerprint} from '../../utils/format'
-import {CardanoMobile} from '../../wrappedCsl'
 import {mockEncryptedStorage} from './storage'
 import {mockTransactionInfo, mockTransactionInfos} from './transaction'
 import {utxos} from './utxos'

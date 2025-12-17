@@ -87,7 +87,7 @@ describe('address utils', () => {
 
   describe('validateAndExtractAddressInfo', () => {
     it('should extract address info from bech32', async () => {
-      // This function uses CardanoMobileWrapped.cslScope which requires real CSL
+      // This function uses CardanoMobile which requires real CSL
       // We'll test the structure indirectly through integration tests
       // For unit tests, we verify the function exists and has correct signature
       expect(typeof validateAndExtractAddressInfo).toBe('function')

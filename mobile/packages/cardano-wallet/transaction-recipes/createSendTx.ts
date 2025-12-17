@@ -1,3 +1,4 @@
+import {CardanoMobile} from '@yoroi/cardano-wallet'
 import {isHex} from '@yoroi/common'
 import {getLogger} from '@yoroi/logger'
 import type {TransactionMetadata} from '@yoroi/tx'
@@ -29,7 +30,6 @@ import type {Address as CSLAddress} from '@emurgo/cross-csl-core'
 import BigNumber from 'bignumber.js'
 
 import {cardanoValueFromAmounts} from '../cardanoValueFromAmounts'
-import {CardanoMobileWrapped} from '../wrappedCsl'
 
 export type CreateSendTxParams = {
   utxos: ModernUtxo[]
@@ -105,117 +105,118 @@ export async function createSendTx({
       // If output has tokens but insufficient ADA, calculate actual minimum UTXO value
       if (hasTokens && adaAmount < minUtxoValue) {
         // Calculate actual minimum ADA required for this output using CSL
-        const actualMinAda = await CardanoMobileWrapped.cslScope(
-          async (csl) => {
-            // Create address within this cslScope to avoid pointer issues
-            let normalizedAddress: CSLAddress | null = null
-            if (csl.ByronAddress.isValid(entry.address)) {
-              const byronAddr = csl.ByronAddress.fromBase58(entry.address)
-              normalizedAddress = byronAddr.toAddress()
-            } else {
-              const isHexAddr = isHex(entry.address)
-              normalizedAddress = isHexAddr
-                ? csl.Address.fromHex(entry.address)
-                : csl.Address.fromBech32(entry.address)
-            }
+        // Create address to avoid pointer issues
+        let normalizedAddress: CSLAddress | null = null
+        if (CardanoMobile.ByronAddress.isValid(entry.address)) {
+          const byronAddr = CardanoMobile.ByronAddress.fromBase58(entry.address)
+          normalizedAddress = byronAddr.toAddress()
+        } else {
+          const isHexAddr = isHex(entry.address)
+          normalizedAddress = isHexAddr
+            ? CardanoMobile.Address.fromHex(entry.address)
+            : CardanoMobile.Address.fromBech32(entry.address)
+        }
 
-            if (!normalizedAddress || normalizedAddress.isMalformed()) {
-              getLogger().error(
-                'createSendTx: Failed to normalize address for minAda calculation',
-                {
-                  address: entry.address,
-                  entryIndex: i,
-                },
-              )
-              throw new Error(`Invalid address: ${entry.address}`)
-            }
+        if (!normalizedAddress || normalizedAddress.isMalformed()) {
+          getLogger().error(
+            'createSendTx: Failed to normalize address for minAda calculation',
+            {
+              address: entry.address,
+              entryIndex: i,
+            },
+          )
+          throw new Error(`Invalid address: ${entry.address}`)
+        }
 
-            // Create value with tokens (using 0 ADA initially to calculate minimum)
-            const tempAmounts: Balance.Amounts = {
-              ...entry.amounts,
-              [primaryTokenId]: '0',
-            }
+        // Create value with tokens (using 0 ADA initially to calculate minimum)
+        const tempAmounts: Balance.Amounts = {
+          ...entry.amounts,
+          [primaryTokenId]: '0',
+        }
 
-            let value
-            try {
-              value = cardanoValueFromAmounts(csl, tempAmounts, primaryTokenId)
-              if (!value) {
-                getLogger().error(
-                  'createSendTx: cardanoValueFromAmounts returned null',
-                  {
-                    address: entry.address,
-                    amounts: entry.amounts,
-                    entryIndex: i,
-                  },
-                )
-                throw new Error(
-                  'Failed to create Value for minAda calculation: cardanoValueFromAmounts returned null',
-                )
-              }
-            } catch (error) {
-              getLogger().error(
-                'createSendTx: Error creating Value for minAda calculation',
-                {
-                  address: entry.address,
-                  amounts: entry.amounts,
-                  entryIndex: i,
-                  error: error instanceof Error ? error.message : String(error),
-                  errorStack: error instanceof Error ? error.stack : undefined,
-                },
-              )
-              throw error
-            }
-
-            const txOutput = csl.TransactionOutput.new(normalizedAddress, value)
-            if (!txOutput) {
-              const errorValueCoin = value.coin()
-              const errorMultiasset = value.multiasset()
-              getLogger().error(
-                'createSendTx: Failed to create TransactionOutput for minAda calculation',
-                {
-                  address: entry.address,
-                  entryIndex: i,
-                  valueCoin: errorValueCoin ? errorValueCoin.toStr() : '0',
-                  hasMultiasset: errorMultiasset
-                    ? errorMultiasset.len() > 0
-                    : false,
-                },
-              )
-              throw new Error(
-                `Failed to create TransactionOutput for minAda calculation: Pointer is NULL for address ${entry.address}`,
-              )
-            }
-
-            const dataCost = csl.DataCost.newCoinsPerByte(
-              csl.BigNum.fromStr(protocolParams.coinsPerUtxoByte),
+        let value
+        try {
+          value = cardanoValueFromAmounts(
+            CardanoMobile,
+            tempAmounts,
+            primaryTokenId,
+          )
+          if (!value) {
+            getLogger().error(
+              'createSendTx: cardanoValueFromAmounts returned null',
+              {
+                address: entry.address,
+                amounts: entry.amounts,
+                entryIndex: i,
+              },
             )
-            if (!dataCost) {
-              getLogger().error(
-                'createSendTx: Failed to create DataCost for minAda calculation',
-                {
-                  entryIndex: i,
-                },
-              )
-              throw new Error(
-                'Failed to create DataCost for minAda calculation',
-              )
-            }
+            throw new Error(
+              'Failed to create Value for minAda calculation: cardanoValueFromAmounts returned null',
+            )
+          }
+        } catch (error) {
+          getLogger().error(
+            'createSendTx: Error creating Value for minAda calculation',
+            {
+              address: entry.address,
+              amounts: entry.amounts,
+              entryIndex: i,
+              error: error instanceof Error ? error.message : String(error),
+              errorStack: error instanceof Error ? error.stack : undefined,
+            },
+          )
+          throw error
+        }
 
-            const minAda = csl.minAdaForOutput(txOutput, dataCost)
-            if (!minAda) {
-              getLogger().error(
-                'createSendTx: Failed to calculate minAdaForOutput',
-                {
-                  address: entry.address,
-                  entryIndex: i,
-                },
-              )
-              throw new Error('Failed to calculate minAdaForOutput')
-            }
-
-            return BigInt(minAda.toStr())
-          },
+        const txOutput = CardanoMobile.TransactionOutput.new(
+          normalizedAddress,
+          value,
         )
+        if (!txOutput) {
+          const errorValueCoin = value.coin()
+          const errorMultiasset = value.multiasset()
+          getLogger().error(
+            'createSendTx: Failed to create TransactionOutput for minAda calculation',
+            {
+              address: entry.address,
+              entryIndex: i,
+              valueCoin: errorValueCoin ? errorValueCoin.toStr() : '0',
+              hasMultiasset: errorMultiasset
+                ? errorMultiasset.len() > 0
+                : false,
+            },
+          )
+          throw new Error(
+            `Failed to create TransactionOutput for minAda calculation: Pointer is NULL for address ${entry.address}`,
+          )
+        }
+
+        const dataCost = CardanoMobile.DataCost.newCoinsPerByte(
+          CardanoMobile.BigNum.fromStr(protocolParams.coinsPerUtxoByte),
+        )
+        if (!dataCost) {
+          getLogger().error(
+            'createSendTx: Failed to create DataCost for minAda calculation',
+            {
+              entryIndex: i,
+            },
+          )
+          throw new Error('Failed to create DataCost for minAda calculation')
+        }
+
+        const minAda = CardanoMobile.minAdaForOutput(txOutput, dataCost)
+        if (!minAda) {
+          getLogger().error(
+            'createSendTx: Failed to calculate minAdaForOutput',
+            {
+              address: entry.address,
+              entryIndex: i,
+            },
+          )
+          throw new Error('Failed to calculate minAdaForOutput')
+        }
+
+        const actualMinAda = BigInt(minAda.toStr())
 
         // Store the calculated minAda for this entry
         entryMinAda.set(i, actualMinAda)
@@ -326,18 +327,16 @@ export async function createSendTx({
       )
 
       // Extract fee from transaction CBOR
-      const fee = await CardanoMobileWrapped.cslScope(async (csl) => {
-        if (!unsignedTx.cbor) {
-          throw new Error('Transaction CBOR not available')
-        }
-        const tx = csl.Transaction.fromHex(unsignedTx.cbor)
-        if (!tx) {
-          throw new Error('Failed to parse transaction from CBOR')
-        }
-        const body = tx.body()
-        const feeBigNum = body.fee()
-        return BigInt(feeBigNum.toStr())
-      })
+      if (!unsignedTx.cbor) {
+        throw new Error('Transaction CBOR not available')
+      }
+      const tx = CardanoMobile.Transaction.fromHex(unsignedTx.cbor)
+      if (!tx) {
+        throw new Error('Failed to parse transaction from CBOR')
+      }
+      const body = tx.body()
+      const feeBigNum = body.fee()
+      const fee = BigInt(feeBigNum.toStr())
 
       return {cbor: unsignedTx.cbor || '', fee}
     }

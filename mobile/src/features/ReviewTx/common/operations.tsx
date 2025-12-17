@@ -1,6 +1,9 @@
-import {formatTokenWithText} from '@yoroi/cardano-wallet'
-import {Quantities, asQuantity} from '@yoroi/cardano-wallet'
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
+import {
+  CardanoMobile,
+  Quantities,
+  asQuantity,
+  formatTokenWithText,
+} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
@@ -1361,10 +1364,8 @@ const updateOperationsCount = (
 }
 
 export const getDrepBech32Id = async (poolId: string) => {
-  return CardanoMobileWrapped.cslScope((csl) => {
-    const keyHash = csl.Ed25519KeyHash.fromHex(poolId)
-    return keyHash.toBech32('drep')
-  })
+  const keyHash = CardanoMobile.Ed25519KeyHash.fromHex(poolId)
+  return keyHash.toBech32('drep')
 }
 
 export const useDrepBech32Id = (poolId: string) => {

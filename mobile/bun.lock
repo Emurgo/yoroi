@@ -13,8 +13,8 @@
         "@emurgo/cross-csl-mobile": "9.0.0-beta.2",
         "@emurgo/cross-msl-core": "3.0.0-beta.1",
         "@emurgo/cross-msl-mobile": "3.0.0-beta.1",
-        "@emurgo/csl-mobile-bridge-jsi": "2.0.0-alpha.12",
-        "@emurgo/msl-mobile-bridge-jsi": "2.0.0-beta.6",
+        "@emurgo/csl-mobile-bridge-jsi": "2.0.0-alpha.14",
+        "@emurgo/msl-mobile-bridge-jsi": "2.0.0-beta.7",
         "@formatjs/intl-datetimeformat": "6.18.0",
         "@formatjs/intl-getcanonicallocales": "2.5.5",
         "@formatjs/intl-locale": "4.2.11",
@@ -164,8 +164,8 @@
     "@shopify/flash-list",
   ],
   "overrides": {
-    "react-native-svg": "15.11.2",
     "@react-native-async-storage/async-storage": "2.1.2",
+    "react-native-svg": "15.11.2",
   },
   "packages": {
     "@0no-co/graphql.web": ["@0no-co/graphql.web@1.2.0", "", { "peerDependencies": { "graphql": "^14.0.0 || ^15.0.0 || ^16.0.0" } }, "sha512-/1iHy9TTr63gE1YcR5idjx8UREz1s0kFhydf3bBLCXyqjhkIc6igAzTOx3zPifCwFR87tsh/4Pa9cNts6d2otw=="],
@@ -398,9 +398,9 @@
 
     "@emurgo/cross-msl-nodejs": ["@emurgo/cross-msl-nodejs@3.0.0-beta.1", "", { "dependencies": { "@emurgo/cardano-message-signing-nodejs-gc": "1.1.0", "@emurgo/cross-msl-core": "3.0.0-beta.1" } }, "sha512-3I2oYUFE5iUu8SX3vToDis1g3fRdrd2fuZlhET8oFYf9G+N73xS1mV1gucb5V+n1Xg+5V46LaNaIAgGAVQ1ekw=="],
 
-    "@emurgo/csl-mobile-bridge-jsi": ["@emurgo/csl-mobile-bridge-jsi@2.0.0-alpha.12", "", { "peerDependencies": { "react": "*", "react-native": "*" } }, "sha512-ImDKdUTbYu/T8pHHPL23qjAnr5TSyAv/k6crEqlKGbdi6T1YSpmykCDDF+9EG4KmIUkQM3IJogTbySGwOyXLRg=="],
+    "@emurgo/csl-mobile-bridge-jsi": ["@emurgo/csl-mobile-bridge-jsi@2.0.0-alpha.14", "", { "peerDependencies": { "react": "*", "react-native": "*" } }, "sha512-5B8Dy9TOgBr91Yw1xXAtoFD3YtTz8wgzs60Y6zK2PhEiw2q44a3jmWR/YzTI3pph184gFotybhCtS5YyRM0cKQ=="],
 
-    "@emurgo/msl-mobile-bridge-jsi": ["@emurgo/msl-mobile-bridge-jsi@2.0.0-beta.6", "", { "peerDependencies": { "react": "*", "react-native": "*" } }, "sha512-slhUfvFDYo+LcCw2VikPmLhmlblSuY6ASfMXCFnyuX+emb99t836LxWAGKT6xePCDExGwvJilu3Pf7lHw9cTtw=="],
+    "@emurgo/msl-mobile-bridge-jsi": ["@emurgo/msl-mobile-bridge-jsi@2.0.0-beta.7", "", { "peerDependencies": { "react": "*", "react-native": "*" } }, "sha512-3+UMsMGMIgTim3747FM+nI/pmONQBIqtOcaulWOfSYnQY8w1rHuoTQegG1eypNvB1i4wTOUllNlJ/MIWmPrg+A=="],
 
     "@eslint-community/eslint-utils": ["@eslint-community/eslint-utils@4.7.0", "", { "dependencies": { "eslint-visitor-keys": "^3.4.3" }, "peerDependencies": { "eslint": "^6.0.0 || ^7.0.0 || >=8.0.0" } }, "sha512-dyybb3AcajC7uha6CvhdVRJqaKyn7w2YKqKyAN37NKYgZT36w+iRb0Dymmc5qEJ549c/S31cMMSFd75bteCpCw=="],
 

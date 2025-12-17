@@ -1,6 +1,6 @@
 import {cardanoConfig} from '@yoroi/blockchains'
 import {
-  CardanoMobileWrapped,
+  CardanoMobile,
   createAddressGenerator,
   deriveAccountFromRootKey,
 } from '@yoroi/cardano-wallet'
@@ -35,8 +35,11 @@ export async function deriveAddressesForAccounts({
   // Generate addresses for each account
   for (let accountIndex = 0; accountIndex < accountCount; accountIndex++) {
     // Derive account public key from root key
-    const accountPubKeyHex = CardanoMobileWrapped.cslScope((csl) =>
-      deriveAccountFromRootKey(rootKeyHex, accountIndex, implementation, csl),
+    const accountPubKeyHex = deriveAccountFromRootKey(
+      rootKeyHex,
+      accountIndex,
+      implementation,
+      CardanoMobile,
     )
 
     // Create address generators for external chain (role 0)

@@ -1,6 +1,6 @@
 // Ledger payload building functions
 // Builds transaction payloads for Ledger hardware wallet signing
-import {CardanoMobileWrapped} from '@yoroi/common'
+import {CardanoMobile} from '@yoroi/cardano-wallet'
 
 import type {
   Certificate as LedgerCertificate,
@@ -41,6 +41,9 @@ function buildLedgerCIP15Payload(
   stakingDerivationPath: number[],
 ): TxAuxiliaryData {
   const {votingPublicKeyHex, paymentAddress} = catalystRegistrationData
+  const addr = CardanoMobile.Address.fromBech32(paymentAddress)
+  const addressHex = Buffer.from(addr.toBytes()).toString('hex')
+
   return {
     type: TxAuxiliaryDataType.CIP36_REGISTRATION,
     params: {
@@ -50,10 +53,7 @@ function buildLedgerCIP15Payload(
       paymentDestination: {
         type: TxOutputDestinationType.THIRD_PARTY,
         params: {
-          addressHex: CardanoMobileWrapped.cslScope((csl) => {
-            const addr = csl.Address.fromBech32(paymentAddress)
-            return Buffer.from(addr.toBytes()).toString('hex')
-          }),
+          addressHex,
         },
       },
       nonce: catalystRegistrationData.nonce,
@@ -67,6 +67,9 @@ function buildLedgerCIP36Payload(
   stakingDerivationPath: number[],
 ): TxAuxiliaryData {
   const {votingPublicKeyHex, paymentAddress, nonce} = catalystRegistrationData
+  const addr = CardanoMobile.Address.fromBech32(paymentAddress)
+  const addressHex = Buffer.from(addr.toBytes()).toString('hex')
+
   return {
     type: TxAuxiliaryDataType.CIP36_REGISTRATION,
     params: {
@@ -82,10 +85,7 @@ function buildLedgerCIP36Payload(
       paymentDestination: {
         type: TxOutputDestinationType.THIRD_PARTY,
         params: {
-          addressHex: CardanoMobileWrapped.cslScope((csl) => {
-            const addr = csl.Address.fromBech32(paymentAddress)
-            return Buffer.from(addr.toBytes()).toString('hex')
-          }),
+          addressHex,
         },
       },
       nonce,
@@ -97,8 +97,8 @@ function buildLedgerCIP36Payload(
 /**
  * Build Ledger payload for voting transactions (Legacy v5)
  *
- * NOTE: This function expects to be called within a cslScope.
- * The unsignedTx parameter must contain CSL objects valid within that same scope.
+ * NOTE: Pass CardanoMobile as the csl parameter.
+ * With wrappedCSL mode, memory management is automatic.
  */
 export async function buildVotingLedgerPayloadV5(
   csl: WasmModuleProxy,
@@ -191,8 +191,8 @@ export async function buildVotingLedgerPayloadV5(
 /**
  * Build Ledger payload for standard transactions
  *
- * NOTE: This function expects to be called within a cslScope.
- * The unsignedTx parameter must contain CSL objects valid within that same scope.
+ * NOTE: Pass CardanoMobile as the csl parameter.
+ * With wrappedCSL mode, memory management is automatic.
  */
 export async function buildLedgerPayload(
   csl: WasmModuleProxy,

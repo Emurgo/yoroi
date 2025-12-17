@@ -1,7 +1,6 @@
-import {CardanoMobile, CardanoMobileWrapped} from '@yoroi/cardano-wallet'
+import {CardanoMobile} from '@yoroi/cardano-wallet'
 import {normalizeToAddress} from '@yoroi/tx'
 
-import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {Buffer} from 'buffer'
 
 import {harden} from '../common/signatureUtils'
@@ -20,14 +19,12 @@ describe('CIP8', () => {
     const signingKey = createRawTxSigningKey(rootKeyHex, path, CardanoMobile)
 
     const payloadInBytes = Buffer.from(payload, 'hex')
-    // Extract address hex inside CSL scope to avoid null pointer errors
-    const addressHex = CardanoMobileWrapped.cslScope((csl: WasmModuleProxy) => {
-      const normalisedAddress = normalizeToAddress(csl, bech32)
-      if (!normalisedAddress) {
-        throw new Error('Failed to normalize address')
-      }
-      return normalisedAddress.toHex()
-    })
+    // Extract address hex
+    const normalisedAddress = normalizeToAddress(CardanoMobile, bech32)
+    if (!normalisedAddress) {
+      throw new Error('Failed to normalize address')
+    }
+    const addressHex = normalisedAddress.toHex()
 
     const coseSign1 = await cip8.sign(
       Buffer.from(addressHex, 'hex'),

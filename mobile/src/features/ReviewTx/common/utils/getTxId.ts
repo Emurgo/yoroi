@@ -1,4 +1,4 @@
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
+import {CardanoMobile} from '@yoroi/cardano-wallet'
 import {calculateTxId} from '@yoroi/tx'
 
 import {Transaction, WasmModuleProxy} from '@emurgo/cross-csl-core'
@@ -32,9 +32,7 @@ export const getTxIdFromArgs = async (
   // 2. Use unsigned CBOR if provided (safe - body hash is same for signed/unsigned)
   if (fallbackCbor) {
     try {
-      return await CardanoMobileWrapped.cslScope(async (csl) => {
-        return await calculateTxId(csl, fallbackCbor, 'hex')
-      })
+      return await calculateTxId(CardanoMobile, fallbackCbor, 'hex')
     } catch (error) {
       // If calculation fails, continue to next fallback
     }
@@ -46,19 +44,15 @@ export const getTxIdFromArgs = async (
     try {
       // If signedTx is a function, call it with CSL to get Transaction
       const tx: Transaction | null =
-        typeof signedTx === 'function'
-          ? await CardanoMobileWrapped.cslScope((csl) => signedTx(csl))
-          : signedTx
+        typeof signedTx === 'function' ? signedTx(CardanoMobile) : signedTx
 
       if (tx) {
         const txBytes = tx.toBytes()
-        return await CardanoMobileWrapped.cslScope(async (csl) => {
-          return await calculateTxId(
-            csl,
-            Buffer.from(txBytes).toString('hex'),
-            'hex',
-          )
-        })
+        return await calculateTxId(
+          CardanoMobile,
+          Buffer.from(txBytes).toString('hex'),
+          'hex',
+        )
       }
     } catch (error) {
       // If calculation fails, return undefined

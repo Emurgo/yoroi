@@ -1,7 +1,5 @@
 import {TxSubmissionStatus} from '@yoroi/api'
-import {YoroiWallet} from '@yoroi/cardano-wallet'
-import {delay} from '@yoroi/cardano-wallet'
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
+import {CardanoMobile, YoroiWallet, delay} from '@yoroi/cardano-wallet'
 import {useMutationWithInvalidations} from '@yoroi/common'
 import {calculateTxId} from '@yoroi/tx'
 import {Branded} from '@yoroi/types'
@@ -37,13 +35,11 @@ export const useSubmitTx = (
       let txId: string | undefined
       try {
         // Calculate txId before submission for better error tracking
-        txId = await CardanoMobileWrapped.cslScope(async (csl) => {
-          return await calculateTxId(
-            csl,
-            Buffer.from(txBytes).toString('hex'),
-            'hex',
-          )
-        })
+        txId = await calculateTxId(
+          CardanoMobile,
+          Buffer.from(txBytes).toString('hex'),
+          'hex',
+        )
         logger.debug('useSubmitTx: Submitting transaction', {
           txId,
           walletId: wallet.id,
@@ -108,13 +104,11 @@ export const useSubmitTx = (
 
       if (serverStatus.isQueueOnline) {
         if (!txId) {
-          txId = await CardanoMobileWrapped.cslScope(async (csl) => {
-            return await calculateTxId(
-              csl,
-              Buffer.from(txBytes).toString('hex'),
-              'hex',
-            )
-          })
+          txId = await calculateTxId(
+            CardanoMobile,
+            Buffer.from(txBytes).toString('hex'),
+            'hex',
+          )
         }
 
         // Notify sync manager about transaction submission for fast polling
@@ -129,13 +123,11 @@ export const useSubmitTx = (
       // This ensures fast polling when queue comes back online
       if (!txId) {
         try {
-          txId = await CardanoMobileWrapped.cslScope(async (csl) => {
-            return await calculateTxId(
-              csl,
-              Buffer.from(txBytes).toString('hex'),
-              'hex',
-            )
-          })
+          txId = await calculateTxId(
+            CardanoMobile,
+            Buffer.from(txBytes).toString('hex'),
+            'hex',
+          )
         } catch (error) {
           logger.error(
             'useSubmitTx: Failed to calculate txId after submission',

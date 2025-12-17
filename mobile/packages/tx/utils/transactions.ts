@@ -19,7 +19,7 @@ export async function hashTransaction(
 /**
  * Calculate transaction ID from encoded transaction
  *
- * NOTE: This function expects to be called within a cslScope.
+ * NOTE: Pass CardanoMobile as the csl parameter.
  */
 export async function calculateTxId(
   csl: WasmModuleProxy,
@@ -34,7 +34,7 @@ export async function calculateTxId(
 /**
  * Get balance for staking credentials from UTXOs
  *
- * NOTE: This function expects to be called within a cslScope.
+ * NOTE: Pass CardanoMobile as the csl parameter.
  */
 export async function getBalanceForStakingCredentials(
   csl: WasmModuleProxy,

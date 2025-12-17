@@ -1,3 +1,4 @@
+import {CardanoMobile} from '@yoroi/cardano-wallet'
 import {isHex} from '@yoroi/common'
 import {StakingStatus} from '@yoroi/staking'
 import {CardanoAddressedUtxo} from '@yoroi/tx'
@@ -6,49 +7,45 @@ import {sortBy} from 'lodash'
 
 import type {TimestampedCertMeta} from './transactionManager/transactionManager'
 import {CardanoTypes} from './types'
-import {CardanoMobileWrapped} from './wrappedCsl'
 
 const addrContainsAccountKey = async (
   address: string,
   targetAccountKey: CardanoTypes.StakeCredential,
   acceptTypeMismatch: boolean,
 ) => {
-  return CardanoMobileWrapped.cslScope((csl) => {
-    // Create address within this cslScope to avoid pointer issues
-    type CslAddress = ReturnType<
-      ReturnType<typeof csl.ByronAddress.fromBase58>['toAddress']
-    >
-    let wasmAddr: CslAddress
-    if (csl.ByronAddress.isValid(address)) {
-      const byronAddr = csl.ByronAddress.fromBase58(address)
-      wasmAddr = byronAddr.toAddress()
-    } else {
-      const isHexAddr = isHex(address)
-      wasmAddr = isHexAddr
-        ? csl.Address.fromHex(address)
-        : csl.Address.fromBech32(address)
+  type CslAddress = ReturnType<
+    ReturnType<typeof CardanoMobile.ByronAddress.fromBase58>['toAddress']
+  >
+  let wasmAddr: CslAddress
+  if (CardanoMobile.ByronAddress.isValid(address)) {
+    const byronAddr = CardanoMobile.ByronAddress.fromBase58(address)
+    wasmAddr = byronAddr.toAddress()
+  } else {
+    const isHexAddr = isHex(address)
+    wasmAddr = isHexAddr
+      ? CardanoMobile.Address.fromHex(address)
+      : CardanoMobile.Address.fromBech32(address)
+  }
+
+  if (wasmAddr == null || wasmAddr.isMalformed()) {
+    throw new Error(`addrContainsAccountKey: invalid address ${address}`)
+  }
+
+  const accountKeyString = Buffer.from(targetAccountKey.toBytes()).toString(
+    'hex',
+  )
+  const asBase = CardanoMobile.BaseAddress.fromAddress(wasmAddr)
+
+  if (asBase != null) {
+    if (
+      Buffer.from(asBase.stakeCred().toBytes()).toString('hex') ===
+      accountKeyString
+    ) {
+      return true
     }
+  }
 
-    if (wasmAddr == null || wasmAddr.isMalformed()) {
-      throw new Error(`addrContainsAccountKey: invalid address ${address}`)
-    }
-
-    const accountKeyString = Buffer.from(targetAccountKey.toBytes()).toString(
-      'hex',
-    )
-    const asBase = csl.BaseAddress.fromAddress(wasmAddr)
-
-    if (asBase != null) {
-      if (
-        Buffer.from(asBase.stakeCred().toBytes()).toString('hex') ===
-        accountKeyString
-      ) {
-        return true
-      }
-    }
-
-    return acceptTypeMismatch
-  })
+  return acceptTypeMismatch
 }
 
 export const filterAddressesByStakingKey = async (
@@ -121,10 +118,8 @@ export const normalizeToPoolHash = (poolIdOrHash: string): string => {
 }
 
 const getPoolHash = (poolId: string): string => {
-  return CardanoMobileWrapped.cslScope((csl) => {
-    const hash = csl.Ed25519KeyHash.fromBech32(poolId)
-    return hash.toHex()
-  })
+  const hash = CardanoMobile.Ed25519KeyHash.fromBech32(poolId)
+  return hash.toHex()
 }
 
 const isValidPoolId = (poolId: string): boolean => {
@@ -138,31 +133,27 @@ const isValidPoolId = (poolId: string): boolean => {
 }
 
 export const getPoolBech32Id = (poolId: string) => {
-  return CardanoMobileWrapped.cslScope((csl) => {
-    const keyHash = csl.Ed25519KeyHash.fromHex(poolId)
-    if (!keyHash) {
-      throw new Error(
-        `getPoolBech32Id: Failed to create key hash from poolId: ${poolId}`,
-      )
-    }
-    const bech32 = keyHash.toBech32('pool')
-    if (!bech32) {
-      throw new Error(
-        `getPoolBech32Id: Failed to convert key hash to bech32 for poolId: ${poolId}`,
-      )
-    }
-    return bech32
-  })
+  const keyHash = CardanoMobile.Ed25519KeyHash.fromHex(poolId)
+  if (!keyHash) {
+    throw new Error(
+      `getPoolBech32Id: Failed to create key hash from poolId: ${poolId}`,
+    )
+  }
+  const bech32 = keyHash.toBech32('pool')
+  if (!bech32) {
+    throw new Error(
+      `getPoolBech32Id: Failed to convert key hash to bech32 for poolId: ${poolId}`,
+    )
+  }
+  return bech32
 }
 
 const isValidPoolHash = (poolHash: string): boolean => {
   if (poolHash.length === 0) return false
-  return CardanoMobileWrapped.cslScope((csl) => {
-    try {
-      csl.Ed25519KeyHash.fromBytes(Buffer.from(poolHash, 'hex'))
-      return true
-    } catch (e) {
-      return false
-    }
-  })
+  try {
+    CardanoMobile.Ed25519KeyHash.fromBytes(Buffer.from(poolHash, 'hex'))
+    return true
+  } catch (e) {
+    return false
+  }
 }

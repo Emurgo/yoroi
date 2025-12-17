@@ -1,6 +1,6 @@
 // Ledger signer utilities
 // Functions for determining required signers for transactions
-import {CardanoMobileWrapped} from '@yoroi/common'
+import {CardanoMobile} from '@yoroi/cardano-wallet'
 import {Address} from '@yoroi/types'
 
 import {Ed25519KeyHash, WasmModuleProxy} from '@emurgo/cross-csl-core'
@@ -49,24 +49,22 @@ export const getAllSigners = async ({
   utxos,
   getAddressAddressing,
 }: GetAllSignersOptions): Promise<Addressing[]> => {
-  return CardanoMobileWrapped.cslScope(async (csl) => {
-    const requiredSignersAddressing = await getRequiredSignersAddressing({
-      wasm: csl,
-      body,
-      networkId,
-      stakeVKHash,
-      getAddressAddressing,
-      partial,
-      stakingKeyPath,
-    })
-    const inputsAddressing = getInputsAddressing(body, utxos, partial)
-    const collateralAddressing = getCollateralAddressing(body, utxos, partial)
-    return [
-      ...requiredSignersAddressing,
-      ...inputsAddressing,
-      ...collateralAddressing,
-    ]
+  const requiredSignersAddressing = await getRequiredSignersAddressing({
+    wasm: CardanoMobile,
+    body,
+    networkId,
+    stakeVKHash,
+    getAddressAddressing,
+    partial,
+    stakingKeyPath,
   })
+  const inputsAddressing = getInputsAddressing(body, utxos, partial)
+  const collateralAddressing = getCollateralAddressing(body, utxos, partial)
+  return [
+    ...requiredSignersAddressing,
+    ...inputsAddressing,
+    ...collateralAddressing,
+  ]
 }
 
 const getInputsAddressing = (

@@ -1,8 +1,8 @@
+import {CardanoMobile} from '@yoroi/cardano-wallet'
+
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {generateMnemonic, mnemonicToEntropy} from 'bip39'
 import {randomBytes} from 'react-native-randombytes'
-
-import {CardanoMobileWrapped} from '../wrappedCsl'
 
 const mnemonicStrengh = 160
 
@@ -29,8 +29,6 @@ export const generateWalletRootKey = (
 }
 
 export const getMasterKeyFromMnemonic = (mnemonic: string) => {
-  return CardanoMobileWrapped.cslScope((csl) => {
-    const rootKeyPtr = generateWalletRootKey(mnemonic, csl)
-    return rootKeyPtr.asBytes()
-  })
+  const rootKeyPtr = generateWalletRootKey(mnemonic, CardanoMobile)
+  return rootKeyPtr.asBytes()
 }

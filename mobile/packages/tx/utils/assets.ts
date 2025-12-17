@@ -16,8 +16,8 @@ import {RemoteUnspentOutput, SendToken} from '../types'
 /**
  * Convert Balance.Amounts to Cardano Value
  *
- * NOTE: This function expects to be called within a cslScope.
- * The returned Value object will be valid within that same scope.
+ * NOTE: Pass CardanoMobile as the csl parameter.
+ * With wrappedCSL mode, memory management is automatic.
  */
 export function cardanoValueFromAmounts(
   csl: WasmModuleProxy,
@@ -79,8 +79,8 @@ export function cardanoValueFromAmounts(
 /**
  * Convert Cardano Value to Balance.Amounts
  *
- * NOTE: This function expects to be called within a cslScope.
- * The value parameter must be valid within that same scope.
+ * NOTE: Pass CardanoMobile as the csl parameter.
+ * With wrappedCSL mode, memory management is automatic.
  */
 export function amountsFromCardanoValue(
   csl: WasmModuleProxy,

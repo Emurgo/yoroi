@@ -1,7 +1,8 @@
+import {CardanoMobile} from '@yoroi/cardano-wallet'
+
 import {mnemonicToEntropy} from 'bip39'
 
 import {generateAdaMnemonic} from '../mnemonic/mnemonic'
-import {CardanoMobile} from '../wrappedCsl'
 
 export function generatePrivateKeyForCatalyst() {
   const mnemonic = generateAdaMnemonic()

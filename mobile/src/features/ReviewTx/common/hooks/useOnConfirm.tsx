@@ -1,5 +1,5 @@
 import {
-  CardanoMobileWrapped,
+  CardanoMobile,
   YoroiWallet,
   createRawTxSigningKey,
   getTransactionSigners,
@@ -293,13 +293,11 @@ export const useOnConfirm = ({
           onSuccess: async (tx: Transaction) => {
             // Calculate txId from signed transaction immediately
             const txBytes = tx.toBytes()
-            const txId = await CardanoMobileWrapped.cslScope(async (csl) => {
-              return await calculateTxId(
-                csl,
-                Buffer.from(txBytes).toString('hex'),
-                'hex',
-              )
-            })
+            const txId = await calculateTxId(
+              CardanoMobile,
+              Buffer.from(txBytes).toString('hex'),
+              'hex',
+            )
 
             handleOnSuccess({tx, txId})
           },
@@ -325,11 +323,7 @@ export const useOnConfirm = ({
                 onSuccess={async () => {
                   // For HW with submit, transaction is already submitted
                   // Calculate txId from unsigned CBOR (body hash is same)
-                  const txId = await CardanoMobileWrapped.cslScope(
-                    async (csl) => {
-                      return await calculateTxId(csl, cbor, 'hex')
-                    },
-                  )
+                  const txId = await calculateTxId(CardanoMobile, cbor, 'hex')
                   handleOnSuccess({txId})
                 }}
                 onCancel={() => {
@@ -450,33 +444,31 @@ const signTx = async (
   txId: string
   signedTxBytes: Uint8Array
 } | null> => {
-  const result = await CardanoMobileWrapped.cslScope(async (csl) => {
-    const signers = await getTransactionSigners(cbor, wallet, meta)
+  const signers = await getTransactionSigners(cbor, wallet, meta)
 
-    const keys = signers.map((signer) =>
-      createRawTxSigningKey(rootKey, signer, csl),
+  const keys = signers.map((signer) =>
+    createRawTxSigningKey(rootKey, signer, CardanoMobile),
+  )
+
+  const signedTxBytes = await wallet.signRawTx(cbor, keys)
+  if (!signedTxBytes) {
+    logger.error(
+      'signTx: Failed to sign transaction - signRawTx returned null',
+      {
+        walletId: wallet.id,
+      },
     )
+    return null
+  }
 
-    const signedTxBytes = await wallet.signRawTx(cbor, keys)
-    if (!signedTxBytes) {
-      logger.error(
-        'signTx: Failed to sign transaction - signRawTx returned null',
-        {
-          walletId: wallet.id,
-        },
-      )
-      return null
-    }
+  // Calculate transaction ID from signed bytes
+  const txId = await calculateTxId(
+    CardanoMobile,
+    Buffer.from(signedTxBytes).toString('hex'),
+    'hex',
+  )
 
-    // Calculate transaction ID from signed bytes
-    const txId = await calculateTxId(
-      csl,
-      Buffer.from(signedTxBytes).toString('hex'),
-      'hex',
-    )
-
-    return {signedTxBytes, txId}
-  })
+  const result = {signedTxBytes, txId}
 
   if (!result) {
     return null

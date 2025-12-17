@@ -18,8 +18,6 @@ import {Address, Branded, KeyHash, Portfolio, Wallet} from '@yoroi/types'
 import type {PublicKey} from '@emurgo/cross-csl-core'
 import BigNumber from 'bignumber.js'
 
-import {CardanoMobileWrapped} from '../wrappedCsl'
-
 export type CreateDelegationTxParams = {
   utxos: ModernUtxo[]
   primaryTokenId: Portfolio.Token.Id
@@ -68,10 +66,8 @@ export async function createDelegationTx({
   )
 
   // Extract stake credential key hash from staking key (done once outside retry loop)
-  const stakeKeyHashHex = CardanoMobileWrapped.cslScope(() => {
-    const keyHash = stakingKey.hash()
-    return keyHash.toHex()
-  })
+  const keyHash = stakingKey.hash()
+  const stakeKeyHashHex = keyHash.toHex()
 
   // Helper function to calculate required ADA based on fee estimate
   // Must account for: fee (and deposit if registering) + minimum UTXO for change output

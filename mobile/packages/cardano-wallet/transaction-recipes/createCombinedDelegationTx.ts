@@ -1,3 +1,4 @@
+import {CardanoMobile} from '@yoroi/cardano-wallet'
 import {getLogger} from '@yoroi/logger'
 import {
   CertificateKind,
@@ -19,8 +20,6 @@ import {Address, Branded, KeyHash, Portfolio, Wallet} from '@yoroi/types'
 
 import type {PublicKey} from '@emurgo/cross-csl-core'
 import BigNumber from 'bignumber.js'
-
-import {CardanoMobileWrapped} from '../wrappedCsl'
 
 export type CreateCombinedDelegationTxParams = {
   utxos: ModernUtxo[]
@@ -80,23 +79,21 @@ export async function createCombinedDelegationTx({
   )
 
   // Extract stake credential key hash from staking key (done once outside retry loop)
-  const stakeKeyHashHex = CardanoMobileWrapped.cslScope(() => {
-    const keyHash = stakingKey.hash()
-    return keyHash.toHex()
-  })
+  const keyHash = stakingKey.hash()
+  const stakeKeyHashHex = keyHash.toHex()
 
   // Convert poolId from bech32 to hex if needed (transaction builder expects hex)
   const poolKeyHashHex = poolId
-    ? CardanoMobileWrapped.cslScope((csl) => {
+    ? (() => {
         const poolIdStr = typeof poolId === 'string' ? poolId : poolId
         // Check if poolId is bech32 format (starts with 'pool')
         if (poolIdStr.startsWith('pool')) {
-          const keyHash = csl.Ed25519KeyHash.fromBech32(poolIdStr)
+          const keyHash = CardanoMobile.Ed25519KeyHash.fromBech32(poolIdStr)
           return keyHash.toHex() as KeyHash
         }
         // Assume it's already hex format
         return poolIdStr as KeyHash
-      })
+      })()
     : undefined
 
   // Validate that at least one delegation type is provided

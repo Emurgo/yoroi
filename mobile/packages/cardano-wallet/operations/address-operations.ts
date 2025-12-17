@@ -1,4 +1,5 @@
 import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
+import {CardanoMobile} from '@yoroi/cardano-wallet'
 import {getLogger, throwLoggedError} from '@yoroi/logger'
 import {Address, App, Branded, Wallet} from '@yoroi/types'
 
@@ -6,7 +7,6 @@ import * as CSL from '@emurgo/cross-csl-core'
 
 import {AccountManager} from '../account-manager/account-manager'
 import type {ReadOnlyAccountManager} from '../account-manager/read-only-account-manager'
-import {CardanoMobile} from '../wrappedCsl'
 
 /**
  * Get change address for a wallet

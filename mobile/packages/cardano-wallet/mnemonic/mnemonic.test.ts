@@ -1,4 +1,5 @@
-import {CardanoMobileWrapped} from '../wrappedCsl'
+import {CardanoMobile} from '@yoroi/cardano-wallet'
+
 import {generateAdaMnemonic, generateWalletRootKey} from './mnemonic'
 
 const mnemonic = [
@@ -19,10 +20,8 @@ describe('BIP39', () => {
   })
 
   it('correctly derives wallet root key', async () => {
-    const rootKeyBytes = CardanoMobileWrapped.cslScope((csl) => {
-      const rootKey = generateWalletRootKey(mnemonic, csl)
-      return rootKey.asBytes()
-    })
+    const rootKey = generateWalletRootKey(mnemonic, CardanoMobile)
+    const rootKeyBytes = rootKey.asBytes()
     expect(Buffer.from(rootKeyBytes).toString('hex')).toEqual(expectedKey)
   })
 })

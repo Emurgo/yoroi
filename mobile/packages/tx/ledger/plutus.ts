@@ -1,6 +1,6 @@
 // Ledger Plutus transaction payload building
 // Functions for building Ledger payloads for Plutus (smart contract) transactions
-import {CardanoMobileWrapped} from '@yoroi/common'
+import {CardanoMobile} from '@yoroi/cardano-wallet'
 import {getLogger} from '@yoroi/logger'
 
 import {
@@ -46,114 +46,111 @@ export const createLedgerPlutusPayload = async (
     stakeVKHash,
   } = params
 
-  return CardanoMobileWrapped.cslScope(async (csl) => {
-    const tx = csl.Transaction.fromHex(cbor)
-    const body = tx.body()
+  const tx = CardanoMobile.Transaction.fromHex(cbor)
+  const body = tx.body()
 
-    assertTagsState(csl, cbor)
+  assertTagsState(CardanoMobile, cbor)
 
-    const ttl = body.ttl()?.toString()
+  const ttl = body.ttl()?.toString()
 
-    const fee = body.fee().toStr()
+  const fee = body.fee().toStr()
 
-    const scriptDataHashHex = body.scriptDataHash()?.toHex()
-    const changeAddrs = addresses
+  const scriptDataHashHex = body.scriptDataHash()?.toHex()
+  const changeAddrs = addresses
 
-    const getAddressingPath = (txId: string, index: number) => {
-      return getUtxoAddressing(txId, index)?.path ?? null
-    }
+  const getAddressingPath = (txId: string, index: number) => {
+    return getUtxoAddressing(txId, index)?.path ?? null
+  }
 
-    const outputs = await transformToLedgerOutputs(csl, {
-      networkId,
-      txOutputs: body.outputs(),
-      changeAddrs,
-    })
+  const outputs = await transformToLedgerOutputs(CardanoMobile, {
+    networkId,
+    txOutputs: body.outputs(),
+    changeAddrs,
+  })
 
-    const originalRequiredSigners = getRequiredSigners(body)
+  const originalRequiredSigners = getRequiredSigners(body)
 
-    // Only include required signers that the wallet actually controls
-    // Skip signers we don't control (e.g., Minswap's payment key + our staking key)
-    const requiredSigners = originalRequiredSigners
-      .map((s) => {
-        const paymentStakeCredential = csl.Credential.fromKeyhash(s)
-        const stakeCredential = csl.Credential.fromKeyhash(stakeVKHash)
-        const baseAddress = csl.BaseAddress.new(
-          networkId,
-          paymentStakeCredential,
-          stakeCredential,
-        )
-        const addressing = getAddressAddressing(
-          baseAddress.toAddress().toBech32(undefined),
-        )
-        if (!addressing) {
-          // Skip if wallet doesn't control this address
-          return null
-        }
-        const path = addressing.path
-        return {type: TxRequiredSignerType.PATH as const, path}
-      })
-      .filter(
-        (s): s is {type: TxRequiredSignerType.PATH; path: number[]} =>
-          s !== null,
+  // Only include required signers that the wallet actually controls
+  // Skip signers we don't control (e.g., Minswap's payment key + our staking key)
+  const requiredSigners = originalRequiredSigners
+    .map((s) => {
+      const paymentStakeCredential = CardanoMobile.Credential.fromKeyhash(s)
+      const stakeCredential = CardanoMobile.Credential.fromKeyhash(stakeVKHash)
+      const baseAddress = CardanoMobile.BaseAddress.new(
+        networkId,
+        paymentStakeCredential,
+        stakeCredential,
       )
+      const addressing = getAddressAddressing(
+        baseAddress.toAddress().toBech32(undefined),
+      )
+      if (!addressing) {
+        // Skip if wallet doesn't control this address
+        return null
+      }
+      const path = addressing.path
+      return {type: TxRequiredSignerType.PATH as const, path}
+    })
+    .filter(
+      (s): s is {type: TxRequiredSignerType.PATH; path: number[]} => s !== null,
+    )
 
-    const inputs = body.inputs()
-    const inputsArray: TxInput[] = []
-    for (let i = 0; i < inputs.len(); i++) {
-      const input = inputs.get(i)
+  const inputs = body.inputs()
+  const inputsArray: TxInput[] = []
+  for (let i = 0; i < inputs.len(); i++) {
+    const input = inputs.get(i)
+    const txId = input.transactionId().toHex()
+    const txIndex = input.index()
+    const path = getAddressingPath(txId, txIndex)
+    if (!path) {
+      getLogger().warn(
+        'createLedgerPlutusPayload: Could not find addressing path for transaction input',
+        {
+          txId,
+          txIndex,
+          inputIndex: i,
+          function: 'createLedgerPlutusPayload',
+        },
+      )
+    }
+    inputsArray.push({txHashHex: txId, outputIndex: txIndex, path})
+  }
+
+  const collateral = body.collateral()
+  const collateralArray: TxInput[] = []
+  if (collateral) {
+    for (let i = 0; i < collateral.len(); i++) {
+      const input = collateral.get(i)
       const txId = input.transactionId().toHex()
       const txIndex = input.index()
-      const path = getAddressingPath(txId, txIndex)
-      if (!path) {
-        getLogger().warn(
-          'createLedgerPlutusPayload: Could not find addressing path for transaction input',
-          {
-            txId,
-            txIndex,
-            inputIndex: i,
-            function: 'createLedgerPlutusPayload',
-          },
-        )
-      }
-      inputsArray.push({txHashHex: txId, outputIndex: txIndex, path})
+      collateralArray.push({
+        txHashHex: txId,
+        outputIndex: txIndex,
+        path: getAddressingPath(txId, txIndex),
+      })
     }
+  }
 
-    const collateral = body.collateral()
-    const collateralArray: TxInput[] = []
-    if (collateral) {
-      for (let i = 0; i < collateral.len(); i++) {
-        const input = collateral.get(i)
-        const txId = input.transactionId().toHex()
-        const txIndex = input.index()
-        collateralArray.push({
-          txHashHex: txId,
-          outputIndex: txIndex,
-          path: getAddressingPath(txId, txIndex),
-        })
-      }
-    }
-
-    return {
-      signingMode: TransactionSigningMode.PLUTUS_TRANSACTION,
-      tx: {
-        fee,
-        inputs: inputsArray,
-        collateralInputs: collateralArray,
-        ...(ttl ? {ttl} : {}),
-        requiredSigners,
-        outputs,
-        network: {
-          networkId,
-          protocolMagic,
-        },
-        scriptDataHashHex,
+  return {
+    signingMode: TransactionSigningMode.PLUTUS_TRANSACTION,
+    tx: {
+      fee,
+      inputs: inputsArray,
+      collateralInputs: collateralArray,
+      ...(ttl ? {ttl} : {}),
+      requiredSigners,
+      outputs,
+      network: {
+        networkId,
+        protocolMagic,
       },
-      additionalWitnessPaths: [],
-      options: {
-        tagCborSets: await doAllSetsHaveTag(csl, cbor),
-      },
-    }
-  })
+      scriptDataHashHex,
+    },
+    additionalWitnessPaths: [],
+    options: {
+      tagCborSets: await doAllSetsHaveTag(CardanoMobile, cbor),
+    },
+  }
 }
 
 const getRequiredSigners = (body: TransactionBody): Array<Ed25519KeyHash> => {

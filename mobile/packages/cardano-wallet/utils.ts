@@ -1,4 +1,5 @@
 import {RawUtxo} from '@yoroi/api'
+import {CardanoMobile} from '@yoroi/cardano-wallet'
 import {isHex} from '@yoroi/common'
 import {getLogger} from '@yoroi/logger'
 import {primaryTokenId as defaultPrimaryTokenId} from '@yoroi/portfolio'
@@ -18,7 +19,6 @@ import {identifierToCardanoAsset} from './assetHelpers'
 import {withMinAmounts} from './getMinAmounts'
 import {CardanoTypes, YoroiWallet} from './types'
 import {Amounts} from './utils/utils'
-import {CardanoMobileWrapped} from './wrappedCsl'
 
 export const deriveRewardAddressHex = (
   accountPubKeyHex: string,
@@ -26,78 +26,74 @@ export const deriveRewardAddressHex = (
   role: number,
   index: number,
 ): string => {
-  return CardanoMobileWrapped.cslScope((csl) => {
-    const accountPubKeyPtr = csl.Bip32PublicKey.fromBytes(
-      Buffer.from(accountPubKeyHex, 'hex'),
-    )
-    const stakingKey = accountPubKeyPtr.derive(role).derive(index).toRawKey()
-    const credential = csl.Credential.fromKeyhash(stakingKey.hash())
-    const rewardAddr = csl.RewardAddress.new(chainId, credential)
-    const rewardAddrAsAddr = rewardAddr.toAddress()
+  const accountPubKeyPtr = CardanoMobile.Bip32PublicKey.fromBytes(
+    Buffer.from(accountPubKeyHex, 'hex'),
+  )
+  const stakingKey = accountPubKeyPtr.derive(role).derive(index).toRawKey()
+  const credential = CardanoMobile.Credential.fromKeyhash(stakingKey.hash())
+  const rewardAddr = CardanoMobile.RewardAddress.new(chainId, credential)
+  const rewardAddrAsAddr = rewardAddr.toAddress()
 
-    const result = Buffer.from(rewardAddrAsAddr.toBytes()).toString('hex')
-    return result
-  })
+  const result = Buffer.from(rewardAddrAsAddr.toBytes()).toString('hex')
+  return result
 }
 
 export const deriveRewardAddressFromAddress = (
   address: string,
   chainId: number,
 ): string => {
-  return CardanoMobileWrapped.cslScope((csl) => {
-    // Handle Byron addresses (base58) - they don't have stake credentials
-    if (csl.ByronAddress.isValid(address)) {
-      throw new Error(
-        `deriveRewardAddressFromAddress: Byron addresses do not support staking/reward addresses: ${address}`,
-      )
-    }
+  // Handle Byron addresses (base58) - they don't have stake credentials
+  if (CardanoMobile.ByronAddress.isValid(address)) {
+    throw new Error(
+      `deriveRewardAddressFromAddress: Byron addresses do not support staking/reward addresses: ${address}`,
+    )
+  }
 
-    // Parse address - supports hex or bech32
-    const isHexAddr = isHex(address)
-    const wasmAddress = isHexAddr
-      ? csl.Address.fromHex(address)
-      : csl.Address.fromBech32(address)
+  // Parse address - supports hex or bech32
+  const isHexAddr = isHex(address)
+  const wasmAddress = isHexAddr
+    ? CardanoMobile.Address.fromHex(address)
+    : CardanoMobile.Address.fromBech32(address)
 
-    if (!wasmAddress || wasmAddress.isMalformed()) {
-      throw new Error(
-        `deriveRewardAddressFromAddress: Invalid address format: ${address}`,
-      )
-    }
+  if (!wasmAddress || wasmAddress.isMalformed()) {
+    throw new Error(
+      `deriveRewardAddressFromAddress: Invalid address format: ${address}`,
+    )
+  }
 
-    const baseAddress = csl.BaseAddress.fromAddress(wasmAddress)
-    if (!baseAddress) {
-      throw new Error(
-        `deriveRewardAddressFromAddress: Address is not a base address: ${address}`,
-      )
-    }
+  const baseAddress = CardanoMobile.BaseAddress.fromAddress(wasmAddress)
+  if (!baseAddress) {
+    throw new Error(
+      `deriveRewardAddressFromAddress: Address is not a base address: ${address}`,
+    )
+  }
 
-    const stakeCred = baseAddress.stakeCred()
-    if (!stakeCred) {
-      throw new Error(
-        `deriveRewardAddressFromAddress: Failed to get stake credential from address: ${address}`,
-      )
-    }
+  const stakeCred = baseAddress.stakeCred()
+  if (!stakeCred) {
+    throw new Error(
+      `deriveRewardAddressFromAddress: Failed to get stake credential from address: ${address}`,
+    )
+  }
 
-    const rewardAddress = csl.RewardAddress.new(chainId, stakeCred)
-    if (!rewardAddress) {
-      throw new Error(
-        `deriveRewardAddressFromAddress: Failed to create reward address`,
-      )
-    }
+  const rewardAddress = CardanoMobile.RewardAddress.new(chainId, stakeCred)
+  if (!rewardAddress) {
+    throw new Error(
+      `deriveRewardAddressFromAddress: Failed to create reward address`,
+    )
+  }
 
-    const rewardAddressObj = rewardAddress.toAddress()
-    if (!rewardAddressObj) {
-      throw new Error(
-        `deriveRewardAddressFromAddress: Failed to convert reward address to Address`,
-      )
-    }
+  const rewardAddressObj = rewardAddress.toAddress()
+  if (!rewardAddressObj) {
+    throw new Error(
+      `deriveRewardAddressFromAddress: Failed to convert reward address to Address`,
+    )
+  }
 
-    const result = rewardAddressObj.toBech32(undefined)
-    if (typeof result !== 'string') {
-      throw new Error('Its not possible to derive reward address')
-    }
-    return result
-  })
+  const result = rewardAddressObj.toBech32(undefined)
+  if (typeof result !== 'string') {
+    throw new Error('Its not possible to derive reward address')
+  }
+  return result
 }
 
 /**
@@ -297,30 +293,28 @@ export const isTokenInfo = (
 }
 
 export const generateCIP30UtxoCbor = (utxo: RawUtxo) => {
-  return CardanoMobileWrapped.cslScope((csl) => {
-    const txHash = csl.TransactionHash.fromBytes(
-      Buffer.from(utxo.tx_hash, 'hex'),
-    )
-    if (!txHash) throw new Error('Invalid tx hash')
+  const txHash = CardanoMobile.TransactionHash.fromBytes(
+    Buffer.from(utxo.tx_hash, 'hex'),
+  )
+  if (!txHash) throw new Error('Invalid tx hash')
 
-    const index = utxo.tx_index
-    const input = csl.TransactionInput.new(txHash, index)
-    // Use normalizeToAddress to handle Byron (base58), Shelley (bech32), and hex addresses
-    const address = normalizeToAddress(csl, utxo.receiver)
-    if (!address) throw new Error('Invalid address')
+  const index = utxo.tx_index
+  const input = CardanoMobile.TransactionInput.new(txHash, index)
+  // Use normalizeToAddress to handle Byron (base58), Shelley (bech32), and hex addresses
+  const address = normalizeToAddress(CardanoMobile, utxo.receiver)
+  if (!address) throw new Error('Invalid address')
 
-    const amount = csl.BigNum.fromStr(utxo.amount)
-    if (!amount) throw new Error('Invalid amount')
+  const amount = CardanoMobile.BigNum.fromStr(utxo.amount)
+  if (!amount) throw new Error('Invalid amount')
 
-    const collateral = csl.Value.new(amount)
-    const output = csl.TransactionOutput.new(address, collateral)
-    const transactionUnspentOutput = csl.TransactionUnspentOutput.new(
-      input,
-      output,
-    )
+  const collateral = CardanoMobile.Value.new(amount)
+  const output = CardanoMobile.TransactionOutput.new(address, collateral)
+  const transactionUnspentOutput = CardanoMobile.TransactionUnspentOutput.new(
+    input,
+    output,
+  )
 
-    return transactionUnspentOutput.toHex()
-  })
+  return transactionUnspentOutput.toHex()
 }
 
 export const createRawTxSigningKey = (

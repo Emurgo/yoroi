@@ -1,4 +1,5 @@
 import {RawUtxo} from '@yoroi/api'
+import {CardanoMobile} from '@yoroi/cardano-wallet'
 import {getLogger} from '@yoroi/logger'
 import {normalizeToAddress} from '@yoroi/tx'
 
@@ -6,7 +7,6 @@ import {Address} from '@emurgo/cross-csl-core'
 import BigNumber from 'bignumber.js'
 
 import {cardanoValueFromRemoteFormat} from './utils'
-import {wrappedCsl} from './wrappedCsl'
 
 // Re-export from assetHelpers to maintain backward compatibility
 export {identifierToCardanoAsset} from './assetHelpers'
@@ -28,8 +28,7 @@ export async function calcLockedDeposit({
   rawUtxos: RawUtxo[]
   coinsPerUtxoByteStr: string
 }) {
-  const cslLocal = wrappedCsl()
-  const csl = cslLocal.csl
+  const csl = CardanoMobile
   const result = new BigNumber(0)
   try {
     const utxosWithAssets = rawUtxos.filter((u) => u.assets.length > 0)
@@ -90,7 +89,5 @@ export async function calcLockedDeposit({
       coinsPerUtxoByteStr,
     })
     return result
-  } finally {
-    cslLocal.release()
   }
 }

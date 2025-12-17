@@ -1,4 +1,5 @@
 import {cardanoConfig, derivationConfig} from '@yoroi/blockchains'
+import {CardanoMobile} from '@yoroi/cardano-wallet'
 import {parseSafe} from '@yoroi/common'
 import {getLogger} from '@yoroi/logger'
 import {
@@ -15,7 +16,6 @@ import {lruMemoize} from 'reselect'
 
 import * as legacyApi from '../api/api'
 import {CardanoTypes} from '../types'
-import {CardanoMobile} from '../wrappedCsl'
 
 export type AddressGenerator = {
   readonly accountPubKeyHex: string

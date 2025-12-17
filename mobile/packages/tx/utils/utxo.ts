@@ -116,9 +116,9 @@ function toTransactionUnspentOutputHex(this: ModernUtxo): string {
  *
  * @param csl - WasmModuleProxy instance. Must be provided from the calling scope.
  *
- * WARNING: Returns a WASM TransactionUnspentOutput object that will be freed when
- * the cslScope exits. Only use the returned object within the same scope where
- * it was created, or extract primitive values before the scope exits.
+ * WARNING: Returns a WASM TransactionUnspentOutput object. With wrappedCSL mode,
+ * memory is managed automatically. Extract primitive values if you need to store them
+ * for long-term use.
  */
 function toTransactionUnspentOutput(
   this: ModernUtxo,

@@ -1,7 +1,7 @@
+import {CardanoMobile} from '@yoroi/cardano-wallet'
 import {Address} from '@yoroi/types'
 
 import {CardanoTypes} from '../types'
-import {CardanoMobile} from '../wrappedCsl'
 
 /**
  * @description Get the spending keyHash, resolves null for PointerAddress & EnterpriseAddress missing yoroi-lib impl

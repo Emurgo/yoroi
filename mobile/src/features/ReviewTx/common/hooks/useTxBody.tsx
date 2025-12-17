@@ -1,4 +1,4 @@
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
+import {CardanoMobile} from '@yoroi/cardano-wallet'
 
 import * as React from 'react'
 
@@ -17,9 +17,7 @@ export const useTxBody = ({
   }, [cbor])
 }
 const getCborTxBody = (cbor: string) => {
-  return CardanoMobileWrapped.cslScope((csl) => {
-    const tx = csl.Transaction.fromHex(cbor)
-    const jsonString = tx.toJson()
-    return JSON.parse(jsonString).body
-  })
+  const tx = CardanoMobile.Transaction.fromHex(cbor)
+  const jsonString = tx.toJson()
+  return JSON.parse(jsonString).body
 }

@@ -1,12 +1,13 @@
 import {RawUtxo} from '@yoroi/api'
-import {YoroiWallet} from '@yoroi/cardano-wallet'
-import {deriveRewardAddressFromAddress} from '@yoroi/cardano-wallet'
-import {asQuantity} from '@yoroi/cardano-wallet'
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
+import {
+  CardanoMobile,
+  YoroiWallet,
+  asQuantity,
+  deriveRewardAddressFromAddress,
+} from '@yoroi/cardano-wallet'
 import {isNonNullable} from '@yoroi/common'
 import {createUnknownTokenInfo} from '@yoroi/portfolio'
-import {Branded, Portfolio} from '@yoroi/types'
-import {BaseAsset, WalletTransaction} from '@yoroi/types'
+import {BaseAsset, Branded, Portfolio, WalletTransaction} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {CredKind} from '@emurgo/cross-csl-core'
@@ -482,15 +483,13 @@ const deriveAddress = (address: string, chainId: number) => {
 }
 
 const getAddressKind = (addressBech32: string): CredKind | null => {
-  return CardanoMobileWrapped.cslScope((csl) => {
-    try {
-      const address = csl.Address.fromBech32(addressBech32)
-      const addressKind = address.paymentCred()?.kind()
-      return addressKind ?? null
-    } catch (e) {
-      return null
-    }
-  })
+  try {
+    const address = CardanoMobile.Address.fromBech32(addressBech32)
+    const addressKind = address.paymentCred()?.kind()
+    return addressKind ?? null
+  } catch (e) {
+    return null
+  }
 }
 
 const isOwnedAddress = (

@@ -1,6 +1,6 @@
 // Ledger transformation utilities
 // Transforms Cardano transactions to Ledger hardware wallet format
-import {CardanoMobileWrapped, isHex} from '@yoroi/common'
+import {isHex} from '@yoroi/common'
 
 import {
   AddressType as LedgerAddressType,
@@ -136,7 +136,7 @@ const areAddressesTheSame = (
  * Transform transaction outputs to Ledger format
  */
 export const transformToLedgerOutputs = async (
-  _csl: WasmModuleProxy,
+  csl: WasmModuleProxy,
   request: {
     networkId: number
     txOutputs: TransactionOutputs
@@ -144,61 +144,59 @@ export const transformToLedgerOutputs = async (
     stakingDerivationPath?: number[]
   },
 ): Promise<Array<LedgerTxOutput>> => {
-  return CardanoMobileWrapped.cslScope((csl) => {
-    const result: LedgerTxOutput[] = []
-    for (let i = 0; i < request.txOutputs.len(); i++) {
-      const output = request.txOutputs.get(i)
-      const address = output.address()
-      const jsAddr = toHexOrBase58(csl, address)
+  const result: LedgerTxOutput[] = []
+  for (let i = 0; i < request.txOutputs.len(); i++) {
+    const output = request.txOutputs.get(i)
+    const address = output.address()
+    const jsAddr = toHexOrBase58(csl, address)
 
-      let changeAddr: AddressingAddress | null = null
-      for (const change of request.changeAddrs) {
-        if (areAddressesTheSame(csl, jsAddr, change.address)) {
-          changeAddr = change
-          break
-        }
-      }
-
-      const dataHash = output.hasDataHash()
-        ? (output.dataHash()?.toHex() ?? '')
-        : undefined
-
-      if (changeAddr != null && changeAddr.addressing) {
-        verifyFromBip44Root(changeAddr.addressing)
-        const addressParams = toLedgerAddressParameters(csl, {
-          networkId: request.networkId,
-          address,
-          path: changeAddr.addressing.path,
-          stakingDerivationPath: request.stakingDerivationPath,
-        })
-        const outputAmount = output.amount()
-        const ledgerOutput: LedgerTxOutput = {
-          amount: output.amount().coin().toStr(),
-          tokenBundle: toLedgerTokenBundle(outputAmount.multiasset()),
-          datumHashHex: dataHash,
-          destination: {
-            type: TxOutputDestinationType.DEVICE_OWNED,
-            params: addressParams,
-          },
-        }
-        result.push(ledgerOutput)
-      } else {
-        const ledgerOutput: LedgerTxOutput = {
-          amount: output.amount().coin().toStr(),
-          tokenBundle: toLedgerTokenBundle(output.amount().multiasset()),
-          datumHashHex: dataHash,
-          destination: {
-            type: TxOutputDestinationType.THIRD_PARTY,
-            params: {
-              addressHex: Buffer.from(address.toBytes()).toString('hex'),
-            },
-          },
-        }
-        result.push(ledgerOutput)
+    let changeAddr: AddressingAddress | null = null
+    for (const change of request.changeAddrs) {
+      if (areAddressesTheSame(csl, jsAddr, change.address)) {
+        changeAddr = change
+        break
       }
     }
-    return result
-  })
+
+    const dataHash = output.hasDataHash()
+      ? (output.dataHash()?.toHex() ?? '')
+      : undefined
+
+    if (changeAddr != null && changeAddr.addressing) {
+      verifyFromBip44Root(changeAddr.addressing)
+      const addressParams = toLedgerAddressParameters(csl, {
+        networkId: request.networkId,
+        address,
+        path: changeAddr.addressing.path,
+        stakingDerivationPath: request.stakingDerivationPath,
+      })
+      const outputAmount = output.amount()
+      const ledgerOutput: LedgerTxOutput = {
+        amount: output.amount().coin().toStr(),
+        tokenBundle: toLedgerTokenBundle(outputAmount.multiasset()),
+        datumHashHex: dataHash,
+        destination: {
+          type: TxOutputDestinationType.DEVICE_OWNED,
+          params: addressParams,
+        },
+      }
+      result.push(ledgerOutput)
+    } else {
+      const ledgerOutput: LedgerTxOutput = {
+        amount: output.amount().coin().toStr(),
+        tokenBundle: toLedgerTokenBundle(output.amount().multiasset()),
+        datumHashHex: dataHash,
+        destination: {
+          type: TxOutputDestinationType.THIRD_PARTY,
+          params: {
+            addressHex: Buffer.from(address.toBytes()).toString('hex'),
+          },
+        },
+      }
+      result.push(ledgerOutput)
+    }
+  }
+  return result
 }
 
 /**

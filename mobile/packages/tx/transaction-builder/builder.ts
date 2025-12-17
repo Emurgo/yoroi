@@ -1,5 +1,5 @@
 // Functional Transaction Builder using CSL TransactionBuilder directly
-import {CardanoMobileWrapped} from '@yoroi/common'
+import {CardanoMobile} from '@yoroi/cardano-wallet'
 import {getLogger} from '@yoroi/logger'
 import {primaryTokenId as defaultPrimaryTokenId} from '@yoroi/portfolio'
 import {
@@ -637,1002 +637,1001 @@ export async function buildTransaction(
   protocolParams: CardanoHaskellConfig,
   primaryTokenId: Portfolio.Token.Id = defaultPrimaryTokenId,
 ): Promise<UnsignedTransaction> {
-  return CardanoMobileWrapped.cslScope((csl) => {
-    // Validate inputs
-    validateInputs(state)
+  // Validate inputs
+  validateInputs(state)
 
-    // Basic validation
-    // Allow transactions with no explicit outputs if they have a change address
-    // (CSL will create change outputs automatically)
-    if (state.outputs.length === 0 && !state.options.changeAddress) {
-      getLogger().error('buildTransaction: No outputs in transaction')
-      throw new NoOutputsError()
-    }
+  // Basic validation
+  // Allow transactions with no explicit outputs if they have a change address
+  // (CSL will create change outputs automatically)
+  if (state.outputs.length === 0 && !state.options.changeAddress) {
+    getLogger().error('buildTransaction: No outputs in transaction')
+    throw new NoOutputsError()
+  }
 
-    // Create CSL TransactionBuilder
-    const cslTxBuilder = createCSLTransactionBuilder(csl, protocolParams)
-    if (!cslTxBuilder) {
-      getLogger().error(
-        'buildTransaction: Failed to create CSL TransactionBuilder',
-      )
-      throw new Error('Failed to create CSL TransactionBuilder')
-    }
+  // Create CSL TransactionBuilder
+  const cslTxBuilder = createCSLTransactionBuilder(
+    CardanoMobile,
+    protocolParams,
+  )
+  if (!cslTxBuilder) {
+    getLogger().error(
+      'buildTransaction: Failed to create CSL TransactionBuilder',
+    )
+    throw new Error('Failed to create CSL TransactionBuilder')
+  }
 
-    // Add outputs first (CSL builder needs outputs to calculate fees)
-    for (let i = 0; i < state.outputs.length; i++) {
-      const output = state.outputs[i]
-      if (!output) continue
-      try {
-        const cslOutput = outputToCSL(csl, output, primaryTokenId)
-        if (!cslOutput) {
-          getLogger().error('buildTransaction: Failed to create CSL output', {
-            outputIndex: i,
-            address: output.address,
-          })
-          throw new Error(`Failed to create CSL output for output ${i}`)
-        }
-        cslTxBuilder.addOutput(cslOutput)
-      } catch (error) {
-        getLogger().error('buildTransaction: Error adding output', {
+  // Add outputs first (CSL builder needs outputs to calculate fees)
+  for (let i = 0; i < state.outputs.length; i++) {
+    const output = state.outputs[i]
+    if (!output) continue
+    try {
+      const cslOutput = outputToCSL(CardanoMobile, output, primaryTokenId)
+      if (!cslOutput) {
+        getLogger().error('buildTransaction: Failed to create CSL output', {
           outputIndex: i,
           address: output.address,
+        })
+        throw new Error(`Failed to create CSL output for output ${i}`)
+      }
+      cslTxBuilder.addOutput(cslOutput)
+    } catch (error) {
+      getLogger().error('buildTransaction: Error adding output', {
+        outputIndex: i,
+        address: output.address,
+        error: error instanceof Error ? error.message : String(error),
+      })
+      throw error
+    }
+  }
+
+  // Add certificates
+  // NOTE: In Conway era, withdrawals require certificates that match the reward account credential
+  // Certificates must be added BEFORE withdrawals to satisfy this requirement
+  // Create CSL Certificate objects from certificate data within this CSL scope
+  if (state.certificates.length > 0) {
+    getLogger().info('buildTransaction: Processing certificates', {
+      certificatesCount: state.certificates.length,
+      certificates: state.certificates.map((c) => ({
+        kind: 'kind' in c ? c.kind : 'unknown',
+        stakeCredentialKeyHashHex:
+          'stakeCredentialKeyHashHex' in c
+            ? c.stakeCredentialKeyHashHex
+            : undefined,
+      })),
+    })
+
+    const certs = CardanoMobile.Certificates.new()
+    if (!certs) {
+      getLogger().error('buildTransaction: Failed to create Certificates')
+      throw new Error('Failed to create Certificates')
+    }
+    for (let i = 0; i < state.certificates.length; i++) {
+      const certData = state.certificates[i]
+      if (!certData) continue
+
+      const certKind = 'kind' in certData ? certData.kind : 'unknown'
+      getLogger().info('buildTransaction: Processing certificate', {
+        certificateIndex: i,
+        certificateKind: certKind,
+      })
+
+      try {
+        // Create certificate using shared helper
+        const cslCert = createCertificateFromData(CardanoMobile, certData)
+        certs.add(cslCert)
+        getLogger().info('buildTransaction: Successfully added certificate', {
+          certificateIndex: i,
+          certificateKind: certKind,
+        })
+      } catch (error) {
+        getLogger().error('buildTransaction: Error adding certificate', {
+          certificateIndex: i,
+          certificateKind: certKind,
           error: error instanceof Error ? error.message : String(error),
         })
         throw error
       }
     }
-
-    // Add certificates
-    // NOTE: In Conway era, withdrawals require certificates that match the reward account credential
-    // Certificates must be added BEFORE withdrawals to satisfy this requirement
-    // Create CSL Certificate objects from certificate data within this CSL scope
-    if (state.certificates.length > 0) {
-      getLogger().info('buildTransaction: Processing certificates', {
+    cslTxBuilder.setCerts(certs)
+    getLogger().info(
+      'buildTransaction: Set certificates on transaction builder',
+      {
         certificatesCount: state.certificates.length,
-        certificates: state.certificates.map((c) => ({
-          kind: 'kind' in c ? c.kind : 'unknown',
-          stakeCredentialKeyHashHex:
-            'stakeCredentialKeyHashHex' in c
-              ? c.stakeCredentialKeyHashHex
-              : undefined,
-        })),
-      })
+      },
+    )
+  }
 
-      const certs = csl.Certificates.new()
-      if (!certs) {
-        getLogger().error('buildTransaction: Failed to create Certificates')
-        throw new Error('Failed to create Certificates')
-      }
-      for (let i = 0; i < state.certificates.length; i++) {
-        const certData = state.certificates[i]
-        if (!certData) continue
+  // Add withdrawals
+  // NOTE: Certificates are only required when explicitly deregistering (matches yoroi-lib behavior)
+  // Normal withdrawals don't require certificates
+  if (state.withdrawals.length > 0) {
+    getLogger().info('buildTransaction: Processing withdrawals', {
+      withdrawalsCount: state.withdrawals.length,
+      withdrawals: state.withdrawals,
+      certificatesCount: state.certificates.length,
+    })
 
-        const certKind = 'kind' in certData ? certData.kind : 'unknown'
-        getLogger().info('buildTransaction: Processing certificate', {
-          certificateIndex: i,
-          certificateKind: certKind,
-        })
-
-        try {
-          // Create certificate using shared helper
-          const cslCert = createCertificateFromData(csl, certData)
-          certs.add(cslCert)
-          getLogger().info('buildTransaction: Successfully added certificate', {
-            certificateIndex: i,
-            certificateKind: certKind,
-          })
-        } catch (error) {
-          getLogger().error('buildTransaction: Error adding certificate', {
-            certificateIndex: i,
-            certificateKind: certKind,
-            error: error instanceof Error ? error.message : String(error),
-          })
-          throw error
-        }
-      }
-      cslTxBuilder.setCerts(certs)
-      getLogger().info(
-        'buildTransaction: Set certificates on transaction builder',
-        {
-          certificatesCount: state.certificates.length,
-        },
-      )
+    const withdrawals = CardanoMobile.Withdrawals.new()
+    if (!withdrawals) {
+      getLogger().error('buildTransaction: Failed to create Withdrawals')
+      throw new Error('Failed to create Withdrawals')
     }
+    for (let i = 0; i < state.withdrawals.length; i++) {
+      const withdrawal = state.withdrawals[i]
+      if (!withdrawal) continue
 
-    // Add withdrawals
-    // NOTE: Certificates are only required when explicitly deregistering (matches yoroi-lib behavior)
-    // Normal withdrawals don't require certificates
-    if (state.withdrawals.length > 0) {
-      getLogger().info('buildTransaction: Processing withdrawals', {
-        withdrawalsCount: state.withdrawals.length,
-        withdrawals: state.withdrawals,
-        certificatesCount: state.certificates.length,
+      getLogger().info('buildTransaction: Processing withdrawal', {
+        withdrawalIndex: i,
+        rewardAddress: withdrawal.rewardAddress,
+        amount: withdrawal.amount,
       })
 
-      const withdrawals = csl.Withdrawals.new()
-      if (!withdrawals) {
-        getLogger().error('buildTransaction: Failed to create Withdrawals')
-        throw new Error('Failed to create Withdrawals')
-      }
-      for (let i = 0; i < state.withdrawals.length; i++) {
-        const withdrawal = state.withdrawals[i]
-        if (!withdrawal) continue
-
-        getLogger().info('buildTransaction: Processing withdrawal', {
-          withdrawalIndex: i,
-          rewardAddress: withdrawal.rewardAddress,
-          amount: withdrawal.amount,
-        })
-
-        try {
-          // Use normalizeToAddress to handle Byron (base58), Shelley (bech32), and hex addresses
-          // Note: Withdrawals are only for Shelley wallets, but normalizeToAddress handles all formats
-          const address = normalizeToAddress(csl, withdrawal.rewardAddress)
-          if (!address) {
-            getLogger().error('buildTransaction: Invalid withdrawal address', {
+      try {
+        // Use normalizeToAddress to handle Byron (base58), Shelley (bech32), and hex addresses
+        // Note: Withdrawals are only for Shelley wallets, but normalizeToAddress handles all formats
+        const address = normalizeToAddress(
+          CardanoMobile,
+          withdrawal.rewardAddress,
+        )
+        if (!address) {
+          getLogger().error('buildTransaction: Invalid withdrawal address', {
+            withdrawalIndex: i,
+            rewardAddress: withdrawal.rewardAddress,
+          })
+          throw new Error(`Invalid reward address: ${withdrawal.rewardAddress}`)
+        }
+        const rewardAddr = CardanoMobile.RewardAddress.fromAddress(address)
+        if (!rewardAddr) {
+          getLogger().error(
+            'buildTransaction: Failed to create RewardAddress',
+            {
               withdrawalIndex: i,
               rewardAddress: withdrawal.rewardAddress,
-            })
-            throw new Error(
-              `Invalid reward address: ${withdrawal.rewardAddress}`,
-            )
-          }
-          const rewardAddr = csl.RewardAddress.fromAddress(address)
-          if (!rewardAddr) {
+            },
+          )
+          throw new Error(`Invalid reward address: ${withdrawal.rewardAddress}`)
+        }
+        // If certificates are present (e.g., when deregistering), validate they match the withdrawal
+        // Normal withdrawals don't require certificates, so we only validate if certificates exist
+        if (state.certificates.length > 0) {
+          const withdrawalStakeCred = rewardAddr.paymentCred()
+          const withdrawalKeyHash = withdrawalStakeCred?.toKeyhash()
+          const withdrawalKeyHashHex = withdrawalKeyHash?.toHex()
+
+          if (!withdrawalKeyHashHex) {
             getLogger().error(
-              'buildTransaction: Failed to create RewardAddress',
+              'buildTransaction: Failed to extract stake credential from withdrawal',
               {
                 withdrawalIndex: i,
                 rewardAddress: withdrawal.rewardAddress,
               },
             )
             throw new Error(
-              `Invalid reward address: ${withdrawal.rewardAddress}`,
+              `Failed to extract stake credential from withdrawal reward address: ${withdrawal.rewardAddress}`,
             )
           }
-          // If certificates are present (e.g., when deregistering), validate they match the withdrawal
-          // Normal withdrawals don't require certificates, so we only validate if certificates exist
-          if (state.certificates.length > 0) {
-            const withdrawalStakeCred = rewardAddr.paymentCred()
-            const withdrawalKeyHash = withdrawalStakeCred?.toKeyhash()
-            const withdrawalKeyHashHex = withdrawalKeyHash?.toHex()
 
-            if (!withdrawalKeyHashHex) {
-              getLogger().error(
-                'buildTransaction: Failed to extract stake credential from withdrawal',
-                {
-                  withdrawalIndex: i,
-                  rewardAddress: withdrawal.rewardAddress,
-                },
-              )
-              throw new Error(
-                `Failed to extract stake credential from withdrawal reward address: ${withdrawal.rewardAddress}`,
-              )
-            }
-
-            // Verify that at least one certificate matches this withdrawal's stake credential
-            let hasMatchingCert = false
-            for (const certData of state.certificates) {
-              const certStakeKeyHashHex =
-                'stakeCredentialKeyHashHex' in certData
-                  ? certData.stakeCredentialKeyHashHex
-                  : undefined
-              if (certStakeKeyHashHex === withdrawalKeyHashHex) {
-                hasMatchingCert = true
-                break
-              }
-            }
-
-            if (!hasMatchingCert) {
-              getLogger().error(
-                'buildTransaction: No matching certificate for withdrawal',
-                {
-                  withdrawalIndex: i,
-                  rewardAddress: withdrawal.rewardAddress,
-                  withdrawalKeyHashHex,
-                  certificateCount: state.certificates.length,
-                  certificateKinds: state.certificates.map((c) =>
-                    'kind' in c ? c.kind : 'unknown',
-                  ),
-                  certificateStakeKeyHashes: state.certificates
-                    .map((c) =>
-                      'stakeCredentialKeyHashHex' in c
-                        ? c.stakeCredentialKeyHashHex
-                        : undefined,
-                    )
-                    .filter((h): h is KeyHash => h !== undefined),
-                },
-              )
-              throw new Error(
-                `No matching certificate for withdrawal reward address: ${withdrawal.rewardAddress}. ` +
-                  `Withdrawal requires a certificate with stake credential matching key hash: ${withdrawalKeyHashHex}. ` +
-                  `Found ${state.certificates.length} certificate(s) but none match.`,
-              )
+          // Verify that at least one certificate matches this withdrawal's stake credential
+          let hasMatchingCert = false
+          for (const certData of state.certificates) {
+            const certStakeKeyHashHex =
+              'stakeCredentialKeyHashHex' in certData
+                ? certData.stakeCredentialKeyHashHex
+                : undefined
+            if (certStakeKeyHashHex === withdrawalKeyHashHex) {
+              hasMatchingCert = true
+              break
             }
           }
 
-          const amount = csl.BigNum.fromStr(withdrawal.amount)
-          if (!amount) {
+          if (!hasMatchingCert) {
             getLogger().error(
-              'buildTransaction: Failed to create BigNum for withdrawal',
+              'buildTransaction: No matching certificate for withdrawal',
               {
                 withdrawalIndex: i,
-                amount: withdrawal.amount,
+                rewardAddress: withdrawal.rewardAddress,
+                withdrawalKeyHashHex,
+                certificateCount: state.certificates.length,
+                certificateKinds: state.certificates.map((c) =>
+                  'kind' in c ? c.kind : 'unknown',
+                ),
+                certificateStakeKeyHashes: state.certificates
+                  .map((c) =>
+                    'stakeCredentialKeyHashHex' in c
+                      ? c.stakeCredentialKeyHashHex
+                      : undefined,
+                  )
+                  .filter((h): h is KeyHash => h !== undefined),
               },
             )
-            throw new Error(`Invalid withdrawal amount: ${withdrawal.amount}`)
+            throw new Error(
+              `No matching certificate for withdrawal reward address: ${withdrawal.rewardAddress}. ` +
+                `Withdrawal requires a certificate with stake credential matching key hash: ${withdrawalKeyHashHex}. ` +
+                `Found ${state.certificates.length} certificate(s) but none match.`,
+            )
           }
-          withdrawals.insert(rewardAddr, amount)
-          getLogger().info('buildTransaction: Successfully added withdrawal', {
-            withdrawalIndex: i,
-            rewardAddress: withdrawal.rewardAddress,
-            amount: withdrawal.amount,
-          })
-        } catch (error) {
-          getLogger().error('buildTransaction: Error adding withdrawal', {
-            withdrawalIndex: i,
-            rewardAddress: withdrawal.rewardAddress,
-            error: error instanceof Error ? error.message : String(error),
-          })
-          throw error
-        }
-      }
-      cslTxBuilder.setWithdrawals(withdrawals)
-      getLogger().info(
-        'buildTransaction: Set withdrawals on transaction builder',
-        {
-          withdrawalsCount: state.withdrawals.length,
-        },
-      )
-    }
-
-    // Set TTL
-    if (state.options.ttl) {
-      cslTxBuilder.setTtl(state.options.ttl)
-    }
-
-    // Add inputs (UTXOs) - CSL TransactionBuilder uses addRegularInput
-    for (let i = 0; i < state.inputs.length; i++) {
-      const input = state.inputs[i]
-      if (!input) continue
-      const utxo = input.utxo
-      try {
-        // Use normalizeToAddress to handle Byron (base58), Shelley (bech32), and hex addresses
-        const cslAddr = normalizeToAddress(csl, utxo.receiver)
-        if (!cslAddr) {
-          getLogger().error('buildTransaction: Invalid address for input', {
-            inputIndex: i,
-            receiver: utxo.receiver,
-          })
-          throw new Error(`Invalid address: ${utxo.receiver}`)
         }
 
-        const txHash = csl.TransactionHash.fromHex(utxo.txHash)
-        if (!txHash) {
-          getLogger().error('buildTransaction: Invalid transaction hash', {
-            inputIndex: i,
-            txHash: utxo.txHash,
-          })
-          throw new Error(`Invalid transaction hash: ${utxo.txHash}`)
-        }
-
-        const txInput = csl.TransactionInput.new(txHash, utxo.txIndex)
-        if (!txInput) {
+        const amount = CardanoMobile.BigNum.fromStr(withdrawal.amount)
+        if (!amount) {
           getLogger().error(
-            'buildTransaction: Failed to create TransactionInput',
+            'buildTransaction: Failed to create BigNum for withdrawal',
             {
-              inputIndex: i,
-              txHash: utxo.txHash,
-              txIndex: utxo.txIndex,
+              withdrawalIndex: i,
+              amount: withdrawal.amount,
             },
           )
-          throw new Error(
-            `Failed to create TransactionInput for ${utxo.txHash}:${utxo.txIndex}`,
-          )
+          throw new Error(`Invalid withdrawal amount: ${withdrawal.amount}`)
         }
-
-        const cslAmount = amountsToValue(csl, utxo.balance, primaryTokenId)
-        if (!cslAmount) {
-          getLogger().error('buildTransaction: Failed to create Value', {
-            inputIndex: i,
-            balance: utxo.balance,
-          })
-          throw new Error(`Failed to create Value for input ${i}`)
-        }
-
-        cslTxBuilder.addRegularInput(cslAddr, txInput, cslAmount)
+        withdrawals.insert(rewardAddr, amount)
+        getLogger().info('buildTransaction: Successfully added withdrawal', {
+          withdrawalIndex: i,
+          rewardAddress: withdrawal.rewardAddress,
+          amount: withdrawal.amount,
+        })
       } catch (error) {
-        getLogger().error('buildTransaction: Error adding input', {
+        getLogger().error('buildTransaction: Error adding withdrawal', {
+          withdrawalIndex: i,
+          rewardAddress: withdrawal.rewardAddress,
+          error: error instanceof Error ? error.message : String(error),
+        })
+        throw error
+      }
+    }
+    cslTxBuilder.setWithdrawals(withdrawals)
+    getLogger().info(
+      'buildTransaction: Set withdrawals on transaction builder',
+      {
+        withdrawalsCount: state.withdrawals.length,
+      },
+    )
+  }
+
+  // Set TTL
+  if (state.options.ttl) {
+    cslTxBuilder.setTtl(state.options.ttl)
+  }
+
+  // Add inputs (UTXOs) - CSL TransactionBuilder uses addRegularInput
+  for (let i = 0; i < state.inputs.length; i++) {
+    const input = state.inputs[i]
+    if (!input) continue
+    const utxo = input.utxo
+    try {
+      // Use normalizeToAddress to handle Byron (base58), Shelley (bech32), and hex addresses
+      const cslAddr = normalizeToAddress(CardanoMobile, utxo.receiver)
+      if (!cslAddr) {
+        getLogger().error('buildTransaction: Invalid address for input', {
+          inputIndex: i,
+          receiver: utxo.receiver,
+        })
+        throw new Error(`Invalid address: ${utxo.receiver}`)
+      }
+
+      const txHash = CardanoMobile.TransactionHash.fromHex(utxo.txHash)
+      if (!txHash) {
+        getLogger().error('buildTransaction: Invalid transaction hash', {
           inputIndex: i,
           txHash: utxo.txHash,
-          txIndex: utxo.txIndex,
+        })
+        throw new Error(`Invalid transaction hash: ${utxo.txHash}`)
+      }
+
+      const txInput = CardanoMobile.TransactionInput.new(txHash, utxo.txIndex)
+      if (!txInput) {
+        getLogger().error(
+          'buildTransaction: Failed to create TransactionInput',
+          {
+            inputIndex: i,
+            txHash: utxo.txHash,
+            txIndex: utxo.txIndex,
+          },
+        )
+        throw new Error(
+          `Failed to create TransactionInput for ${utxo.txHash}:${utxo.txIndex}`,
+        )
+      }
+
+      const cslAmount = amountsToValue(
+        CardanoMobile,
+        utxo.balance,
+        primaryTokenId,
+      )
+      if (!cslAmount) {
+        getLogger().error('buildTransaction: Failed to create Value', {
+          inputIndex: i,
+          balance: utxo.balance,
+        })
+        throw new Error(`Failed to create Value for input ${i}`)
+      }
+
+      cslTxBuilder.addRegularInput(cslAddr, txInput, cslAmount)
+    } catch (error) {
+      getLogger().error('buildTransaction: Error adding input', {
+        inputIndex: i,
+        txHash: utxo.txHash,
+        txIndex: utxo.txIndex,
+        error: error instanceof Error ? error.message : String(error),
+      })
+      throw error
+    }
+  }
+
+  // Handle manual fee
+  if (state.options.manualFee) {
+    const feeAmount = state.options.manualFee[primaryTokenId] || '0'
+    const feeBigNum = CardanoMobile.BigNum.fromStr(feeAmount)
+    if (!feeBigNum) {
+      getLogger().error(
+        'buildTransaction: Failed to create BigNum for manual fee',
+        {
+          feeAmount,
+        },
+      )
+      throw new Error(`Invalid manual fee: ${feeAmount}`)
+    }
+    cslTxBuilder.setFee(feeBigNum)
+  }
+
+  // Add minting actions BEFORE change output handling
+  // This ensures minted tokens are included in the change output
+  if (state.options.mints && state.options.mints.length > 0) {
+    const mint = CardanoMobile.Mint.new()
+    if (!mint) {
+      getLogger().error('buildTransaction: Failed to create Mint')
+      throw new Error('Failed to create Mint')
+    }
+
+    const nativeScripts = CardanoMobile.NativeScripts.new()
+    const plutusScripts = CardanoMobile.PlutusScripts.new()
+
+    for (let i = 0; i < state.options.mints.length; i++) {
+      const mintAction = state.options.mints[i]
+      if (!mintAction) continue
+
+      try {
+        // Create policy ID
+        const policyId = CardanoMobile.ScriptHash.fromHex(mintAction.policyId)
+        if (!policyId) {
+          getLogger().error('buildTransaction: Invalid policy ID', {
+            mintIndex: i,
+            policyId: mintAction.policyId,
+          })
+          throw new Error(`Invalid policy ID: ${mintAction.policyId}`)
+        }
+
+        // Create mint assets map for this policy (uses Int, not BigNum)
+        const mintAssets = CardanoMobile.MintAssets.new()
+        if (!mintAssets) {
+          getLogger().error('buildTransaction: Failed to create MintAssets')
+          throw new Error('Failed to create MintAssets')
+        }
+
+        for (const asset of mintAction.assets) {
+          const assetName = CardanoMobile.AssetName.fromHex(asset.assetName)
+          if (!assetName) {
+            getLogger().error('buildTransaction: Invalid asset name', {
+              mintIndex: i,
+              assetName: asset.assetName,
+            })
+            throw new Error(`Invalid asset name: ${asset.assetName}`)
+          }
+
+          const amount = CardanoMobile.Int.fromStr(asset.amount)
+          if (!amount) {
+            getLogger().error('buildTransaction: Invalid mint amount', {
+              mintIndex: i,
+              amount: asset.amount,
+            })
+            throw new Error(`Invalid mint amount: ${asset.amount}`)
+          }
+
+          mintAssets.insert(assetName, amount)
+        }
+
+        // Insert policy and assets into mint
+        mint.insert(policyId, mintAssets)
+
+        // Add script to appropriate collection
+        if (mintAction.script.type === 'native') {
+          const nativeScript = CardanoMobile.NativeScript.fromHex(
+            mintAction.script.script,
+          )
+          if (nativeScript) {
+            nativeScripts.add(nativeScript)
+          }
+        } else {
+          const plutusScript = CardanoMobile.PlutusScript.fromHex(
+            mintAction.script.script,
+          )
+          if (plutusScript) {
+            plutusScripts.add(plutusScript)
+          }
+        }
+      } catch (error) {
+        getLogger().error('buildTransaction: Error adding mint action', {
+          mintIndex: i,
+          policyId: mintAction.policyId,
           error: error instanceof Error ? error.message : String(error),
         })
         throw error
       }
     }
 
-    // Handle manual fee
-    if (state.options.manualFee) {
-      const feeAmount = state.options.manualFee[primaryTokenId] || '0'
-      const feeBigNum = csl.BigNum.fromStr(feeAmount)
-      if (!feeBigNum) {
-        getLogger().error(
-          'buildTransaction: Failed to create BigNum for manual fee',
-          {
-            feeAmount,
-          },
-        )
-        throw new Error(`Invalid manual fee: ${feeAmount}`)
-      }
-      cslTxBuilder.setFee(feeBigNum)
+    // setMint requires mint value and native scripts (if any)
+    // Plutus scripts and redeemers are handled separately after building
+    cslTxBuilder.setMint(mint, nativeScripts)
+
+    // Store Plutus scripts and redeemers for later witness set handling
+    // Note: Plutus scripts and redeemers need to be added to the final
+    // transaction witness set after build() is called
+    if (plutusScripts.len() > 0) {
+      // Plutus scripts will be added to witness set in post-processing
+      // This is handled by the transaction building flow
     }
+  }
 
-    // Add minting actions BEFORE change output handling
-    // This ensures minted tokens are included in the change output
-    if (state.options.mints && state.options.mints.length > 0) {
-      const mint = csl.Mint.new()
-      if (!mint) {
-        getLogger().error('buildTransaction: Failed to create Mint')
-        throw new Error('Failed to create Mint')
-      }
-
-      const nativeScripts = csl.NativeScripts.new()
-      const plutusScripts = csl.PlutusScripts.new()
-
-      for (let i = 0; i < state.options.mints.length; i++) {
-        const mintAction = state.options.mints[i]
-        if (!mintAction) continue
-
-        try {
-          // Create policy ID
-          const policyId = csl.ScriptHash.fromHex(mintAction.policyId)
-          if (!policyId) {
-            getLogger().error('buildTransaction: Invalid policy ID', {
-              mintIndex: i,
-              policyId: mintAction.policyId,
-            })
-            throw new Error(`Invalid policy ID: ${mintAction.policyId}`)
-          }
-
-          // Create mint assets map for this policy (uses Int, not BigNum)
-          const mintAssets = csl.MintAssets.new()
-          if (!mintAssets) {
-            getLogger().error('buildTransaction: Failed to create MintAssets')
-            throw new Error('Failed to create MintAssets')
-          }
-
-          for (const asset of mintAction.assets) {
-            const assetName = csl.AssetName.fromHex(asset.assetName)
-            if (!assetName) {
-              getLogger().error('buildTransaction: Invalid asset name', {
-                mintIndex: i,
-                assetName: asset.assetName,
-              })
-              throw new Error(`Invalid asset name: ${asset.assetName}`)
-            }
-
-            const amount = csl.Int.fromStr(asset.amount)
-            if (!amount) {
-              getLogger().error('buildTransaction: Invalid mint amount', {
-                mintIndex: i,
-                amount: asset.amount,
-              })
-              throw new Error(`Invalid mint amount: ${asset.amount}`)
-            }
-
-            mintAssets.insert(assetName, amount)
-          }
-
-          // Insert policy and assets into mint
-          mint.insert(policyId, mintAssets)
-
-          // Add script to appropriate collection
-          if (mintAction.script.type === 'native') {
-            const nativeScript = csl.NativeScript.fromHex(
-              mintAction.script.script,
-            )
-            if (nativeScript) {
-              nativeScripts.add(nativeScript)
-            }
-          } else {
-            const plutusScript = csl.PlutusScript.fromHex(
-              mintAction.script.script,
-            )
-            if (plutusScript) {
-              plutusScripts.add(plutusScript)
-            }
-          }
-        } catch (error) {
-          getLogger().error('buildTransaction: Error adding mint action', {
-            mintIndex: i,
-            policyId: mintAction.policyId,
-            error: error instanceof Error ? error.message : String(error),
-          })
-          throw error
-        }
-      }
-
-      // setMint requires mint value and native scripts (if any)
-      // Plutus scripts and redeemers are handled separately after building
-      cslTxBuilder.setMint(mint, nativeScripts)
-
-      // Store Plutus scripts and redeemers for later witness set handling
-      // Note: Plutus scripts and redeemers need to be added to the final
-      // transaction witness set after build() is called
-      if (plutusScripts.len() > 0) {
-        // Plutus scripts will be added to witness set in post-processing
-        // This is handled by the transaction building flow
-      }
+  // Handle change output
+  if (state.options.manualChangeOutput) {
+    const cslChangeOutput = outputToCSL(
+      CardanoMobile,
+      state.options.manualChangeOutput,
+      primaryTokenId,
+    )
+    if (!cslChangeOutput) {
+      getLogger().error(
+        'buildTransaction: Failed to create manual change output',
+      )
+      throw new Error('Failed to create manual change output')
     }
-
-    // Handle change output
-    if (state.options.manualChangeOutput) {
-      const cslChangeOutput = outputToCSL(
-        csl,
-        state.options.manualChangeOutput,
-        primaryTokenId,
-      )
-      if (!cslChangeOutput) {
-        getLogger().error(
-          'buildTransaction: Failed to create manual change output',
-        )
-        throw new Error('Failed to create manual change output')
-      }
-      cslTxBuilder.addOutput(cslChangeOutput)
-    } else if (state.options.changeAddress && !state.options.manualFee) {
-      // Use CSL's automatic change handling
-      // Use normalizeToAddress to handle Byron (base58), Shelley (bech32), and hex addresses
-      const changeAddr = normalizeToAddress(csl, state.options.changeAddress)
-      if (!changeAddr) {
-        getLogger().error('buildTransaction: Invalid change address', {
-          changeAddress: state.options.changeAddress,
-        })
-        throw new Error(
-          `Invalid change address: ${state.options.changeAddress}`,
-        )
-      }
-
-      // Calculate totals before adding change to help debug issues
-      const totalInput = calculateTotalInputValue(state.inputs)
-      const totalOutput = calculateTotalOutputValue(
-        state.outputs,
-        state.options.manualChangeOutput,
-      )
-
-      // Calculate total withdrawals
-      const totalWithdrawals: Balance.Amounts = {} as Balance.Amounts
-      for (const withdrawal of state.withdrawals) {
-        const current = BigInt(totalWithdrawals[primaryTokenId] || '0')
-        const added = BigInt(withdrawal.amount)
-        totalWithdrawals[primaryTokenId] = (
-          current + added
-        ).toString() as Balance.Quantity
-      }
-
-      // Check for non-ADA tokens in inputs
-      const inputTokenIds = Object.keys(totalInput).filter(
-        (id) => id !== primaryTokenId,
-      )
-      const hasTokens = inputTokenIds.length > 0
-
-      // Calculate expected remaining ADA (before fee is calculated)
-      // Withdrawals ADD to available ADA, outputs SUBTRACT
-      const inputAda = BigInt(totalInput[primaryTokenId] || '0')
-      const outputAda = BigInt(totalOutput[primaryTokenId] || '0')
-      const withdrawalsAda = BigInt(totalWithdrawals[primaryTokenId] || '0')
-      // Available ADA = input + withdrawals - outputs (fee will be subtracted by CSL)
-      const availableAdaBeforeFee = inputAda + withdrawalsAda - outputAda
-
-      // Get min UTXO value from protocol params
-      const minUtxoValue = BigInt(protocolParams.minimumUtxoVal || '1000000') // Default 1 ADA
-
-      // Estimate fee (CSL will calculate actual fee, but this gives us an idea)
-      // Fee calculation happens inside addChangeIfNeeded, but we can estimate
-      // Account for native scripts in witness set if minting is present
-      let estimatedTxSize = 500 // Rough base estimate
-      let witnessSetFeeBuffer = BigInt(0)
-      if (state.options.mints && state.options.mints.length > 0) {
-        // Add buffer for native scripts in witness set
-        // Each native script adds ~100-150 bytes to the witness set
-        const nativeScriptCount = state.options.mints.filter(
-          (m) => m?.script.type === 'native',
-        ).length
-        if (nativeScriptCount > 0) {
-          // Estimate witness set size: ~150 bytes per native script (conservative)
-          const witnessSetSizeEstimate = nativeScriptCount * 150
-          // Add fee for witness set size: coefficient * size
-          witnessSetFeeBuffer =
-            BigInt(protocolParams.linearFee.coefficient) *
-            BigInt(witnessSetSizeEstimate)
-          estimatedTxSize += nativeScriptCount * 100 // Also add to size estimate for logging
-        }
-      }
-      const estimatedFee =
-        BigInt(protocolParams.linearFee.constant) +
-        BigInt(protocolParams.linearFee.coefficient) * BigInt(estimatedTxSize) +
-        witnessSetFeeBuffer
-
-      const expectedRemainingAda = availableAdaBeforeFee - estimatedFee
-
-      getLogger().info('buildTransaction: About to add change if needed', {
-        totalInputAda: totalInput[primaryTokenId] || '0',
-        totalInputTokens: inputTokenIds.length,
-        inputTokenIds: inputTokenIds.slice(0, 10), // Limit to first 10
-        totalOutputAda: totalOutput[primaryTokenId] || '0',
-        totalOutputTokens: Object.keys(totalOutput).filter(
-          (id) => id !== primaryTokenId,
-        ).length,
-        totalWithdrawalsAda: totalWithdrawals[primaryTokenId] || '0',
-        withdrawalsCount: state.withdrawals.length,
-        inputsCount: state.inputs.length,
-        inputs: state.inputs.map((input) => ({
-          txId: input.utxo.txHash,
-          index: input.utxo.txIndex,
-          adaAmount: input.utxo.balance[primaryTokenId] || '0',
-          tokenCount: Object.keys(input.utxo.balance).filter(
-            (id) => id !== primaryTokenId,
-          ).length,
-          tokenIds: Object.keys(input.utxo.balance)
-            .filter((id) => id !== primaryTokenId)
-            .slice(0, 5), // Limit to first 5 tokens per UTXO
-        })),
-        hasTokens,
+    cslTxBuilder.addOutput(cslChangeOutput)
+  } else if (state.options.changeAddress && !state.options.manualFee) {
+    // Use CSL's automatic change handling
+    // Use normalizeToAddress to handle Byron (base58), Shelley (bech32), and hex addresses
+    const changeAddr = normalizeToAddress(
+      CardanoMobile,
+      state.options.changeAddress,
+    )
+    if (!changeAddr) {
+      getLogger().error('buildTransaction: Invalid change address', {
         changeAddress: state.options.changeAddress,
-        // Financial calculations
-        availableAdaBeforeFee: availableAdaBeforeFee.toString(),
-        estimatedFee: estimatedFee.toString(),
-        expectedRemainingAda: expectedRemainingAda.toString(),
-        minUtxoValue: minUtxoValue.toString(),
-        hasEnoughAdaForMinUtxo: expectedRemainingAda >= minUtxoValue,
-        // Warning if tokens present but not enough ADA
-        warning:
-          hasTokens && expectedRemainingAda < minUtxoValue
-            ? `UTXO has ${inputTokenIds.length} tokens but expected remaining ADA (${expectedRemainingAda.toString()}) is less than min UTXO (${minUtxoValue.toString()}). CSL will calculate actual fee which may be different.`
-            : undefined,
       })
-
-      try {
-        // If transaction has metadata, estimate witness set size and set manual fee
-        // BEFORE calling addChangeIfNeeded, since CSL calculates fee based on body size only
-        // The witness set size (signatures) increases total transaction size, which increases fee
-        // This is especially important for voting registration transactions with CIP-36 metadata
-        if (
-          state.metadata.length > 0 &&
-          !state.options.manualFee &&
-          (!state.options.mints || state.options.mints.length === 0)
-        ) {
-          // Estimate witness set size: each input needs a signature (~64 bytes)
-          // Plus CBOR overhead for witness set structure (~20 bytes)
-          const signatureSize = 64
-          const witnessSetOverhead = 20
-          const estimatedWitnessSetSize =
-            state.inputs.length * signatureSize + witnessSetOverhead
-
-          // Estimate transaction body size
-          const baseBodySizeEstimate = 200
-          const inputsSize = state.inputs.length * 80
-          const outputsSize = state.outputs.length * 150
-          const certificatesSize = state.certificates.length * 120
-          const withdrawalsSize = state.withdrawals.length * 60
-
-          // Metadata size - estimate conservatively based on actual metadata
-          let metadataSize = 100 // Base overhead
-          for (const meta of state.metadata) {
-            if (meta) {
-              const metaStr = JSON.stringify(meta.data)
-              // CIP-36 metadata with hex addresses can be large
-              metadataSize += Math.max(metaStr.length, 300)
-            }
-          }
-
-          // Estimate change output size (will be added by addChangeIfNeeded)
-          const changeOutputSize = 150
-
-          const estimatedBodySize =
-            baseBodySizeEstimate +
-            inputsSize +
-            outputsSize +
-            certificatesSize +
-            withdrawalsSize +
-            metadataSize +
-            changeOutputSize
-
-          // Apply safety multiplier for CBOR encoding overhead
-          const adjustedBodySize = Math.ceil(estimatedBodySize * 2.0)
-
-          // Total transaction size including witness set
-          const totalTxSizeEstimate = adjustedBodySize + estimatedWitnessSetSize
-
-          // Calculate fee with buffer: constant + coefficient * total_size
-          // Add 10% buffer to account for fee calculation variance
-          const baseFee =
-            BigInt(protocolParams.linearFee.constant) +
-            BigInt(protocolParams.linearFee.coefficient) *
-              BigInt(totalTxSizeEstimate)
-          const feeBuffer = baseFee / BigInt(10) // 10% buffer
-          const totalFee = baseFee + feeBuffer
-
-          // Set manual fee BEFORE calling addChangeIfNeeded
-          const feeBigNum = csl.BigNum.fromStr(totalFee.toString())
-          if (feeBigNum) {
-            cslTxBuilder.setFee(feeBigNum)
-            getLogger().info(
-              'buildTransaction: Set manual fee accounting for metadata and witness set',
-              {
-                estimatedBodySize,
-                adjustedBodySize,
-                estimatedWitnessSetSize,
-                totalTxSizeEstimate,
-                baseFee: baseFee.toString(),
-                feeBuffer: feeBuffer.toString(),
-                totalFee: totalFee.toString(),
-                metadataCount: state.metadata.length,
-                inputsCount: state.inputs.length,
-              },
-            )
-          }
-        }
-
-        // If minting with native scripts, calculate witness set size and estimate fee
-        // BEFORE calling addChangeIfNeeded, since CSL calculates fee based on body size only
-        // The witness set size increases total transaction size, which increases fee
-        if (
-          state.options.mints &&
-          state.options.mints.length > 0 &&
-          !state.options.manualFee
-        ) {
-          const nativeScriptCount = state.options.mints.filter(
-            (m) => m?.script.type === 'native',
-          ).length
-          if (nativeScriptCount > 0) {
-            // Calculate actual witness set size by serializing native scripts
-            let actualWitnessSetSize = 0
-            const tempWitnessSet = csl.TransactionWitnessSet.new()
-            if (tempWitnessSet) {
-              const tempNativeScripts = csl.NativeScripts.new()
-              for (let i = 0; i < state.options.mints.length; i++) {
-                const mintAction = state.options.mints[i]
-                if (!mintAction || mintAction.script.type !== 'native') continue
-                const nativeScript = csl.NativeScript.fromHex(
-                  mintAction.script.script,
-                )
-                if (nativeScript) {
-                  tempNativeScripts.add(nativeScript)
-                }
-              }
-              if (tempNativeScripts.len() > 0) {
-                tempWitnessSet.setNativeScripts(tempNativeScripts)
-                // Serialize witness set to get actual size
-                const witnessSetBytes = tempWitnessSet.toBytes()
-                actualWitnessSetSize = witnessSetBytes.length
-              }
-            }
-
-            if (actualWitnessSetSize > 0) {
-              // Estimate base transaction body size (inputs, outputs, certificates, etc.)
-              // We need to account for the change output that will be added by addChangeIfNeeded
-              const baseBodySizeEstimate = 1000 // More conservative base estimate
-
-              // Input size: ~60 bytes per input (tx hash + index + CBOR overhead)
-              const inputsSize = state.inputs.length * 80
-
-              // Output size: ~70 bytes base + address (~60 bytes) + value (~20 bytes) + tokens overhead
-              // For change output with minted tokens, add extra size for token bundle
-              let changeOutputSize = 0
-              if (!state.options.manualChangeOutput) {
-                // Base output size
-                changeOutputSize = 150
-                // Add size for minted tokens in change output
-                // Each minted asset adds ~40 bytes (policy ID + asset name + amount)
-                for (const mintAction of state.options.mints || []) {
-                  if (mintAction && mintAction.assets) {
-                    changeOutputSize +=
-                      Object.keys(mintAction.assets).length * 50
-                  }
-                }
-              }
-
-              const outputsSize = state.outputs.length * 150 + changeOutputSize
-
-              const certificatesSize = state.certificates.length * 120
-              const withdrawalsSize = state.withdrawals.length * 60
-
-              // Metadata size varies significantly - estimate conservatively
-              // Each metadata entry adds overhead, and large values (like base64 images) add more
-              let metadataSize = 0
-              if (state.metadata.length > 0) {
-                // Base overhead for metadata map
-                metadataSize = 100
-                // Add size for each metadata entry
-                for (const meta of state.metadata) {
-                  if (meta) {
-                    // Estimate based on JSON stringified size
-                    const metaStr = JSON.stringify(meta.data)
-                    metadataSize += Math.max(metaStr.length, 200) // At least 200 bytes per entry
-                  }
-                }
-              }
-
-              // Mint field: policy ID + asset name + amount for each asset
-              // Each mint adds ~60 bytes (policy ID ~56 bytes + asset name + amount)
-              let mintSize = 0
-              if (state.options.mints && state.options.mints.length > 0) {
-                mintSize = 100 // Base overhead
-                for (const mintAction of state.options.mints) {
-                  if (mintAction && mintAction.assets) {
-                    mintSize += Object.keys(mintAction.assets).length * 70
-                  }
-                }
-              }
-
-              const estimatedBodySize =
-                baseBodySizeEstimate +
-                inputsSize +
-                outputsSize +
-                certificatesSize +
-                withdrawalsSize +
-                metadataSize +
-                mintSize
-
-              // Apply a safety multiplier (2.5x) to account for CBOR encoding overhead,
-              // variable-length encoding, and other factors we can't predict accurately
-              // The actual body size is typically 2-3x larger than our estimate
-              const adjustedBodySize = Math.ceil(estimatedBodySize * 2.5)
-
-              // Estimate total transaction size including witness set
-              const totalTxSizeEstimate =
-                adjustedBodySize + actualWitnessSetSize
-
-              // Calculate total fee: constant + coefficient * total_size
-              const totalFee =
-                BigInt(protocolParams.linearFee.constant) +
-                BigInt(protocolParams.linearFee.coefficient) *
-                  BigInt(totalTxSizeEstimate)
-
-              // Set manual fee BEFORE calling addChangeIfNeeded
-              // CSL will use this fee instead of calculating its own
-              const feeBigNum = csl.BigNum.fromStr(totalFee.toString())
-              if (feeBigNum) {
-                cslTxBuilder.setFee(feeBigNum)
-                getLogger().info(
-                  'buildTransaction: Set manual fee accounting for native scripts',
-                  {
-                    estimatedBodySize,
-                    adjustedBodySize,
-                    actualWitnessSetSize,
-                    totalTxSizeEstimate,
-                    totalFee: totalFee.toString(),
-                    nativeScriptCount,
-                    inputsSize,
-                    outputsSize,
-                    changeOutputSize,
-                    metadataSize,
-                    mintSize,
-                  },
-                )
-              }
-            }
-          }
-        }
-
-        cslTxBuilder.addChangeIfNeeded(changeAddr)
-        getLogger().info(
-          'buildTransaction: Successfully added change if needed',
-        )
-      } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : String(error)
-        const isInsufficientAdaError =
-          errorMessage.includes('Not enough ADA leftover') ||
-          errorMessage.includes('add_change_if_needed')
-
-        getLogger().error('buildTransaction: Failed to add change if needed', {
-          error: errorMessage,
-          errorStack: error instanceof Error ? error.stack : undefined,
-          totalInputAda: totalInput[primaryTokenId] || '0',
-          totalOutputAda: totalOutput[primaryTokenId] || '0',
-          totalWithdrawalsAda: totalWithdrawals[primaryTokenId] || '0',
-          hasTokens,
-          inputTokenIds,
-          inputTokenCount: inputTokenIds.length,
-          expectedRemainingAda: expectedRemainingAda.toString(),
-          minUtxoValue: minUtxoValue.toString(),
-          isInsufficientAdaError,
-        })
-
-        // Provide a more helpful error message when tokens are present
-        if (isInsufficientAdaError && hasTokens) {
-          const enhancedError = new Error(
-            `Not enough ADA to create change output with ${inputTokenIds.length} tokens. ` +
-              `The change output requires more ADA than the base minimum UTXO value (${minUtxoValue.toString()} lovelace) ` +
-              `due to the tokens it contains. ` +
-              `Expected remaining ADA: ${expectedRemainingAda.toString()} lovelace. ` +
-              `Consider selecting UTXOs with more ADA or using pure ADA UTXOs when possible.`,
-          )
-          enhancedError.stack = error instanceof Error ? error.stack : undefined
-          throw enhancedError
-        }
-
-        throw error
-      }
+      throw new Error(`Invalid change address: ${state.options.changeAddress}`)
     }
 
-    // Add metadata
-    let auxData: AuxiliaryData | undefined
-    if (state.metadata.length > 0) {
-      auxData = csl.AuxiliaryData.new()
-      if (!auxData) {
-        getLogger().error('buildTransaction: Failed to create AuxiliaryData')
-        throw new Error('Failed to create AuxiliaryData')
-      }
-      const metadataMap = csl.GeneralTransactionMetadata.new()
-      if (!metadataMap) {
-        getLogger().error(
-          'buildTransaction: Failed to create GeneralTransactionMetadata',
-        )
-        throw new Error('Failed to create GeneralTransactionMetadata')
-      }
-
-      for (let i = 0; i < state.metadata.length; i++) {
-        const meta = state.metadata[i]
-        if (!meta) continue
-        try {
-          const label =
-            typeof meta.label === 'string'
-              ? parseInt(meta.label, 10)
-              : meta.label
-          const metadata = csl.encodeJsonStrToMetadatum(
-            JSON.stringify(meta.data),
-            1, // MetadataJsonSchema.BasicConversions
-          )
-          if (!metadata) {
-            getLogger().error('buildTransaction: Failed to encode metadata', {
-              metadataIndex: i,
-              label,
-            })
-            throw new Error(`Failed to encode metadata for label ${label}`)
-          }
-          const labelBigNum = csl.BigNum.fromStr(label.toString())
-          if (!labelBigNum) {
-            getLogger().error(
-              'buildTransaction: Failed to create BigNum for label',
-              {
-                metadataIndex: i,
-                label,
-              },
-            )
-            throw new Error(`Invalid metadata label: ${label}`)
-          }
-          metadataMap.insert(labelBigNum, metadata)
-        } catch (error) {
-          getLogger().error('buildTransaction: Error adding metadata entry', {
-            metadataIndex: i,
-            label: meta.label,
-            error: error instanceof Error ? error.message : String(error),
-          })
-          throw error
-        }
-      }
-
-      auxData.setMetadata(metadataMap)
-      cslTxBuilder.setAuxiliaryData(auxData)
-    }
-
-    // Build the transaction body
-    const txBody = cslTxBuilder.build()
-    if (!txBody) {
-      getLogger().error('buildTransaction: Failed to build transaction body')
-      throw new Error('Failed to build transaction body')
-    }
-
-    // Handle reference inputs and collateral inputs
-    // CSL TransactionBuilder doesn't support these directly
-    // TODO: Check CSL API for reference/collateral inputs support
-    // For now, we'll note that these are in the state but not yet added to the transaction
-    // They will be included in the returned UnsignedTransaction for future processing
-
-    // Handle validity interval
-    // CSL TransactionBuilder may support this via setValidityStartInterval
-    // TODO: Check CSL API for validity interval support
-
-    // Get fee from builder
-    const feeBigNum = cslTxBuilder.getFeeIfSet()
-    const feeStr = feeBigNum ? feeBigNum.toStr() : '0'
-    const fee: Balance.Amounts = feeBigNum
-      ? ({[primaryTokenId]: feeStr} as Balance.Amounts)
-      : state.options.manualFee || {}
-
-    // Validate sufficient funds
+    // Calculate totals before adding change to help debug issues
     const totalInput = calculateTotalInputValue(state.inputs)
     const totalOutput = calculateTotalOutputValue(
       state.outputs,
       state.options.manualChangeOutput,
     )
-    const feeAda = BigInt(fee[primaryTokenId] || '0')
+
+    // Calculate total withdrawals
+    const totalWithdrawals: Balance.Amounts = {} as Balance.Amounts
+    for (const withdrawal of state.withdrawals) {
+      const current = BigInt(totalWithdrawals[primaryTokenId] || '0')
+      const added = BigInt(withdrawal.amount)
+      totalWithdrawals[primaryTokenId] = (
+        current + added
+      ).toString() as Balance.Quantity
+    }
+
+    // Check for non-ADA tokens in inputs
+    const inputTokenIds = Object.keys(totalInput).filter(
+      (id) => id !== primaryTokenId,
+    )
+    const hasTokens = inputTokenIds.length > 0
+
+    // Calculate expected remaining ADA (before fee is calculated)
+    // Withdrawals ADD to available ADA, outputs SUBTRACT
     const inputAda = BigInt(totalInput[primaryTokenId] || '0')
     const outputAda = BigInt(totalOutput[primaryTokenId] || '0')
+    const withdrawalsAda = BigInt(totalWithdrawals[primaryTokenId] || '0')
+    // Available ADA = input + withdrawals - outputs (fee will be subtracted by CSL)
+    const availableAdaBeforeFee = inputAda + withdrawalsAda - outputAda
 
-    if (inputAda < outputAda + feeAda) {
-      getLogger().error('buildTransaction: Insufficient funds', {
-        inputAda: inputAda.toString(),
-        outputAda: outputAda.toString(),
-        feeAda: feeAda.toString(),
-        required: (outputAda + feeAda).toString(),
-      })
-      throw new NotEnoughMoneyToSendError()
-    }
+    // Get min UTXO value from protocol params
+    const minUtxoValue = BigInt(protocolParams.minimumUtxoVal || '1000000') // Default 1 ADA
 
-    // Create witness set - include native scripts if minting is present
-    // Native scripts used in minting need to be in the witness set
-    const witnessSet = csl.TransactionWitnessSet.new()
-    if (!witnessSet) {
-      getLogger().error(
-        'buildTransaction: Failed to create TransactionWitnessSet',
-      )
-      throw new Error('Failed to create TransactionWitnessSet')
-    }
-
-    // Add native scripts to witness set if minting is present
+    // Estimate fee (CSL will calculate actual fee, but this gives us an idea)
+    // Fee calculation happens inside addChangeIfNeeded, but we can estimate
+    // Account for native scripts in witness set if minting is present
+    let estimatedTxSize = 500 // Rough base estimate
+    let witnessSetFeeBuffer = BigInt(0)
     if (state.options.mints && state.options.mints.length > 0) {
-      const nativeScriptsForWitness = csl.NativeScripts.new()
-      for (let i = 0; i < state.options.mints.length; i++) {
-        const mintAction = state.options.mints[i]
-        if (!mintAction) continue
+      // Add buffer for native scripts in witness set
+      // Each native script adds ~100-150 bytes to the witness set
+      const nativeScriptCount = state.options.mints.filter(
+        (m) => m?.script.type === 'native',
+      ).length
+      if (nativeScriptCount > 0) {
+        // Estimate witness set size: ~150 bytes per native script (conservative)
+        const witnessSetSizeEstimate = nativeScriptCount * 150
+        // Add fee for witness set size: coefficient * size
+        witnessSetFeeBuffer =
+          BigInt(protocolParams.linearFee.coefficient) *
+          BigInt(witnessSetSizeEstimate)
+        estimatedTxSize += nativeScriptCount * 100 // Also add to size estimate for logging
+      }
+    }
+    const estimatedFee =
+      BigInt(protocolParams.linearFee.constant) +
+      BigInt(protocolParams.linearFee.coefficient) * BigInt(estimatedTxSize) +
+      witnessSetFeeBuffer
 
-        if (mintAction.script.type === 'native') {
-          const nativeScript = csl.NativeScript.fromHex(
-            mintAction.script.script,
+    const expectedRemainingAda = availableAdaBeforeFee - estimatedFee
+
+    getLogger().info('buildTransaction: About to add change if needed', {
+      totalInputAda: totalInput[primaryTokenId] || '0',
+      totalInputTokens: inputTokenIds.length,
+      inputTokenIds: inputTokenIds.slice(0, 10), // Limit to first 10
+      totalOutputAda: totalOutput[primaryTokenId] || '0',
+      totalOutputTokens: Object.keys(totalOutput).filter(
+        (id) => id !== primaryTokenId,
+      ).length,
+      totalWithdrawalsAda: totalWithdrawals[primaryTokenId] || '0',
+      withdrawalsCount: state.withdrawals.length,
+      inputsCount: state.inputs.length,
+      inputs: state.inputs.map((input) => ({
+        txId: input.utxo.txHash,
+        index: input.utxo.txIndex,
+        adaAmount: input.utxo.balance[primaryTokenId] || '0',
+        tokenCount: Object.keys(input.utxo.balance).filter(
+          (id) => id !== primaryTokenId,
+        ).length,
+        tokenIds: Object.keys(input.utxo.balance)
+          .filter((id) => id !== primaryTokenId)
+          .slice(0, 5), // Limit to first 5 tokens per UTXO
+      })),
+      hasTokens,
+      changeAddress: state.options.changeAddress,
+      // Financial calculations
+      availableAdaBeforeFee: availableAdaBeforeFee.toString(),
+      estimatedFee: estimatedFee.toString(),
+      expectedRemainingAda: expectedRemainingAda.toString(),
+      minUtxoValue: minUtxoValue.toString(),
+      hasEnoughAdaForMinUtxo: expectedRemainingAda >= minUtxoValue,
+      // Warning if tokens present but not enough ADA
+      warning:
+        hasTokens && expectedRemainingAda < minUtxoValue
+          ? `UTXO has ${inputTokenIds.length} tokens but expected remaining ADA (${expectedRemainingAda.toString()}) is less than min UTXO (${minUtxoValue.toString()}). CSL will calculate actual fee which may be different.`
+          : undefined,
+    })
+
+    try {
+      // If transaction has metadata, estimate witness set size and set manual fee
+      // BEFORE calling addChangeIfNeeded, since CSL calculates fee based on body size only
+      // The witness set size (signatures) increases total transaction size, which increases fee
+      // This is especially important for voting registration transactions with CIP-36 metadata
+      if (
+        state.metadata.length > 0 &&
+        !state.options.manualFee &&
+        (!state.options.mints || state.options.mints.length === 0)
+      ) {
+        // Estimate witness set size: each input needs a signature (~64 bytes)
+        // Plus CBOR overhead for witness set structure (~20 bytes)
+        const signatureSize = 64
+        const witnessSetOverhead = 20
+        const estimatedWitnessSetSize =
+          state.inputs.length * signatureSize + witnessSetOverhead
+
+        // Estimate transaction body size
+        const baseBodySizeEstimate = 200
+        const inputsSize = state.inputs.length * 80
+        const outputsSize = state.outputs.length * 150
+        const certificatesSize = state.certificates.length * 120
+        const withdrawalsSize = state.withdrawals.length * 60
+
+        // Metadata size - estimate conservatively based on actual metadata
+        let metadataSize = 100 // Base overhead
+        for (const meta of state.metadata) {
+          if (meta) {
+            const metaStr = JSON.stringify(meta.data)
+            // CIP-36 metadata with hex addresses can be large
+            metadataSize += Math.max(metaStr.length, 300)
+          }
+        }
+
+        // Estimate change output size (will be added by addChangeIfNeeded)
+        const changeOutputSize = 150
+
+        const estimatedBodySize =
+          baseBodySizeEstimate +
+          inputsSize +
+          outputsSize +
+          certificatesSize +
+          withdrawalsSize +
+          metadataSize +
+          changeOutputSize
+
+        // Apply safety multiplier for CBOR encoding overhead
+        const adjustedBodySize = Math.ceil(estimatedBodySize * 2.0)
+
+        // Total transaction size including witness set
+        const totalTxSizeEstimate = adjustedBodySize + estimatedWitnessSetSize
+
+        // Calculate fee with buffer: constant + coefficient * total_size
+        // Add 10% buffer to account for fee calculation variance
+        const baseFee =
+          BigInt(protocolParams.linearFee.constant) +
+          BigInt(protocolParams.linearFee.coefficient) *
+            BigInt(totalTxSizeEstimate)
+        const feeBuffer = baseFee / BigInt(10) // 10% buffer
+        const totalFee = baseFee + feeBuffer
+
+        // Set manual fee BEFORE calling addChangeIfNeeded
+        const feeBigNum = CardanoMobile.BigNum.fromStr(totalFee.toString())
+        if (feeBigNum) {
+          cslTxBuilder.setFee(feeBigNum)
+          getLogger().info(
+            'buildTransaction: Set manual fee accounting for metadata and witness set',
+            {
+              estimatedBodySize,
+              adjustedBodySize,
+              estimatedWitnessSetSize,
+              totalTxSizeEstimate,
+              baseFee: baseFee.toString(),
+              feeBuffer: feeBuffer.toString(),
+              totalFee: totalFee.toString(),
+              metadataCount: state.metadata.length,
+              inputsCount: state.inputs.length,
+            },
           )
-          if (nativeScript) {
-            nativeScriptsForWitness.add(nativeScript)
+        }
+      }
+
+      // If minting with native scripts, calculate witness set size and estimate fee
+      // BEFORE calling addChangeIfNeeded, since CSL calculates fee based on body size only
+      // The witness set size increases total transaction size, which increases fee
+      if (
+        state.options.mints &&
+        state.options.mints.length > 0 &&
+        !state.options.manualFee
+      ) {
+        const nativeScriptCount = state.options.mints.filter(
+          (m) => m?.script.type === 'native',
+        ).length
+        if (nativeScriptCount > 0) {
+          // Calculate actual witness set size by serializing native scripts
+          let actualWitnessSetSize = 0
+          const tempWitnessSet = CardanoMobile.TransactionWitnessSet.new()
+          if (tempWitnessSet) {
+            const tempNativeScripts = CardanoMobile.NativeScripts.new()
+            for (let i = 0; i < state.options.mints.length; i++) {
+              const mintAction = state.options.mints[i]
+              if (!mintAction || mintAction.script.type !== 'native') continue
+              const nativeScript = CardanoMobile.NativeScript.fromHex(
+                mintAction.script.script,
+              )
+              if (nativeScript) {
+                tempNativeScripts.add(nativeScript)
+              }
+            }
+            if (tempNativeScripts.len() > 0) {
+              tempWitnessSet.setNativeScripts(tempNativeScripts)
+              // Serialize witness set to get actual size
+              const witnessSetBytes = tempWitnessSet.toBytes()
+              actualWitnessSetSize = witnessSetBytes.length
+            }
+          }
+
+          if (actualWitnessSetSize > 0) {
+            // Estimate base transaction body size (inputs, outputs, certificates, etc.)
+            // We need to account for the change output that will be added by addChangeIfNeeded
+            const baseBodySizeEstimate = 1000 // More conservative base estimate
+
+            // Input size: ~60 bytes per input (tx hash + index + CBOR overhead)
+            const inputsSize = state.inputs.length * 80
+
+            // Output size: ~70 bytes base + address (~60 bytes) + value (~20 bytes) + tokens overhead
+            // For change output with minted tokens, add extra size for token bundle
+            let changeOutputSize = 0
+            if (!state.options.manualChangeOutput) {
+              // Base output size
+              changeOutputSize = 150
+              // Add size for minted tokens in change output
+              // Each minted asset adds ~40 bytes (policy ID + asset name + amount)
+              for (const mintAction of state.options.mints || []) {
+                if (mintAction && mintAction.assets) {
+                  changeOutputSize += Object.keys(mintAction.assets).length * 50
+                }
+              }
+            }
+
+            const outputsSize = state.outputs.length * 150 + changeOutputSize
+
+            const certificatesSize = state.certificates.length * 120
+            const withdrawalsSize = state.withdrawals.length * 60
+
+            // Metadata size varies significantly - estimate conservatively
+            // Each metadata entry adds overhead, and large values (like base64 images) add more
+            let metadataSize = 0
+            if (state.metadata.length > 0) {
+              // Base overhead for metadata map
+              metadataSize = 100
+              // Add size for each metadata entry
+              for (const meta of state.metadata) {
+                if (meta) {
+                  // Estimate based on JSON stringified size
+                  const metaStr = JSON.stringify(meta.data)
+                  metadataSize += Math.max(metaStr.length, 200) // At least 200 bytes per entry
+                }
+              }
+            }
+
+            // Mint field: policy ID + asset name + amount for each asset
+            // Each mint adds ~60 bytes (policy ID ~56 bytes + asset name + amount)
+            let mintSize = 0
+            if (state.options.mints && state.options.mints.length > 0) {
+              mintSize = 100 // Base overhead
+              for (const mintAction of state.options.mints) {
+                if (mintAction && mintAction.assets) {
+                  mintSize += Object.keys(mintAction.assets).length * 70
+                }
+              }
+            }
+
+            const estimatedBodySize =
+              baseBodySizeEstimate +
+              inputsSize +
+              outputsSize +
+              certificatesSize +
+              withdrawalsSize +
+              metadataSize +
+              mintSize
+
+            // Apply a safety multiplier (2.5x) to account for CBOR encoding overhead,
+            // variable-length encoding, and other factors we can't predict accurately
+            // The actual body size is typically 2-3x larger than our estimate
+            const adjustedBodySize = Math.ceil(estimatedBodySize * 2.5)
+
+            // Estimate total transaction size including witness set
+            const totalTxSizeEstimate = adjustedBodySize + actualWitnessSetSize
+
+            // Calculate total fee: constant + coefficient * total_size
+            const totalFee =
+              BigInt(protocolParams.linearFee.constant) +
+              BigInt(protocolParams.linearFee.coefficient) *
+                BigInt(totalTxSizeEstimate)
+
+            // Set manual fee BEFORE calling addChangeIfNeeded
+            // CSL will use this fee instead of calculating its own
+            const feeBigNum = CardanoMobile.BigNum.fromStr(totalFee.toString())
+            if (feeBigNum) {
+              cslTxBuilder.setFee(feeBigNum)
+              getLogger().info(
+                'buildTransaction: Set manual fee accounting for native scripts',
+                {
+                  estimatedBodySize,
+                  adjustedBodySize,
+                  actualWitnessSetSize,
+                  totalTxSizeEstimate,
+                  totalFee: totalFee.toString(),
+                  nativeScriptCount,
+                  inputsSize,
+                  outputsSize,
+                  changeOutputSize,
+                  metadataSize,
+                  mintSize,
+                },
+              )
+            }
           }
         }
       }
 
-      if (nativeScriptsForWitness.len() > 0) {
-        witnessSet.setNativeScripts(nativeScriptsForWitness)
-        getLogger().info(
-          'buildTransaction: Added native scripts to witness set',
-          {
-            nativeScriptCount: nativeScriptsForWitness.len(),
-          },
+      cslTxBuilder.addChangeIfNeeded(changeAddr)
+      getLogger().info('buildTransaction: Successfully added change if needed')
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error)
+      const isInsufficientAdaError =
+        errorMessage.includes('Not enough ADA leftover') ||
+        errorMessage.includes('add_change_if_needed')
+
+      getLogger().error('buildTransaction: Failed to add change if needed', {
+        error: errorMessage,
+        errorStack: error instanceof Error ? error.stack : undefined,
+        totalInputAda: totalInput[primaryTokenId] || '0',
+        totalOutputAda: totalOutput[primaryTokenId] || '0',
+        totalWithdrawalsAda: totalWithdrawals[primaryTokenId] || '0',
+        hasTokens,
+        inputTokenIds,
+        inputTokenCount: inputTokenIds.length,
+        expectedRemainingAda: expectedRemainingAda.toString(),
+        minUtxoValue: minUtxoValue.toString(),
+        isInsufficientAdaError,
+      })
+
+      // Provide a more helpful error message when tokens are present
+      if (isInsufficientAdaError && hasTokens) {
+        const enhancedError = new Error(
+          `Not enough ADA to create change output with ${inputTokenIds.length} tokens. ` +
+            `The change output requires more ADA than the base minimum UTXO value (${minUtxoValue.toString()} lovelace) ` +
+            `due to the tokens it contains. ` +
+            `Expected remaining ADA: ${expectedRemainingAda.toString()} lovelace. ` +
+            `Consider selecting UTXOs with more ADA or using pure ADA UTXOs when possible.`,
         )
+        enhancedError.stack = error instanceof Error ? error.stack : undefined
+        throw enhancedError
+      }
+
+      throw error
+    }
+  }
+
+  // Add metadata
+  let auxData: AuxiliaryData | undefined
+  if (state.metadata.length > 0) {
+    auxData = CardanoMobile.AuxiliaryData.new()
+    if (!auxData) {
+      getLogger().error('buildTransaction: Failed to create AuxiliaryData')
+      throw new Error('Failed to create AuxiliaryData')
+    }
+    const metadataMap = CardanoMobile.GeneralTransactionMetadata.new()
+    if (!metadataMap) {
+      getLogger().error(
+        'buildTransaction: Failed to create GeneralTransactionMetadata',
+      )
+      throw new Error('Failed to create GeneralTransactionMetadata')
+    }
+
+    for (let i = 0; i < state.metadata.length; i++) {
+      const meta = state.metadata[i]
+      if (!meta) continue
+      try {
+        const label =
+          typeof meta.label === 'string' ? parseInt(meta.label, 10) : meta.label
+        const metadata = CardanoMobile.encodeJsonStrToMetadatum(
+          JSON.stringify(meta.data),
+          1, // MetadataJsonSchema.BasicConversions
+        )
+        if (!metadata) {
+          getLogger().error('buildTransaction: Failed to encode metadata', {
+            metadataIndex: i,
+            label,
+          })
+          throw new Error(`Failed to encode metadata for label ${label}`)
+        }
+        const labelBigNum = CardanoMobile.BigNum.fromStr(label.toString())
+        if (!labelBigNum) {
+          getLogger().error(
+            'buildTransaction: Failed to create BigNum for label',
+            {
+              metadataIndex: i,
+              label,
+            },
+          )
+          throw new Error(`Invalid metadata label: ${label}`)
+        }
+        metadataMap.insert(labelBigNum, metadata)
+      } catch (error) {
+        getLogger().error('buildTransaction: Error adding metadata entry', {
+          metadataIndex: i,
+          label: meta.label,
+          error: error instanceof Error ? error.message : String(error),
+        })
+        throw error
       }
     }
 
-    // Create full transaction: [body, witness_set, auxiliary_data?]
-    // auxData was already created above if metadata exists
-    const fullTx = csl.Transaction.new(txBody, witnessSet, auxData)
-    if (!fullTx) {
-      getLogger().error('buildTransaction: Failed to create Transaction')
-      throw new Error('Failed to create Transaction')
+    auxData.setMetadata(metadataMap)
+    cslTxBuilder.setAuxiliaryData(auxData)
+  }
+
+  // Build the transaction body
+  const txBody = cslTxBuilder.build()
+  if (!txBody) {
+    getLogger().error('buildTransaction: Failed to build transaction body')
+    throw new Error('Failed to build transaction body')
+  }
+
+  // Handle reference inputs and collateral inputs
+  // CSL TransactionBuilder doesn't support these directly
+  // TODO: Check CSL API for reference/collateral inputs support
+  // For now, we'll note that these are in the state but not yet added to the transaction
+  // They will be included in the returned UnsignedTransaction for future processing
+
+  // Handle validity interval
+  // CSL TransactionBuilder may support this via setValidityStartInterval
+  // TODO: Check CSL API for validity interval support
+
+  // Get fee from builder
+  const feeBigNum = cslTxBuilder.getFeeIfSet()
+  const feeStr = feeBigNum ? feeBigNum.toStr() : '0'
+  const fee: Balance.Amounts = feeBigNum
+    ? ({[primaryTokenId]: feeStr} as Balance.Amounts)
+    : state.options.manualFee || {}
+
+  // Validate sufficient funds
+  const totalInput = calculateTotalInputValue(state.inputs)
+  const totalOutput = calculateTotalOutputValue(
+    state.outputs,
+    state.options.manualChangeOutput,
+  )
+  const feeAda = BigInt(fee[primaryTokenId] || '0')
+  const inputAda = BigInt(totalInput[primaryTokenId] || '0')
+  const outputAda = BigInt(totalOutput[primaryTokenId] || '0')
+
+  if (inputAda < outputAda + feeAda) {
+    getLogger().error('buildTransaction: Insufficient funds', {
+      inputAda: inputAda.toString(),
+      outputAda: outputAda.toString(),
+      feeAda: feeAda.toString(),
+      required: (outputAda + feeAda).toString(),
+    })
+    throw new NotEnoughMoneyToSendError()
+  }
+
+  // Create witness set - include native scripts if minting is present
+  // Native scripts used in minting need to be in the witness set
+  const witnessSet = CardanoMobile.TransactionWitnessSet.new()
+  if (!witnessSet) {
+    getLogger().error(
+      'buildTransaction: Failed to create TransactionWitnessSet',
+    )
+    throw new Error('Failed to create TransactionWitnessSet')
+  }
+
+  // Add native scripts to witness set if minting is present
+  if (state.options.mints && state.options.mints.length > 0) {
+    const nativeScriptsForWitness = CardanoMobile.NativeScripts.new()
+    for (let i = 0; i < state.options.mints.length; i++) {
+      const mintAction = state.options.mints[i]
+      if (!mintAction) continue
+
+      if (mintAction.script.type === 'native') {
+        const nativeScript = CardanoMobile.NativeScript.fromHex(
+          mintAction.script.script,
+        )
+        if (nativeScript) {
+          nativeScriptsForWitness.add(nativeScript)
+        }
+      }
     }
 
-    // Serialize full transaction to CBOR (not just the body)
-    const txBytes = fullTx.toBytes()
-    if (!txBytes || txBytes.length === 0) {
-      getLogger().error(
-        'buildTransaction: Failed to serialize transaction to bytes',
+    if (nativeScriptsForWitness.len() > 0) {
+      witnessSet.setNativeScripts(nativeScriptsForWitness)
+      getLogger().info(
+        'buildTransaction: Added native scripts to witness set',
+        {
+          nativeScriptCount: nativeScriptsForWitness.len(),
+        },
       )
-      throw new Error('Failed to serialize transaction to bytes')
     }
-    const cbor: TransactionCbor = Buffer.from(txBytes).toString(
-      'hex',
-    ) as TransactionCbor
+  }
 
-    return {
-      inputs: state.inputs,
-      outputs: state.outputs,
-      certificates: state.certificates,
-      withdrawals: state.withdrawals,
-      referenceInputs: state.referenceInputs,
-      collateralInputs: state.collateralInputs,
-      metadata: state.metadata.length > 0 ? state.metadata : undefined,
-      options: state.options,
-      cbor,
-    }
-  })
+  // Create full transaction: [body, witness_set, auxiliary_data?]
+  // auxData was already created above if metadata exists
+  const fullTx = CardanoMobile.Transaction.new(txBody, witnessSet, auxData)
+  if (!fullTx) {
+    getLogger().error('buildTransaction: Failed to create Transaction')
+    throw new Error('Failed to create Transaction')
+  }
+
+  // Serialize full transaction to CBOR (not just the body)
+  const txBytes = fullTx.toBytes()
+  if (!txBytes || txBytes.length === 0) {
+    getLogger().error(
+      'buildTransaction: Failed to serialize transaction to bytes',
+    )
+    throw new Error('Failed to serialize transaction to bytes')
+  }
+  const cbor: TransactionCbor = Buffer.from(txBytes).toString(
+    'hex',
+  ) as TransactionCbor
+
+  return {
+    inputs: state.inputs,
+    outputs: state.outputs,
+    certificates: state.certificates,
+    withdrawals: state.withdrawals,
+    referenceInputs: state.referenceInputs,
+    collateralInputs: state.collateralInputs,
+    metadata: state.metadata.length > 0 ? state.metadata : undefined,
+    options: state.options,
+    cbor,
+  }
 }
 
 /**

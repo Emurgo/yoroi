@@ -1,6 +1,7 @@
 // Cardano address utilities
 // Cardano-specific address normalization and manipulation functions
-import {CardanoMobileWrapped, isHex} from '@yoroi/common'
+import {CardanoMobile} from '@yoroi/cardano-wallet'
+import {isHex} from '@yoroi/common'
 import {Address, AddressBech32, AddressHex} from '@yoroi/types'
 
 import {
@@ -31,7 +32,7 @@ export function isByronAddress(address: string): boolean {
 }
 
 /**
- * Address information extracted from WASM objects (safe to use outside cslScope)
+ * Address information extracted from WASM objects (safe to use anywhere)
  */
 export type AddressInfo = {
   networkId: number
@@ -48,45 +49,43 @@ export type AddressInfo = {
 export async function validateAndExtractAddressInfo(
   addr: Address | string,
 ): Promise<AddressInfo | undefined> {
-  return CardanoMobileWrapped.cslScope((csl) => {
-    const addrStr = typeof addr === 'string' ? addr : addr
-    let address: CslAddress
+  const addrStr = typeof addr === 'string' ? addr : addr
+  let address: CslAddress
 
-    // 1) Try converting from base58
-    if (csl.ByronAddress.isValid(addrStr)) {
-      const byronAddr = csl.ByronAddress.fromBase58(addrStr)
-      const byronAddress = byronAddr.toAddress()
-      if (!byronAddress) {
-        return undefined
-      }
-      address = byronAddress
-    } else {
-      const isHexAddr = isHex(addrStr)
-      const parsedAddress = isHexAddr
-        ? csl.Address.fromHex(addrStr)
-        : csl.Address.fromBech32(addrStr)
-      if (!parsedAddress) {
-        return undefined
-      }
-      address = parsedAddress
-    }
-
-    if (address.isMalformed()) {
+  // 1) Try converting from base58
+  if (CardanoMobile.ByronAddress.isValid(addrStr)) {
+    const byronAddr = CardanoMobile.ByronAddress.fromBase58(addrStr)
+    const byronAddress = byronAddr.toAddress()
+    if (!byronAddress) {
       return undefined
     }
-
-    // Extract all needed values before scope exits
-    const networkId = address.networkId()
-    const hex = address.toHex() as AddressHex
-    const bech32 = (address.toBech32(undefined) ?? null) as AddressBech32 | null
-
-    return {
-      networkId,
-      hex,
-      bech32,
-      isValid: true,
+    address = byronAddress
+  } else {
+    const isHexAddr = isHex(addrStr)
+    const parsedAddress = isHexAddr
+      ? CardanoMobile.Address.fromHex(addrStr)
+      : CardanoMobile.Address.fromBech32(addrStr)
+    if (!parsedAddress) {
+      return undefined
     }
-  })
+    address = parsedAddress
+  }
+
+  if (address.isMalformed()) {
+    return undefined
+  }
+
+  // Extract all needed values
+  const networkId = address.networkId()
+  const hex = address.toHex() as AddressHex
+  const bech32 = (address.toBech32(undefined) ?? null) as AddressBech32 | null
+
+  return {
+    networkId,
+    hex,
+    bech32,
+    isValid: true,
+  }
 }
 
 /**
@@ -96,11 +95,9 @@ export async function validateAndExtractAddressInfo(
  * NOTE: This function must use the same csl instance as the caller to avoid
  * NULL pointer errors. All CSL objects must be created from the same instance.
  *
- * WARNING: The returned Address object is a WASM object that will be freed when
- * the cslScope exits. Do NOT use it outside the scope where it was created.
- *
- * For safe usage, use validateAndExtractAddressInfo() instead, which extracts
- * primitive values (networkId, hex, bech32) before the scope exits.
+ * With wrappedCSL mode, memory management is automatic. However, for better
+ * practices, use validateAndExtractAddressInfo() which extracts primitive values
+ * (networkId, hex, bech32) that are safer for long-term storage.
  */
 export function normalizeToAddress(
   csl: WasmModuleProxy,
@@ -163,8 +160,8 @@ export async function filterAddressesByStakingKey<
 
 /**
  * Check if address contains account key
- * NOTE: This function expects to be called within a cslScope, and will parse
- * the address within that same scope to avoid WASM pointer issues
+ * NOTE: Pass CardanoMobile as the csl parameter to ensure consistent
+ * WASM object handling
  */
 export async function addrContainsAccountKey(
   csl: WasmModuleProxy,

@@ -1,4 +1,4 @@
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
+import {CardanoMobile} from '@yoroi/cardano-wallet'
 import {isString} from '@yoroi/common'
 
 import {MetadataJsonSchema} from '@emurgo/cross-csl-core'
@@ -17,12 +17,10 @@ export const formatMetadata = (
   let scripts: Array<{scriptHash: string; scriptBytes: string}> | null = null
 
   if (cbor != null && hash != null) {
-    CardanoMobileWrapped.cslScope((csl) => {
-      const tx = csl.Transaction.fromHex(cbor)
-      const auxiliaryData = tx.auxiliaryData()
+    const tx = CardanoMobile.Transaction.fromHex(cbor)
+    const auxiliaryData = tx.auxiliaryData()
 
-      if (!auxiliaryData) return
-
+    if (auxiliaryData) {
       // Extract all metadata labels
       const txMetadata = auxiliaryData.metadata()
       if (txMetadata) {
@@ -37,7 +35,7 @@ export const formatMetadata = (
           if (!metadatum) continue
 
           try {
-            const decodedMetadata = csl.decodeMetadatumToJsonStr(
+            const decodedMetadata = CardanoMobile.decodeMetadatumToJsonStr(
               metadatum,
               MetadataJsonSchema.BasicConversions,
             )
@@ -109,7 +107,7 @@ export const formatMetadata = (
           scripts = null
         }
       }
-    })
+    }
   }
 
   return {

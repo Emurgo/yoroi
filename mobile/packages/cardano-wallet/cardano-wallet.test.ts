@@ -1,4 +1,5 @@
 import {buildNetworkManagers} from '@yoroi/blockchains'
+import {CardanoMobile} from '@yoroi/cardano-wallet'
 import {createTokenManagerMock} from '@yoroi/portfolio'
 import {App, Chain} from '@yoroi/types'
 import {
@@ -9,7 +10,6 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import {keyManager} from './key-manager/key-manager'
-import {CardanoMobileWrapped} from './wrappedCsl'
 
 // Setup network managers and initialize wallet factories before tests
 const mockTokenManagers = {
@@ -91,13 +91,11 @@ describe('CardanoWallet', () => {
     const id = '261c7e0f-dd72-490c-8ce9-6714b512b969'
 
     // keys
-    const {accountPubKeyHex} = CardanoMobileWrapped.cslScope((csl) =>
-      keyManager('cardano-cip1852')({
-        csl,
-        mnemonic,
-        accountVisual,
-      }),
-    )
+    const {accountPubKeyHex} = keyManager('cardano-cip1852')({
+      csl: CardanoMobile,
+      mnemonic,
+      accountVisual,
+    })
 
     const wallet = await ShelleyWalletPreprod.build({
       id,

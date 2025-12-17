@@ -1,8 +1,10 @@
 import {RawUtxo} from '@yoroi/api'
-import {YoroiWallet} from '@yoroi/cardano-wallet'
-import {deriveRewardAddressFromAddress} from '@yoroi/cardano-wallet'
-import {asQuantity} from '@yoroi/cardano-wallet'
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
+import {
+  CardanoMobile,
+  YoroiWallet,
+  asQuantity,
+  deriveRewardAddressFromAddress,
+} from '@yoroi/cardano-wallet'
 import {isNonNullable} from '@yoroi/common'
 import {
   type ChainValidationResult,
@@ -16,8 +18,7 @@ import {
   parseTokenList,
 } from '@yoroi/tx'
 import {Api, Balance, Branded, Network, Portfolio} from '@yoroi/types'
-import {useSelectedNetwork} from '@yoroi/wallet-manager'
-import {useSelectedWallet} from '@yoroi/wallet-manager'
+import {useSelectedNetwork, useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {CredKind, WasmModuleProxy} from '@emurgo/cross-csl-core'
 import * as _ from 'lodash'
@@ -83,25 +84,22 @@ export const useFormattedTx = (
   const outputTokenIds = React.useMemo(() => {
     if (cbor) {
       // Extract from CSL objects using parseTokenList for correct token ID format
-      // Note: This creates a separate scope, but it's fine since we're just extracting IDs (primitives)
-      return CardanoMobileWrapped.cslScope((csl) => {
-        const tx = csl.Transaction.fromHex(cbor)
-        const txBody = tx.body()
-        const txOutputs = txBody.outputs()
-        const tokenIds: Portfolio.Token.Id[] = []
+      const tx = CardanoMobile.Transaction.fromHex(cbor)
+      const txBody = tx.body()
+      const txOutputs = txBody.outputs()
+      const tokenIds: Portfolio.Token.Id[] = []
 
-        for (let i = 0; i < txOutputs.len(); i++) {
-          const output = txOutputs.get(i)
-          const value = output.amount()
-          const multiasset = value.multiasset()
-          if (multiasset) {
-            const tokens = parseTokenList(csl, multiasset)
-            tokenIds.push(...tokens.map((t) => t.assetId as Portfolio.Token.Id))
-          }
+      for (let i = 0; i < txOutputs.len(); i++) {
+        const output = txOutputs.get(i)
+        const value = output.amount()
+        const multiasset = value.multiasset()
+        if (multiasset) {
+          const tokens = parseTokenList(CardanoMobile, multiasset)
+          tokenIds.push(...tokens.map((t) => t.assetId as Portfolio.Token.Id))
         }
+      }
 
-        return tokenIds
-      })
+      return tokenIds
     }
 
     // Fall back to JSON parsing
@@ -157,11 +155,9 @@ export const useFormattedTx = (
     }
   }
 
-  // Create a single scope for all CSL operations if CBOR is available
+  // Format outputs using CardanoMobile if CBOR is available
   const formattedOutputs: FormattedOutputs = cbor
-    ? CardanoMobileWrapped.cslScope((csl) => {
-        return formatOutputs(csl, wallet, outputs, tokenInfos, cbor)
-      })
+    ? formatOutputs(CardanoMobile, wallet, outputs, tokenInfos, cbor)
     : formatOutputs(undefined, wallet, outputs, tokenInfos, cbor)
 
   const formattedInputs: FormattedInputs = formatInputs(
@@ -180,76 +176,50 @@ export const useFormattedTx = (
 
   // Extract all missing transaction body fields
   const formattedWithdrawals = cbor
-    ? CardanoMobileWrapped.cslScope((csl) => {
-        return formatWithdrawals(csl, wallet, cbor)
-      })
+    ? formatWithdrawals(CardanoMobile, wallet, cbor)
     : null
 
   const formattedCollateral = cbor
-    ? CardanoMobileWrapped.cslScope((csl) => {
-        return formatCollateral(csl, wallet, tokenInfos, cbor)
-      })
+    ? formatCollateral(CardanoMobile, wallet, tokenInfos, cbor)
     : null
 
   const formattedCollateralReturn = cbor
-    ? CardanoMobileWrapped.cslScope((csl) => {
-        return formatCollateralReturn(csl, wallet, tokenInfos, cbor)
-      })
+    ? formatCollateralReturn(CardanoMobile, wallet, tokenInfos, cbor)
     : null
 
   const formattedTotalCollateral = cbor
-    ? CardanoMobileWrapped.cslScope((csl) => {
-        return formatTotalCollateral(csl, wallet, cbor)
-      })
+    ? formatTotalCollateral(CardanoMobile, wallet, cbor)
     : null
 
   const formattedRequiredSigners = cbor
-    ? CardanoMobileWrapped.cslScope((csl) => {
-        return formatRequiredSigners(csl, cbor)
-      })
+    ? formatRequiredSigners(CardanoMobile, cbor)
     : null
 
   const formattedScriptDataHash = cbor
-    ? CardanoMobileWrapped.cslScope((csl) => {
-        return formatScriptDataHash(csl, cbor)
-      })
+    ? formatScriptDataHash(CardanoMobile, cbor)
     : null
 
-  const formattedTtl = cbor
-    ? CardanoMobileWrapped.cslScope((csl) => {
-        return formatTtl(csl, cbor)
-      })
-    : null
+  const formattedTtl = cbor ? formatTtl(CardanoMobile, cbor) : null
 
   const formattedValidityIntervalStart = cbor
-    ? CardanoMobileWrapped.cslScope((csl) => {
-        return formatValidityIntervalStart(csl, cbor)
-      })
+    ? formatValidityIntervalStart(CardanoMobile, cbor)
     : null
 
-  const formattedNetworkId = cbor
-    ? CardanoMobileWrapped.cslScope((csl) => {
-        return formatNetworkId(csl, cbor)
-      })
-    : null
+  const formattedNetworkId = cbor ? formatNetworkId(CardanoMobile, cbor) : null
 
   const formattedWitnessSet = cbor
-    ? CardanoMobileWrapped.cslScope((csl) => {
-        return formatWitnessSet(csl, cbor)
-      })
+    ? formatWitnessSet(CardanoMobile, cbor)
     : null
 
   // Parse governance certificates and metadata
   const governance = cbor
-    ? CardanoMobileWrapped.cslScope((csl) => {
-        return parseGovernance(csl, formattedCertificates, cbor)
-      })
+    ? parseGovernance(CardanoMobile, formattedCertificates, cbor)
     : null
 
   // Detect transaction chaining
   const chainInfo: FormattedTx['chainInfo'] = cbor
-    ? CardanoMobileWrapped.cslScope((csl) => {
-        const result = detectChaining(csl, formattedInputs, cbor)
+    ? (() => {
+        const result = detectChaining(CardanoMobile, formattedInputs, cbor)
         return result
           ? {
               ...result,
@@ -258,7 +228,7 @@ export const useFormattedTx = (
                 | undefined,
             }
           : null
-      })
+      })()
     : null
 
   return {
@@ -590,15 +560,13 @@ const deriveAddress = (address: string, chainId: number) => {
 }
 
 const getAddressKind = (addressBech32: string): CredKind | null => {
-  return CardanoMobileWrapped.cslScope((csl) => {
-    try {
-      const address = csl.Address.fromBech32(addressBech32)
-      const addressKind = address.paymentCred()?.kind()
-      return addressKind ?? null
-    } catch (e) {
-      return null
-    }
-  })
+  try {
+    const address = CardanoMobile.Address.fromBech32(addressBech32)
+    const addressKind = address.paymentCred()?.kind()
+    return addressKind ?? null
+  } catch (e) {
+    return null
+  }
 }
 
 export const useUtxos = (inputs: TransactionInputs, wallet: YoroiWallet) => {
