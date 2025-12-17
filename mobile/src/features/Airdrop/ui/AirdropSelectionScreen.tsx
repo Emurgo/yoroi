@@ -3,7 +3,6 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {useNavigation} from '@react-navigation/native'
 import {StackNavigationProp} from '@react-navigation/stack'
 import {useQueryClient} from '@tanstack/react-query'
-import {BigNumber} from 'bignumber.js'
 import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
@@ -33,6 +32,7 @@ import {Space} from '~/ui/Space/Space'
 import {useAirdropAddressCache} from '../common/airdropAddressCache'
 import {scheduleThawNotifications} from '../common/scheduleThawNotifications'
 import {useAirdropEligibility} from '../common/useAirdropEligibility'
+import {calculateRedeemableAmount, formatAmount} from '../common/utils'
 import type {AddressAllocation} from '../types'
 import {
   useDestinationAddressInfoModal,
@@ -41,15 +41,6 @@ import {
 import {useManualAddressModal} from './ManualAddressModal'
 import {NotificationsScheduledModal} from './NotificationsScheduledModal'
 import type {AirdropRoutes} from './types'
-
-// NIGHT token has 6 decimals
-const NIGHT_DECIMALS = 6
-
-const formatAmount = (amount: number): string => {
-  const normalizationFactor = Math.pow(10, NIGHT_DECIMALS)
-  const normalized = new BigNumber(amount).dividedBy(normalizationFactor)
-  return normalized.toFormat(2)
-}
 
 export const AirdropSelectionScreen = () => {
   const strings = useStrings()
@@ -317,48 +308,11 @@ const AddressCard = ({
   const {openDestinationAddressInfoModal} = useDestinationAddressInfoModal()
   const {openRedeemableNowInfoModal} = useRedeemableNowInfoModal()
 
-  // Calculate if this allocation has redeemable thaws
-  // Check both backend 'redeemable' status and thaws that have started
-  const now = new Date()
-  const hasRedeemableThaws = allocation.schedule.thaws.some((thaw) => {
-    const thawDate = new Date(thaw.thawing_period_start.replace(/\s/g, ''))
-    const hasStarted = thawDate <= now
-    const isRedeemable = thaw.status === 'redeemable'
-    const isPendingRedeemable =
-      thaw.status === 'upcoming' || thaw.status === 'queued'
-    const isNotRedeemed =
-      thaw.status !== 'confirmed' &&
-      thaw.status !== 'confirming' &&
-      thaw.status !== 'submitted' &&
-      thaw.status !== 'failed'
-
-    return isRedeemable || (hasStarted && isPendingRedeemable && isNotRedeemed)
-  })
-
-  // Calculate redeemable amount dynamically (same logic as AirdropDetailsScreen)
-  const currentlyRedeemableAmount = allocation.schedule.thaws.reduce(
-    (sum, thaw) => {
-      const thawDate = new Date(thaw.thawing_period_start.replace(/\s/g, ''))
-      const hasStarted = thawDate <= now
-      const isRedeemable = thaw.status === 'redeemable'
-      const isPendingRedeemable =
-        thaw.status === 'upcoming' || thaw.status === 'queued'
-      const isNotRedeemed =
-        thaw.status !== 'confirmed' &&
-        thaw.status !== 'confirming' &&
-        thaw.status !== 'submitted' &&
-        thaw.status !== 'failed'
-
-      if (
-        isRedeemable ||
-        (hasStarted && isPendingRedeemable && isNotRedeemed)
-      ) {
-        return sum + thaw.amount
-      }
-      return sum
-    },
-    0,
+  // Calculate redeemable amount using shared utility
+  const currentlyRedeemableAmount = calculateRedeemableAmount(
+    allocation.schedule.thaws,
   )
+  const hasRedeemableThaws = currentlyRedeemableAmount > 0
 
   const redeemableAmount = formatAmount(currentlyRedeemableAmount)
   const totalToRedeem = formatAmount(allocation.totalLeftToRedeem)

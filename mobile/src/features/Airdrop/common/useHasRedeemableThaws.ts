@@ -1,6 +1,7 @@
 import * as React from 'react'
 
 import {useAirdropEligibility} from './useAirdropEligibility'
+import {isThawRedeemable} from './utils'
 
 /**
  * Hook to check if there are any redeemable airdrop thaws available
@@ -13,8 +14,6 @@ export const useHasRedeemableThaws = () => {
     if (isLoading || allocations.length === 0) {
       return false
     }
-
-    const now = new Date()
 
     return allocations.some((allocation) => {
       // Check if any thaw is marked as 'redeemable' by backend
@@ -32,19 +31,7 @@ export const useHasRedeemableThaws = () => {
           return false
         }
 
-        const thawDate = new Date(thaw.thawing_period_start.replace(/\s/g, ''))
-        const hasStarted = thawDate <= now
-        const isRedeemable = thawStatus === 'redeemable'
-        const isPendingRedeemable =
-          thawStatus === 'upcoming' || thawStatus === 'queued'
-        const isNotRedeemed =
-          thawStatus !== 'confirmed' &&
-          thawStatus !== 'confirming' &&
-          thawStatus !== 'submitted'
-
-        return (
-          isRedeemable || (hasStarted && isPendingRedeemable && isNotRedeemed)
-        )
+        return isThawRedeemable(thaw)
       })
     })
   }, [allocations, isLoading])

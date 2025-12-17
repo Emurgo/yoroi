@@ -344,6 +344,8 @@ export const useStrings = () => {
         notificationsScheduledBody: f(
           airdropMessages.notificationsScheduledBody,
         ),
+        havingIssues: f(airdropMessages.havingIssues),
+        contactMidnightSupport: f(airdropMessages.contactMidnightSupport),
         status: {
           upcoming: f(airdropMessages.statusUpcoming),
           redeemable: f(airdropMessages.statusRedeemable),

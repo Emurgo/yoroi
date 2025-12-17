@@ -4,7 +4,6 @@ import {Notifications} from '@yoroi/types'
 import {useWalletEvent, useWalletManager} from '@yoroi/wallet-manager'
 
 import {useQuery, useQueryClient} from '@tanstack/react-query'
-import {BigNumber} from 'bignumber.js'
 
 import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
 import {BannerIds, showBanner} from '~/features/Notifications/common/banners'
@@ -12,14 +11,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 
 import {useAirdropEligibility} from './useAirdropEligibility'
-
-const NIGHT_DECIMALS = 6
-
-const formatAmount = (amount: number): string => {
-  const normalizationFactor = Math.pow(10, NIGHT_DECIMALS)
-  const normalized = new BigNumber(amount).dividedBy(normalizationFactor)
-  return normalized.toFormat(2)
-}
+import {formatAmount} from './utils'
 
 export const useAirdropBanner = () => {
   const walletManager = useWalletManager()
