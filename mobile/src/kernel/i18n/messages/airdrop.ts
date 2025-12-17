@@ -61,13 +61,9 @@ export const airdropMessages = defineMessages({
     id: 'airdrop.nextThaw',
     defaultMessage: '!!!Next thaw',
   },
-  endsIn: {
-    id: 'airdrop.endsIn',
-    defaultMessage: '!!!Ends in',
-  },
   startsIn: {
     id: 'airdrop.startsIn',
-    defaultMessage: '!!!Starts in',
+    defaultMessage: '!!!Next thaw in',
   },
   active: {
     id: 'airdrop.active',
@@ -229,6 +225,10 @@ export const airdropMessages = defineMessages({
     id: 'airdrop.noRedeemableThaws',
     defaultMessage: '!!!No thaws are currently redeemable',
   },
+  allocationsRedeemableNow: {
+    id: 'airdrop.allocationsRedeemableNow',
+    defaultMessage: '!!!{count} allocation{plural} redeemable now',
+  },
   manualAddress: {
     id: 'airdrop.manualAddress',
     defaultMessage: '!!!Manual Address',
@@ -270,5 +270,13 @@ export const airdropMessages = defineMessages({
     id: 'airdrop.notificationsScheduledBody',
     defaultMessage:
       '!!!Scheduled {scheduled} new thaw notifications. Skipped {skipped} existing notifications.',
+  },
+  havingIssues: {
+    id: 'airdrop.havingIssues',
+    defaultMessage: '!!!Having issues?',
+  },
+  contactMidnightSupport: {
+    id: 'airdrop.contactMidnightSupport',
+    defaultMessage: '!!!Contact Midnight support',
   },
 })
