@@ -121,7 +121,7 @@
   },
   "peerDependencies": {
     "@emurgo/cross-csl-core": "9.0.0-beta.2",
-    "@emurgo/cross-csl-nodejs":"9.0.0-alpha.1",
+    "@emurgo/cross-csl-nodejs": "9.0.0-beta.2",
     "@react-native-async-storage/async-storage": "2.1.2",
     "@tanstack/react-query": "5.81.5",
     "@yoroi/api": "^7.0.0-beta",
