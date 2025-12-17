@@ -271,4 +271,12 @@ export const airdropMessages = defineMessages({
     defaultMessage:
       '!!!Scheduled {scheduled} new thaw notifications. Skipped {skipped} existing notifications.',
   },
+  havingIssues: {
+    id: 'airdrop.havingIssues',
+    defaultMessage: '!!!Having issues?',
+  },
+  contactMidnightSupport: {
+    id: 'airdrop.contactMidnightSupport',
+    defaultMessage: '!!!Contact Midnight support',
+  },
 })

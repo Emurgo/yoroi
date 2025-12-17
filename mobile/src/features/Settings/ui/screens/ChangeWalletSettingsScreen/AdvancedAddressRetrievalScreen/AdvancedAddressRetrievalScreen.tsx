@@ -729,15 +729,17 @@ export const AdvancedAddressRetrievalScreen = () => {
 
           {step === 'discovered' && (
             <View style={a.gap_sm}>
-              <Button
-                onPress={handleExport}
-                disabled={isExporting}
-                title={
-                  isExporting
-                    ? strings.settings.advancedAddressRetrieval.exportingCsv
-                    : strings.settings.advancedAddressRetrieval.exportCsv
-                }
-              />
+              {Platform.OS !== 'ios' && (
+                <Button
+                  onPress={handleExport}
+                  disabled={isExporting}
+                  title={
+                    isExporting
+                      ? strings.settings.advancedAddressRetrieval.exportingCsv
+                      : strings.settings.advancedAddressRetrieval.exportCsv
+                  }
+                />
+              )}
               <Button
                 onPress={handleVerification}
                 type={ButtonType.Secondary}
