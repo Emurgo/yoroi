@@ -1,7 +1,4 @@
-import type {CardanoTypes} from '@yoroi/cardano-wallet'
-import {RemoteCertificateMeta} from '@yoroi/staking'
-import {Balance} from '@yoroi/types'
-
+import {BalanceAmounts} from '../balance/token'
 import {
   Address,
   Amount,
@@ -13,8 +10,8 @@ import {
   TokenId,
   TransactionHash,
 } from '../branded'
-
-// Note: CardanoTypes is still in src/ but will be moved in future refactoring
+import {RemoteCertificateMeta} from '../staking/certificate'
+import {TokenEntry} from '../tx/types'
 
 /**
  * Minimal token metadata for transaction processing
@@ -120,7 +117,7 @@ export type BaseAsset = RemoteAsset
  */
 type IOData = {
   address: Address
-  assets: Array<CardanoTypes.TokenEntry>
+  assets: Array<TokenEntry>
   amount: Amount
   id?: TransactionHash
 }
@@ -135,9 +132,9 @@ export type TransactionInfo = {
   id: TransactionHash
   inputs: Array<IOData>
   outputs: Array<IOData>
-  amount: Balance.Amounts
-  fee: Balance.Amounts | null | undefined
-  delta: Balance.Amounts
+  amount: BalanceAmounts
+  fee: BalanceAmounts | null | undefined
+  delta: BalanceAmounts
   direction: TransactionDirection
   confirmations: number
   submittedAt: string | null | undefined

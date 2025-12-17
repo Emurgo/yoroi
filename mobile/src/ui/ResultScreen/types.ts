@@ -11,6 +11,7 @@ export type OperationContext =
   | 'exchange'
   | 'withdraw'
   | 'utxo-consolidation'
+  | 'airdrop'
   | 'default'
 
 export type ResultScreenType = 'success' | 'error'

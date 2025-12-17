@@ -1,4 +1,5 @@
 import {act, renderHook} from '@testing-library/react-native'
+import React from 'react'
 
 import {catalystApiMaker} from '../api-maker'
 import {catalystManagerMaker} from '../manager'

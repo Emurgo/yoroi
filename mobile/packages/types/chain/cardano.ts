@@ -1,12 +1,11 @@
-import {
-  Datum,
-  SignedTx as SignedTxType,
-  UnsignedTx as UnsignedTxType,
-} from '@yoroi/tx'
-
 import {BalanceAmounts} from '../balance/token'
 import {Address, BlockHash, EpochNumber, SlotNumber, TokenId} from '../branded'
+import {Datum} from '../datum/types'
 import {NumbersRatio} from '../numbers/ratio'
+import {
+  SignedTx as SignedTxType,
+  UnsignedTx as UnsignedTxType,
+} from '../tx/types'
 
 export type ChainCardanoProtocolParams = Readonly<{
   linearFee: {

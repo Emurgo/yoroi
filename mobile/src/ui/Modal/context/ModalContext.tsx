@@ -92,11 +92,13 @@ export const ModalProvider = ({children, initialState}: Props) => {
   const prevLoggedOutRef = React.useRef(isLoggedOut)
   const shouldCloseAfterKeyboardDismissRef = React.useRef(false)
   const isKeyboardOpen = useIsKeyboardOpen()
+  const isKeyboardOpenRef = React.useRef(isKeyboardOpen)
 
   React.useEffect(() => {
     isOpenRef.current = state.isOpen
     queueRef.current = state.queue
-  }, [state.isOpen, state.queue])
+    isKeyboardOpenRef.current = isKeyboardOpen
+  }, [state.isOpen, state.queue, isKeyboardOpen])
 
   React.useEffect(() => {
     if (!isKeyboardOpen && shouldCloseAfterKeyboardDismissRef.current) {
@@ -108,7 +110,7 @@ export const ModalProvider = ({children, initialState}: Props) => {
   }, [isKeyboardOpen])
 
   const closeModal = React.useCallback(() => {
-    if (isKeyboardOpen) {
+    if (isKeyboardOpenRef.current) {
       shouldCloseAfterKeyboardDismissRef.current = true
       Keyboard.dismiss()
       return
@@ -116,7 +118,7 @@ export const ModalProvider = ({children, initialState}: Props) => {
     dispatch({
       type: 'closeAndProcessQueue',
     })
-  }, [isKeyboardOpen])
+  }, [])
 
   const openModal = React.useCallback(
     ({

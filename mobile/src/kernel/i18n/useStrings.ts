@@ -292,7 +292,6 @@ export const useStrings = () => {
         redeemableNow: f(airdropMessages.redeemableNow),
         currentThaw: f(airdropMessages.currentThaw),
         nextThaw: f(airdropMessages.nextThaw),
-        endsIn: f(airdropMessages.endsIn),
         startsIn: f(airdropMessages.startsIn),
         active: f(airdropMessages.active),
         thawInfo: f(airdropMessages.thawInfo),
@@ -330,6 +329,7 @@ export const useStrings = () => {
         redeemableThaws: f(airdropMessages.redeemableThaws),
         readOnlyWallet: f(airdropMessages.readOnlyWallet),
         noRedeemableThaws: f(airdropMessages.noRedeemableThaws),
+        allocationsRedeemableNow: f(airdropMessages.allocationsRedeemableNow),
         manualAddress: f(airdropMessages.manualAddress),
         manualAddressTitle: f(airdropMessages.manualAddressTitle),
         manualAddressDescription: f(airdropMessages.manualAddressDescription),
@@ -354,6 +354,7 @@ export const useStrings = () => {
           queued: f(airdropMessages.statusQueued),
           skipped: f(airdropMessages.statusSkipped),
         },
+        tryAgain: f(airdropMessages.tryAgain),
       },
 
       // Portfolio strings

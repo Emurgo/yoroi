@@ -32,30 +32,30 @@ import {CardanoApi} from '@yoroi/api'
 // Get token metadata (on-chain)
 const metadata = await CardanoApi.getOnChainMetadatas({
   tokenIds: ['your-token-id'],
-  network: 'mainnet'
+  network: 'mainnet',
 })
 
 // Get off-chain token metadata
 const offChainMetadata = await CardanoApi.getOffChainMetadata({
   tokenId: 'your-token-id',
-  network: 'mainnet'
+  network: 'mainnet',
 })
 
 // Get token supply information
 const supply = await CardanoApi.getTokenSupply({
   tokenId: 'your-token-id',
-  network: 'mainnet'
+  network: 'mainnet',
 })
 
 // Get protocol parameters
 const protocolParams = await CardanoApi.getProtocolParams({
-  network: 'mainnet'
+  network: 'mainnet',
 })
 
 // Get UTXO data
 const utxoData = await CardanoApi.getUtxoData({
   addresses: ['addr1...'],
-  network: 'mainnet'
+  network: 'mainnet',
 })
 
 // Use the Cardano API maker for custom configurations
@@ -68,11 +68,6 @@ const customCardanoApi = CardanoApi.cardanoApiMaker({
 
 ```tsx
 import {AppApi} from '@yoroi/api'
-
-// Get frontend fees
-const fees = await AppApi.getFrontendFees({
-  network: 'mainnet'
-})
 
 // Use the App API maker for custom configurations
 const customAppApi = AppApi.appApiMaker({

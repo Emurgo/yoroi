@@ -8,9 +8,9 @@
  * Exception: Error classes must extend Error class for proper error handling and instanceof checks.
  * This is a fundamental JavaScript/TypeScript requirement for error handling.
  */
-import type {TransactionValidationResult} from '@yoroi/tx'
-
 import {MessageDescriptor} from 'react-intl'
+
+import type {TransactionValidationResult} from './tx/validation'
 
 // ============================================================================
 // Base Error Classes

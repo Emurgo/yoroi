@@ -12,7 +12,6 @@ import {Received} from '~/ui/Icon/Received'
 import {RewardWithdrawn} from '~/ui/Icon/RewardWithdrawn'
 import {Send} from '~/ui/Icon/Send'
 import {Staking} from '~/ui/Icon/Staking'
-import {StakingKeyDeregistered} from '~/ui/Icon/StakingKeyDeregistered'
 import {StakingKeyRegistered} from '~/ui/Icon/StakingKeyRegistered'
 import {Swap} from '~/ui/Icon/Swap'
 import {Transaction} from '~/ui/Icon/Transaction'
@@ -158,9 +157,9 @@ const iconMap: Record<
   SWAP: Swap,
   SMART_CONTRACT: DigitalAsset,
   STAKE_REGISTRATION: StakingKeyRegistered,
-  STAKE_DEREGISTRATION: StakingKeyDeregistered,
+  STAKE_DEREGISTRATION: Staking,
   STAKE_DELEGATION: Staking,
-  STAKE_UNDELEGATION: StakingKeyDeregistered,
+  STAKE_UNDELEGATION: Staking,
   VOTE_DELEGATION: Governance,
   COLLATERAL_CREATION: Lock,
   MINT: DigitalAsset,

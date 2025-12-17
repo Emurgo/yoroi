@@ -28,6 +28,8 @@ import {usePrefetchPoolList} from '~/features/Staking/Staking/PoolList/usePoolLi
 import {PoolTransitionNotice} from '~/features/Staking/Staking/PoolTransition/PoolTransitionNotice'
 import {usePoolTransition} from '~/features/Staking/Staking/PoolTransition/usePoolTransition'
 import {useCreateWithdrawTx} from '~/features/Staking/hooks/useCreateWithdrawTx'
+import {useConnectionStatus} from '~/kernel/connection/ConnectionProvider'
+import {ConnectionStatus} from '~/kernel/connection/types'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useResultNavigation} from '~/kernel/navigation/hooks/useResultNavigation'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
@@ -75,7 +77,15 @@ export const DashboardScreen = () => {
   })
   const {wallet, meta} = useSelectedWallet()
   const {isPending: isSyncing, sync} = useSync(wallet)
-  const isOnline = useIsOnline(wallet)
+  const connectionStatus = useConnectionStatus()
+  const isOnline = useIsOnline(
+    wallet,
+    connectionStatus === ConnectionStatus.Online
+      ? 'online'
+      : connectionStatus === ConnectionStatus.Offline
+        ? 'offline'
+        : 'connecting',
+  )
   const {openModal} = useModal()
   const walletNavigateTo = useWalletNavigation()
 

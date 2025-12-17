@@ -1,19 +1,13 @@
-import {isDev} from './constants'
-
 export const features = {
   useTestnet: false,
   prefillWalletInfo: false,
-  showProdPoolsInDev: isDev,
   moderatingNftsEnabled: false,
   poolTransition: true,
   portfolioPerformance: false,
   portfolioNews: false,
   portfolioExport: false,
-  walletListFeedback: isDev,
   walletListAggregatedBalance: false,
-  walletListSwipeableActions: isDev,
   swapTokenLinks: true,
-  utxoConsolidation: isDev,
   pushNotifications: true,
 }
 

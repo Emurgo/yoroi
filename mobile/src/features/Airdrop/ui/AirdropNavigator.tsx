@@ -63,7 +63,7 @@ export const AirdropNavigator = () => {
             Record<string, unknown>
           >
         }
-        options={{headerShown: false}}
+        options={{headerShown: true}}
       />
     </Stack.Navigator>
   )

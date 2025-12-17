@@ -4,6 +4,7 @@ import {useNavigation} from '@react-navigation/native'
 import {StackNavigationProp} from '@react-navigation/stack'
 import {useQueryClient} from '@tanstack/react-query'
 import {BigNumber} from 'bignumber.js'
+import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
 import {
@@ -12,6 +13,7 @@ import {
   Pressable,
   RefreshControl,
   ScrollView,
+  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -90,13 +92,33 @@ export const AirdropSelectionScreen = () => {
         // Also remove from eligible cache if it exists there
         await addressCache.removeEligibleAddress(address)
 
-        // Invalidate and refetch queries to update the list
-        await queryClient.invalidateQueries({
-          queryKey: [persistPrefixKeyword, 'airdropEligibility'],
+        // Update React Query cache directly to avoid network calls
+        // Invalidate with partial key to match all wallets, then update cache directly
+        const partialQueryKey = [
+          persistPrefixKeyword,
+          'airdropEligibility',
+        ] as const
+
+        // Get all matching queries and update them
+        const queryCache = queryClient.getQueryCache()
+        const matchingQueries = queryCache.findAll({
+          queryKey: partialQueryKey,
         })
-        await queryClient.refetchQueries({
-          queryKey: [persistPrefixKeyword, 'airdropEligibility'],
-        })
+
+        for (const query of matchingQueries) {
+          const currentData = query.state.data as
+            | AddressAllocation[]
+            | undefined
+
+          if (currentData && Array.isArray(currentData)) {
+            // Remove the address from allocations array
+            const updatedData = currentData.filter(
+              (allocation) => allocation.address !== address,
+            )
+            // Update cache directly without network call
+            queryClient.setQueryData(query.queryKey, updatedData)
+          }
+        }
       } catch (error) {
         logger.error('Failed to remove external address', {address, error})
       }
@@ -390,15 +412,15 @@ const AddressCard = ({
       ]}
     >
       {({pressed}) => (
-        <View
-          style={[
-            a.flex_row,
-            {
-              backgroundColor:
-                pressed || hasRedeemable ? p.bg_gradient_1[0] : 'transparent',
-            },
-          ]}
-        >
+        <View style={[a.flex_row]}>
+          {(pressed || hasRedeemable) && (
+            <LinearGradient
+              colors={pressed ? p.bg_gradient_2 : p.bg_gradient_1}
+              start={{x: 1, y: 1}}
+              end={{x: 0, y: 0}}
+              style={[StyleSheet.absoluteFill]}
+            />
+          )}
           <View style={[a.flex_1, a.p_lg]}>
             {/* Header row */}
             <View style={[a.flex_row, a.justify_between, a.align_center]}>

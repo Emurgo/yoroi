@@ -61,13 +61,9 @@ export const airdropMessages = defineMessages({
     id: 'airdrop.nextThaw',
     defaultMessage: '!!!Next thaw',
   },
-  endsIn: {
-    id: 'airdrop.endsIn',
-    defaultMessage: '!!!Ends in',
-  },
   startsIn: {
     id: 'airdrop.startsIn',
-    defaultMessage: '!!!Starts in',
+    defaultMessage: '!!!Next thaw in',
   },
   active: {
     id: 'airdrop.active',
@@ -144,7 +140,11 @@ export const airdropMessages = defineMessages({
   statusSkipped: {
     id: 'airdrop.status.skipped',
     defaultMessage: '!!!Skipped',
-  }, // Add these to the existing airdropMessages in airdrop.ts
+  },
+  tryAgain: {
+    id: 'airdrop.tryAgain',
+    defaultMessage: '!!!Try Again',
+  },
   destinationAddressTitle: {
     id: 'airdrop.destinationAddressTitle',
     defaultMessage: '!!!Destination address',
@@ -224,6 +224,10 @@ export const airdropMessages = defineMessages({
   noRedeemableThaws: {
     id: 'airdrop.noRedeemableThaws',
     defaultMessage: '!!!No thaws are currently redeemable',
+  },
+  allocationsRedeemableNow: {
+    id: 'airdrop.allocationsRedeemableNow',
+    defaultMessage: '!!!{count} allocation{plural} redeemable now',
   },
   manualAddress: {
     id: 'airdrop.manualAddress',

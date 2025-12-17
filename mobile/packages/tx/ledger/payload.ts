@@ -1,7 +1,11 @@
 // Ledger payload building functions
 // Builds transaction payloads for Ledger hardware wallet signing
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
+import {CardanoMobileWrapped} from '@yoroi/common'
 
+import type {
+  Certificate as LedgerCertificate,
+  Withdrawal as LedgerWithdrawal,
+} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {
   CIP36VoteDelegationType,
   CIP36VoteRegistrationFormat,
@@ -10,10 +14,6 @@ import {
   TxAuxiliaryData,
   TxAuxiliaryDataType,
   TxOutputDestinationType,
-} from '@cardano-foundation/ledgerjs-hw-app-cardano'
-import type {
-  Certificate as LedgerCertificate,
-  Withdrawal as LedgerWithdrawal,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {blake2b as blake2bHash} from '@noble/hashes/blake2b'

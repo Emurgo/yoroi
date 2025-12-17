@@ -1,5 +1,5 @@
 // Functional Transaction Builder using CSL TransactionBuilder directly
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
+import {CardanoMobileWrapped} from '@yoroi/common'
 import {getLogger} from '@yoroi/logger'
 import {primaryTokenId as defaultPrimaryTokenId} from '@yoroi/portfolio'
 import {
@@ -24,14 +24,13 @@ import type {
 import {Buffer} from 'buffer'
 
 import {NoOutputsError, NotEnoughMoneyToSendError} from '../errors'
-import {CardanoHaskellConfig, Datum} from '../types'
+import {CardanoHaskellConfig, Datum, TransactionMetadata} from '../types'
 import {normalizeToAddress} from '../utils/addresses'
 import {ModernUtxo} from '../utxo/models'
 import {createCertificateFromData} from './certificates'
 import type {
   TransactionCertificate,
   TransactionInput,
-  TransactionMetadata,
   TransactionOptions,
   TransactionOutput,
   TransactionReferenceInput,
@@ -1194,6 +1193,87 @@ export async function buildTransaction(
       })
 
       try {
+        // If transaction has metadata, estimate witness set size and set manual fee
+        // BEFORE calling addChangeIfNeeded, since CSL calculates fee based on body size only
+        // The witness set size (signatures) increases total transaction size, which increases fee
+        // This is especially important for voting registration transactions with CIP-36 metadata
+        if (
+          state.metadata.length > 0 &&
+          !state.options.manualFee &&
+          (!state.options.mints || state.options.mints.length === 0)
+        ) {
+          // Estimate witness set size: each input needs a signature (~64 bytes)
+          // Plus CBOR overhead for witness set structure (~20 bytes)
+          const signatureSize = 64
+          const witnessSetOverhead = 20
+          const estimatedWitnessSetSize =
+            state.inputs.length * signatureSize + witnessSetOverhead
+
+          // Estimate transaction body size
+          const baseBodySizeEstimate = 200
+          const inputsSize = state.inputs.length * 80
+          const outputsSize = state.outputs.length * 150
+          const certificatesSize = state.certificates.length * 120
+          const withdrawalsSize = state.withdrawals.length * 60
+
+          // Metadata size - estimate conservatively based on actual metadata
+          let metadataSize = 100 // Base overhead
+          for (const meta of state.metadata) {
+            if (meta) {
+              const metaStr = JSON.stringify(meta.data)
+              // CIP-36 metadata with hex addresses can be large
+              metadataSize += Math.max(metaStr.length, 300)
+            }
+          }
+
+          // Estimate change output size (will be added by addChangeIfNeeded)
+          const changeOutputSize = 150
+
+          const estimatedBodySize =
+            baseBodySizeEstimate +
+            inputsSize +
+            outputsSize +
+            certificatesSize +
+            withdrawalsSize +
+            metadataSize +
+            changeOutputSize
+
+          // Apply safety multiplier for CBOR encoding overhead
+          const adjustedBodySize = Math.ceil(estimatedBodySize * 2.0)
+
+          // Total transaction size including witness set
+          const totalTxSizeEstimate = adjustedBodySize + estimatedWitnessSetSize
+
+          // Calculate fee with buffer: constant + coefficient * total_size
+          // Add 10% buffer to account for fee calculation variance
+          const baseFee =
+            BigInt(protocolParams.linearFee.constant) +
+            BigInt(protocolParams.linearFee.coefficient) *
+              BigInt(totalTxSizeEstimate)
+          const feeBuffer = baseFee / BigInt(10) // 10% buffer
+          const totalFee = baseFee + feeBuffer
+
+          // Set manual fee BEFORE calling addChangeIfNeeded
+          const feeBigNum = csl.BigNum.fromStr(totalFee.toString())
+          if (feeBigNum) {
+            cslTxBuilder.setFee(feeBigNum)
+            getLogger().info(
+              'buildTransaction: Set manual fee accounting for metadata and witness set',
+              {
+                estimatedBodySize,
+                adjustedBodySize,
+                estimatedWitnessSetSize,
+                totalTxSizeEstimate,
+                baseFee: baseFee.toString(),
+                feeBuffer: feeBuffer.toString(),
+                totalFee: totalFee.toString(),
+                metadataCount: state.metadata.length,
+                inputsCount: state.inputs.length,
+              },
+            )
+          }
+        }
+
         // If minting with native scripts, calculate witness set size and estimate fee
         // BEFORE calling addChangeIfNeeded, since CSL calculates fee based on body size only
         // The witness set size increases total transaction size, which increases fee

@@ -3,8 +3,7 @@ import {YoroiWallet} from '@yoroi/cardano-wallet'
 import {getLogger} from '@yoroi/logger'
 import {App, Chain, Network, Wallet} from '@yoroi/types'
 
-import {KeychainManager} from '~/kernel/storage/Keychain'
-
+import type {KeychainManager} from '../common/types'
 import {getWalletFactory} from '../network-manager/get-wallet-factory'
 
 /**

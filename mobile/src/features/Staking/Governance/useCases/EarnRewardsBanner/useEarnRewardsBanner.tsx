@@ -1,7 +1,9 @@
+import {useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
 import {Branded} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {logger} from '@sentry/react'
+import {useQuery} from '@tanstack/react-query'
 import * as React from 'react'
 import {LayoutAnimation} from 'react-native'
 
@@ -17,16 +19,22 @@ import {EarnRewardsBanner} from './EarnRewardsBanner'
 import {useEarnRewardsDelegation} from './useEarnRewardsDelegation'
 import {useYoroiStakePool} from './useYoroiStakePool'
 
+const DISMISSAL_DURATION_MS = 7 * 24 * 60 * 60 * 1000 // 1 week in milliseconds
+
 /**
  * Hook to manage the earn rewards banner display and interactions
  * Conditions for showing the banner:
  * - User is not participating in staking (stakingInfo.status !== 'staked')
  * - User is not participating in governance (no DRep delegation)
  * - User is on mainnet
- * - Banner has not been dismissed in the last month
+ * - Banner has not been dismissed in the last week
  */
 export const useEarnRewardsBanner = () => {
   const {wallet, meta} = useSelectedWallet()
+  const storage = useAsyncStorage()
+  const walletStorage = storage.join(`wallet/${wallet.id}/earnRewardsBanner/`)
+  const queryKey = [wallet.id, 'earnRewardsBanner', 'dismissedAt']
+
   const {stakingInfo, isLoading: isLoadingStaking} = useStakingInfo(wallet)
   const {
     isParticipating: isParticipatingInGovernance,
@@ -38,8 +46,18 @@ export const useEarnRewardsBanner = () => {
   const {poolId: yoroiPoolId, isLoading: isLoadingYoroiPool} =
     useYoroiStakePool()
 
+  // Load dismissal timestamp from storage
+  const {data: dismissedAt} = useQuery({
+    queryKey,
+    queryFn: async () => {
+      const timestamp = await walletStorage.getItem<number | null>(
+        'dismissedAt',
+      )
+      return timestamp ?? null
+    },
+  })
+
   const [showBanner, setShowBanner] = React.useState(false)
-  const [isDismissed, setIsDismissed] = React.useState(false)
 
   // Check if wallet has enough ADA (at least 5 ADA for transaction fees + stake key deposit if needed)
   const hasEnoughAda = React.useMemo(() => {
@@ -47,6 +65,13 @@ export const useEarnRewardsBanner = () => {
     const adaLovelace = BigInt(balance?.quantity ?? Branded.ZERO_QUANTITY)
     return adaLovelace >= minAdaForGovernanceBanner
   }, [wallet])
+
+  // Check if dismissal has expired (more than 1 week ago)
+  const isDismissed = React.useMemo(() => {
+    if (dismissedAt === null || dismissedAt === undefined) return false
+    const now = Date.now()
+    return now - dismissedAt < DISMISSAL_DURATION_MS
+  }, [dismissedAt])
 
   const shouldShowBanner = React.useMemo(() => {
     return (
@@ -108,11 +133,19 @@ export const useEarnRewardsBanner = () => {
     navigateTo,
   ])
 
+  // Mutation to persist dismissal timestamp
+  const dismissMutation = useMutationWithInvalidations({
+    mutationFn: async () => {
+      await walletStorage.setItem('dismissedAt', Date.now())
+    },
+    invalidateQueries: [queryKey],
+  })
+
   const handleDismiss = React.useCallback(() => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    setIsDismissed(true)
+    dismissMutation.mutate()
     setShowBanner(false)
-  }, [])
+  }, [dismissMutation])
 
   const banner = React.useMemo(() => {
     if (!showBanner) return null
@@ -120,6 +153,7 @@ export const useEarnRewardsBanner = () => {
       <>
         <Space.Height.md />
         <EarnRewardsBanner onPress={handleCtaPress} onDismiss={handleDismiss} />
+        <Space.Height.lg />
       </>
     )
   }, [showBanner, handleCtaPress, handleDismiss])

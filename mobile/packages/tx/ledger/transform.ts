@@ -1,7 +1,6 @@
 // Ledger transformation utilities
 // Transforms Cardano transactions to Ledger hardware wallet format
-import {CardanoMobileWrapped} from '@yoroi/cardano-wallet'
-import {isHex} from '@yoroi/common'
+import {CardanoMobileWrapped, isHex} from '@yoroi/common'
 
 import {
   AddressType as LedgerAddressType,

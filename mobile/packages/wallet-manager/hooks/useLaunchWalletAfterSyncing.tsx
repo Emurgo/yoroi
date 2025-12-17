@@ -4,9 +4,15 @@ import {getLogger} from '@yoroi/logger'
 
 import * as React from 'react'
 
-import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
-
 import {useWalletManagerSelector} from '../context/WalletManagerProvider'
+
+/**
+ * Wallet navigation functions - should be provided by the app
+ */
+export type WalletNavigation = {
+  resetToWalletSelection: () => void
+  resetToTxHistory: () => void
+}
 
 /**
  * Custom hook to launch a new wallet first time or when a previous sync is required, it will follow these steps:
@@ -31,12 +37,16 @@ export function useLaunchWalletAfterSyncing({
   isGlobalSyncPaused = false,
   walletId,
   shouldNavigateAfterSync = true,
+  walletNavigation,
 }: {
   isGlobalSyncPaused: boolean
   walletId: YoroiWallet['id'] | null
   shouldNavigateAfterSync?: boolean
+  /**
+   * Navigation functions - should be provided by the app
+   */
+  walletNavigation: WalletNavigation
 }) {
-  const walletNavigation = useWalletNavigation()
   // Use selector to prevent re-renders when selected wallet changes
   const walletManager = useWalletManagerSelector((ctx) => ctx.walletManager)
 
@@ -97,7 +107,27 @@ export function useLaunchWalletAfterSyncing({
         // Do quick sync first to make wallet usable immediately
         await wallet.quickSync({isForced: true})
 
-        // Navigate immediately after quick sync
+        // Wait a bit for balance to be calculated after quickSync
+        // Balance calculation happens asynchronously after UTXO sync
+        await new Promise((resolve) => setTimeout(resolve, 500))
+
+        // Check if balance is available (hydrated)
+        // For new/empty wallets, balance might legitimately be zero, but we want to ensure
+        // balance manager has been updated with the synced data
+        let balanceCheckAttempts = 0
+        const maxBalanceCheckAttempts = 5
+        while (balanceCheckAttempts < maxBalanceCheckAttempts) {
+          const balance = wallet.primaryBalance()
+          // If balance manager is hydrated and has processed the sync, proceed
+          // We check if balance info is available (not just quantity)
+          if (balance && balance.info) {
+            break
+          }
+          balanceCheckAttempts++
+          await new Promise((resolve) => setTimeout(resolve, 300))
+        }
+
+        // Navigate after balance is available
         if (shouldNavigateAfterSync) {
           try {
             walletNavigation.resetToTxHistory()
@@ -112,7 +142,7 @@ export function useLaunchWalletAfterSyncing({
         }
 
         // Start full sync in the background without waiting
-        wallet.sync({isForced: true}).catch((error) => {
+        wallet.sync({isForced: true}).catch((error: unknown) => {
           getLogger().error(
             'useLaunchWalletAfterSyncing: Error during background full sync',
             {error, walletId},

@@ -4,6 +4,7 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Alert, View} from 'react-native'
 
+import {useBackgroundTimerControl} from '~/common/providers/BackgroundTimerContext'
 import {useIsUsbSupported} from '~/features/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
@@ -20,11 +21,15 @@ const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => {
   const strings = useStrings()
   const isUSBSupported = useIsUsbSupported()
   const {palette: p} = useTheme()
+  const backgroundTimerControl = useBackgroundTimerControl()
 
-  const {request} = useLedgerPermissions({
-    onError: () => Alert.alert(strings.hw.error, strings.hw.bluetoothError),
-    onSuccess: onSelectBLE,
-  })
+  const {request} = useLedgerPermissions(
+    {
+      onError: () => Alert.alert(strings.hw.error, strings.hw.bluetoothError),
+      onSuccess: onSelectBLE,
+    },
+    backgroundTimerControl,
+  )
 
   return (
     <View style={[a.flex_1, {marginBottom: 24}, a.px_lg]}>

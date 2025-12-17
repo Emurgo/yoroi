@@ -1,14 +1,14 @@
 import {getLogger} from '@yoroi/logger'
-import {TransactionOutput} from '@yoroi/tx'
 import type {DRepValue} from '@yoroi/tx'
+import {TransactionOutput} from '@yoroi/tx'
+import type {TransactionMetadata} from '@yoroi/types'
 import {Branded, KeyHash, Network, PublicKeyHex, Wallet} from '@yoroi/types'
 
 import type {Certificate} from '@emurgo/cross-csl-core'
 import {BigNumber} from 'bignumber.js'
 
 import * as legacyApi from '../api/api'
-import type {CardanoTypes} from '../types'
-import type {YoroiWallet} from '../types'
+import type {CardanoTypes, YoroiWallet} from '../types'
 import {createCombinedDelegationTx} from './createCombinedDelegationTx'
 import {createDelegationTx} from './createDelegationTx'
 import {createSendTx} from './createSendTx'
@@ -283,7 +283,7 @@ export async function createSendTxFromWallet(
   params: {
     entries: TransactionOutput[]
     addressMode: Wallet.AddressMode
-    metadata?: Array<CardanoTypes.TxMetadata>
+    metadata?: Array<TransactionMetadata>
     /**
      * If true, subtract transaction fee from the primary token amount in the first output.
      * This is useful when sending MAX amount - the output will be automatically adjusted

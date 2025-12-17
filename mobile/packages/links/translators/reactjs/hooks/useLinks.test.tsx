@@ -1,4 +1,5 @@
 import {renderHook} from '@testing-library/react-native'
+import React from 'react'
 
 import {LinksProvider} from '../provider/LinksProvider'
 import {useLinks} from './useLinks'

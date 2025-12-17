@@ -247,20 +247,6 @@ export function selectUtxosForAmounts(
   const primaryTokenIdStr =
     typeof primaryTokenId === 'string' ? primaryTokenId : primaryTokenId
 
-  const requiredAda =
-    (Object.keys(requiredAmounts) as Array<TokenId>).reduce((sum, tokenId) => {
-      const tokenIdStr = typeof tokenId === 'string' ? tokenId : tokenId
-      if (tokenIdStr === primaryTokenIdStr) {
-        const quantity = requiredAmounts[tokenId]
-        const qtyStr = typeof quantity === 'string' ? quantity : quantity
-        return sum + BigInt(qtyStr || '0')
-      }
-      return sum
-    }, BigInt(0)) +
-    BigInt(feeStr) +
-    minUtxoValue +
-    feeBuffer
-
   // Get all required token IDs (excluding primary token)
   const requiredTokenIds = new Set(
     Object.keys(requiredAmounts).filter((id) => {
@@ -299,7 +285,6 @@ export function selectUtxosForAmounts(
   }
 
   // Check if we have enough of each token
-  let needsMoreAda = selectedAda < requiredAda
   const needsMoreTokens: TokenId[] = []
 
   for (const tokenId of requiredTokenIds) {
@@ -331,11 +316,105 @@ export function selectUtxosForAmounts(
     return selected
   }
 
+  // Calculate tokens that will remain in change (tokens in selected UTXOs minus tokens being sent)
+  const tokensInChange: Record<string, bigint> = {}
+  for (const [tokenId, inputAmount] of Object.entries(selectedAmounts)) {
+    if (tokenId === primaryTokenIdStr) continue
+    const outputAmount = BigInt(requiredAmounts[tokenId as TokenId] || '0')
+    const remaining = inputAmount - outputAmount
+    if (remaining > BigInt(0)) {
+      tokensInChange[tokenId] = remaining
+    }
+  }
+
+  // Estimate minimum UTXO for change output based on token count
+  // When tokens will be in change, the minimum UTXO requirement increases significantly
+  // Use a conservative estimate: base minimum + additional ADA per token
+  // This is a heuristic since exact calculation requires CSL
+  const tokenCountInChange = Object.keys(tokensInChange).length
+  let estimatedMinUtxoForChange = minUtxoValue
+  if (tokenCountInChange > 0) {
+    // Conservative estimate: base minimum + 0.1 ADA per token (scaled for safety)
+    // Actual minimum can be higher depending on token sizes, but this provides a buffer
+    const adaPerToken = BigInt('100000') // 0.1 ADA per token
+    const tokenMultiplier = BigInt(Math.max(tokenCountInChange, 1))
+    estimatedMinUtxoForChange =
+      minUtxoValue + adaPerToken * tokenMultiplier * BigInt(2) // 2x multiplier for safety
+  }
+
+  // Calculate base required ADA (outputs + fee + buffer) - min UTXO calculated separately
+  const baseRequiredAda =
+    (Object.keys(requiredAmounts) as Array<TokenId>).reduce((sum, tokenId) => {
+      const tokenIdStr = typeof tokenId === 'string' ? tokenId : tokenId
+      if (tokenIdStr === primaryTokenIdStr) {
+        const quantity = requiredAmounts[tokenId]
+        const qtyStr = typeof quantity === 'string' ? quantity : quantity
+        return sum + BigInt(qtyStr || '0')
+      }
+      return sum
+    }, BigInt(0)) +
+    BigInt(feeStr) +
+    feeBuffer
+
+  // Calculate required ADA including proper change output minimum
+  let requiredAda = baseRequiredAda + estimatedMinUtxoForChange
+
   // If we need more ADA, select from remaining UTXOs
+  // Prefer pure ADA UTXOs to avoid adding unexpected tokens to change output
+  // This prevents underestimating minimum UTXO when non-required tokens end up in change
+  let needsMoreAda = selectedAda < requiredAda
   if (needsMoreAda) {
-    const sortedRemaining = sortUtxosByAda(utxosWithoutTokens, primaryTokenId)
+    const pureAdaUtxos = filterPureAdaUtxos(utxosWithoutTokens, primaryTokenId)
+    const otherUtxos = utxosWithoutTokens.filter(
+      (u) => !pureAdaUtxos.includes(u),
+    )
+
+    // Always prefer pure ADA UTXOs first to avoid adding tokens to change
+    // This ensures minimum UTXO estimate remains accurate
+    const sortedRemaining = [
+      ...sortUtxosByAda(pureAdaUtxos, primaryTokenId),
+      ...sortUtxosByAda(otherUtxos, primaryTokenId),
+    ]
+
+    // Track tokens being added and update minimum UTXO estimate dynamically
+    let currentTokensInChange = {...tokensInChange}
+    let currentEstimatedMinUtxo = estimatedMinUtxoForChange
+    const adaPerToken = BigInt('100000') // 0.1 ADA per token
 
     for (const utxo of sortedRemaining) {
+      // Check if this UTXO adds any tokens to change
+      const utxoTokenIds = (Object.keys(utxo.balance) as Array<TokenId>).filter(
+        (id) => {
+          const idStr = typeof id === 'string' ? id : id
+          return idStr !== primaryTokenIdStr
+        },
+      )
+
+      // Update tokens in change if UTXO contains non-required tokens
+      if (utxoTokenIds.length > 0) {
+        for (const tokenId of utxoTokenIds) {
+          const tokenIdStr = typeof tokenId === 'string' ? tokenId : tokenId
+          const tokenAmount = BigInt(utxo.balance[tokenId] || '0')
+          if (tokenAmount > BigInt(0)) {
+            // This token will be added to change (not required, so goes to change)
+            if (!currentTokensInChange[tokenIdStr]) {
+              currentTokensInChange[tokenIdStr] = BigInt(0)
+            }
+            currentTokensInChange[tokenIdStr] += tokenAmount
+          }
+        }
+
+        // Recalculate minimum UTXO estimate based on updated token count
+        const newTokenCount = Object.keys(currentTokensInChange).length
+        if (newTokenCount > 0) {
+          const tokenMultiplier = BigInt(newTokenCount)
+          currentEstimatedMinUtxo =
+            minUtxoValue + adaPerToken * tokenMultiplier * BigInt(2)
+          // Update required ADA with new minimum UTXO estimate
+          requiredAda = baseRequiredAda + currentEstimatedMinUtxo
+        }
+      }
+
       if (selectedAda >= requiredAda) break
       selected.push(utxo)
       selectedAda += BigInt(utxo.balance[primaryTokenIdStr] || '0')
@@ -367,12 +446,23 @@ export function createCIP15VotingMetadata(
     typeof stakingPublicKey === 'string' ? stakingPublicKey : stakingPublicKey
   const rewardAddrStr =
     typeof rewardAddress === 'string' ? rewardAddress : rewardAddress
+  // Add 0x prefix for hex strings to match Cardano metadata format
+  // Remove 0x if already present to avoid double prefix
+  const votingKeyHex = votingKeyStr.startsWith('0x')
+    ? votingKeyStr
+    : `0x${votingKeyStr}`
+  const stakingKeyHex = stakingKeyStr.startsWith('0x')
+    ? stakingKeyStr
+    : `0x${stakingKeyStr}`
+  const rewardAddrHex = rewardAddrStr.startsWith('0x')
+    ? rewardAddrStr
+    : `0x${rewardAddrStr}`
   return {
     label: 61284, // CIP-15 DATA label
     data: {
-      1: votingKeyStr,
-      2: stakingKeyStr,
-      3: rewardAddrStr,
+      1: votingKeyHex,
+      2: stakingKeyHex,
+      3: rewardAddrHex,
       4: nonce,
     },
   }
@@ -380,6 +470,12 @@ export function createCIP15VotingMetadata(
 
 /**
  * Create CIP-36 voting metadata (new Catalyst voting format)
+ * CIP-36 format:
+ * - Field 1: delegations (array of [votingKey, weight])
+ * - Field 2: stake_credential (staking key)
+ * - Field 3: payment_address (payment address for receiving voting rewards)
+ * - Field 4: nonce
+ * - Field 5: voting_purpose (optional, default 0)
  */
 export function createCIP36VotingMetadata(
   votingPublicKey: PublicKeyHex | string,
@@ -392,19 +488,31 @@ export function createCIP36VotingMetadata(
     typeof votingPublicKey === 'string' ? votingPublicKey : votingPublicKey
   const stakingKeyStr =
     typeof stakingPublicKey === 'string' ? stakingPublicKey : stakingPublicKey
-  const rewardAddrStr =
-    typeof rewardAddress === 'string' ? rewardAddress : rewardAddress
-  const metadata: Record<string, unknown> = {
-    1: votingKeyStr,
-    2: stakingKeyStr,
-    3: rewardAddrStr,
-    4: nonce,
-  }
+  // Add 0x prefix for hex strings to match Cardano metadata format
+  // Remove 0x if already present to avoid double prefix
+  const votingKeyHex = votingKeyStr.startsWith('0x')
+    ? votingKeyStr
+    : `0x${votingKeyStr}`
+  const stakingKeyHex = stakingKeyStr.startsWith('0x')
+    ? stakingKeyStr
+    : `0x${stakingKeyStr}`
 
-  if (paymentAddress) {
-    const paymentAddrStr =
-      typeof paymentAddress === 'string' ? paymentAddress : paymentAddress
-    metadata[5] = paymentAddrStr
+  // CIP-36 uses payment_address in field 3, not reward_address
+  // If paymentAddress is provided, use it; otherwise fall back to rewardAddress
+  const addressToUse = paymentAddress || rewardAddress
+  const addressStr =
+    typeof addressToUse === 'string' ? addressToUse : addressToUse
+  const addressHex = addressStr.startsWith('0x')
+    ? addressStr
+    : `0x${addressStr}`
+
+  // CIP-36 format: field 1 is an array of [votingKey, weight]
+  const metadata: Record<string, unknown> = {
+    1: [[votingKeyHex, 1]],
+    2: stakingKeyHex,
+    3: addressHex, // payment_address (field 3 in CIP-36)
+    4: nonce,
+    5: 0, // voting_purpose (default 0 for voting registration)
   }
 
   return {

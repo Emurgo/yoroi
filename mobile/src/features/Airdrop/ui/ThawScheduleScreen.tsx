@@ -11,7 +11,7 @@ import {StackNavigationProp} from '@react-navigation/stack'
 import {BigNumber} from 'bignumber.js'
 import * as React from 'react'
 import {useIntl} from 'react-intl'
-import {ScrollView, Text, View} from 'react-native'
+import {Pressable, ScrollView, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useNavigateTo} from '~/features/ReviewTx/common/hooks/useNavigateTo'
@@ -38,8 +38,89 @@ const formatAmount = (amount: number): string => {
   return normalized.toFormat(2)
 }
 
+/**
+ * Parse error message to extract and format POSIX timestamps into human-readable dates
+ */
+const formatErrorMessage = (
+  errorMessage: string,
+  intl: {
+    formatDate: (
+      date: Date,
+      options?: {
+        year?: 'numeric' | '2-digit'
+        month?: 'short' | 'long' | 'numeric' | '2-digit'
+        day?: 'numeric' | '2-digit'
+        hour?: '2-digit'
+        minute?: '2-digit'
+      },
+    ) => string
+  },
+): string => {
+  // Check if error contains POSIX timestamps
+  const posixTimeRegex = /getPOSIXTime\s*=\s*(\d+)/g
+  const matches = Array.from(errorMessage.matchAll(posixTimeRegex))
+
+  if (matches.length === 0) {
+    return errorMessage
+  }
+
+  // Extract nextThaw and now timestamps
+  let formattedMessage = errorMessage
+
+  // Try to find nextThaw timestamp
+  const nextThawMatch = errorMessage.match(
+    /nextThaw\s*=\s*POSIXTime\s*\{\s*getPOSIXTime\s*=\s*(\d+)\s*\}/,
+  )
+  const nowMatch = errorMessage.match(
+    /now\s*=\s*POSIXTime\s*\{\s*getPOSIXTime\s*=\s*(\d+)\s*\}/,
+  )
+
+  if (nextThawMatch && nowMatch && nextThawMatch[1] && nowMatch[1]) {
+    const nextThawTimestamp = parseInt(nextThawMatch[1], 10)
+    const nowTimestamp = parseInt(nowMatch[1], 10)
+
+    // Convert POSIX timestamps (milliseconds) to Date objects
+    const nextThawDate = new Date(nextThawTimestamp)
+    const nowDate = new Date(nowTimestamp)
+
+    // Format dates using intl
+    const formattedNextThaw = intl.formatDate(nextThawDate, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+
+    // Create a more user-friendly error message
+    if (errorMessage.includes('NoRedeemableThaws')) {
+      formattedMessage = `There are no redeemable thaws available. The next thaw will be available on ${formattedNextThaw}.`
+    } else {
+      // For other errors, replace timestamps with formatted dates
+      formattedMessage = errorMessage
+        .replace(
+          /nextThaw\s*=\s*POSIXTime\s*\{\s*getPOSIXTime\s*=\s*\d+\s*\}/,
+          `nextThaw = ${formattedNextThaw}`,
+        )
+        .replace(
+          /now\s*=\s*POSIXTime\s*\{\s*getPOSIXTime\s*=\s*\d+\s*\}/,
+          `now = ${intl.formatDate(nowDate, {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+          })}`,
+        )
+    }
+  }
+
+  return formattedMessage
+}
+
 export const ThawScheduleScreen = () => {
   const strings = useStrings()
+  const intl = useIntl()
   const {atoms: ta} = useTheme()
   const route = useRoute<RouteProp<AirdropRoutes, 'airdrop-thaw-schedule'>>()
   const navigation = useNavigation<StackNavigationProp<AirdropRoutes>>()
@@ -121,7 +202,8 @@ export const ThawScheduleScreen = () => {
   }, [thaws, refetchEligibility])
 
   const handleRedeem = async () => {
-    if (!canRedeem || isRedeeming) {
+    // Allow retry even if canRedeem is false (for failed/completed thaws)
+    if (isRedeeming) {
       return
     }
 
@@ -179,6 +261,12 @@ export const ThawScheduleScreen = () => {
         },
       })
     } catch (error) {
+      logger.error('handleRedeem: Failed to redeem', {
+        destAddress: allocation.address,
+        error: error instanceof Error ? error.message : String(error),
+        errorStack: error instanceof Error ? error.stack : undefined,
+      })
+
       // Check if error is due to insufficient funds
       if (isInsufficientBalanceError(error)) {
         logger.info(
@@ -187,7 +275,7 @@ export const ThawScheduleScreen = () => {
         )
         resultNavigation.showResultScreen({
           type: 'error',
-          context: 'default',
+          context: 'airdrop',
           title: strings.airdrop.insufficientFunds,
           message: strings.airdrop.redeemError,
           primaryAction: {
@@ -213,7 +301,42 @@ export const ThawScheduleScreen = () => {
         return
       }
 
-      setIsRedeeming(false)
+      // Show error message for other build failures (e.g., already redeemed, no redeemable thaws)
+      const rawErrorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Failed to build redemption transaction'
+      const formattedErrorMessage = formatErrorMessage(rawErrorMessage, intl)
+
+      // Use more specific title for "NoRedeemableThaws" errors
+      const errorTitle = rawErrorMessage.includes('NoRedeemableThaws')
+        ? strings.airdrop.noRedeemableThaws
+        : strings.airdrop.redeemError
+
+      resultNavigation.showResultScreen({
+        type: 'error',
+        context: 'airdrop',
+        title: errorTitle,
+        message: formattedErrorMessage,
+        primaryAction: {
+          title: strings.txReview.failedTxButton,
+          onPress: () => {
+            setIsRedeeming(false)
+            // Navigate back to thaw schedule screen
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [
+                  {
+                    name: 'airdrop-thaw-schedule',
+                    params: {allocation},
+                  },
+                ],
+              }),
+            )
+          },
+        },
+      })
     }
   }
 
@@ -230,6 +353,11 @@ export const ThawScheduleScreen = () => {
             index={index}
             totalThaws={totalThaws}
             isLast={index === thaws.length - 1}
+            thaws={thaws}
+            onRetryFailed={handleRedeem}
+            isReadOnly={isReadOnly}
+            isWalletInitialized={isWalletInitialized}
+            isRedeeming={isRedeeming}
           />
         ))}
       </ScrollView>
@@ -253,9 +381,23 @@ type ThawItemProps = {
   index: number
   totalThaws: number
   isLast: boolean
+  thaws: ReadonlyArray<Thaw>
+  onRetryFailed: () => Promise<void>
+  isReadOnly: boolean
+  isWalletInitialized: boolean
+  isRedeeming: boolean
 }
 
-const ThawItem = ({thaw, index, totalThaws, isLast}: ThawItemProps) => {
+const ThawItem = ({
+  thaw,
+  index,
+  totalThaws,
+  isLast,
+  onRetryFailed,
+  isReadOnly,
+  isWalletInitialized,
+  isRedeeming,
+}: ThawItemProps) => {
   const strings = useStrings()
   const intl = useIntl()
   const {atoms: ta, palette: p} = useTheme()
@@ -289,11 +431,19 @@ const ThawItem = ({thaw, index, totalThaws, isLast}: ThawItemProps) => {
     minute: '2-digit',
   })
 
+  const isFailed = thaw.status === 'failed'
+
   const getStatusBadge = () => {
     if (isCompleted) {
       return {
         label: strings.airdrop.redeemed,
         color: p.secondary_600,
+      }
+    }
+    if (isFailed) {
+      return {
+        label: strings.airdrop.status.failed,
+        color: p.sys_magenta_500,
       }
     }
     if (isRedeemable) {
@@ -309,6 +459,10 @@ const ThawItem = ({thaw, index, totalThaws, isLast}: ThawItemProps) => {
   }
 
   const badge = getStatusBadge()
+
+  // Color the line primary if the current thaw's date has passed
+  // The line comes AFTER the current thaw and connects to the next one
+  const hasCurrentThawDatePassed = hasStarted
 
   return (
     <View style={[a.flex_row]}>
@@ -329,6 +483,21 @@ const ThawItem = ({thaw, index, totalThaws, isLast}: ThawItemProps) => {
             ]}
           >
             <Icon.Check size={16} color={p.white_static} />
+          </View>
+        ) : isFailed ? (
+          <View
+            style={[
+              a.align_center,
+              a.justify_center,
+              a.rounded_full,
+              {
+                width: 28,
+                height: 28,
+                backgroundColor: p.sys_magenta_500,
+              },
+            ]}
+          >
+            <Icon.Close size={16} color={p.white_static} />
           </View>
         ) : isRedeemable ? (
           <View
@@ -374,7 +543,9 @@ const ThawItem = ({thaw, index, totalThaws, isLast}: ThawItemProps) => {
             style={{
               width: 2,
               flex: 1,
-              backgroundColor: isCompleted ? p.primary_300 : p.gray_200,
+              backgroundColor: hasCurrentThawDatePassed
+                ? p.primary_500
+                : p.gray_200,
               marginVertical: 4,
             }}
           />
@@ -406,8 +577,33 @@ const ThawItem = ({thaw, index, totalThaws, isLast}: ThawItemProps) => {
 
         <Space.Height.sm />
 
-        {/* Status badge */}
-        <Badge label={badge.label} color={badge.color} />
+        {/* Status badge and Try again button for failed thaws */}
+        <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+          <Badge label={badge.label} color={badge.color} />
+          {isFailed && !isReadOnly && isWalletInitialized && (
+            <Pressable
+              onPress={onRetryFailed}
+              disabled={isRedeeming}
+              style={({pressed}) => [
+                {
+                  borderRadius: 999,
+                  paddingHorizontal: 8,
+                  paddingVertical: 4,
+                  backgroundColor: pressed
+                    ? p.primary_600
+                    : isRedeeming
+                      ? p.gray_400
+                      : p.primary_500,
+                  opacity: isRedeeming ? 0.6 : 1,
+                },
+              ]}
+            >
+              <Text style={[a.body_3_sm_regular, {color: p.white_static}]}>
+                {strings.airdrop.tryAgain}
+              </Text>
+            </Pressable>
+          )}
+        </View>
       </View>
     </View>
   )

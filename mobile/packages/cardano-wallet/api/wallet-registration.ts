@@ -1,14 +1,13 @@
 // @ts-ignore
-import QuickCrypto from 'react-native-quick-crypto'
-
 /**
  * Get backend-zero base URL from legacy API URL
  * @deprecated Use getBackendZeroUrl from '@yoroi/api' instead
  * Re-exported from package to maintain backward compatibility
  */
-// Re-export getBackendZeroUrl - using relative path since it's not exported from @yoroi/api index
-// TODO: Export getBackendZeroUrl from @yoroi/api index
-import {getBackendZeroUrl} from '../../../packages/api/cardano/utils/url-mapping'
+import {getBackendZeroUrl} from '@yoroi/api'
+
+import QuickCrypto from 'react-native-quick-crypto'
+
 import {getSpendingKey} from '../addressInfo/addressInfo'
 
 /**

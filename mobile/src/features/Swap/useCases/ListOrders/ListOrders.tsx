@@ -3,8 +3,7 @@ import {isLeft, parseNumberFromText, truncateString} from '@yoroi/common'
 import {infoExtractName} from '@yoroi/portfolio'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Api, Portfolio, Swap} from '@yoroi/types'
-import {useSelectedWallet} from '@yoroi/wallet-manager'
-import {useWalletManager} from '@yoroi/wallet-manager'
+import {useSelectedWallet, useWalletManager} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
@@ -406,6 +405,7 @@ const OrderCancellation = ({
         </Modal.Footer>
       ),
       height: 400,
+      canDiscard: true,
     })
   }
 

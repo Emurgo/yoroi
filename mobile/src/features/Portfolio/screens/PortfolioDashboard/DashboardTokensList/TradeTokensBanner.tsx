@@ -13,10 +13,10 @@ import {TradeTokensAsset} from './TradeTokensAsset'
 export const TradeTokensBanner = () => {
   const {palette: p} = useTheme()
   const strings = useStrings()
-  const navigationTo = useNavigateTo()
+  const navigateTo = useNavigateTo()
 
   const handleSwap = () => {
-    navigationTo.swap()
+    navigateTo.resetTabAndSwapWithRemoteConfig()
   }
 
   return (
