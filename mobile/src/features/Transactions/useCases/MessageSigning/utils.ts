@@ -1,3 +1,5 @@
+import {CardanoMobile} from '@yoroi/cardano-wallet'
+
 import {Buffer} from 'buffer'
 import {decode} from 'cbor2'
 
@@ -106,8 +108,6 @@ export const extractAddressFromSignature = async (
   protectedHeaderBytes: Uint8Array,
 ): Promise<string | null> => {
   try {
-    const {CardanoMobile} = await import('@yoroi/cardano-wallet')
-
     const protectedHeader = decode(Buffer.from(protectedHeaderBytes)) as Map<
       number | string,
       unknown
@@ -170,8 +170,6 @@ export const verifyAddressFromPublicKey = async (
   addressBech32: string,
 ): Promise<boolean> => {
   try {
-    const {CardanoMobile} = await import('@yoroi/cardano-wallet')
-
     // Parse the address
     const wasmAddress = CardanoMobile.Address.fromBech32(addressBech32)
     if (wasmAddress.isMalformed()) {

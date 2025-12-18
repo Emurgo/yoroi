@@ -114,7 +114,7 @@
     "@yoroi/tx": "^7.0.0-beta",
     "@yoroi/portfolio": "^7.0.0-beta",
     "@emurgo/cip4-js": "^1.0.7",
-    "@emurgo/cross-csl-core": "^9.0.0-beta.2",
+    "@emurgo/cross-csl-core": "9.0.0",
     "@cardano-foundation/ledgerjs-hw-app-cardano": "^7.1.4",
     "axios": "^1.10.0",
     "bignumber.js": "9.3.0",

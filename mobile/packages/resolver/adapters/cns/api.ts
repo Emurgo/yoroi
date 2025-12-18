@@ -1,3 +1,4 @@
+import {CardanoMobile} from '@yoroi/cardano-wallet'
 import {Api, Resolver} from '@yoroi/types'
 
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
@@ -19,7 +20,6 @@ export const cnsCryptoAddress = (
       isMainnet ? cnsApiConfig.mainnet.baseUrl : cnsApiConfig.preprod.baseUrl,
     )
     try {
-      const {CardanoMobile} = await import('@yoroi/cardano-wallet')
       const address = await resolveAddress(
         receiver,
         isMainnet ? cnsApiConfig.mainnet : cnsApiConfig.preprod,
