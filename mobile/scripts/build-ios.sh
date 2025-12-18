@@ -14,18 +14,18 @@ fi
 
 rustup default 1.86
 
-# Add iOS targets
+# Add iOS targets (including x86_64-apple-darwin for Intel Macs)
 echo "🎯 Adding iOS targets..."
-rustup target add \
-  aarch64-apple-darwin \
-  aarch64-apple-ios \
-  aarch64-apple-ios-sim \
-  aarch64-linux-android \
-  armv7-linux-androideabi \
-  i686-linux-android \
-  wasm32-unknown-unknown \
-  x86_64-apple-ios \
-  x86_64-linux-android
+rustup target add aarch64-apple-darwin
+rustup target add aarch64-apple-ios
+rustup target add aarch64-apple-ios-sim
+rustup target add aarch64-linux-android
+rustup target add armv7-linux-androideabi
+rustup target add i686-linux-android
+rustup target add wasm32-unknown-unknown
+rustup target add x86_64-apple-darwin
+rustup target add x86_64-apple-ios
+rustup target add x86_64-linux-android
 
 # Show Rust configuration
 echo "📋 Rust configuration:"
