@@ -195,10 +195,10 @@
     "react-native-svg": "15.11.2",
     "@react-native-async-storage/async-storage": "2.1.2",
     "@emurgo/cross-csl-mobile": {
-      "@emurgo/csl-mobile-bridge-jsi": "2.0.0-alpha.12"
+      "@emurgo/csl-mobile-bridge-jsi": "2.0.0-alpha.14"
     },
     "@emurgo/cross-msl-mobile": {
-      "@emurgo/msl-mobile-bridge-jsi": "2.0.0-beta.6"
+      "@emurgo/msl-mobile-bridge-jsi": "2.0.0-beta.7"
     }
   }
 }
