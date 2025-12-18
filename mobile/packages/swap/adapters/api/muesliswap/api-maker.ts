@@ -257,13 +257,15 @@ export const muesliswapApiMaker = (
         const kind: 'create' | 'createLimit' =
           body.wantedPrice !== undefined ? 'createLimit' : 'create'
 
+        const requestBody = transformers[kind].request(body)
+
         const response = await request<
           CreateOrderResponse | LimitOrderResponse
         >({
           method: 'post',
           url: `${baseUrl}${apiPaths[kind]}`,
           headers,
-          data: transformers[kind].request(body),
+          data: requestBody,
         })
 
         if (isLeft(response)) return parseMuesliError(response)

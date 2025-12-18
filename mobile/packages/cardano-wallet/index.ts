@@ -58,6 +58,13 @@ export {
 } from './utils/validators'
 // Utils - amountUtils
 export {editedFormatter, pastedFormatter} from './utils/amountUtils'
+// Utils - assetUtils
+export {
+  calcLockedDeposit,
+  calcLockedDepositForRemainingUtxos,
+  calcOptimizedLockedDeposit,
+  identifierToCardanoAsset,
+} from './assetUtils'
 
 // Mnemonic
 export {
