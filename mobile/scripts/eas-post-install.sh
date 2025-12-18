@@ -98,8 +98,8 @@ else
 fi
 
 # Patch Emurgo bridge modules to use the correct NDK version
-CSL_BRIDGE_GRADLE_PROPS="${PROJECT_ROOT}/node_modules/@emurgo/csl-mobile-bridge-jsi/android/gradle.properties"
-MSL_BRIDGE_GRADLE_PROPS="${PROJECT_ROOT}/node_modules/@emurgo/msl-mobile-bridge-jsi/android/gradle.properties"
+CSL_BRIDGE_GRADLE_PROPS="${PROJECT_ROOT}/node_modules/@emurgo/csl-mobile-bridge/android/gradle.properties"
+MSL_BRIDGE_GRADLE_PROPS="${PROJECT_ROOT}/node_modules/@emurgo/msl-mobile-bridge/android/gradle.properties"
 
 for BRIDGE_PROPS in "${CSL_BRIDGE_GRADLE_PROPS}" "${MSL_BRIDGE_GRADLE_PROPS}"; do
   if [[ -f "${BRIDGE_PROPS}" ]]; then
@@ -122,11 +122,11 @@ done
 # Prebuild Rust JNI libraries for Emurgo bridges (arm64)
 cd android
 ./gradlew \
-  :emurgo_csl-mobile-bridge-jsi:cargoBuildArm \
-  :emurgo_csl-mobile-bridge-jsi:cargoBuildArm64 \
-  :emurgo_csl-mobile-bridge-jsi:cargoBuildX86 \
-  :emurgo_csl-mobile-bridge-jsi:cargoBuildX86_64 \
-  :emurgo_msl-mobile-bridge-jsi:cargoBuildArm \
-  :emurgo_msl-mobile-bridge-jsi:cargoBuildArm64 \
-  :emurgo_msl-mobile-bridge-jsi:cargoBuildX86 \
-  :emurgo_msl-mobile-bridge-jsi:cargoBuildX86_64
+  :emurgo_csl-mobile-bridge:cargoBuildArm \
+  :emurgo_csl-mobile-bridge:cargoBuildArm64 \
+  :emurgo_csl-mobile-bridge:cargoBuildX86 \
+  :emurgo_csl-mobile-bridge:cargoBuildX86_64 \
+  :emurgo_msl-mobile-bridge:cargoBuildArm \
+  :emurgo_msl-mobile-bridge:cargoBuildArm64 \
+  :emurgo_msl-mobile-bridge:cargoBuildX86 \
+  :emurgo_msl-mobile-bridge:cargoBuildX86_64

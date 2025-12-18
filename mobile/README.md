@@ -441,7 +441,7 @@ Configuration files are located in the root directory:
 
 ```bash
 # Clean and rebuild Rust modules
-cd node_modules/@emurgo/csl-mobile-bridge-jsi/rust
+cd node_modules/@emurgo/csl-mobile-bridge/rust
 cargo clean
 cargo build --release --target aarch64-apple-ios
 ```

@@ -1,1 +1,1 @@
-export * from '@emurgo/csl-mobile-bridge-jsi'
+export * from '@emurgo/csl-mobile-bridge'

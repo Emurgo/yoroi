@@ -33,7 +33,7 @@ rustup show
 
 # Build CSL mobile bridge
 echo "🔨 Building CSL mobile bridge..."
-cd node_modules/@emurgo/csl-mobile-bridge-jsi/rust
+cd node_modules/@emurgo/csl-mobile-bridge/rust
 cargo build --release --target aarch64-apple-darwin
 cargo build --release --target aarch64-apple-ios
 cargo build --release --target aarch64-apple-ios-sim
@@ -48,7 +48,7 @@ cd ../../../
 
 # Build MSL mobile bridge
 echo "🔨 Building MSL mobile bridge..."
-cd node_modules/@emurgo/msl-mobile-bridge-jsi/rust
+cd node_modules/@emurgo/msl-mobile-bridge/rust
 cargo build --release --target aarch64-apple-darwin
 cargo build --release --target aarch64-apple-ios
 cargo build --release --target aarch64-apple-ios-sim

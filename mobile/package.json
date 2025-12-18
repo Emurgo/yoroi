@@ -39,12 +39,12 @@
     "@emurgo/cardano-serialization-lib-browser": "14.1.2",
     "@emurgo/cip14-js": "3.0.1",
     "@emurgo/cip4-js": "1.0.7",
-    "@emurgo/cross-csl-core": "9.0.0-beta.2",
-    "@emurgo/cross-csl-mobile": "9.0.0-beta.2",
-    "@emurgo/cross-msl-core": "3.0.0-beta.1",
-    "@emurgo/cross-msl-mobile": "3.0.0-beta.1",
-    "@emurgo/csl-mobile-bridge-jsi": "2.0.0-alpha.14",
-    "@emurgo/msl-mobile-bridge-jsi": "2.0.0-beta.7",
+    "@emurgo/cross-csl-core": "9.0.0",
+    "@emurgo/cross-csl-mobile": "9.0.0",
+    "@emurgo/cross-msl-core": "3.0.0",
+    "@emurgo/cross-msl-mobile": "3.0.0",
+    "@emurgo/csl-mobile-bridge": "9.0.1",
+    "@emurgo/msl-mobile-bridge": "2.0.0",
     "@formatjs/intl-datetimeformat": "6.18.0",
     "@formatjs/intl-getcanonicallocales": "2.5.5",
     "@formatjs/intl-locale": "4.2.11",
@@ -193,12 +193,6 @@
   },
   "overrides": {
     "react-native-svg": "15.11.2",
-    "@react-native-async-storage/async-storage": "2.1.2",
-    "@emurgo/cross-csl-mobile": {
-      "@emurgo/csl-mobile-bridge-jsi": "2.0.0-alpha.14"
-    },
-    "@emurgo/cross-msl-mobile": {
-      "@emurgo/msl-mobile-bridge-jsi": "2.0.0-beta.7"
-    }
+    "@react-native-async-storage/async-storage": "2.1.2"
   }
 }
