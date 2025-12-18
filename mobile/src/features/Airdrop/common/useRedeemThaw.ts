@@ -1,5 +1,9 @@
 import {RawUtxo} from '@yoroi/api'
-import {CardanoMobile} from '@yoroi/cardano-wallet'
+import {
+  CardanoMobile,
+  collateralConfig,
+  utxosMaker,
+} from '@yoroi/cardano-wallet'
 import type {SelectionStrategy} from '@yoroi/tx'
 import {rawUtxoToModernUtxo, selectUtxos} from '@yoroi/tx'
 import {Balance} from '@yoroi/types'
@@ -89,6 +93,20 @@ export const useRedeemThaw = () => {
         throw new Error('No UTXOs available with sufficient funds')
       }
 
+      // Track which UTXOs were selected for funding (by utxo_id from RawUtxo)
+      // Match ModernUtxo to RawUtxo by txHash and txIndex
+      const selectedFundingUtxoIds = new Set<string>()
+      selection.selected.forEach((modernUtxo) => {
+        const matchingRawUtxo = rawUtxos.find(
+          (rawUtxo) =>
+            rawUtxo.tx_hash === modernUtxo.txHash &&
+            rawUtxo.tx_index === modernUtxo.txIndex,
+        )
+        if (matchingRawUtxo) {
+          selectedFundingUtxoIds.add(matchingRawUtxo.utxo_id)
+        }
+      })
+
       // Convert ModernUtxo to hex strings using toTransactionUnspentOutput
       const utxoHexStrings = await Promise.all(
         selection.selected.map(async (utxo) => {
@@ -99,14 +117,41 @@ export const useRedeemThaw = () => {
 
       const fundingUtxosHex = utxoHexStrings
 
-      // Get change address
-      const changeAddress = wallet.getChangeAddress('multiple')
+      // Find collateral candidates (pure ADA, <= 5 ADA)
+      const utxosList = utxosMaker(rawUtxos, collateralConfig)
+      const collateralCandidates = utxosList.findCollateralCandidates()
+
+      // Filter out UTXOs already selected for funding
+      const availableCollateral = collateralCandidates.filter(
+        (utxo: RawUtxo) => !selectedFundingUtxoIds.has(utxo.utxo_id),
+      )
+
+      // Convert the first available collateral UTXO to hex format
+      let collateralUtxosHex: string[] = []
+      if (availableCollateral.length > 0) {
+        const collateralUtxo = availableCollateral[0]!
+        // Find the corresponding ModernUtxo to convert it
+        const collateralModernUtxo = modernUtxos.find(
+          (utxo) =>
+            utxo.txHash === collateralUtxo.tx_hash &&
+            utxo.txIndex === collateralUtxo.tx_index,
+        )
+
+        if (collateralModernUtxo) {
+          const cslUtxo =
+            collateralModernUtxo.toTransactionUnspentOutput(CardanoMobile)
+          collateralUtxosHex = [Buffer.from(cslUtxo.toBytes()).toString('hex')]
+        }
+      }
+
+      // Get change address (respects wallet's address mode - single uses first address, multiple uses unused address)
+      const changeAddress = wallet.getChangeAddress(meta.addressMode)
 
       // Build transaction request
       const buildRequest: BuildTransactionRequest = {
         change_address: changeAddress,
         funding_utxos: fundingUtxosHex,
-        collateral_utxos: [],
+        collateral_utxos: collateralUtxosHex,
       }
 
       logger.info(
