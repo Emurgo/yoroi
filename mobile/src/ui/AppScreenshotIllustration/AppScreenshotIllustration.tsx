@@ -2,7 +2,7 @@ import {Image} from 'expo-image'
 import * as React from 'react'
 import {ImageStyle, StyleProp} from 'react-native'
 
-const appScreenshotSource = require('~/assets/img/illustration-app-screenshot.png')
+import appScreenshotSource from '~/assets/img/illustration-app-screenshot.png'
 
 export const AppScreenshotIllustration = ({
   width = 280,
