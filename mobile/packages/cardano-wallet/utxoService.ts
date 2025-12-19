@@ -9,12 +9,10 @@
  * - CNT-specific transfer requirements
  */
 import {RawUtxo} from '@yoroi/api'
-import {CardanoMobileWrapped} from '@yoroi/common'
-import {isHex} from '@yoroi/common'
+import {CardanoMobileWrapped, isHex} from '@yoroi/common'
 import {getLogger} from '@yoroi/logger'
 import {primaryTokenId as defaultPrimaryTokenId} from '@yoroi/portfolio'
-import {ModernUtxo} from '@yoroi/tx'
-import {filterPureAdaUtxos, selectUtxosForAmounts} from '@yoroi/tx'
+import {ModernUtxo, filterPureAdaUtxos, selectUtxosForAmounts} from '@yoroi/tx'
 import {
   Address,
   Balance,
@@ -55,6 +53,16 @@ import {
 } from './utxoServiceTypes'
 
 const logger = getLogger()
+
+/**
+ * Helper function to format lovelace to ADA for display
+ * 1 ADA = 1,000,000 lovelace
+ */
+function formatLovelaceToAda(lovelace: bigint): string {
+  const ada = Number(lovelace) / 1_000_000
+  // Format with up to 6 decimal places, removing trailing zeros
+  return ada.toFixed(6).replace(/\.?0+$/, '')
+}
 
 /**
  * Analyze transfer feasibility before attempting to build a transaction
@@ -147,25 +155,25 @@ export async function analyzeTransferFeasibility(
 
     if (!isFeasible) {
       if (totalInputAda < requiredAda) {
-        reason = `Insufficient ADA: Need ${requiredAda.toString()} but only ${totalInputAda.toString()} available from selected UTXOs`
+        reason = `Insufficient ADA: Need ${formatLovelaceToAda(requiredAda)} but only ${formatLovelaceToAda(totalInputAda)} available from selected UTXOs`
         suggestions.push(
-          `Reduce transfer amount by ${(requiredAda - totalInputAda).toString()} ADA to proceed`,
+          `Reduce transfer amount by ${formatLovelaceToAda(requiredAda - totalInputAda)} ADA to proceed`,
         )
       }
 
       if (availableAda < requiredAdaFromOutputs) {
-        reason = `Insufficient spendable ADA: Need ${requiredAdaFromOutputs.toString()} but only ${availableAda.toString()} available (${dynamicLockedAda.toString()} ADA locked)`
+        reason = `Insufficient spendable ADA: Need ${formatLovelaceToAda(requiredAdaFromOutputs)} but only ${formatLovelaceToAda(availableAda)} available (${formatLovelaceToAda(dynamicLockedAda)} ADA locked)`
         if (lockedAdaResult.optimizationSavings > BigInt(0)) {
           suggestions.push(
-            `Consider consolidating CNT tokens to unlock ${lockedAdaResult.optimizationSavings.toString()} ADA`,
+            `Consider consolidating CNT tokens to unlock ${formatLovelaceToAda(lockedAdaResult.optimizationSavings)} ADA`,
           )
         }
       }
 
       // Add error-specific suggestions
       const errorSuggestions = createErrorSuggestions('INSUFFICIENT_ADA', {
-        requiredAda: requiredAda.toString(),
-        availableAda: availableAda.toString(),
+        requiredAda,
+        availableAda,
         unlockedByConsolidation: lockedAdaResult.optimizationSavings,
       })
       suggestions.push(...errorSuggestions)
@@ -392,7 +400,7 @@ export async function calculateLockedAda(
           steps: [
             `Consolidate ${cntUtxos.length} UTXOs containing CNT tokens`,
             `Target: ${Math.ceil(cntUtxos.length / 2)} UTXOs`,
-            `Estimated savings: ${optimizationSavings.toString()} ADA`,
+            `Estimated savings: ${formatLovelaceToAda(optimizationSavings)} ADA`,
           ],
         }
       }
@@ -493,8 +501,8 @@ export async function analyzeReorganizationOpportunities(
               steps: [
                 `Select ${policyUtxos.length} UTXOs containing CNT tokens`,
                 `Create consolidation transaction to merge into fewer UTXOs`,
-                `Estimated fee: ${estimatedFee.toString()} ADA`,
-                `Net benefit: ${netBenefit.toString()} ADA`,
+                `Estimated fee: ${formatLovelaceToAda(estimatedFee)} ADA`,
+                `Net benefit: ${formatLovelaceToAda(netBenefit)} ADA`,
               ],
             })
           }
@@ -528,7 +536,7 @@ export async function analyzeReorganizationOpportunities(
           steps: [
             `Select ${smallUtxos.length} small UTXOs (< 5 ADA each)`,
             `Create consolidation transaction`,
-            `Estimated fee: ${estimatedFee.toString()} ADA`,
+            `Estimated fee: ${formatLovelaceToAda(estimatedFee)} ADA`,
             `Benefit: Better UTXO organization`,
           ],
         })
@@ -634,7 +642,7 @@ export async function calculateCntTransferRequirements(
     // Automatic ADA added is the minimum required
     const automaticAdaAdded = requiredAda
 
-    const explanation = `Sending ${cntAmount.quantity.toString()} ${cntTokenId.substring(0, 8)}... requires ${requiredAda.toString()} ADA minimum.${willUnlockAda > BigInt(0) ? ` This will unlock ${willUnlockAda.toString()} ADA from UTXO(s) being spent.` : ''}`
+    const explanation = `Sending ${cntAmount.quantity.toString()} ${cntTokenId.substring(0, 8)}... requires ${formatLovelaceToAda(requiredAda)} ADA minimum.${willUnlockAda > BigInt(0) ? ` This will unlock ${formatLovelaceToAda(willUnlockAda)} ADA from UTXO(s) being spent.` : ''}`
 
     return {
       requiredAda,

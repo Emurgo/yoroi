@@ -128,6 +128,18 @@ export class FeeEstimationError extends UtxoServiceError {
 }
 
 /**
+ * Helper function to format lovelace to ADA for display
+ * 1 ADA = 1,000,000 lovelace
+ */
+function formatLovelaceToAda(lovelace: bigint | string): string {
+  const lovelaceBigInt =
+    typeof lovelace === 'string' ? BigInt(lovelace) : lovelace
+  const ada = Number(lovelaceBigInt) / 1_000_000
+  // Format with up to 6 decimal places, removing trailing zeros
+  return ada.toFixed(6).replace(/\.?0+$/, '')
+}
+
+/**
  * Helper function to create user-friendly error messages with suggestions
  */
 export function createErrorSuggestions(
@@ -138,22 +150,33 @@ export function createErrorSuggestions(
 
   switch (errorType) {
     case 'INSUFFICIENT_ADA': {
-      const requiredAda = context.requiredAda as bigint | undefined
-      const availableAda = context.availableAda as bigint | undefined
+      const requiredAda = context.requiredAda as bigint | string | undefined
+      const availableAda = context.availableAda as bigint | string | undefined
       const unlockedByConsolidation = context.unlockedByConsolidation as
         | bigint
+        | string
         | undefined
 
-      if (unlockedByConsolidation && unlockedByConsolidation > BigInt(0)) {
-        suggestions.push(
-          `Consider consolidating CNT tokens to unlock ${unlockedByConsolidation.toString()} ADA`,
-        )
+      if (unlockedByConsolidation) {
+        const unlockedBigInt =
+          typeof unlockedByConsolidation === 'string'
+            ? BigInt(unlockedByConsolidation)
+            : unlockedByConsolidation
+        if (unlockedBigInt > BigInt(0)) {
+          suggestions.push(
+            `Consider consolidating CNT tokens to unlock ${formatLovelaceToAda(unlockedBigInt)} ADA`,
+          )
+        }
       }
 
       if (requiredAda && availableAda) {
-        const shortfall = requiredAda - availableAda
+        const requiredBigInt =
+          typeof requiredAda === 'string' ? BigInt(requiredAda) : requiredAda
+        const availableBigInt =
+          typeof availableAda === 'string' ? BigInt(availableAda) : availableAda
+        const shortfall = requiredBigInt - availableBigInt
         suggestions.push(
-          `Reduce transfer amount by ${shortfall.toString()} ADA to proceed`,
+          `Reduce transfer amount by ${formatLovelaceToAda(shortfall)} ADA to proceed`,
         )
       }
 
