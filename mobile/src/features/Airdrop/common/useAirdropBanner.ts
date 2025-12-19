@@ -60,7 +60,7 @@ export const useAirdropBanner = () => {
         return false
       }
 
-      logger.info('Airdrop banner prerequisites', {
+      logger.debug('Airdrop banner prerequisites', {
         walletId: wallet?.id,
         allocationsCount: allocations.length,
         totalRedeemableAmount,

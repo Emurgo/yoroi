@@ -8,6 +8,12 @@ import {cnsCryptoAddress, handleCnsApiError} from './api'
 import {resolveAddress} from './api-helpers'
 
 jest.mock('./api-helpers')
+jest.mock('@yoroi/cardano-wallet', () => {
+  const {init: mockInit} = jest.requireActual('@emurgo/cross-csl-nodejs')
+  return {
+    CardanoMobile: mockInit,
+  }
+})
 
 describe('cnsCryptoAddress', () => {
   beforeEach(jest.clearAllMocks)
