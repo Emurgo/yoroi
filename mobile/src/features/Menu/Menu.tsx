@@ -15,6 +15,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
 import {useHasRedeemableThaws} from '~/features/Airdrop/common/useHasRedeemableThaws'
+import {AirdropNavigator} from '~/features/Airdrop/ui/AirdropNavigator'
 import {usePrefetchStakingInfo} from '~/features/Dashboard/ui/shared/StakePoolInfos'
 import {useCanVote} from '~/features/RegisterCatalyst/common/hooks'
 import {NetworkTag} from '~/features/Settings/ui/shared/NetworkTag'
@@ -37,6 +38,9 @@ const MenuStack = createStackNavigator<MenuRoutes>()
 export const MenuNavigator = () => {
   const strings = useStrings()
   const {palette: p} = useTheme()
+  const {config} = useRemoteConfig()
+  const isAirdropEnabled = config?.features?.midnightAirdrop?.enabled ?? false
+
   return (
     <MenuStack.Navigator
       initialRouteName="_menu"
@@ -51,6 +55,16 @@ export const MenuNavigator = () => {
         component={Menu}
         options={{title: strings.menu.menu}}
       />
+
+      {isAirdropEnabled && (
+        <MenuStack.Screen
+          name="airdrop"
+          options={{
+            headerShown: false,
+          }}
+          getComponent={() => AirdropNavigator}
+        />
+      )}
     </MenuStack.Navigator>
   )
 }

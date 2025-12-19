@@ -683,7 +683,7 @@ export const useWalletNavigation = () => {
       navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
         params: {
-          screen: 'history',
+          screen: 'menu',
           params: {
             screen: 'airdrop',
           },
