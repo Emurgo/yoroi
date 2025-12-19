@@ -183,7 +183,9 @@ export const minswapApiMaker = (
             data: requestBody,
           })
 
-          if (isLeft(response)) return parseMinswapError(response)
+          if (isLeft(response)) {
+            return parseMinswapError(response)
+          }
 
           return freeze(
             {
@@ -238,7 +240,9 @@ export const minswapApiMaker = (
           )
         }
 
-        if (isLeft(response)) return parseMinswapError(response)
+        if (isLeft(response)) {
+          return parseMinswapError(response)
+        }
 
         // Make an ad-hoc estimate call to get the swap details
         const estimateRequest: Swap.EstimateRequest = {
