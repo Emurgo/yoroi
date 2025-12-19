@@ -25,7 +25,7 @@ export type WalletTabRoutes = {
   history: NavigatorScreenParams<TxHistoryRoutes>
   portfolio: NavigatorScreenParams<PortfolioRoutes>
   discover: NavigatorScreenParams<DiscoverRoutes>
-  menu: undefined
+  menu: NavigatorScreenParams<MenuRoutes>
 }
 
 export type WalletStackRoutes = {
@@ -90,7 +90,6 @@ export type TxHistoryRoutes = {
     signature: string
     key: string
   }
-  'airdrop': undefined
   'receive-single': undefined
   'receive-specific-amount': undefined
   'receive-multiple': undefined
@@ -313,6 +312,14 @@ export type NftRouteNavigation = StackNavigationProp<NftRoutes>
 export type MenuRoutes = {
   '_menu': undefined
   'voting-registration': undefined
+  'airdrop': undefined
+  'utxo-list': undefined
+  'utxo-consolidation': undefined
+  'message-signing': undefined
+  'message-signing-result': {
+    signature: string
+    key: string
+  }
 }
 
 export type AppRoutes = {
