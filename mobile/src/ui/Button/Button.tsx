@@ -220,7 +220,7 @@ export const Button = (props: ButtonProps) => {
           ...shape,
           ...(rightIcon && a.flex_row_reverse),
           ...(type === ButtonType.Secondary && {
-            borderWidth: 2,
+            borderWidth: 1,
             borderColor: foregroundColor,
           }),
         },
