@@ -472,14 +472,14 @@ export const useWalletNavigation = () => {
     navigateToUtxoList: () => {
       navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
-        params: {screen: 'history', params: {screen: 'utxo-list'}},
+        params: {screen: 'menu', params: {screen: 'utxo-list'}},
       })
     },
 
     navigateToMessageSigning: () => {
       navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
-        params: {screen: 'history', params: {screen: 'message-signing'}},
+        params: {screen: 'menu', params: {screen: 'message-signing'}},
       })
     },
 
@@ -487,7 +487,7 @@ export const useWalletNavigation = () => {
       navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
         params: {
-          screen: 'history',
+          screen: 'menu',
           params: {
             screen: 'message-signing-result',
             params: {signature, key},
@@ -499,7 +499,7 @@ export const useWalletNavigation = () => {
     navigateToUtxoConsolidation: () => {
       navigation.navigate('manage-wallets', {
         screen: 'main-wallet-routes',
-        params: {screen: 'history', params: {screen: 'utxo-consolidation'}},
+        params: {screen: 'menu', params: {screen: 'utxo-consolidation'}},
       })
     },
 
