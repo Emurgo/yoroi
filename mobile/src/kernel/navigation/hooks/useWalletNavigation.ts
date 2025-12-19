@@ -161,6 +161,9 @@ export const useWalletNavigation = () => {
         screen: 'main-wallet-routes',
         params: {
           screen: 'menu',
+          params: {
+            screen: '_menu',
+          },
         },
       })
     },
