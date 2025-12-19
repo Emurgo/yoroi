@@ -254,6 +254,23 @@ export const stakingMessages = defineMessages({
     id: 'components.staking.skip',
     defaultMessage: '!!!SKIP',
   },
+  cardanoCardAnnouncementTitle: {
+    id: 'components.staking.cardanoCardAnnouncementTitle',
+    defaultMessage: '!!!Cardano Card Has Arrived',
+  },
+  cardanoCardAnnouncementHeading: {
+    id: 'components.staking.cardanoCardAnnouncementHeading',
+    defaultMessage: '!!!Cardano Card Has Arrived',
+  },
+  cardanoCardAnnouncementDescription: {
+    id: 'components.staking.cardanoCardAnnouncementDescription',
+    defaultMessage:
+      '!!!Pay. Earn. Borrow. Stake. Access the new era of crypto spending. Activate your Cardano Card today.',
+  },
+  cardanoCardAnnouncementButton: {
+    id: 'components.staking.cardanoCardAnnouncementButton',
+    defaultMessage: '!!!GET THE CARD',
+  },
   governanceCentreTitle: {
     id: 'components.governance.governanceCentreTitle',
     defaultMessage: '!!!Governance Dashboard',
