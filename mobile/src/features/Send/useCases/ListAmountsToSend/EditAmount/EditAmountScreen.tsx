@@ -132,6 +132,9 @@ export const EditAmountScreen = () => {
   const isUnableToSpend = isPrimary && quantity > spendable
   const isZero = quantity === BigInt(0)
 
+  // Show info about locked ADA when selecting primary token
+  const showLockedInfo = isPrimary && currentLocked > BigInt(0)
+
   // Show info about unlocked ADA if tokens are being sent
   const showUnlockedInfo =
     isPrimary &&
@@ -243,9 +246,15 @@ export const EditAmountScreen = () => {
 
           <Space.Height.md />
 
+          {showLockedInfo && (
+            <Text style={[ta.text_gray_max, a.body_2_md_regular]}>
+              {`Locked: ${atomicBreakdown(currentLocked, amount.info.decimals).str} ${amount.info.ticker}`}
+            </Text>
+          )}
+
           {showUnlockedInfo && (
             <Text style={[ta.text_gray_max, a.body_2_md_regular]}>
-              {`Unlocked: ${atomicBreakdown(unlockedBySending, amount.info.decimals).str} ${amount.info.ticker}`}
+              {`Unlocked by sending tokens: ${atomicBreakdown(unlockedBySending, amount.info.decimals).str} ${amount.info.ticker}`}
             </Text>
           )}
 

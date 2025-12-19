@@ -47,7 +47,7 @@ export {
   getTokenFingerprint,
 } from './utils/format'
 // Utils - utils (Amounts, Quantities, etc.)
-export {Amounts, Entries, Quantities, Utxos, asQuantity} from './utils/utils'
+export {Amounts, asQuantity, Entries, Quantities, Utxos} from './utils/utils'
 // Utils - timeUtils
 export {delay, formatTimeSpan} from './utils/timeUtils'
 // Utils - validators
@@ -61,6 +61,7 @@ export {editedFormatter, pastedFormatter} from './utils/amountUtils'
 // Utils - assetUtils
 export {
   calcLockedDeposit,
+  calcLockedDepositAfterRemovingTokens,
   calcLockedDepositForRemainingUtxos,
   calcOptimizedLockedDeposit,
   identifierToCardanoAsset,

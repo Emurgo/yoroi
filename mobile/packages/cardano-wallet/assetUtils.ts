@@ -49,6 +49,75 @@ export async function calcLockedDepositForRemainingUtxos({
 }
 
 /**
+ * Calculates locked deposit after removing or reducing specific tokens from UTXOs.
+ * This is used when sending tokens from a UTXO - handles both full removal and partial amounts.
+ * If only part of a token is being sent, the UTXO still contains that token (with reduced amount)
+ * and still requires locked ADA.
+ *
+ * @param rawUtxos - All available UTXOs
+ * @param coinsPerUtxoByteStr - Protocol parameter for coins per UTXO byte
+ * @param tokensBeingSent - Map of token IDs to amounts being sent
+ * @returns Total locked deposit for UTXOs after removing/reducing tokens
+ */
+export async function calcLockedDepositAfterRemovingTokens({
+  rawUtxos,
+  coinsPerUtxoByteStr,
+  tokensBeingSent,
+}: {
+  rawUtxos: RawUtxo[]
+  coinsPerUtxoByteStr: string
+  tokensBeingSent: Map<string, string> // tokenId -> amount being sent
+}) {
+  // Create modified UTXOs with tokens removed or reduced
+  // Only include UTXOs that will still have assets after removal
+  // (UTXOs with no assets after removal will be completely spent and don't need locked deposit)
+  const modifiedUtxos: RawUtxo[] = []
+  for (const utxo of rawUtxos) {
+    // Create mutable array for remaining assets
+    const remainingAssets: Array<(typeof utxo.assets)[number]> = []
+
+    for (const asset of utxo.assets) {
+      const amountBeingSent = tokensBeingSent.get(asset.tokenId)
+
+      if (amountBeingSent == null) {
+        // Token not being sent, keep it as-is
+        remainingAssets.push(asset)
+      } else {
+        // Token is being sent - check if partial or full amount
+        const utxoAmount = BigInt(asset.amount)
+        const sentAmount = BigInt(amountBeingSent)
+
+        if (sentAmount >= utxoAmount) {
+          // Sending full amount (or more) - remove token completely
+          // Don't add to remainingAssets
+        } else {
+          // Sending partial amount - reduce the amount in UTXO
+          const remainingAmount = (utxoAmount - sentAmount).toString()
+          remainingAssets.push({
+            ...asset,
+            amount: remainingAmount as typeof asset.amount,
+          })
+        }
+      }
+    }
+
+    // Only include UTXOs that still have assets after removal/reduction
+    if (remainingAssets.length > 0) {
+      modifiedUtxos.push({
+        ...utxo,
+        assets: remainingAssets,
+      } as RawUtxo)
+    }
+  }
+
+  // Calculate locked deposit for modified UTXOs
+  return calcLockedDeposit({
+    rawUtxos: modifiedUtxos,
+    coinsPerUtxoByteStr,
+  })
+}
+
+/**
  * Calculates optimized locked deposit by simulating CNT consolidation.
  * Attempts to consolidate CNTs into fewer UTXOs to minimize locked ADA.
  *

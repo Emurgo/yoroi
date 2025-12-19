@@ -1,5 +1,5 @@
 import {
-  calcLockedDepositForRemainingUtxos,
+  calcLockedDepositAfterRemovingTokens,
   calcOptimizedLockedDeposit,
 } from '@yoroi/cardano-wallet'
 import {isPrimaryToken} from '@yoroi/portfolio'
@@ -31,6 +31,18 @@ export const useDynamicLockedDeposit = ({
   const [dynamicLocked, setDynamicLocked] = React.useState<bigint | null>(null)
   const [isCalculating, setIsCalculating] = React.useState(false)
 
+  // Cache for expensive calculations
+  const cacheRef = React.useRef<{
+    optimized?: {
+      key: string
+      result: {current: bigint; optimized: bigint; savings: bigint}
+    }
+    dynamic?: {
+      key: string
+      result: bigint
+    }
+  }>({})
+
   // Get token IDs being sent (excluding primary token)
   const tokenIdsBeingSent = React.useMemo(() => {
     return Object.keys(tokensBeingSent).filter((id) => {
@@ -41,15 +53,62 @@ export const useDynamicLockedDeposit = ({
     })
   }, [tokensBeingSent, primaryTokenId])
 
-  // Calculate optimized locked deposit (with CNT consolidation)
+  // Create stable cache key from UTXOs and protocol params
+  const createCacheKey = React.useCallback(
+    (
+      utxos: ReturnType<typeof wallet.utxos>,
+      coinsPerUtxoByte: string,
+      tokensBeingSentMap?: Map<string, string>,
+    ) => {
+      // Create stable key from UTXO IDs (sorted) + protocol params + token amounts
+      const utxoIds = utxos
+        .map((u) => u.utxo_id)
+        .sort()
+        .join(',')
+      let tokenKey = ''
+      if (tokensBeingSentMap && tokensBeingSentMap.size > 0) {
+        // Sort by token ID and include amounts for cache key
+        const tokenEntries = Array.from(tokensBeingSentMap.entries())
+          .sort(([a], [b]) => a.localeCompare(b))
+          .map(([id, amount]) => `${id}:${amount}`)
+        tokenKey = tokenEntries.join(',')
+      }
+      return `${utxoIds}|${coinsPerUtxoByte}|${tokenKey}`
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  )
+
+  // Calculate both optimized and dynamic locked deposits in a single effect
   React.useEffect(() => {
     let cancelled = false
+    let finishedCount = 0
+    const totalCalculations = 2 // optimized + dynamic
+
+    const finishCalculation = () => {
+      finishedCount += 1
+      if (finishedCount === totalCalculations) {
+        setIsCalculating(false)
+      }
+    }
 
     const calculateOptimized = async () => {
-      setIsCalculating(true)
       try {
         const utxos = wallet.utxos()
         const protocolParams = wallet.protocolParams
+        const cacheKey = createCacheKey(utxos, protocolParams.coinsPerUtxoByte)
+
+        // Check cache first
+        if (
+          cacheRef.current.optimized?.key === cacheKey &&
+          cacheRef.current.optimized.result
+        ) {
+          if (!cancelled) {
+            setOptimizedLocked(cacheRef.current.optimized.result)
+          }
+          finishCalculation()
+          return
+        }
 
         const result = await calcOptimizedLockedDeposit({
           rawUtxos: utxos,
@@ -58,11 +117,17 @@ export const useDynamicLockedDeposit = ({
         })
 
         if (!cancelled) {
-          setOptimizedLocked({
+          const optimizedResult = {
             current: BigInt(result.current.toString()),
             optimized: BigInt(result.optimized.toString()),
             savings: BigInt(result.savings.toString()),
-          })
+          }
+          // Cache the result
+          cacheRef.current.optimized = {
+            key: cacheKey,
+            result: optimizedResult,
+          }
+          setOptimizedLocked(optimizedResult)
         }
       } catch (error) {
         // If optimization fails, use current locked as fallback
@@ -76,54 +141,69 @@ export const useDynamicLockedDeposit = ({
         }
       } finally {
         if (!cancelled) {
-          setIsCalculating(false)
+          finishCalculation()
         }
       }
     }
 
-    calculateOptimized()
-
-    return () => {
-      cancelled = true
-    }
-  }, [wallet, primaryBreakdown.lockedAsStorageCost])
-
-  // Calculate dynamic locked deposit (excluding UTXOs being spent)
-  React.useEffect(() => {
-    let cancelled = false
-
     const calculateDynamic = async () => {
-      if (tokenIdsBeingSent.length === 0) {
-        // No tokens being sent, use current locked
-        setDynamicLocked(primaryBreakdown.lockedAsStorageCost)
-        return
-      }
-
-      setIsCalculating(true)
       try {
+        if (tokenIdsBeingSent.length === 0) {
+          // No tokens being sent, use current locked
+          if (!cancelled) {
+            setDynamicLocked(primaryBreakdown.lockedAsStorageCost)
+          }
+          finishCalculation()
+          return
+        }
+
         const utxos = wallet.utxos()
         const protocolParams = wallet.protocolParams
 
-        // Find UTXOs that contain tokens being sent
-        const utxosToExclude = new Set<string>()
-        for (const utxo of utxos) {
-          for (const asset of utxo.assets) {
-            if (tokenIdsBeingSent.includes(asset.tokenId)) {
-              utxosToExclude.add(utxo.utxo_id)
-              break
-            }
+        // Create map of token IDs to amounts being sent for efficient lookup
+        // This handles partial amounts - if only part of a token is sent, the UTXO
+        // still contains that token (with reduced amount) and still requires locked ADA
+        const tokensBeingSentMap = new Map<string, string>()
+        for (const tokenId of tokenIdsBeingSent) {
+          const tokenAmount = tokensBeingSent[tokenId as Portfolio.Token.Id]
+          if (tokenAmount) {
+            tokensBeingSentMap.set(tokenId, tokenAmount.quantity.toString())
           }
         }
 
-        // Calculate locked deposit for remaining UTXOs
-        const remainingLocked = await calcLockedDepositForRemainingUtxos({
+        const cacheKey = createCacheKey(
+          utxos,
+          protocolParams.coinsPerUtxoByte,
+          tokensBeingSentMap,
+        )
+
+        // Check cache first
+        if (
+          cacheRef.current.dynamic?.key === cacheKey &&
+          cacheRef.current.dynamic.result
+        ) {
+          if (!cancelled) {
+            setDynamicLocked(cacheRef.current.dynamic.result)
+          }
+          finishCalculation()
+          return
+        }
+
+        // Calculate locked deposit after removing/reducing tokens being sent from UTXOs
+        const remainingLocked = await calcLockedDepositAfterRemovingTokens({
           rawUtxos: utxos,
           coinsPerUtxoByteStr: protocolParams.coinsPerUtxoByte,
-          excludeUtxoIds: utxosToExclude,
+          tokensBeingSent: tokensBeingSentMap,
         })
 
         if (!cancelled) {
-          setDynamicLocked(BigInt(remainingLocked.toString()))
+          const dynamicResult = BigInt(remainingLocked.toString())
+          // Cache the result
+          cacheRef.current.dynamic = {
+            key: cacheKey,
+            result: dynamicResult,
+          }
+          setDynamicLocked(dynamicResult)
         }
       } catch (error) {
         // If calculation fails, use current locked as fallback
@@ -132,17 +212,27 @@ export const useDynamicLockedDeposit = ({
         }
       } finally {
         if (!cancelled) {
-          setIsCalculating(false)
+          finishCalculation()
         }
       }
     }
 
+    // Start both calculations in parallel
+    setIsCalculating(true)
+    finishedCount = 0
+    calculateOptimized()
     calculateDynamic()
 
     return () => {
       cancelled = true
     }
-  }, [wallet, tokenIdsBeingSent, primaryBreakdown.lockedAsStorageCost])
+  }, [
+    wallet,
+    tokenIdsBeingSent,
+    tokensBeingSent,
+    primaryBreakdown.lockedAsStorageCost,
+    createCacheKey,
+  ])
 
   const currentLocked = primaryBreakdown.lockedAsStorageCost
 
