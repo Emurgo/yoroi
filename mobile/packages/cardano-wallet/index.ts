@@ -67,6 +67,40 @@ export {
   identifierToCardanoAsset,
 } from './assetUtils'
 
+// UTXO Service
+export {
+  analyzeReorganizationOpportunities,
+  analyzeTransferFeasibility,
+  calculateChangeOutputMinAda,
+  calculateCntTransferRequirements,
+  calculateLockedAda,
+  selectUtxosForTransfer,
+} from './utxoService'
+export {
+  ChangeOutputError,
+  FeeEstimationError,
+  InsufficientAdaError,
+  InsufficientTokensError,
+  UtxoSelectionFailedError,
+  UtxoServiceError,
+} from './utxoServiceErrors'
+export type {
+  AnalyzeReorganizationParams,
+  AnalyzeTransferFeasibilityParams,
+  CalculateCntTransferParams,
+  CalculateLockedAdaParams,
+  CntTransferResult,
+  ConsolidationPlan,
+  LockedAdaResult,
+  ProtocolParams,
+  ReorganizationOpportunity,
+  ReorganizationResult,
+  SelectUtxosForTransferParams,
+  TransferFeasibilityResult,
+  UtxoSelectionResult,
+  UtxoSelectionStrategy,
+} from './utxoServiceTypes'
+
 // Mnemonic
 export {
   generateAdaMnemonic,
