@@ -907,11 +907,10 @@ export async function createSendTx({
           }
 
           // Check if proactive reduction already happened
-          // Compare currentAdaAmount to the original firstEntry amount
-          const originalAdaAmount = BigInt(
-            entries[0]?.amounts[primaryTokenId] ?? Branded.ZERO_QUANTITY,
-          )
-          const wasProactivelyReduced = currentAdaAmount < originalAdaAmount
+          // Compare currentAdaAmount to the original firstEntry amount (before any modifications)
+          // Use the stored originalEntryAdaAmount variable, not entries[0] which may have been modified
+          const wasProactivelyReduced =
+            currentAdaAmount < originalEntryAdaAmount
 
           // Start with initial reduction
           // If proactive reduction already happened, reduce more conservatively
