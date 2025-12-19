@@ -14,8 +14,8 @@ import {FlatList} from 'react-native-gesture-handler'
 
 import {usePromise} from '~/common/hooks/usePromise'
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
-import {usePortfolioPrimaryBreakdown} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
 import {useSearch} from '~/features/Search/SearchContext'
+import {useDynamicLockedDeposit} from '~/features/Send/common/hooks/useDynamicLockedDeposit'
 import {useNavigateTo} from '~/features/Send/common/navigation'
 import {toTransactionOutput} from '~/features/Send/common/toTransactionOutput'
 import {isInsufficientBalanceError} from '~/features/Staking/Governance/common/transactionErrorHandling'
@@ -62,16 +62,36 @@ export const ListAmountsToSendScreen = () => {
 
   // Check if MAX amount is being sent for primary token
   const balances = usePortfolioBalances({wallet})
-  const primaryBreakdown = usePortfolioPrimaryBreakdown({wallet})
   const primaryTokenId = wallet.portfolioPrimaryTokenInfo.id
   const primaryAmount = amounts[primaryTokenId]
+
+  // Get tokens being sent (excluding primary token for dynamic calculation)
+  const tokensBeingSent = React.useMemo(() => {
+    const tokens: Record<Portfolio.Token.Id, Portfolio.Token.Amount> = {}
+    for (const [tokenId, amount] of Object.entries(amounts)) {
+      if (tokenId !== primaryTokenId && !isPrimaryToken(amount.info)) {
+        tokens[tokenId as Portfolio.Token.Id] = amount
+      }
+    }
+    return tokens
+  }, [amounts, primaryTokenId])
+
+  // Calculate dynamic locked deposit based on tokens being sent
+  const {dynamicLocked, currentLocked} = useDynamicLockedDeposit({
+    tokensBeingSent,
+  })
+
   const isSendingMaxAda = React.useMemo(() => {
     if (!primaryAmount || !isPrimaryToken(primaryAmount.info)) return false
 
     const available =
       (balances.records.get(primaryTokenId)?.quantity ?? BigInt(0)) -
       (allocated.get(selectedTargetIndex)?.get(primaryTokenId) ?? BigInt(0))
-    const spendable = available - primaryBreakdown.lockedAsStorageCost
+
+    // Use dynamic locked if tokens are being sent, otherwise use current locked
+    const lockedToUse =
+      Object.keys(tokensBeingSent).length > 0 ? dynamicLocked : currentLocked
+    const spendable = available - lockedToUse
 
     // Check if the amount equals spendable (MAX was used)
     const isMax = primaryAmount.quantity === spendable && spendable > BigInt(0)
@@ -79,8 +99,11 @@ export const ListAmountsToSendScreen = () => {
     logger.info('ListAmountsToSendScreen: MAX detection', {
       primaryAmount: primaryAmount.quantity.toString(),
       available: available.toString(),
-      lockedAsStorageCost: primaryBreakdown.lockedAsStorageCost.toString(),
+      currentLocked: currentLocked.toString(),
+      dynamicLocked: dynamicLocked.toString(),
+      lockedToUse: lockedToUse.toString(),
       spendable: spendable.toString(),
+      tokensBeingSent: Object.keys(tokensBeingSent),
       isSendingMaxAda: isMax,
     })
 
@@ -88,7 +111,9 @@ export const ListAmountsToSendScreen = () => {
   }, [
     primaryAmount,
     balances,
-    primaryBreakdown.lockedAsStorageCost,
+    currentLocked,
+    dynamicLocked,
+    tokensBeingSent,
     primaryTokenId,
     selectedTargetIndex,
     allocated,

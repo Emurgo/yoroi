@@ -1368,7 +1368,7 @@ describe('standarizeError', () => {
 
     if (isLeft(result)) {
       expect(result.error.message).toBe(
-        'Insufficient balance: consider fees and assets blocked by staking.',
+        'Insufficient balance: consider fees and Ada locked by other assets.',
       )
     } else {
       fail('Expected result to be a Left type')

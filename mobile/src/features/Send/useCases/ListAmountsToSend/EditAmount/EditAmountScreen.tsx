@@ -17,7 +17,7 @@ import {
 } from 'react-native'
 
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
-import {usePortfolioPrimaryBreakdown} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
+import {useDynamicLockedDeposit} from '~/features/Send/common/hooks/useDynamicLockedDeposit'
 import {useNavigateTo} from '~/features/Send/common/navigation'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -46,24 +46,57 @@ export const EditAmountScreen = () => {
 
   const {wallet} = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
-  const primaryBreakdown = usePortfolioPrimaryBreakdown({wallet})
 
-  const {amountRemoved, amountChanged, allocated, selectedTargetIndex} =
-    useTransfer()
+  const {
+    amountRemoved,
+    amountChanged,
+    allocated,
+    selectedTargetIndex,
+    targets,
+  } = useTransfer()
 
   const params = useParams(isEditAmountParams)
   const amount = params.amount
   const selectedTokenId = amount.info.id
 
+  // Get tokens currently being sent (excluding the one being edited)
+  const tokensBeingSent = React.useMemo(() => {
+    const target = targets[selectedTargetIndex]
+    if (!target) return {}
+    const amounts = {...target.entry.amounts}
+    // Exclude current token being edited from the calculation
+    delete amounts[selectedTokenId]
+    return amounts
+  }, [targets, selectedTargetIndex, selectedTokenId])
+
+  // Calculate dynamic locked deposit based on tokens being sent
+  const {currentLocked, optimizedLocked, dynamicLocked, unlockedBySending} =
+    useDynamicLockedDeposit({tokensBeingSent})
+
   const available =
     (balances.records.get(selectedTokenId)?.quantity ?? BigInt(0)) -
     (allocated.get(selectedTargetIndex)?.get(selectedTokenId) ?? BigInt(0))
   const isPrimary = isPrimaryToken(amount.info)
-  // Calculate spendable amount accounting for locked deposit only
+
+  // Calculate spendable amount accounting for locked deposit
+  // Use dynamic locked if tokens are being sent, otherwise use current locked
   // Fee subtraction is handled by the transaction builder when subtractFeeFromAmount is true
-  const spendable = isPrimary
-    ? available - primaryBreakdown.lockedAsStorageCost
-    : available
+  const spendable = React.useMemo(() => {
+    if (!isPrimary) return available
+
+    // If tokens are being sent, use dynamic locked (which excludes UTXOs being spent)
+    // Otherwise use current locked
+    const lockedToUse =
+      Object.keys(tokensBeingSent).length > 0 ? dynamicLocked : currentLocked
+
+    return available - lockedToUse
+  }, [isPrimary, available, tokensBeingSent, dynamicLocked, currentLocked])
+
+  // Calculate optimized spendable (if CNTs were consolidated)
+  const optimizedSpendable = React.useMemo(() => {
+    if (!isPrimary) return available
+    return available - optimizedLocked
+  }, [isPrimary, available, optimizedLocked])
 
   const [quantity, setQuantity] = React.useState(amount.quantity)
   const [inputValue, setInputValue] = React.useState(
@@ -95,9 +128,18 @@ export const EditAmountScreen = () => {
   }, [quantity, amountRemoved, isFocused, selectedTokenId])
 
   const hasBalance = available >= quantity
-  // primary can have locked amount
+  // primary can have locked amount - check against spendable (which accounts for dynamic locked)
   const isUnableToSpend = isPrimary && quantity > spendable
   const isZero = quantity === BigInt(0)
+
+  // Show info about locked ADA when selecting primary token
+  const showLockedInfo = isPrimary && currentLocked > BigInt(0)
+
+  // Show info about unlocked ADA if tokens are being sent
+  const showUnlockedInfo =
+    isPrimary &&
+    Object.keys(tokensBeingSent).length > 0 &&
+    unlockedBySending > BigInt(0)
 
   const handleOnChangeQuantity = React.useCallback(
     (text: string) => {
@@ -200,6 +242,26 @@ export const EditAmountScreen = () => {
               size="M"
               style={{minHeight: 44, minWidth: 88}}
             />
+          )}
+
+          <Space.Height.md />
+
+          {showLockedInfo && (
+            <Text style={[ta.text_gray_max, a.body_2_md_regular]}>
+              {`Locked: ${atomicBreakdown(currentLocked, amount.info.decimals).str} ${amount.info.ticker}`}
+            </Text>
+          )}
+
+          {showUnlockedInfo && (
+            <Text style={[ta.text_gray_max, a.body_2_md_regular]}>
+              {`Unlocked by sending tokens: ${atomicBreakdown(unlockedBySending, amount.info.decimals).str} ${amount.info.ticker}`}
+            </Text>
+          )}
+
+          {optimizedSpendable > spendable && isPrimary && (
+            <Text style={[ta.text_gray_max, a.body_2_md_regular]}>
+              {`Optimized spendable: ${atomicBreakdown(optimizedSpendable, amount.info.decimals).str} ${amount.info.ticker}`}
+            </Text>
           )}
 
           <Space.Height.md />
