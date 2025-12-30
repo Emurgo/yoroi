@@ -147,7 +147,16 @@ const Actions = ({children}: {children: React.ReactNode}) => {
   const {palette: p} = useTheme()
 
   return (
-    <View style={[a.self_stretch, a.border_t, {borderTopColor: p.gray_200}]}>
+    <View
+      style={[
+        a.self_stretch,
+        a.border_t,
+        a.flex_row,
+        a.justify_center,
+        a.align_center,
+        {borderTopColor: p.gray_200},
+      ]}
+    >
       {children}
     </View>
   )
