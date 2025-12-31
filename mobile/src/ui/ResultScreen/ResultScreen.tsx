@@ -75,48 +75,40 @@ export const ResultScreen = (props?: ResultScreenParams) => {
     icon ?? (type === 'success' ? <SuccessfulTxIcon /> : <FailedTxIcon />)
 
   return (
-    <SafeArea
-      style={[
-        ta.bg_color_max,
-        a.p_lg,
-        a.flex_1,
-        a.align_center,
-        a.justify_center,
-      ]}
-    >
-      {defaultIcon}
+    <SafeArea style={[ta.bg_color_max, a.p_lg, a.flex_1]}>
+      <View style={[a.flex_1, a.align_center, a.justify_center]}>
+        {defaultIcon}
 
-      <Space.Height.lg />
+        <Space.Height.lg />
 
-      <Text
-        style={[
-          a.heading_3_medium,
-          a.px_sm,
-          {
-            color: p.gray_max,
-            textAlign: 'center',
-          },
-        ]}
-      >
-        {title}
-      </Text>
+        <Text
+          style={[
+            a.heading_3_medium,
+            a.px_sm,
+            {
+              color: p.gray_max,
+              textAlign: 'center',
+            },
+          ]}
+        >
+          {title}
+        </Text>
 
-      <Text
-        style={[
-          a.body_1_lg_regular,
-          {
-            color: p.gray_600,
-            maxWidth: 330,
-            textAlign: 'center',
-          },
-        ]}
-      >
-        {message}
-      </Text>
+        <Text
+          style={[
+            a.body_1_lg_regular,
+            {
+              color: p.gray_600,
+              maxWidth: 330,
+              textAlign: 'center',
+            },
+          ]}
+        >
+          {message}
+        </Text>
 
-      {params.customContent}
-
-      <Space.Height._2xs fill />
+        {params.customContent}
+      </View>
 
       <Actions>
         {secondaryAction && (
