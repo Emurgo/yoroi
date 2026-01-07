@@ -229,7 +229,9 @@ export async function createSendTx({
         const minAdaToUse =
           actualMinAda > minUtxoValue ? actualMinAda : minUtxoValue
 
-        adaNeeded = minAdaToUse
+        if (adaNeeded < minAdaToUse) {
+          adaNeeded = minAdaToUse
+        }
       }
 
       // Update requiredAmounts for ADA
