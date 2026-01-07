@@ -100,6 +100,7 @@ export type TxHistoryRoutes = {
   }
   'send-select-token-from-list': undefined
   'swap': NavigatorScreenParams<SwapTokenRoutes>
+  'result-screen': import('~/ui/ResultScreen/types').ResultScreenParams
 } & ScanRoutes &
   ClaimRoutes &
   ExchangeRoutes &

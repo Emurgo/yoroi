@@ -970,9 +970,7 @@ export async function createSendTx({
                   minAdaForEntry: minAdaForEntry.toString(),
                 },
               )
-              throw new Error(
-                'Cannot send MAX amount: insufficient ADA after accounting for fees and minimum change requirements',
-              )
+              throw new NotEnoughMoneyToSendError()
             }
 
             // Create adjusted entries with reduced ADA amount
@@ -1056,6 +1054,11 @@ export async function createSendTx({
                     initialBuildFailed,
                   },
                 )
+
+                if (isNotEnoughAdaError || isInsufficientInputError) {
+                  throw new NotEnoughMoneyToSendError()
+                }
+
                 throw error
               }
             }

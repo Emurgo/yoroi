@@ -32,6 +32,7 @@ import {
 } from '~/kernel/navigation/common/helpers'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {TxHistoryRoutes} from '~/kernel/navigation/types'
+import {ResultScreen} from '~/ui/ResultScreen/ResultScreen'
 
 import {AddressDetailsScreen} from '../Transactions/useCases/AddressDetails/AddressDetailsScreen'
 import {BlockDetails} from '../Transactions/useCases/BlockDetails/BlockDetails'
@@ -303,6 +304,16 @@ export const TxHistoryNavigator = () => {
             title: strings.exchange.provider,
           }}
           getComponent={() => SelectProviderFromListScreen}
+        />
+
+        <Stack.Screen
+          name="result-screen"
+          component={
+            ResultScreen as unknown as React.ComponentType<
+              Record<string, unknown>
+            >
+          }
+          options={{headerShown: true}}
         />
       </Stack.Navigator>
     </WithWalletOpened>
