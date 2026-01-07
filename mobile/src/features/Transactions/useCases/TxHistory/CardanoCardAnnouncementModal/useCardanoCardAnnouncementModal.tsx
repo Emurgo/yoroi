@@ -168,6 +168,13 @@ export const useCardanoCardAnnouncementModal = () => {
       expectedOpenCountRef.current = null
       queryClient.setQueryData(QUERY_KEY, nextState)
     },
+    onError: () => {
+      expectedOpenCountRef.current = null
+      setShowing(false)
+    },
+    onSettled: () => {
+      expectedOpenCountRef.current = null
+    },
   })
 
   const setLastShownOpenCount = useMutationWithInvalidations({
@@ -203,10 +210,15 @@ export const useCardanoCardAnnouncementModal = () => {
     config?.popups?.cardanoCardAnnouncement?.display ?? false
 
   React.useEffect(() => {
-    if (isLoadingConfig || !stateQuery.isSuccess) return
-    if (config == null) return
-    if (!shouldDisplay) return
-    if (hasIncrementedOpenCountThisSession) return
+    if (
+      isLoadingConfig ||
+      !stateQuery.isSuccess ||
+      config == null ||
+      !shouldDisplay ||
+      hasIncrementedOpenCountThisSession
+    ) {
+      return
+    }
 
     hasIncrementedOpenCountThisSession = true
     expectedOpenCountRef.current = state.openCount + 1
@@ -218,41 +230,32 @@ export const useCardanoCardAnnouncementModal = () => {
     shouldDisplay,
     incrementOpenCount,
     state.openCount,
-    state.lastShownOpenCount,
   ])
 
   React.useEffect(() => {
-    if (isLoadingConfig || !stateQuery.isSuccess) return
-    if (config == null) {
-      if (!hasTriggeredRef.current) setShowing(false)
-      return
-    }
+    const ready = !isLoadingConfig && stateQuery.isSuccess
+    if (!ready || hasTriggeredRef.current) return
 
-    if (!shouldDisplay) {
-      if (!hasTriggeredRef.current) setShowing(false)
-      return
-    }
-
-    const expectedOpenCount = expectedOpenCountRef.current
-    if (
-      expectedOpenCount != null &&
-      !hasTriggeredRef.current &&
-      state.openCount < expectedOpenCount
-    ) {
-      setShowing(true)
-      return
-    }
-
+    const enabled = config != null && shouldDisplay
     const shouldShowNow =
       (state.openCount === 1 || state.openCount === 5) &&
       state.lastShownOpenCount !== state.openCount
 
-    if (!shouldShowNow) {
-      if (!hasTriggeredRef.current) setShowing(false)
+    const expectedOpenCount = expectedOpenCountRef.current
+    const awaitingIncrement =
+      expectedOpenCount != null && state.openCount < expectedOpenCount
+
+    const shouldShow = enabled && (awaitingIncrement || shouldShowNow)
+    if (!shouldShow) {
+      setShowing(false)
       return
     }
 
-    if (hasTriggeredRef.current) return
+    if (awaitingIncrement) {
+      setShowing(true)
+      return
+    }
+
     hasTriggeredRef.current = true
 
     setShowing(true)
