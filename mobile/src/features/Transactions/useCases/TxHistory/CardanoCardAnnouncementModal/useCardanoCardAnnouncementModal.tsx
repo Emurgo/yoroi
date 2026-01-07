@@ -1,10 +1,6 @@
-import {
-  parseBoolean,
-  useAsyncStorage,
-  useMutationWithInvalidations,
-} from '@yoroi/common'
+import {parseBoolean, useAsyncStorage} from '@yoroi/common'
 
-import {useQuery, useQueryClient} from '@tanstack/react-query'
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import * as React from 'react'
 
 import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
@@ -123,7 +119,7 @@ export const useCardanoCardAnnouncementModal = () => {
     retry: false,
   })
 
-  const incrementOpenCount = useMutationWithInvalidations({
+  const incrementOpenCount = useMutation({
     mutationFn: async () => {
       const [rawOpenCount, rawLastShownOpenCount] = await Promise.all([
         storage.getItem<number | string | null>(
@@ -163,7 +159,6 @@ export const useCardanoCardAnnouncementModal = () => {
         lastShownOpenCount: currentLastShownOpenCount,
       }
     },
-    invalidateQueries: [],
     onSuccess: (nextState) => {
       expectedOpenCountRef.current = null
       queryClient.setQueryData(QUERY_KEY, nextState)
@@ -177,7 +172,7 @@ export const useCardanoCardAnnouncementModal = () => {
     },
   })
 
-  const setLastShownOpenCount = useMutationWithInvalidations({
+  const setLastShownOpenCount = useMutation({
     mutationFn: async (openCount: number) => {
       await Promise.all([
         storage.setItem(
@@ -189,7 +184,6 @@ export const useCardanoCardAnnouncementModal = () => {
 
       return openCount
     },
-    invalidateQueries: [],
     onSuccess: (openCount) => {
       const current =
         queryClient.getQueryData<CardanoCardAnnouncementModalState>(QUERY_KEY)
