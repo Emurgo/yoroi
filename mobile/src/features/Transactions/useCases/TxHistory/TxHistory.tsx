@@ -52,16 +52,23 @@ export const TxHistory = () => {
     return insets.top + headerHeight + 8
   }, [insets.top])
 
-  useRequestSystemNotifications({enabled: features.pushNotifications})
-
   const {wallet} = useSelectedWallet()
   const isByronWallet = useIsByronWallet()
 
   const {sync, isPending: isLoadingWallet} = useSync(wallet)
-  const {isLoading: isLoadingPoolTransition} = usePoolTransitionModal()
-  const {isLoading: isLoadingStakingUpdate} = useStakingUpdateModal()
-  const {isLoading: isLoadingCardanoCardAnnouncement} =
-    useCardanoCardAnnouncementModal()
+  const {
+    isLoading: isLoadingCardanoCardAnnouncement,
+    isShowing: isShowingCardanoCardAnnouncement,
+  } = useCardanoCardAnnouncementModal()
+  useRequestSystemNotifications({
+    enabled: features.pushNotifications && !isShowingCardanoCardAnnouncement,
+  })
+  const {isLoading: isLoadingPoolTransition} = usePoolTransitionModal({
+    enabled: !isShowingCardanoCardAnnouncement,
+  })
+  const {isLoading: isLoadingStakingUpdate} = useStakingUpdateModal({
+    enabled: !isShowingCardanoCardAnnouncement,
+  })
   const isLoading =
     isLoadingWallet ||
     isLoadingPoolTransition ||

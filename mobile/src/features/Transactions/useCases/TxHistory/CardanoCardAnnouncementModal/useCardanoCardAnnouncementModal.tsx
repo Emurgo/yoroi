@@ -15,7 +15,30 @@ import {CardanoCardAnnouncementModal} from './CardanoCardAnnouncementModal'
 
 const CARDANO_CARD_ANNOUNCEMENT_MODAL_SHOWN_KEY =
   'cardano-card-announcement-modal-shown'
-const QUERY_KEY = ['cardanoCardAnnouncementModalShown']
+const CARDANO_CARD_ANNOUNCEMENT_MODAL_OPEN_COUNT_KEY =
+  'cardano-card-announcement-modal-open-count'
+const CARDANO_CARD_ANNOUNCEMENT_MODAL_LAST_SHOWN_OPEN_COUNT_KEY =
+  'cardano-card-announcement-modal-last-shown-open-count'
+const QUERY_KEY = ['cardanoCardAnnouncementModalState']
+
+type CardanoCardAnnouncementModalState = {
+  openCount: number
+  lastShownOpenCount: number
+}
+
+const INITIAL_STATE: CardanoCardAnnouncementModalState = Object.freeze({
+  openCount: 0,
+  lastShownOpenCount: 0,
+})
+
+const parseIntOr = (raw: string | null, defaultValue: number) => {
+  if (raw == null) return defaultValue
+  const parsed = Number.parseInt(raw, 10)
+  if (!Number.isFinite(parsed)) return defaultValue
+  return Math.max(0, parsed)
+}
+
+let hasIncrementedOpenCountThisSession = false
 
 export const useCardanoCardAnnouncementModal = () => {
   const {config, isLoading: isLoadingConfig} = useRemoteConfig()
@@ -24,41 +47,69 @@ export const useCardanoCardAnnouncementModal = () => {
   const modalHeight = 600
   const storage = useAsyncStorage()
   const queryClient = useQueryClient()
+  const [isShowing, setIsShowing] = React.useState(true)
+  const setShowing = React.useCallback(
+    (next: boolean) => setIsShowing((prev) => (prev === next ? prev : next)),
+    [],
+  )
 
-  const cachedValue = queryClient.getQueryData<boolean>(QUERY_KEY)
+  const cachedValue =
+    queryClient.getQueryData<CardanoCardAnnouncementModalState>(QUERY_KEY)
 
-  const hasBeenShownQuery = useQuery({
+  const stateQuery = useQuery({
     queryKey: QUERY_KEY,
     initialData: cachedValue,
     queryFn: async () => {
       try {
-        const rawValue = await storage.getItem<string | null>(
-          CARDANO_CARD_ANNOUNCEMENT_MODAL_SHOWN_KEY,
-          (value) => value,
+        const [openCountValue, lastShownOpenCountValue, legacyValue] =
+          await Promise.all([
+            storage.getItem<number | string | null>(
+              CARDANO_CARD_ANNOUNCEMENT_MODAL_OPEN_COUNT_KEY,
+            ),
+            storage.getItem<number | string | null>(
+              CARDANO_CARD_ANNOUNCEMENT_MODAL_LAST_SHOWN_OPEN_COUNT_KEY,
+            ),
+            storage.getItem<boolean | string | null>(
+              CARDANO_CARD_ANNOUNCEMENT_MODAL_SHOWN_KEY,
+            ),
+          ])
+
+        const openCount = parseIntOr(
+          typeof openCountValue === 'number'
+            ? String(openCountValue)
+            : openCountValue,
+          0,
+        )
+        const lastShownOpenCount = parseIntOr(
+          typeof lastShownOpenCountValue === 'number'
+            ? String(lastShownOpenCountValue)
+            : lastShownOpenCountValue,
+          0,
         )
 
-        if (rawValue === null) {
-          return false
-        }
-
-        const parsed = parseBoolean(rawValue)
-        if (parsed !== undefined) {
-          return parsed
-        }
-
-        if (rawValue === 'true') {
+        const legacyShown = (() => {
+          if (legacyValue === true) return true
+          if (legacyValue === false || legacyValue == null) return false
+          const parsed = parseBoolean(legacyValue)
+          if (parsed != null) return parsed
+          if (legacyValue === 'true') return true
+          if (legacyValue === 'false') return false
           return true
-        }
-        if (rawValue === 'false') {
-          return false
+        })()
+
+        if (legacyShown) {
+          return {
+            openCount: Math.max(openCount, 1),
+            lastShownOpenCount: Math.max(lastShownOpenCount, 1),
+          }
         }
 
-        return true
-      } catch (error) {
-        return true
+        return {openCount, lastShownOpenCount}
+      } catch (_error) {
+        return INITIAL_STATE
       }
     },
-    placeholderData: true,
+    placeholderData: INITIAL_STATE,
     staleTime: Infinity,
     gcTime: Infinity,
     refetchOnMount: false,
@@ -66,37 +117,122 @@ export const useCardanoCardAnnouncementModal = () => {
     retry: false,
   })
 
-  const setModalShown = useMutationWithInvalidations({
+  const incrementOpenCount = useMutationWithInvalidations({
     mutationFn: async () => {
-      await storage.setItem(CARDANO_CARD_ANNOUNCEMENT_MODAL_SHOWN_KEY, true)
+      const [rawOpenCount, rawLastShownOpenCount] = await Promise.all([
+        storage.getItem<number | string | null>(
+          CARDANO_CARD_ANNOUNCEMENT_MODAL_OPEN_COUNT_KEY,
+        ),
+        storage.getItem<number | string | null>(
+          CARDANO_CARD_ANNOUNCEMENT_MODAL_LAST_SHOWN_OPEN_COUNT_KEY,
+        ),
+      ])
+
+      const currentOpenCount = parseIntOr(
+        typeof rawOpenCount === 'number' ? String(rawOpenCount) : rawOpenCount,
+        0,
+      )
+      const currentLastShownOpenCount = parseIntOr(
+        typeof rawLastShownOpenCount === 'number'
+          ? String(rawLastShownOpenCount)
+          : rawLastShownOpenCount,
+        0,
+      )
+
+      if (currentOpenCount >= 5 && currentLastShownOpenCount >= 5) {
+        return {
+          openCount: currentOpenCount,
+          lastShownOpenCount: currentLastShownOpenCount,
+        }
+      }
+
+      const nextOpenCount = currentOpenCount + 1
+      await storage.setItem(
+        CARDANO_CARD_ANNOUNCEMENT_MODAL_OPEN_COUNT_KEY,
+        nextOpenCount,
+      )
+
+      return {
+        openCount: nextOpenCount,
+        lastShownOpenCount: currentLastShownOpenCount,
+      }
     },
     invalidateQueries: [],
-    onSuccess: () => {
-      queryClient.setQueryData(QUERY_KEY, true)
+    onSuccess: (nextState) => {
+      queryClient.setQueryData(QUERY_KEY, nextState)
     },
   })
 
-  const hasBeenShown = hasBeenShownQuery.data ?? false
+  const setLastShownOpenCount = useMutationWithInvalidations({
+    mutationFn: async (openCount: number) => {
+      await Promise.all([
+        storage.setItem(
+          CARDANO_CARD_ANNOUNCEMENT_MODAL_LAST_SHOWN_OPEN_COUNT_KEY,
+          openCount,
+        ),
+        storage.setItem(CARDANO_CARD_ANNOUNCEMENT_MODAL_SHOWN_KEY, true),
+      ])
+
+      return openCount
+    },
+    invalidateQueries: [],
+    onSuccess: (openCount) => {
+      const current =
+        queryClient.getQueryData<CardanoCardAnnouncementModalState>(QUERY_KEY)
+
+      queryClient.setQueryData<CardanoCardAnnouncementModalState>(QUERY_KEY, {
+        openCount: Math.max(current?.openCount ?? 0, openCount),
+        lastShownOpenCount: Math.max(
+          current?.lastShownOpenCount ?? 0,
+          openCount,
+        ),
+      })
+    },
+  })
+
+  const state = stateQuery.data ?? INITIAL_STATE
   const hasTriggeredRef = React.useRef(false)
   const shouldDisplay =
     config?.popups?.cardanoCardAnnouncement?.display ?? false
 
   React.useEffect(() => {
-    if (
-      !hasBeenShownQuery.isSuccess ||
-      hasBeenShown ||
-      hasTriggeredRef.current ||
-      isLoadingConfig ||
-      !shouldDisplay
-    ) {
+    if (isLoadingConfig || !stateQuery.isSuccess) return
+    if (config == null) return
+    if (!shouldDisplay) return
+    if (hasIncrementedOpenCountThisSession) return
+
+    hasIncrementedOpenCountThisSession = true
+    incrementOpenCount.mutate()
+  }, [
+    isLoadingConfig,
+    stateQuery.isSuccess,
+    config,
+    shouldDisplay,
+    incrementOpenCount,
+    state.openCount,
+    state.lastShownOpenCount,
+  ])
+
+  React.useEffect(() => {
+    if (isLoadingConfig || !stateQuery.isSuccess) return
+    if (config == null) return
+
+    if (!shouldDisplay) {
+      setShowing(false)
       return
     }
 
+    const shouldShowNow =
+      (state.openCount === 1 || state.openCount === 5) &&
+      state.lastShownOpenCount !== state.openCount
+
+    if (!shouldShowNow) {
+      setShowing(false)
+      return
+    }
+
+    if (hasTriggeredRef.current) return
     hasTriggeredRef.current = true
-
-    queryClient.setQueryData(QUERY_KEY, true)
-
-    setModalShown.mutate()
 
     openModal({
       title: strings.staking.cardanoCardAnnouncementTitle,
@@ -104,18 +240,24 @@ export const useCardanoCardAnnouncementModal = () => {
       footer: <CardanoCardAnnouncementModal.Footer />,
       height: modalHeight,
       canDiscard: true,
+      onClose: () => setShowing(false),
     })
+
+    setShowing(true)
+    setLastShownOpenCount.mutate(state.openCount)
   }, [
-    hasBeenShownQuery.isSuccess,
-    hasBeenShown,
+    stateQuery.isSuccess,
     isLoadingConfig,
+    config,
     shouldDisplay,
     openModal,
     strings,
     modalHeight,
-    setModalShown,
-    queryClient,
+    setLastShownOpenCount,
+    setShowing,
+    state.openCount,
+    state.lastShownOpenCount,
   ])
 
-  return {isLoading: isLoadingConfig}
+  return {isLoading: isLoadingConfig, isShowing}
 }
