@@ -4,8 +4,8 @@ import * as React from 'react'
 import {Linking, Text, View} from 'react-native'
 
 import {useStrings} from '~/kernel/i18n/useStrings'
-import {AppScreenshotIllustration} from '~/ui/AppScreenshotIllustration/AppScreenshotIllustration'
 import {Button, ButtonType} from '~/ui/Button/Button'
+import {CardAnnouncementIllustration} from '~/ui/CardAnnouncementIllustration/CardAnnouncementIllustration'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
@@ -19,7 +19,7 @@ const CardanoCardAnnouncementModalContent = () => {
   return (
     <Modal.Content>
       <View style={[a.align_center, a.px_lg]}>
-        <AppScreenshotIllustration width={320} height={270} />
+        <CardAnnouncementIllustration width={320} height={270} />
 
         <Space.Height.md />
 

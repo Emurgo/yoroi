@@ -4,7 +4,7 @@ import {ImageStyle, StyleProp} from 'react-native'
 
 import appScreenshotSource from '~/assets/img/illustration-app-screenshot.png'
 
-export const AppScreenshotIllustration = ({
+export const CardAnnouncementIllustration = ({
   width = 280,
   height = 280,
   style,
@@ -21,3 +21,4 @@ export const AppScreenshotIllustration = ({
     />
   )
 }
+
