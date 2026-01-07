@@ -60,7 +60,7 @@ export const useCardanoCardAnnouncementModal = () => {
   const modalHeight = 600
   const storage = useAsyncStorage()
   const queryClient = useQueryClient()
-  const [isShowing, setIsShowing] = React.useState(true)
+  const [isShowing, setIsShowing] = React.useState(false)
   const expectedOpenCountRef = React.useRef<number | null>(null)
   const setShowing = React.useCallback(
     (next: boolean) => setIsShowing((prev) => (prev === next ? prev : next)),
@@ -223,7 +223,10 @@ export const useCardanoCardAnnouncementModal = () => {
 
   React.useEffect(() => {
     if (isLoadingConfig || !stateQuery.isSuccess) return
-    if (config == null) return
+    if (config == null) {
+      if (!hasTriggeredRef.current) setShowing(false)
+      return
+    }
 
     if (!shouldDisplay) {
       if (!hasTriggeredRef.current) setShowing(false)
