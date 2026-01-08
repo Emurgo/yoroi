@@ -70,8 +70,13 @@ export const EditAmountScreen = () => {
   }, [targets, selectedTargetIndex, selectedTokenId])
 
   // Calculate dynamic locked deposit based on tokens being sent
-  const {currentLocked, optimizedLocked, dynamicLocked, unlockedBySending} =
-    useDynamicLockedDeposit({tokensBeingSent})
+  const {
+    currentLocked,
+    optimizedLocked,
+    dynamicLocked,
+    unlockedBySending,
+    isCalculating,
+  } = useDynamicLockedDeposit({tokensBeingSent})
 
   const available =
     (balances.records.get(selectedTokenId)?.quantity ?? BigInt(0)) -
@@ -240,6 +245,8 @@ export const EditAmountScreen = () => {
               onPress={handleOnMaxBalance}
               type={ButtonType.Text}
               size="M"
+              disabled={isCalculating}
+              isLoading={isCalculating}
               style={{minHeight: 44, minWidth: 88}}
             />
           )}

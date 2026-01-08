@@ -29,7 +29,7 @@ import type {Address as CSLAddress} from '@emurgo/cross-csl-core'
 import BigNumber from 'bignumber.js'
 
 import {cardanoValueFromAmounts} from '../cardanoValueFromAmounts'
-import {calculateChangeOutputMinAda, calculateLockedAda} from '../utxoService'
+import {calculateChangeOutputMinAda} from '../utxoService'
 import {CardanoMobileWrapped} from '../wrappedCsl'
 
 export type CreateSendTxParams = {
@@ -493,38 +493,7 @@ export async function createSendTx({
           }
         }
 
-        // Calculate spendable ADA from selected UTXOs (excluding locked ADA)
-        // This is critical: we need to account for locked ADA in the selected UTXOs
-        let spendableAda = totalInputAda
-        try {
-          const lockedAdaResult = await calculateLockedAda({
-            utxos: selectedUtxos,
-            protocolParams: {
-              coinsPerUtxoByte: protocolParams.coinsPerUtxoByte,
-              linearFee: protocolParams.linearFee,
-              minimumUtxoVal: minUtxoValue.toString(),
-            },
-            primaryTokenId,
-            // No tokens being sent in proactive reduction phase
-          })
-          spendableAda = totalInputAda - lockedAdaResult.currentLocked
-          getLogger().debug(
-            'createSendTx: Calculated spendable ADA (proactive)',
-            {
-              totalInputAda: totalInputAda.toString(),
-              lockedAda: lockedAdaResult.currentLocked.toString(),
-              spendableAda: spendableAda.toString(),
-            },
-          )
-        } catch (error) {
-          // Fallback: assume no locked ADA if calculation fails
-          getLogger().debug(
-            'createSendTx: Failed to calculate locked ADA (proactive), assuming no locked ADA',
-            {
-              error: error instanceof Error ? error.message : String(error),
-            },
-          )
-        }
+        const spendableAda = totalInputAda
 
         // Calculate accurate minimum ADA for change output using CSL
         let minAdaForChange = BigInt(0)
@@ -569,18 +538,11 @@ export async function createSendTx({
           BigInt(protocolParams.linearFee.coefficient) * BigInt(600) // 600 bytes estimate
 
         // Calculate how much we can actually send
-        // When subtractFeeFromAmount is true and there are no tokens in change:
-        //   - Fee is subtracted from output, so output = spendableAda - fee
-        //   - No change output needed (or minimal change < minUtxo)
-        //   - Available = spendableAda - fee (no minAdaForChange needed)
-        // When there are tokens in change:
-        //   - Need to reserve minAdaForChange for change output
-        //   - Available = spendableAda - fee - minAdaForChange
-        // Use spendableAda (not totalInputAda) to account for locked ADA
-        const availableAfterFeeAndChange =
-          hasNonAdaAssetsInChange && !subtractFeeFromAmount
-            ? spendableAda - conservativeFeeEstimate - minAdaForChange
-            : spendableAda - conservativeFeeEstimate
+        // If hasNonAdaAssetsInChange is true, we MUST reserve minAdaForChange for the change output.
+        // If false, we are sending all tokens, so we aim for 0 change output (Send All ADA).
+        const availableAfterFeeAndChange = hasNonAdaAssetsInChange
+          ? spendableAda - conservativeFeeEstimate - minAdaForChange
+          : spendableAda - conservativeFeeEstimate
 
         // When sending all ADA (totalOutputAda >= totalInputAda), reduce by fee estimate
         // This ensures we don't try to send more than available
