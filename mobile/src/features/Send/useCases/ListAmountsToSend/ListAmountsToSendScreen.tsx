@@ -22,7 +22,6 @@ import {isInsufficientBalanceError} from '~/features/Staking/Governance/common/t
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {BackButton} from '~/kernel/navigation/common/helpers'
-import {useResultNavigation} from '~/kernel/navigation/hooks/useResultNavigation'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {AddTokenButton} from '~/ui/AddTokenButton/AddTokenButton'
 import {Boundary} from '~/ui/Boundary/Boundary'
@@ -33,7 +32,6 @@ import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
 
 export const ListAmountsToSendScreen = () => {
   const navigateTo = useNavigateTo()
-  const resultNavigation = useResultNavigation()
   const {navigateToTxReview, resetToStartTransfer} = useWalletNavigation()
   const strings = useStrings()
   const {clearSearch} = useSearch()
@@ -208,31 +206,56 @@ export const ListAmountsToSendScreen = () => {
 
   const handleCreateUnsignedTxError = React.useCallback(
     (error: Error) => {
-      // Check for insufficient balance errors and show error screen
+      logger.error('ListAmountsToSendScreen: Transaction creation failed', {
+        errorMessage: error.message,
+        errorStack: error.stack,
+      })
+
       if (
         error instanceof NotEnoughMoneyToSendError ||
         isInsufficientBalanceError(error)
       ) {
-        logger.info('ListAmountsToSendScreen: Insufficient balance error', {
-          errorMessage: error.message,
-        })
         // Use unified result screen with insufficient balance message
-        resultNavigation.showResultScreen({
-          type: 'error',
-          context: 'send',
-          title: strings.send.noBalance,
-          message: strings.send.failedTxText,
-          primaryAction: {
-            title: strings.send.failedTxButton,
-            onPress: resetToStartTransfer,
+        // @ts-ignore - Navigating to a screen in a sibling navigator
+        navigation.navigate('manage-wallets', {
+          screen: 'review-tx-routes',
+          params: {
+            screen: 'result-screen',
+            params: {
+              type: 'error',
+              context: 'send',
+              title: strings.send.noBalance,
+              message: strings.send.failedTxText,
+              primaryAction: {
+                title: strings.send.failedTxButton,
+                onPress: resetToStartTransfer,
+              },
+            },
           },
         })
         return
       }
-      // Re-throw other errors to be handled by default error handling
-      throw error
+
+      // Show generic error screen for other unexpected errors
+      // @ts-ignore - Navigating to a screen in a sibling navigator
+      navigation.navigate('manage-wallets', {
+        screen: 'review-tx-routes',
+        params: {
+          screen: 'result-screen',
+          params: {
+            type: 'error',
+            context: 'send',
+            title: strings.send.failedTxTitle,
+            message: error.message,
+            primaryAction: {
+              title: strings.send.failedTxButton,
+              onPress: resetToStartTransfer,
+            },
+          },
+        },
+      })
     },
-    [resultNavigation, strings, resetToStartTransfer],
+    [navigation, strings, resetToStartTransfer],
   )
 
   const {resolve: createUnsignedTx, isPending} = usePromise({
