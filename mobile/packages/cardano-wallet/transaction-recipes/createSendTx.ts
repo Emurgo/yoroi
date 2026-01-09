@@ -103,8 +103,12 @@ export async function createSendTx({
         entry.amounts[primaryTokenId] ?? Branded.ZERO_QUANTITY,
       )
 
-      // If output has tokens but insufficient ADA, calculate actual minimum UTXO value
-      if (hasTokens && adaAmount < minUtxoValue) {
+      // Determine the ADA amount needed for this entry
+      let adaNeeded = adaAmount
+
+      // If output has tokens, we must verify the minimum ADA requirement
+      // The default minUtxoValue (e.g. 1 ADA) might not be enough for a token bundle
+      if (hasTokens) {
         // Calculate actual minimum ADA required for this output using CSL
         const actualMinAda = await CardanoMobileWrapped.cslScope(
           async (csl) => {
@@ -221,18 +225,25 @@ export async function createSendTx({
         // Store the calculated minAda for this entry
         entryMinAda.set(i, actualMinAda)
 
-        const currentAda = BigInt(
-          requiredAmounts[primaryTokenId] ?? Branded.ZERO_QUANTITY,
-        )
         // Use the calculated minimum or the hardcoded fallback, whichever is higher
         const minAdaToUse =
           actualMinAda > minUtxoValue ? actualMinAda : minUtxoValue
-        requiredAmounts[primaryTokenId] = (
-          currentAda + minAdaToUse
-        ).toString() as Balance.Quantity
+
+        if (adaNeeded < minAdaToUse) {
+          adaNeeded = minAdaToUse
+        }
       }
 
+      // Update requiredAmounts for ADA
+      const currentAda = BigInt(
+        requiredAmounts[primaryTokenId] ?? Branded.ZERO_QUANTITY,
+      )
+      requiredAmounts[primaryTokenId] = (
+        currentAda + adaNeeded
+      ).toString() as Balance.Quantity
+
       for (const [tokenId, quantity] of Object.entries(entry.amounts)) {
+        if (tokenId === primaryTokenId) continue
         const tokenIdBranded = Branded.asTokenId(tokenId)
         const current = BigInt(
           requiredAmounts[tokenIdBranded] ?? Branded.ZERO_QUANTITY,
@@ -372,18 +383,21 @@ export async function createSendTx({
           entry.amounts[primaryTokenId] ?? Branded.ZERO_QUANTITY,
         )
 
-        // If output has tokens but insufficient ADA, use calculated minAda or fallback
+        // If output has tokens, ensure we meet the calculated minimum requirement
         const adjustedAmounts = {...entry.amounts}
-        if (hasTokens && adaAmount < minUtxoValue) {
+        if (hasTokens) {
           // Use the calculated minAda if available, otherwise use the fallback
           const calculatedMinAda = entryMinAda.get(i)
-          const minAdaToUse =
+          const minRequired =
             calculatedMinAda && calculatedMinAda > minUtxoValue
               ? calculatedMinAda
               : minUtxoValue
 
-          adjustedAmounts[primaryTokenId] =
-            minAdaToUse.toString() as Balance.Quantity
+          // If the current amount is less than required, bump it up
+          if (adaAmount < minRequired) {
+            adjustedAmounts[primaryTokenId] =
+              minRequired.toString() as Balance.Quantity
+          }
         }
 
         builderState = addOutput(
