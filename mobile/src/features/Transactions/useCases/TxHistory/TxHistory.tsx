@@ -28,6 +28,7 @@ import {TxList} from '../TxList/TxList'
 import {useUtxoConsolidationBanner} from '../UtxoConsolidation/UtxoConsolidation/useUtxoConsolidationBanner'
 import {ActionsBanner} from './ActionsBanner'
 import {BalanceBanner} from './BalanceBanner'
+import {useCardanoCardAnnouncementModal} from './CardanoCardAnnouncementModal/useCardanoCardAnnouncementModal'
 import {CollapsibleHeader} from './CollapsibleHeader'
 import {LockedDeposit} from './LockedDeposit'
 import {useOnScroll} from './useOnScroll'
@@ -46,23 +47,33 @@ export const TxHistory = () => {
   const walletNavigation = useWalletNavigation()
   const insets = useSafeAreaInsets()
 
-  // Calculate header spacing: safe area top + header height (typically 44-56px)
-  // Add extra padding to ensure content doesn't touch the header
   const headerSpacing = React.useMemo(() => {
     const headerHeight = Platform.OS === 'ios' ? 44 : 56
-    return insets.top + headerHeight + 8 // 8px extra padding
+    return insets.top + headerHeight + 8
   }, [insets.top])
-
-  useRequestSystemNotifications({enabled: features.pushNotifications})
 
   const {wallet} = useSelectedWallet()
   const isByronWallet = useIsByronWallet()
 
   const {sync, isPending: isLoadingWallet} = useSync(wallet)
-  const {isLoading: isLoadingPoolTransition} = usePoolTransitionModal()
-  const {isLoading: isLoadingStakingUpdate} = useStakingUpdateModal()
+  const {
+    isLoading: isLoadingCardanoCardAnnouncement,
+    isShowing: isShowingCardanoCardAnnouncement,
+  } = useCardanoCardAnnouncementModal()
+  useRequestSystemNotifications({
+    enabled: features.pushNotifications && !isShowingCardanoCardAnnouncement,
+  })
+  const {isLoading: isLoadingPoolTransition} = usePoolTransitionModal({
+    enabled: !isShowingCardanoCardAnnouncement,
+  })
+  const {isLoading: isLoadingStakingUpdate} = useStakingUpdateModal({
+    enabled: !isShowingCardanoCardAnnouncement,
+  })
   const isLoading =
-    isLoadingWallet || isLoadingPoolTransition || isLoadingStakingUpdate
+    isLoadingWallet ||
+    isLoadingPoolTransition ||
+    isLoadingStakingUpdate ||
+    isLoadingCardanoCardAnnouncement
 
   const [expanded, setExpanded] = React.useState(true)
   const onScroll = useOnScroll({
@@ -74,20 +85,15 @@ export const TxHistory = () => {
 
   const {filters, openFilterModal} = useTxFilterModal()
 
-  // Handle back navigation - always reset to wallet selection when on history-list
   React.useEffect(() => {
-    // Handle OS back button (Android) - only when on history-list screen
     if (Platform.OS === 'android') {
       const backHandler = BackHandler.addEventListener(
         'hardwareBackPress',
         () => {
-          // Check if we can go back in the current stack
-          // If not, we're at the root (history-list) and should reset to wallet selection
           if (!navigation.canGoBack()) {
             walletNavigation.resetToWalletSelection()
-            return true // Prevent default back behavior
+            return true
           }
-          // Otherwise, let normal navigation handle it (go back to previous screen in stack)
           return false
         },
       )
@@ -97,21 +103,13 @@ export const TxHistory = () => {
     return undefined
   }, [navigation, walletNavigation])
 
-  // Handle navigation back button (header button and gesture)
-  // This only fires when trying to remove history-list from the stack
-  // Only intercept user-initiated back navigation (GO_BACK), not programmatic navigation
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', (e) => {
-      // Only intercept user-initiated back navigation
-      // Allow programmatic navigation (RESET, NAVIGATE, etc.) to proceed normally
       if (e.data.action.type === 'GO_BACK') {
-        // Prevent default behavior
         e.preventDefault()
 
-        // Reset to wallet selection
         walletNavigation.resetToWalletSelection()
       }
-      // For other action types (RESET, NAVIGATE, etc.), let them proceed normally
     })
 
     return unsubscribe
@@ -127,7 +125,7 @@ export const TxHistory = () => {
               'rgba(22, 25, 45, 1)',
             ]
           : p.bg_gradient_1
-      } // it fixes a weird bug
+      }
       start={{x: isDark ? 0.5 : 0.5, y: isDark ? 0 : 0.5}}
       end={{x: isDark ? 0 : 0, y: isDark ? 0.5 : 0}}
       style={{flex: 1}}
