@@ -12,7 +12,9 @@ export const useModalKeyboardResize = ({
   focusedHeight,
 }: UseModalKeyboardResizeOptions) => {
   const {setHeight} = useModal()
-  const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined)
+  const timeoutRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  )
 
   React.useEffect(() => {
     return () => {
@@ -20,18 +22,25 @@ export const useModalKeyboardResize = ({
     }
   }, [])
 
+  const scheduleHeightChange = React.useCallback(
+    (targetHeight: number, delay: number = 150) => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+      timeoutRef.current = setTimeout(() => setHeight(targetHeight), delay)
+    },
+    [setHeight],
+  )
+
   const handleInputFocus = React.useCallback(() => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current)
-    timeoutRef.current = setTimeout(() => setHeight(focusedHeight), 150)
-  }, [setHeight, focusedHeight])
+    scheduleHeightChange(focusedHeight)
+  }, [scheduleHeightChange, focusedHeight])
 
   const handleInputBlur = React.useCallback(() => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current)
-    timeoutRef.current = setTimeout(() => setHeight(defaultHeight), 150)
-  }, [setHeight, defaultHeight])
+    scheduleHeightChange(defaultHeight)
+  }, [scheduleHeightChange, defaultHeight])
 
   return {
     handleInputFocus,
     handleInputBlur,
+    scheduleHeightChange,
   }
 }

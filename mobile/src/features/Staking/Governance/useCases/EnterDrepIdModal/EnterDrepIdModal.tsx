@@ -46,24 +46,26 @@ const shortenDRepId = (id: string) => {
 export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
-  const {closeModal, setHeight} = useModal()
+  const {closeModal} = useModal()
   const {wallet} = useSelectedWallet()
   const network = wallet.networkManager.network
 
   const [showCard, setShowCard] = React.useState(true)
   const [drepId, setDrepId] = React.useState(initialDrepId ?? '')
 
-  const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined)
   const showCardRef = React.useRef(showCard)
   const isInputFocusedRef = React.useRef(false)
   // Track if we've already set initialDrepId to prevent overriding user input
   const hasSetInitialDrepIdRef = React.useRef(false)
 
-  React.useEffect(() => {
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current)
-    }
-  }, [])
+  const {
+    handleInputFocus: defaultHandleInputFocus,
+    handleInputBlur: defaultHandleInputBlur,
+    scheduleHeightChange,
+  } = useModalKeyboardResize({
+    defaultHeight: HEIGHT_WITH_CARD,
+    focusedHeight: HEIGHT_INPUT_FOCUSED,
+  })
 
   const handleDrepIdChange = React.useCallback(
     (text: string) => {
@@ -71,36 +73,17 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
       if (text.length > 0 && showCardRef.current) {
         showCardRef.current = false
         setShowCard(false)
-        if (timeoutRef.current) clearTimeout(timeoutRef.current)
-        timeoutRef.current = setTimeout(
-          () => setHeight(HEIGHT_WITHOUT_CARD),
-          150,
-        )
+        scheduleHeightChange(HEIGHT_WITHOUT_CARD)
       } else if (text.length === 0 && !showCardRef.current) {
         showCardRef.current = true
         setShowCard(true)
-        if (timeoutRef.current) clearTimeout(timeoutRef.current)
-        timeoutRef.current = setTimeout(
-          () =>
-            setHeight(
-              isInputFocusedRef.current
-                ? HEIGHT_INPUT_FOCUSED
-                : HEIGHT_WITH_CARD,
-            ),
-          150,
+        scheduleHeightChange(
+          isInputFocusedRef.current ? HEIGHT_INPUT_FOCUSED : HEIGHT_WITH_CARD,
         )
       }
     },
-    [setHeight],
+    [scheduleHeightChange],
   )
-
-  const {
-    handleInputFocus: defaultHandleInputFocus,
-    handleInputBlur: defaultHandleInputBlur,
-  } = useModalKeyboardResize({
-    defaultHeight: HEIGHT_WITH_CARD,
-    focusedHeight: HEIGHT_INPUT_FOCUSED,
-  })
 
   const handleInputFocus = React.useCallback(() => {
     isInputFocusedRef.current = true
