@@ -13,6 +13,7 @@ import {YoroiDrepCard} from '~/features/Staking/Governance/common/YoroiDrepCard/
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'
+import {useModalKeyboardResize} from '~/ui/Modal/hooks/useModalKeyboardResize'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 import {TextInput} from '~/ui/TextInput/TextInput'
@@ -93,24 +94,27 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
     [setHeight],
   )
 
+  const {
+    handleInputFocus: defaultHandleInputFocus,
+    handleInputBlur: defaultHandleInputBlur,
+  } = useModalKeyboardResize({
+    defaultHeight: HEIGHT_WITH_CARD,
+    focusedHeight: HEIGHT_INPUT_FOCUSED,
+  })
+
   const handleInputFocus = React.useCallback(() => {
     isInputFocusedRef.current = true
     if (showCardRef.current) {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current)
-      timeoutRef.current = setTimeout(
-        () => setHeight(HEIGHT_INPUT_FOCUSED),
-        150,
-      )
+      defaultHandleInputFocus()
     }
-  }, [setHeight])
+  }, [defaultHandleInputFocus])
 
   const handleInputBlur = React.useCallback(() => {
     isInputFocusedRef.current = false
     if (showCardRef.current) {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current)
-      timeoutRef.current = setTimeout(() => setHeight(HEIGHT_WITH_CARD), 150)
+      defaultHandleInputBlur()
     }
-  }, [setHeight])
+  }, [defaultHandleInputBlur])
 
   // Trim whitespace from input, ensure drepId is always a string
   const trimmedDrepId = (drepId ?? '').trim()
