@@ -529,7 +529,6 @@
   "components.settings.collateral.notEnoughFundsAlertMessage": "We could not find enough funds in this wallet to create collateral.",
   "components.settings.collateral.notEnoughFundsAlertOK": "OK",
   "components.settings.collateral.notEnoughFundsAlertTitle": "Not enough funds",
-  "components.settings.collateral.removeCollateral": "If you want to return the amount locked as collateral to your balance press the remove icon",
   "components.settings.collateral.collateralInfoModalLabel": "Collateral creation",
   "components.settings.collateral.collateralInfoModalTitle": "What is collateral?",
   "components.settings.collateral.collateralInfoModalText": "The collateral mechanism is an important feature that has been designed to ensure successful smart contract execution. It is used to guarantee that Cardano nodes are compensated for their work in case phase-2 validation fails.",
