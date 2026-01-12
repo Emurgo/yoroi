@@ -29,8 +29,62 @@ import type {Address as CSLAddress} from '@emurgo/cross-csl-core'
 import BigNumber from 'bignumber.js'
 
 import {cardanoValueFromAmounts} from '../cardanoValueFromAmounts'
-import {calculateChangeOutputMinAda, calculateLockedAda} from '../utxoService'
+import {calculateChangeOutputMinAda} from '../utxoService'
 import {CardanoMobileWrapped} from '../wrappedCsl'
+
+// Constants for fee estimation and calculations
+const CONSERVATIVE_TX_BYTE_ESTIMATE = 600 // Conservative estimate for transaction size in bytes
+const ITERATIVE_REDUCTION_STEP = BigInt('500000') // ~0.5 ADA reduction step for iterative adjustments
+
+/**
+ * Calculate minimum ADA required for change output
+ * Handles both cases: with tokens and without tokens in change
+ */
+async function calculateMinAdaForChange(
+  hasNonAdaAssetsInChange: boolean,
+  changeOutputTokens: Record<TokenId, bigint>,
+  changeAddress: Address,
+  protocolParams: {
+    coinsPerUtxoByte: string
+    linearFee: {constant: string; coefficient: string}
+    minimumUtxoVal: string
+  },
+  minUtxoValue: bigint,
+  primaryTokenId: Portfolio.Token.Id,
+): Promise<bigint> {
+  if (!hasNonAdaAssetsInChange) {
+    // No tokens in change, use base minimum
+    return minUtxoValue
+  }
+
+  try {
+    const minAdaForChange = await calculateChangeOutputMinAda(
+      changeAddress,
+      changeOutputTokens,
+      {
+        coinsPerUtxoByte: protocolParams.coinsPerUtxoByte,
+        linearFee: protocolParams.linearFee,
+        minimumUtxoVal: minUtxoValue.toString(),
+      },
+      primaryTokenId,
+    )
+    getLogger().debug('createSendTx: Calculated accurate minAdaForChange', {
+      minAdaForChange: minAdaForChange.toString(),
+      tokenCount: Object.keys(changeOutputTokens).length,
+    })
+    return minAdaForChange
+  } catch (error) {
+    // Fallback to conservative estimate if calculation fails
+    getLogger().debug(
+      'createSendTx: Failed to calculate minAdaForChange, using estimate',
+      {
+        error: error instanceof Error ? error.message : String(error),
+      },
+    )
+    // Use 1.5x multiplier: multiply first, then divide to avoid BigInt truncation
+    return (minUtxoValue * BigInt(3)) / BigInt(2)
+  }
+}
 
 export type CreateSendTxParams = {
   utxos: ModernUtxo[]
@@ -507,94 +561,50 @@ export async function createSendTx({
           }
         }
 
-        // Calculate spendable ADA from selected UTXOs (excluding locked ADA)
-        // This is critical: we need to account for locked ADA in the selected UTXOs
-        let spendableAda = totalInputAda
-        try {
-          const lockedAdaResult = await calculateLockedAda({
-            utxos: selectedUtxos,
-            protocolParams: {
-              coinsPerUtxoByte: protocolParams.coinsPerUtxoByte,
-              linearFee: protocolParams.linearFee,
-              minimumUtxoVal: minUtxoValue.toString(),
-            },
-            primaryTokenId,
-            // No tokens being sent in proactive reduction phase
-          })
-          spendableAda = totalInputAda - lockedAdaResult.currentLocked
-          getLogger().debug(
-            'createSendTx: Calculated spendable ADA (proactive)',
-            {
-              totalInputAda: totalInputAda.toString(),
-              lockedAda: lockedAdaResult.currentLocked.toString(),
-              spendableAda: spendableAda.toString(),
-            },
-          )
-        } catch (error) {
-          // Fallback: assume no locked ADA if calculation fails
-          getLogger().debug(
-            'createSendTx: Failed to calculate locked ADA (proactive), assuming no locked ADA',
-            {
-              error: error instanceof Error ? error.message : String(error),
-            },
-          )
-        }
+        const spendableAda = totalInputAda
 
         // Calculate accurate minimum ADA for change output using CSL
-        let minAdaForChange = BigInt(0)
-        if (hasNonAdaAssetsInChange) {
-          try {
-            minAdaForChange = await calculateChangeOutputMinAda(
-              changeAddress,
-              changeOutputTokens,
-              {
-                coinsPerUtxoByte: protocolParams.coinsPerUtxoByte,
-                linearFee: protocolParams.linearFee,
-                minimumUtxoVal: minUtxoValue.toString(),
-              },
-              primaryTokenId,
-            )
-            getLogger().debug(
-              'createSendTx: Calculated accurate minAdaForChange (proactive)',
-              {
-                minAdaForChange: minAdaForChange.toString(),
-                tokenCount: Object.keys(changeOutputTokens).length,
-              },
-            )
-          } catch (error) {
-            // Fallback to conservative estimate if calculation fails
-            getLogger().debug(
-              'createSendTx: Failed to calculate minAdaForChange (proactive), using estimate',
-              {
-                error: error instanceof Error ? error.message : String(error),
-              },
-            )
-            minAdaForChange = (minUtxoValue * BigInt(3)) / BigInt(2) // 1.5x fallback
-          }
-        } else {
-          // No tokens in change, use base minimum
-          minAdaForChange = minUtxoValue
-        }
+        const minAdaForChange = await calculateMinAdaForChange(
+          hasNonAdaAssetsInChange,
+          changeOutputTokens,
+          changeAddress,
+          {
+            coinsPerUtxoByte: protocolParams.coinsPerUtxoByte,
+            linearFee: protocolParams.linearFee,
+            minimumUtxoVal: minUtxoValue.toString(),
+          },
+          minUtxoValue,
+          primaryTokenId,
+        )
 
         // Proactively reduce the output amount by estimated fee + change requirement
         // Use a conservative fee estimate to avoid initial build failure
         const conservativeFeeEstimate =
           BigInt(protocolParams.linearFee.constant) +
-          BigInt(protocolParams.linearFee.coefficient) * BigInt(600) // 600 bytes estimate
+          BigInt(protocolParams.linearFee.coefficient) *
+            BigInt(CONSERVATIVE_TX_BYTE_ESTIMATE)
 
         // Calculate how much we can actually send
-        // When subtractFeeFromAmount is true and there are no tokens in change:
-        //   - Fee is subtracted from output, so output = spendableAda - fee
-        //   - No change output needed (or minimal change < minUtxo)
-        //   - Available = spendableAda - fee (no minAdaForChange needed)
-        // When there are tokens in change:
-        //   - Need to reserve minAdaForChange for change output
-        //   - Available = spendableAda - fee - minAdaForChange
-        // Use spendableAda (not totalInputAda) to account for locked ADA
-        const availableAfterFeeAndChange =
-          hasNonAdaAssetsInChange && !subtractFeeFromAmount
-            ? spendableAda - conservativeFeeEstimate - minAdaForChange
-            : spendableAda - conservativeFeeEstimate
+        // If hasNonAdaAssetsInChange is true, we MUST reserve minAdaForChange for the change output.
+        // If false, we are sending all tokens, so we aim for 0 change output (Send All ADA).
+        const availableAfterFeeAndChange = hasNonAdaAssetsInChange
+          ? spendableAda - conservativeFeeEstimate - minAdaForChange
+          : spendableAda - conservativeFeeEstimate
+
+        // Early validation: if available amount is zero or negative, fail fast
+        if (availableAfterFeeAndChange <= BigInt(0)) {
+          getLogger().error(
+            'createSendTx: Insufficient ADA after accounting for fees and change requirements',
+            {
+              totalInputAda: totalInputAda.toString(),
+              conservativeFeeEstimate: conservativeFeeEstimate.toString(),
+              minAdaForChange: minAdaForChange.toString(),
+              hasNonAdaAssetsInChange,
+              availableAfterFeeAndChange: availableAfterFeeAndChange.toString(),
+            },
+          )
+          throw new NotEnoughMoneyToSendError()
+        }
 
         // When sending all ADA (totalOutputAda >= totalInputAda), reduce by fee estimate
         // This ensures we don't try to send more than available
@@ -604,10 +614,7 @@ export async function createSendTx({
           // When sending all ADA, reduce output by fee estimate
           // Use availableAfterFeeAndChange, but ensure it's at least some minimum (even if below minAdaForEntry)
           // The actual minimum will be validated during build
-          const adjustedAdaAmount =
-            availableAfterFeeAndChange > BigInt(0)
-              ? availableAfterFeeAndChange
-              : BigInt(0)
+          const adjustedAdaAmount = availableAfterFeeAndChange
 
           getLogger().debug(
             'createSendTx: Proactively reducing amount for subtractFeeFromAmount (sending all ADA)',
@@ -657,7 +664,8 @@ export async function createSendTx({
               },
             )
           } else {
-            getLogger().debug(
+            // This should not happen due to early validation above, but log for safety
+            getLogger().error(
               'createSendTx: Cannot reduce amount - available after fees is zero or negative',
               {
                 totalInputAda: totalInputAda.toString(),
@@ -667,6 +675,7 @@ export async function createSendTx({
                   availableAfterFeeAndChange.toString(),
               },
             )
+            throw new NotEnoughMoneyToSendError()
           }
         } else {
           // When not sending all ADA, ensure output doesn't exceed available after fees
@@ -880,45 +889,25 @@ export async function createSendTx({
         // If initial build succeeded, we can do a single adjustment with actual fee
         if (initialBuildFailed) {
           // Iterative approach: keep reducing until transaction builds successfully
+          // Use same conservative estimate as proactive reduction for consistency
           const estimatedFee =
             BigInt(protocolParams.linearFee.constant) +
-            BigInt(protocolParams.linearFee.coefficient) * BigInt(500) // Estimate: 500 bytes
+            BigInt(protocolParams.linearFee.coefficient) *
+              BigInt(CONSERVATIVE_TX_BYTE_ESTIMATE)
 
           // Calculate accurate minimum ADA for change output using CSL
-          let minAdaForChange = BigInt(0)
-          if (hasNonAdaAssetsInChange) {
-            try {
-              minAdaForChange = await calculateChangeOutputMinAda(
-                changeAddress,
-                changeOutputTokens,
-                {
-                  coinsPerUtxoByte: protocolParams.coinsPerUtxoByte,
-                  linearFee: protocolParams.linearFee,
-                  minimumUtxoVal: minUtxoValue.toString(),
-                },
-                primaryTokenId,
-              )
-              getLogger().debug(
-                'createSendTx: Calculated accurate minAdaForChange',
-                {
-                  minAdaForChange: minAdaForChange.toString(),
-                  tokenCount: Object.keys(changeOutputTokens).length,
-                },
-              )
-            } catch (error) {
-              // Fallback to conservative estimate if calculation fails
-              getLogger().debug(
-                'createSendTx: Failed to calculate minAdaForChange, using estimate',
-                {
-                  error: error instanceof Error ? error.message : String(error),
-                },
-              )
-              minAdaForChange = (minUtxoValue * BigInt(3)) / BigInt(2) // 1.5x fallback
-            }
-          } else {
-            // No tokens in change, use base minimum
-            minAdaForChange = minUtxoValue
-          }
+          const minAdaForChange = await calculateMinAdaForChange(
+            hasNonAdaAssetsInChange,
+            changeOutputTokens,
+            changeAddress,
+            {
+              coinsPerUtxoByte: protocolParams.coinsPerUtxoByte,
+              linearFee: protocolParams.linearFee,
+              minimumUtxoVal: minUtxoValue.toString(),
+            },
+            minUtxoValue,
+            primaryTokenId,
+          )
 
           // Check if proactive reduction already happened
           // Compare currentAdaAmount to the original firstEntry amount (before any modifications)
@@ -934,7 +923,7 @@ export async function createSendTx({
             // Already reduced proactively, so reduce by smaller increments
             // The proactive reduction already accounted for conservativeFeeEstimate + minAdaForChange
             // So we only need to reduce by a small amount (~0.5 ADA) and iterate
-            attemptAdaAmount = currentAdaAmount - BigInt('500000') // ~0.5 ADA initial reduction
+            attemptAdaAmount = currentAdaAmount - ITERATIVE_REDUCTION_STEP
           } else {
             // Not proactively reduced
             if (subtractFeeFromAmount) {
@@ -984,9 +973,7 @@ export async function createSendTx({
                   minAdaForEntry: minAdaForEntry.toString(),
                 },
               )
-              throw new Error(
-                'Cannot send MAX amount: insufficient ADA after accounting for fees and minimum change requirements',
-              )
+              throw new NotEnoughMoneyToSendError()
             }
 
             // Create adjusted entries with reduced ADA amount
@@ -1035,7 +1022,7 @@ export async function createSendTx({
                 let reductionAmount: bigint
                 if (wasProactivelyReduced) {
                   // Already reduced proactively, use smaller fixed increments (0.5 ADA)
-                  reductionAmount = BigInt('500000')
+                  reductionAmount = ITERATIVE_REDUCTION_STEP
                 } else {
                   // Not proactively reduced, use percentage-based reduction (5%)
                   reductionAmount = (attemptAdaAmount * BigInt(5)) / BigInt(100)
@@ -1070,6 +1057,11 @@ export async function createSendTx({
                     initialBuildFailed,
                   },
                 )
+
+                if (isNotEnoughAdaError || isInsufficientInputError) {
+                  throw new NotEnoughMoneyToSendError()
+                }
+
                 throw error
               }
             }
@@ -1109,8 +1101,30 @@ export async function createSendTx({
             // Use the current amount as-is since proactive reduction already handled it
           } else {
             // No proactive reduction happened, but subtractFeeFromAmount is true
-            // Only subtract the actual fee (not minAdaForChange - that's for change output)
-            const adjustedAdaAmount = currentAdaAmount - result!.fee
+            // Need to account for both fee and minAdaForChange if tokens remain in change
+            // Calculate minAdaForChange for tokens that will remain in change output
+            const minAdaForChange = await calculateMinAdaForChange(
+              hasNonAdaAssetsInChange,
+              changeOutputTokens,
+              changeAddress,
+              {
+                coinsPerUtxoByte: protocolParams.coinsPerUtxoByte,
+                linearFee: protocolParams.linearFee,
+                minimumUtxoVal: minUtxoValue.toString(),
+              },
+              minUtxoValue,
+              primaryTokenId,
+            )
+
+            // When subtracting fee from amount:
+            // - Fee is subtracted from output
+            // - If tokens remain in change, we must also reserve minAdaForChange
+            // - Otherwise, only subtract the fee
+            const adjustmentAmount = hasNonAdaAssetsInChange
+              ? result!.fee + minAdaForChange
+              : result!.fee
+
+            const adjustedAdaAmount = currentAdaAmount - adjustmentAmount
             const finalAdaAmount =
               adjustedAdaAmount > minAdaForEntry
                 ? adjustedAdaAmount
@@ -1121,6 +1135,9 @@ export async function createSendTx({
               {
                 currentAdaAmount: currentAdaAmount.toString(),
                 fee: result!.fee.toString(),
+                minAdaForChange: minAdaForChange.toString(),
+                hasNonAdaAssetsInChange,
+                adjustmentAmount: adjustmentAmount.toString(),
                 adjustedAdaAmount: adjustedAdaAmount.toString(),
                 finalAdaAmount: finalAdaAmount.toString(),
               },
