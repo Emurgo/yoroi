@@ -1453,6 +1453,18 @@ export const useStrings = () => {
         stakingUpdateHeading: f(stakingMessages.stakingUpdateHeading),
         stakingUpdateDescription: f(stakingMessages.stakingUpdateDescription),
         skip: f(stakingMessages.skip),
+        cardanoCardAnnouncementTitle: f(
+          stakingMessages.cardanoCardAnnouncementTitle,
+        ),
+        cardanoCardAnnouncementHeading: f(
+          stakingMessages.cardanoCardAnnouncementHeading,
+        ),
+        cardanoCardAnnouncementDescription: f(
+          stakingMessages.cardanoCardAnnouncementDescription,
+        ),
+        cardanoCardAnnouncementButton: f(
+          stakingMessages.cardanoCardAnnouncementButton,
+        ),
         governanceCentreTitle: f(stakingMessages.governanceCentreTitle),
         confirmTxTitle: f(stakingMessages.confirmTxTitle),
         learnMoreAboutGovernance: f(stakingMessages.learnMoreAboutGovernance),

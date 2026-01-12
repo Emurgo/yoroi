@@ -51,7 +51,6 @@ const queryClient = new QueryClient({
 const safeAsyncStorage = {
   getItem: (key: string): Promise<string | null> => {
     const result = AsyncStorage.getItem(key)
-    // Ensure we always return a promise
     if (result && typeof result.then === 'function') {
       return result.catch(() => null)
     }
@@ -59,7 +58,6 @@ const safeAsyncStorage = {
   },
   setItem: (key: string, value: string): Promise<void> => {
     const result = AsyncStorage.setItem(key, value)
-    // Ensure we always return a promise
     if (result && typeof result.then === 'function') {
       return result.catch(() => undefined)
     }
@@ -67,7 +65,6 @@ const safeAsyncStorage = {
   },
   removeItem: (key: string): Promise<void> => {
     const result = AsyncStorage.removeItem(key)
-    // Ensure we always return a promise
     if (result && typeof result.then === 'function') {
       return result.catch(() => undefined)
     }
@@ -101,7 +98,13 @@ const cacheKeyIndicator: QueryKey = freeze([persistPrefixKeyword])
 const dehydrateOptions: PersistQueryClientProviderProps['persistOptions']['dehydrateOptions'] =
   {
     shouldDehydrateMutation: () => false,
-    shouldDehydrateQuery: ({queryKey}) =>
+    // Only dehydrate successful queries that have the 'persist' prefix.
+    // IMPORTANT: We must check status === 'success' to avoid serializing queries
+    // with pending promises. Since React Query 5.40+, pending queries can include
+    // a promise property for SSR streaming. When JSON.stringify'd, Promise becomes
+    // {}. On restoration, tryResolveSync() fails calling .then() on this plain object.
+    shouldDehydrateQuery: ({queryKey, state}) =>
+      state.status === 'success' &&
       cacheKeyIndicator.includes(String(queryKey[0])),
   }
 
