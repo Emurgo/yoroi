@@ -46,7 +46,11 @@ export const ResultScreen = (props?: ResultScreenProps) => {
     if ('route' in props && props.route?.params) {
       // React Navigation route props
       propsParams = props.route.params
-    } else if ('type' in props && !('route' in props) && !('navigation' in props)) {
+    } else if (
+      'type' in props &&
+      !('route' in props) &&
+      !('navigation' in props)
+    ) {
       // Direct ResultScreenParams props
       propsParams = props as ResultScreenParams
     }
