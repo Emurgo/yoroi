@@ -15,11 +15,32 @@ import {SuccessfulTxIcon} from '~/ui/SuccessfulTxIcon/SuccessfulTxIcon'
 import {useResultScreenDefaults} from './ResultScreenContext'
 import {ResultScreenParams} from './types'
 
-export const ResultScreen = () => {
+export const ResultScreen = (props?: ResultScreenParams) => {
   const {palette: p, atoms: ta} = useTheme()
   const strings = useStrings()
   const navigation = useNavigation()
-  const params = useUnsafeParams<ResultScreenParams>()
+  const navParamsRaw = useUnsafeParams<
+    ResultScreenParams | {route?: {params?: ResultScreenParams}}
+  >()
+
+  // Extract actual params - handle both direct params and nested route.params structure
+  let navParams: ResultScreenParams | undefined
+  if (navParamsRaw) {
+    if ('route' in navParamsRaw && navParamsRaw.route?.params) {
+      // React Navigation sometimes wraps params in route object
+      navParams = navParamsRaw.route.params as ResultScreenParams
+    } else if ('type' in navParamsRaw) {
+      // Direct params object
+      navParams = navParamsRaw as ResultScreenParams
+    }
+  }
+
+  // Use props if provided, otherwise use navigation params
+  // But if props looks like a route object (has 'route' property), ignore it and use navParams
+  const params =
+    props && 'type' in props && !('route' in props) && !('navigation' in props)
+      ? props
+      : navParams
 
   if (!params) {
     throw new Error('ResultScreen: params are required')

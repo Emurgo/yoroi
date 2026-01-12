@@ -35,7 +35,6 @@ import {CardanoMobileWrapped} from '../wrappedCsl'
 // Constants for fee estimation and calculations
 const CONSERVATIVE_TX_BYTE_ESTIMATE = 600 // Conservative estimate for transaction size in bytes
 const ITERATIVE_REDUCTION_STEP = BigInt('500000') // ~0.5 ADA reduction step for iterative adjustments
-const MIN_ADA_FALLBACK_MULTIPLIER = BigInt(3) / BigInt(2) // 1.5x multiplier for fallback calculations
 
 /**
  * Calculate minimum ADA required for change output
@@ -82,7 +81,8 @@ async function calculateMinAdaForChange(
         error: error instanceof Error ? error.message : String(error),
       },
     )
-    return (minUtxoValue * MIN_ADA_FALLBACK_MULTIPLIER) as bigint
+    // Use 1.5x multiplier: multiply first, then divide to avoid BigInt truncation
+    return (minUtxoValue * BigInt(3)) / BigInt(2)
   }
 }
 
