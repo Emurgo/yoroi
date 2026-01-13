@@ -1,3 +1,6 @@
+import {Chain} from '@yoroi/types'
+import {useSelectedWallet} from '@yoroi/wallet-manager'
+
 import {useEffect, useState} from 'react'
 
 import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
@@ -21,8 +24,11 @@ type DappResponse = {
 }
 
 export const useDappList = () => {
+  const {wallet} = useSelectedWallet()
+  const isPreprod = wallet.networkManager.network === Chain.Network.Preprod
+
   const {
-    config,
+    config: remoteConfig,
     isLoading: configLoading,
     error: configError,
   } = useRemoteConfig()
@@ -36,18 +42,23 @@ export const useDappList = () => {
       return
     }
 
+    if (configError) {
+      setError(configError as Error)
+      setData(null)
+      setIsLoading(false)
+      return
+    }
+
     try {
       setIsLoading(true)
       setError(null)
 
-      if (configError) {
-        setError(configError as Error)
-        setData(null)
-        return
-      }
+      const config = isPreprod
+        ? remoteConfig?.dappsPreprod
+        : remoteConfig?.dapps
 
-      if (config?.dapps?.recommended) {
-        const dapps = config.dapps.recommended.map((dapp) => ({
+      if (config?.recommended) {
+        const dapps = config.recommended.map((dapp) => ({
           id: dapp.id,
           name: dapp.name,
           description: dapp.description,
@@ -58,11 +69,11 @@ export const useDappList = () => {
           isSingleAddress: dapp.isSingleAddress ?? false,
         }))
 
-        const filters = config.dapps.filters
+        const filters = config.filters
           ? Object.fromEntries(
-              Object.entries(config.dapps.filters).map(([key, value]) => [
+              Object.entries(config.filters).map(([key, value]) => [
                 key,
-                [...value],
+                [...(value as string[])],
               ]),
             )
           : {}
@@ -79,7 +90,7 @@ export const useDappList = () => {
     } finally {
       setIsLoading(false)
     }
-  }, [config, configLoading, configError])
+  }, [remoteConfig, configLoading, configError, isPreprod])
 
   return {
     data,
