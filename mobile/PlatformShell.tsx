@@ -51,18 +51,20 @@ export function PlatformShell({children}: React.PropsWithChildren) {
 
 function usePosthogClient(enabled: boolean) {
   const installationId = React.useMemo(() => initInstallationId(), [])
+  const [initialEnabled] = React.useState(enabled)
 
-  const client = React.useMemo(() => {
+  const {sdk, client} = React.useMemo(() => {
     const apiKey = process.env.EXPO_PUBLIC_POSTHOG_KEY
     const host = process.env.EXPO_PUBLIC_POSTHOG_HOST
     if (!apiKey || !host) throw new Error('Analytics client is not configured')
-    const sdk = new PostHog(apiKey, {host, disabled: !enabled})
-    return createPosthogClient({sdk})
-  }, [enabled])
+    const sdk = new PostHog(apiKey, {host, defaultOptIn: initialEnabled})
+    return {sdk, client: createPosthogClient({sdk})}
+  }, [initialEnabled])
 
   React.useEffect(() => {
-    if (installationId && enabled) client.identify(installationId)
-  }, [client, installationId, enabled])
+    enabled ? sdk.optIn() : sdk.optOut()
+    if (enabled && installationId) client.identify(installationId)
+  }, [sdk, client, installationId, enabled])
 
   return client
 }
