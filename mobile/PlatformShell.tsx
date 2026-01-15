@@ -51,20 +51,54 @@ export function PlatformShell({children}: React.PropsWithChildren) {
 
 function usePosthogClient(enabled: boolean) {
   const installationId = React.useMemo(() => initInstallationId(), [])
-  const [initialEnabled] = React.useState(enabled)
+  const hasIdentifiedRef = React.useRef(false)
+  const previousEnabledRef = React.useRef<boolean | null>(null)
 
+  // Create SDK once
   const {sdk, client} = React.useMemo(() => {
     const apiKey = process.env.EXPO_PUBLIC_POSTHOG_KEY
     const host = process.env.EXPO_PUBLIC_POSTHOG_HOST
     if (!apiKey || !host) throw new Error('Analytics client is not configured')
-    const sdk = new PostHog(apiKey, {host, defaultOptIn: initialEnabled})
+    // Type definitions may be incomplete - these options are documented
+    const devOptions = __DEV__ ? {flushAt: 1, flushInterval: 1000} : {}
+    const sdk = new PostHog(apiKey, {
+      host,
+      defaultOptIn: true,
+      ...(devOptions as Record<string, unknown>),
+    })
     return {sdk, client: createPosthogClient({sdk})}
-  }, [initialEnabled])
+  }, [])
 
+  // Sync opt-in/opt-out state with enabled
   React.useEffect(() => {
-    enabled ? sdk.optIn() : sdk.optOut()
-    if (enabled && installationId) client.identify(installationId)
-  }, [sdk, client, installationId, enabled])
+    const prevEnabled = previousEnabledRef.current
+    previousEnabledRef.current = enabled
+
+    // On initial mount, sync SDK state if user is opted out
+    if (prevEnabled === null) {
+      if (!enabled) {
+        sdk.optOut()
+      }
+      return
+    }
+
+    // Only call when state actually changes
+    if (prevEnabled !== enabled) {
+      if (enabled) {
+        sdk.optIn()
+      } else {
+        sdk.optOut()
+      }
+    }
+  }, [sdk, enabled])
+
+  // Identify only once when enabled
+  React.useEffect(() => {
+    if (enabled && installationId && !hasIdentifiedRef.current) {
+      hasIdentifiedRef.current = true
+      client.identify(installationId)
+    }
+  }, [client, installationId, enabled])
 
   return client
 }

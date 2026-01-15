@@ -10,13 +10,20 @@ type SDK = {
     event: string,
     properties?: Record<string, string | number | boolean | null | string[]>,
   ) => void
+  flush?: () => Promise<void>
 }
 
 export function createPosthogClient({sdk}: {sdk: SDK}): AnalyticsProvider {
   let currentUserId: string | undefined
   return {
-    navigate: (to) => sdk.capture('navigate', {to}),
-    capture: (event, properties) => sdk.capture(event, properties),
+    navigate: (to) => {
+      sdk.capture('navigate', {to})
+      sdk.flush?.()
+    },
+    capture: (event, properties) => {
+      sdk.capture(event, properties)
+      sdk.flush?.()
+    },
     install: (campaign, source) => {
       if (currentUserId) sdk.identify(currentUserId, {campaign, source})
     },
@@ -25,6 +32,7 @@ export function createPosthogClient({sdk}: {sdk: SDK}): AnalyticsProvider {
       if (hasValidUserId) {
         currentUserId = userId
         sdk.identify(userId, traits)
+        sdk.flush?.()
         return
       }
       currentUserId = undefined
