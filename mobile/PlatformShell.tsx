@@ -52,7 +52,6 @@ export function PlatformShell({children}: React.PropsWithChildren) {
 function usePosthogClient(enabled: boolean) {
   const installationId = React.useMemo(() => initInstallationId(), [])
   const hasIdentifiedRef = React.useRef(false)
-  const previousEnabledRef = React.useRef<boolean | null>(null)
 
   // Create SDK once
   const {sdk, client} = React.useMemo(() => {
@@ -71,24 +70,10 @@ function usePosthogClient(enabled: boolean) {
 
   // Sync opt-in/opt-out state with enabled
   React.useEffect(() => {
-    const prevEnabled = previousEnabledRef.current
-    previousEnabledRef.current = enabled
-
-    // On initial mount, sync SDK state if user is opted out
-    if (prevEnabled === null) {
-      if (!enabled) {
-        sdk.optOut()
-      }
-      return
-    }
-
-    // Only call when state actually changes
-    if (prevEnabled !== enabled) {
-      if (enabled) {
-        sdk.optIn()
-      } else {
-        sdk.optOut()
-      }
+    if (enabled) {
+      sdk.optIn()
+    } else {
+      sdk.optOut()
     }
   }, [sdk, enabled])
 

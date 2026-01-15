@@ -25,7 +25,10 @@ export function createPosthogClient({sdk}: {sdk: SDK}): AnalyticsProvider {
       sdk.flush?.()
     },
     install: (campaign, source) => {
-      if (currentUserId) sdk.identify(currentUserId, {campaign, source})
+      if (currentUserId) {
+        sdk.identify(currentUserId, {campaign, source})
+        sdk.flush?.()
+      }
     },
     identify: (userId, traits) => {
       const hasValidUserId = userId && userId.length > 0
