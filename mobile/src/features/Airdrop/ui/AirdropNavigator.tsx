@@ -58,11 +58,7 @@ export const AirdropNavigator = () => {
 
       <Stack.Screen
         name="result-screen"
-        component={
-          ResultScreen as unknown as React.ComponentType<
-            Record<string, unknown>
-          >
-        }
+        component={ResultScreen}
         options={{headerShown: true}}
       />
     </Stack.Navigator>
