@@ -7,6 +7,7 @@ import * as React from 'react'
 import {OnConfirm} from '~/features/ReviewTx/common/hooks/useOnConfirm'
 import {ReviewDetailsProps} from '~/features/ReviewTx/useCases/ReviewTxScreen/ReviewTx/Overview/OverviewTab'
 import {Routes as StakingGovernanceRoutes} from '~/features/Staking/Governance/common/navigation'
+import type {ResultScreenParams} from '~/ui/ResultScreen/types'
 
 export type Guard<Params> = (params: Params | object) => params is Params
 
@@ -100,6 +101,7 @@ export type TxHistoryRoutes = {
   }
   'send-select-token-from-list': undefined
   'swap': NavigatorScreenParams<SwapTokenRoutes>
+  'result-screen': ResultScreenParams
 } & ScanRoutes &
   ClaimRoutes &
   ExchangeRoutes &
@@ -258,7 +260,7 @@ export type ReviewTxRoutes = {
     onNotSupportedCIP1694?: () => void
     onCIP36SupportChange?: (supportsCIP36: boolean) => void
   }
-  'result-screen': import('~/ui/ResultScreen/types').ResultScreenParams
+  'result-screen': ResultScreenParams
 }
 
 export type VotingRegistrationRoutes = {
