@@ -73,7 +73,7 @@ export const useDappList = () => {
           ? Object.fromEntries(
               Object.entries(config.filters).map(([key, value]) => [
                 key,
-                [...(value as string[])],
+                [...value],
               ]),
             )
           : {}
