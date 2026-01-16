@@ -2173,7 +2173,6 @@ export const useStrings = () => {
       // ManageCollateral strings
       manageCollateral: {
         lockedAsCollateral: f(manageCollateralMessages.lockedAsCollateral),
-        removeCollateral: f(manageCollateralMessages.removeCollateral),
         collateralSpent: f(manageCollateralMessages.collateralSpent),
         generateCollateral: f(manageCollateralMessages.generateCollateral),
         notEnoughFundsAlertTitle: f(
