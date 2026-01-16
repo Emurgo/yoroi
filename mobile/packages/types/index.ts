@@ -382,6 +382,16 @@ export namespace App {
         Community?: ReadonlyArray<string>
       }>
     }>
+    dappsPreprod?: Readonly<{
+      banned?: ReadonlyArray<string>
+      recommended?: ReadonlyArray<App.ConfigRecommendedDapp>
+      filters?: Readonly<{
+        Media?: ReadonlyArray<string>
+        Investment?: ReadonlyArray<string>
+        Trading?: ReadonlyArray<string>
+        Community?: ReadonlyArray<string>
+      }>
+    }>
     swap?: Readonly<{
       initialPair?: Readonly<{
         tokenIn?: Portfolio.Token.Id
