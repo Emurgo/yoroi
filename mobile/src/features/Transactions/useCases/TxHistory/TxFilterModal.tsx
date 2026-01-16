@@ -7,6 +7,7 @@ import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/context/ModalContext'
+import {useModalKeyboardResize} from '~/ui/Modal/hooks/useModalKeyboardResize'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 import {Space} from '~/ui/Space/Space'
 import {TextInput} from '~/ui/TextInput/TextInput'
@@ -154,6 +155,9 @@ type Props = {
   }
 }
 
+const HEIGHT_DEFAULT = 600
+const HEIGHT_INPUT_FOCUSED = 400
+
 export const TxFilterModal = ({
   onApply,
   onClear,
@@ -167,6 +171,11 @@ export const TxFilterModal = ({
   const strings = useStrings()
   const {palette: p} = useTheme()
   const {closeModal} = useModal()
+
+  const {handleInputFocus, handleInputBlur} = useModalKeyboardResize({
+    defaultHeight: HEIGHT_DEFAULT,
+    focusedHeight: HEIGHT_INPUT_FOCUSED,
+  })
 
   const [selectedOperations, setSelectedOperations] = React.useState<string[]>(
     initialFilters?.selectedOperations ?? [],
@@ -273,6 +282,8 @@ export const TxFilterModal = ({
         value={metadataMemoSearch}
         onChangeText={setMetadataMemoSearch}
         placeholder={strings.transactions.filterMetadataMemoPlaceholder}
+        onFocus={handleInputFocus}
+        onBlur={handleInputBlur}
       />
 
       <Space.Height.lg />
@@ -292,6 +303,8 @@ export const TxFilterModal = ({
             onChangeText={handleMinAdaChange}
             placeholder="0"
             keyboardType="decimal-pad"
+            onFocus={handleInputFocus}
+            onBlur={handleInputBlur}
           />
         </View>
         <View style={[a.flex_1]}>
@@ -305,6 +318,8 @@ export const TxFilterModal = ({
             onChangeText={handleMaxAdaChange}
             placeholder="0"
             keyboardType="decimal-pad"
+            onFocus={handleInputFocus}
+            onBlur={handleInputBlur}
           />
         </View>
       </View>
