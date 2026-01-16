@@ -5,10 +5,6 @@ export const manageCollateralMessages = defineMessages({
     id: 'components.settings.collateral.lockedAsCollateral',
     defaultMessage: '!!!Locked as Collateral',
   },
-  removeCollateral: {
-    id: 'components.settings.collateral.removeCollateral',
-    defaultMessage: '!!!Remove Collateral',
-  },
   collateralSpent: {
     id: 'components.settings.collateral.collateralSpent',
     defaultMessage: '!!!Collateral Spent',

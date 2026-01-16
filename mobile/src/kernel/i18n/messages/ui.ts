@@ -69,10 +69,6 @@ export const uiMessages = defineMessages({
     id: 'analytics.noip',
     defaultMessage: '!!!Add',
   },
-  remove: {
-    id: 'components.settings.collateral.removeCollateral',
-    defaultMessage: '!!!Remove',
-  },
   search: {
     id: 'nft.navigation.search',
     defaultMessage: '!!!Search',
