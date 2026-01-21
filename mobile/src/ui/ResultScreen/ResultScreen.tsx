@@ -15,7 +15,12 @@ import {SuccessfulTxIcon} from '~/ui/SuccessfulTxIcon/SuccessfulTxIcon'
 import {useResultScreenDefaults} from './ResultScreenContext'
 import {ResultScreenParams} from './types'
 
-export const ResultScreen = (props?: ResultScreenParams) => {
+type ResultScreenProps =
+  | ResultScreenParams
+  | {route?: {params?: ResultScreenParams}; navigation?: unknown}
+  | {}
+
+export const ResultScreen = (props?: ResultScreenProps) => {
   const {palette: p, atoms: ta} = useTheme()
   const strings = useStrings()
   const navigation = useNavigation()
@@ -35,12 +40,24 @@ export const ResultScreen = (props?: ResultScreenParams) => {
     }
   }
 
-  // Use props if provided, otherwise use navigation params
-  // But if props looks like a route object (has 'route' property), ignore it and use navParams
-  const params =
-    props && 'type' in props && !('route' in props) && !('navigation' in props)
-      ? props
-      : navParams
+  // Extract params from props if it's a React Navigation route prop
+  let propsParams: ResultScreenParams | undefined
+  if (props) {
+    if ('route' in props && props.route?.params) {
+      // React Navigation route props
+      propsParams = props.route.params
+    } else if (
+      'type' in props &&
+      !('route' in props) &&
+      !('navigation' in props)
+    ) {
+      // Direct ResultScreenParams props
+      propsParams = props as ResultScreenParams
+    }
+  }
+
+  // Use props params if provided, otherwise use navigation params
+  const params = propsParams ?? navParams
 
   if (!params) {
     throw new Error('ResultScreen: params are required')
@@ -75,48 +92,40 @@ export const ResultScreen = (props?: ResultScreenParams) => {
     icon ?? (type === 'success' ? <SuccessfulTxIcon /> : <FailedTxIcon />)
 
   return (
-    <SafeArea
-      style={[
-        ta.bg_color_max,
-        a.p_lg,
-        a.flex_1,
-        a.align_center,
-        a.justify_center,
-      ]}
-    >
-      {defaultIcon}
+    <SafeArea style={[ta.bg_color_max, a.p_lg, a.flex_1]}>
+      <View style={[a.flex_1, a.align_center, a.justify_center]}>
+        {defaultIcon}
 
-      <Space.Height.lg />
+        <Space.Height.lg />
 
-      <Text
-        style={[
-          a.heading_3_medium,
-          a.px_sm,
-          {
-            color: p.gray_max,
-            textAlign: 'center',
-          },
-        ]}
-      >
-        {title}
-      </Text>
+        <Text
+          style={[
+            a.heading_3_medium,
+            a.px_sm,
+            {
+              color: p.gray_max,
+              textAlign: 'center',
+            },
+          ]}
+        >
+          {title}
+        </Text>
 
-      <Text
-        style={[
-          a.body_1_lg_regular,
-          {
-            color: p.gray_600,
-            maxWidth: 330,
-            textAlign: 'center',
-          },
-        ]}
-      >
-        {message}
-      </Text>
+        <Text
+          style={[
+            a.body_1_lg_regular,
+            {
+              color: p.gray_600,
+              maxWidth: 330,
+              textAlign: 'center',
+            },
+          ]}
+        >
+          {message}
+        </Text>
 
-      {params.customContent}
-
-      <Space.Height._2xs fill />
+        {params.customContent}
+      </View>
 
       <Actions>
         {secondaryAction && (
@@ -147,7 +156,16 @@ const Actions = ({children}: {children: React.ReactNode}) => {
   const {palette: p} = useTheme()
 
   return (
-    <View style={[a.self_stretch, a.border_t, {borderTopColor: p.gray_200}]}>
+    <View
+      style={[
+        a.self_stretch,
+        a.border_t,
+        a.flex_row,
+        a.justify_center,
+        a.align_center,
+        {borderTopColor: p.gray_200},
+      ]}
+    >
       {children}
     </View>
   )

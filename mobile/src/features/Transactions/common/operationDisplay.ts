@@ -319,13 +319,15 @@ export const getOperationDisplayText = (
       return strings.transactions.operation.swapResolved
     }
   }
-  /*
+
   // 4.5. Check for NIGHT redemption transactions
-  // Pattern: Smart contract interaction where NIGHT tokens are being spent/redeemed
-  // Redemption pattern: NIGHT tokens in inputs (being spent) + smart contract address present
+  // Pattern: NIGHT tokens being spent from the redemption address
+  // Redemption pattern: NIGHT tokens in inputs from specific redemption address
   const NIGHT_POLICY_ID =
     '0691b2fecca1ac4f53cb6dfb00b7013e561d1f34403b957cbb5af1fa'
   const NIGHT_TOKEN_NAME = '4e49474854'
+  const NIGHT_REDEMPTION_ADDRESS =
+    'addr1wxgp2xvmvh0lrfdeu2q3jtqp2lprej6hjvgjx2u5lcwqxlqfvty7h'
 
   const hasNightToken = (
     assets?: Array<{policyId?: string; name?: string}>,
@@ -339,21 +341,17 @@ export const getOperationDisplayText = (
 
   const txInputs = inputs || walletTransaction.inputs || []
 
-  // Check if NIGHT tokens are being spent (present in inputs)
+  // Check if NIGHT tokens are being spent from the redemption address
   // This indicates redemption rather than just transfer
-  const hasNightInInputs = txInputs.some((input) => hasNightToken(input.assets))
+  const hasNightRedemption = txInputs.some(
+    (input) =>
+      input.address === NIGHT_REDEMPTION_ADDRESS && hasNightToken(input.assets),
+  )
 
-  if (hasNightInInputs) {
-    if (
-      hasSmartContract(
-        inputs || walletTransaction.inputs,
-        outputs || walletTransaction.outputs,
-      )
-    ) {
-      return strings.transactions.operation.nightRedemption
-    }
+  if (hasNightRedemption) {
+    return strings.transactions.operation.nightRedemption
   }
-*/
+
   // 5. Check for smart contracts (only if no certificate matched, no mint/burn, and not a swap)
   if (
     !swapInfo.isSwap &&

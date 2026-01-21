@@ -10,7 +10,8 @@ import {PoolTransitionModal} from './PoolTransitionModal'
 import {usePoolTransitionContext} from './PoolTransitionProvider'
 import {usePoolTransition} from './usePoolTransition'
 
-export const usePoolTransitionModal = () => {
+export const usePoolTransitionModal = (options?: {enabled?: boolean}) => {
+  const enabled = options?.enabled ?? true
   const {poolTransition, isPoolRetiring, isLoading, navigateToUpdate} =
     usePoolTransition()
   const {wallet} = useSelectedWallet()
@@ -22,6 +23,7 @@ export const usePoolTransitionModal = () => {
 
   React.useEffect(() => {
     if (
+      enabled &&
       !shownWallets.includes(wallet.id) &&
       isPoolRetiring &&
       poolTransition !== null
@@ -37,6 +39,7 @@ export const usePoolTransitionModal = () => {
       setShownWallets(() => [wallet.id, ...shownWallets])
     }
   }, [
+    enabled,
     shownWallets,
     isPoolRetiring,
     modalHeight,

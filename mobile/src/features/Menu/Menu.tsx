@@ -15,6 +15,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
 import {useHasRedeemableThaws} from '~/features/Airdrop/common/useHasRedeemableThaws'
+import {AirdropNavigator} from '~/features/Airdrop/ui/AirdropNavigator'
 import {usePrefetchStakingInfo} from '~/features/Dashboard/ui/shared/StakePoolInfos'
 import {useCanVote} from '~/features/RegisterCatalyst/common/hooks'
 import {NetworkTag} from '~/features/Settings/ui/shared/NetworkTag'
@@ -31,25 +32,73 @@ import {Text} from '~/ui/Text/Text'
 
 import {InsufficientFundsModal} from '../RegisterCatalyst/common/InsufficientFundsModal'
 import {usePoolTransition} from '../Staking/Staking/PoolTransition/usePoolTransition'
+import {MessageSigningResultScreen} from '../Transactions/useCases/MessageSigning/MessageSigningResultScreen'
+import {MessageSigningScreen} from '../Transactions/useCases/MessageSigning/MessageSigningScreen'
+import {UtxoConsolidation} from '../Transactions/useCases/UtxoConsolidation/UtxoConsolidation/UtxoConsolidation'
+import {UtxoList as UtxoListScreen} from '../Transactions/useCases/UtxoList/UtxoList'
 
 const MenuStack = createStackNavigator<MenuRoutes>()
 
 export const MenuNavigator = () => {
   const strings = useStrings()
   const {palette: p} = useTheme()
+  const {config} = useRemoteConfig()
+  const isAirdropEnabled = config?.features?.midnightAirdrop?.enabled ?? false
+
   return (
     <MenuStack.Navigator
       initialRouteName="_menu"
       screenOptions={{
         ...defaultStackNavigationOptions(p),
-        headerLeft: () => null,
         headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
       }}
     >
       <MenuStack.Screen
         name="_menu"
         component={Menu}
-        options={{title: strings.menu.menu}}
+        options={{title: strings.menu.menu, headerLeft: () => null}}
+      />
+
+      {isAirdropEnabled && (
+        <MenuStack.Screen
+          name="airdrop"
+          options={{
+            headerShown: false,
+          }}
+          getComponent={() => AirdropNavigator}
+        />
+      )}
+
+      <MenuStack.Screen
+        name="utxo-list"
+        options={{
+          title: strings.transactions.utxo.utxoListTitle,
+        }}
+        getComponent={() => UtxoListScreen}
+      />
+
+      <MenuStack.Screen
+        name="utxo-consolidation"
+        options={{
+          title: strings.transactions.utxo.utxoConsolidationTitle,
+        }}
+        getComponent={() => UtxoConsolidation}
+      />
+
+      <MenuStack.Screen
+        name="message-signing"
+        options={{
+          title: strings.transactions.messageSigning.messageSigningTitle,
+        }}
+        getComponent={() => MessageSigningScreen}
+      />
+
+      <MenuStack.Screen
+        name="message-signing-result"
+        options={{
+          title: strings.transactions.messageSigning.messageSigningResultTitle,
+        }}
+        getComponent={() => MessageSigningResultScreen}
       />
     </MenuStack.Navigator>
   )

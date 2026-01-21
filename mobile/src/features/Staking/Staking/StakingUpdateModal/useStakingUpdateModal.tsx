@@ -20,7 +20,8 @@ import {StakingUpdateModal} from './StakingUpdateModal'
 const STAKING_UPDATE_MODAL_SHOWN_KEY = 'staking-update-modal-shown'
 const QUERY_KEY = ['stakingUpdateModalShown']
 
-export const useStakingUpdateModal = () => {
+export const useStakingUpdateModal = (options?: {enabled?: boolean}) => {
+  const enabled = options?.enabled ?? true
   const {wallet} = useSelectedWallet()
   const {stakingInfo, isLoading: isLoadingStakingInfo} = useStakingInfo(wallet)
   const {config, isLoading: isLoadingConfig} = useRemoteConfig()
@@ -118,6 +119,7 @@ export const useStakingUpdateModal = () => {
     // 7. Wallet is not staking
     // 8. Current pool is not in the affected pools list
     if (
+      !enabled ||
       !hasBeenShownQuery.isSuccess ||
       hasBeenShown ||
       hasTriggeredRef.current ||
@@ -166,6 +168,7 @@ export const useStakingUpdateModal = () => {
       })
     }
   }, [
+    enabled,
     hasBeenShownQuery.isSuccess,
     hasBeenShown,
     isLoadingStakingInfo,
