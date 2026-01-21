@@ -17,6 +17,7 @@ import {
 } from 'react-native'
 
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
+import {usePortfolioPrimaryBreakdown} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
 import {useDynamicLockedDeposit} from '~/features/Send/common/hooks/useDynamicLockedDeposit'
 import {useNavigateTo} from '~/features/Send/common/navigation'
 import {useLanguage} from '~/kernel/i18n/LanguageProvider'
@@ -46,6 +47,7 @@ export const EditAmountScreen = () => {
 
   const {wallet} = useSelectedWallet()
   const balances = usePortfolioBalances({wallet})
+  const primaryBreakdown = usePortfolioPrimaryBreakdown({wallet})
 
   const {
     amountRemoved,
@@ -78,10 +80,31 @@ export const EditAmountScreen = () => {
     isCalculating,
   } = useDynamicLockedDeposit({tokensBeingSent})
 
-  const available =
-    (balances.records.get(selectedTokenId)?.quantity ?? BigInt(0)) -
-    (allocated.get(selectedTargetIndex)?.get(selectedTokenId) ?? BigInt(0))
   const isPrimary = isPrimaryToken(amount.info)
+
+  // Calculate available balance excluding staking rewards
+  // Staking rewards are not in UTXOs and require withdrawal first
+  const available = React.useMemo(() => {
+    const balanceWithRewards =
+      (balances.records.get(selectedTokenId)?.quantity ?? BigInt(0)) -
+      (allocated.get(selectedTargetIndex)?.get(selectedTokenId) ?? BigInt(0))
+
+    // For primary token, exclude staking rewards from available balance
+    // Staking rewards are not spendable without withdrawal transaction
+    if (isPrimary) {
+      const availableRewards = primaryBreakdown.availableRewards ?? BigInt(0)
+      return balanceWithRewards - availableRewards
+    }
+
+    return balanceWithRewards
+  }, [
+    balances,
+    selectedTokenId,
+    allocated,
+    selectedTargetIndex,
+    isPrimary,
+    primaryBreakdown.availableRewards,
+  ])
 
   // Calculate spendable amount accounting for locked deposit
   // Use dynamic locked if tokens are being sent, otherwise use current locked

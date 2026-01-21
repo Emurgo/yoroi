@@ -14,6 +14,7 @@ import {FlatList} from 'react-native-gesture-handler'
 
 import {usePromise} from '~/common/hooks/usePromise'
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
+import {usePortfolioPrimaryBreakdown} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
 import {useSearch} from '~/features/Search/SearchContext'
 import {useDynamicLockedDeposit} from '~/features/Send/common/hooks/useDynamicLockedDeposit'
 import {useNavigateTo} from '~/features/Send/common/navigation'
@@ -60,6 +61,7 @@ export const ListAmountsToSendScreen = () => {
 
   // Check if MAX amount is being sent for primary token
   const balances = usePortfolioBalances({wallet})
+  const primaryBreakdown = usePortfolioPrimaryBreakdown({wallet})
   const primaryTokenId = wallet.portfolioPrimaryTokenInfo.id
   const primaryAmount = amounts[primaryTokenId]
 
@@ -82,9 +84,13 @@ export const ListAmountsToSendScreen = () => {
   const isSendingMaxAda = React.useMemo(() => {
     if (!primaryAmount || !isPrimaryToken(primaryAmount.info)) return false
 
-    const available =
+    // Calculate available balance excluding staking rewards
+    // Staking rewards are not in UTXOs and require withdrawal first
+    const balanceWithRewards =
       (balances.records.get(primaryTokenId)?.quantity ?? BigInt(0)) -
       (allocated.get(selectedTargetIndex)?.get(primaryTokenId) ?? BigInt(0))
+    const availableRewards = primaryBreakdown.availableRewards ?? BigInt(0)
+    const available = balanceWithRewards - availableRewards
 
     // Use dynamic locked if tokens are being sent, otherwise use current locked
     const lockedToUse =
@@ -96,6 +102,8 @@ export const ListAmountsToSendScreen = () => {
 
     logger.info('ListAmountsToSendScreen: MAX detection', {
       primaryAmount: primaryAmount.quantity.toString(),
+      balanceWithRewards: balanceWithRewards.toString(),
+      availableRewards: availableRewards.toString(),
       available: available.toString(),
       currentLocked: currentLocked.toString(),
       dynamicLocked: dynamicLocked.toString(),
@@ -109,6 +117,7 @@ export const ListAmountsToSendScreen = () => {
   }, [
     primaryAmount,
     balances,
+    primaryBreakdown.availableRewards,
     currentLocked,
     dynamicLocked,
     tokensBeingSent,
