@@ -11,16 +11,16 @@ export const usePrimaryTokenActivity = ({
   options,
 }: {
   to: Portfolio.Currency.Symbol
-  options?: UseQueryOptions<PrimaryTokenActivity, Error>
+  options?: UseQueryOptions<PrimaryTokenActivity | undefined, Error>
 }) => {
-  const query = useQuery({
+  const query = useQuery<PrimaryTokenActivity | undefined, Error>({
     enabled: to !== ptTicker,
     staleTime: time.oneMinute,
     retryDelay: time.oneSecond,
     refetchInterval: time.oneMinute,
     queryKey: [persistPrefixKeyword, 'usePrimaryTokenActivity', to],
     ...options,
-    queryFn: async () => {
+    queryFn: async (): Promise<PrimaryTokenActivity | undefined> => {
       const response = await fetchPtPriceActivity([
         Date.now(),
         Date.now() - time.oneDay,
@@ -39,7 +39,7 @@ export const usePrimaryTokenActivity = ({
         }
       }
 
-      return defaultPrimaryTokenActivity
+      return undefined
     },
   })
 
