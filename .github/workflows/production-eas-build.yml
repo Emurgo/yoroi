@@ -7,6 +7,8 @@ on:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  EAS_BUILD_PROFILE: production
+  EXPO_PUBLIC_BUILD_VARIANT: PROD
 
 jobs:
   production-build:
@@ -38,12 +40,21 @@ jobs:
 
       - name: 🚀 Create production build
         working-directory: mobile
+        env:
+          EAS_BUILD_PROFILE: production
+          EXPO_PUBLIC_BUILD_VARIANT: PROD
         run: eas build --profile production --platform all --non-interactive
 
       - name: 🚀 Submit build to Apple TestFlight
         working-directory: mobile
+        env:
+          EAS_BUILD_PROFILE: production
+          EXPO_PUBLIC_BUILD_VARIANT: PROD
         run: eas submit --platform ios --profile production --non-interactive --latest
 
       - name: 🚀 Submit build to Android Google Play
         working-directory: mobile
+        env:
+          EAS_BUILD_PROFILE: production
+          EXPO_PUBLIC_BUILD_VARIANT: PROD
         run: eas submit --platform android --profile production --non-interactive --latest

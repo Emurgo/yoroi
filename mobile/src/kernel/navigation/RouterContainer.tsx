@@ -30,8 +30,8 @@ export function RouterContainer({children, onRouteChange}: Props) {
     isDarkRef.current = isDark
   }, [palette, isDark])
 
-  // Debounce navigation state changes to prevent rapid-fire status bar updates
-  const stateChangeRef = React.useRef(0)
+  // Use state to trigger re-renders for debounced callback
+  const [stateChangeCount, setStateChangeCount] = React.useState(0)
 
   const handleStateChangeDebounced = React.useCallback(() => {
     const routeName = navRef.current?.getCurrentRoute()?.name
@@ -42,15 +42,15 @@ export function RouterContainer({children, onRouteChange}: Props) {
 
   const handleStateChange = React.useCallback(
     (_state: NavigationState | undefined) => {
-      // Increment ref to trigger debounced callback
-      stateChangeRef.current += 1
+      // Increment state to trigger re-render and debounced callback
+      setStateChangeCount((prev) => prev + 1)
     },
     [],
   )
 
   useDebouncedCallback(
     handleStateChangeDebounced,
-    stateChangeRef.current,
+    stateChangeCount,
     100,
     false, // Don't skip first render - we want initial route to be processed
   )

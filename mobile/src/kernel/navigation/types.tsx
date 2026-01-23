@@ -7,6 +7,7 @@ import * as React from 'react'
 import {OnConfirm} from '~/features/ReviewTx/common/hooks/useOnConfirm'
 import {ReviewDetailsProps} from '~/features/ReviewTx/useCases/ReviewTxScreen/ReviewTx/Overview/OverviewTab'
 import {Routes as StakingGovernanceRoutes} from '~/features/Staking/Governance/common/navigation'
+import type {ResultScreenParams} from '~/ui/ResultScreen/types'
 
 export type Guard<Params> = (params: Params | object) => params is Params
 
@@ -25,7 +26,7 @@ export type WalletTabRoutes = {
   history: NavigatorScreenParams<TxHistoryRoutes>
   portfolio: NavigatorScreenParams<PortfolioRoutes>
   discover: NavigatorScreenParams<DiscoverRoutes>
-  menu: undefined
+  menu: NavigatorScreenParams<MenuRoutes>
 }
 
 export type WalletStackRoutes = {
@@ -90,7 +91,6 @@ export type TxHistoryRoutes = {
     signature: string
     key: string
   }
-  'airdrop': undefined
   'receive-single': undefined
   'receive-specific-amount': undefined
   'receive-multiple': undefined
@@ -101,6 +101,7 @@ export type TxHistoryRoutes = {
   }
   'send-select-token-from-list': undefined
   'swap': NavigatorScreenParams<SwapTokenRoutes>
+  'result-screen': ResultScreenParams
 } & ScanRoutes &
   ClaimRoutes &
   ExchangeRoutes &
@@ -259,7 +260,7 @@ export type ReviewTxRoutes = {
     onNotSupportedCIP1694?: () => void
     onCIP36SupportChange?: (supportsCIP36: boolean) => void
   }
-  'result-screen': import('~/ui/ResultScreen/types').ResultScreenParams
+  'result-screen': ResultScreenParams
 }
 
 export type VotingRegistrationRoutes = {
@@ -313,6 +314,14 @@ export type NftRouteNavigation = StackNavigationProp<NftRoutes>
 export type MenuRoutes = {
   '_menu': undefined
   'voting-registration': undefined
+  'airdrop': undefined
+  'utxo-list': undefined
+  'utxo-consolidation': undefined
+  'message-signing': undefined
+  'message-signing-result': {
+    signature: string
+    key: string
+  }
 }
 
 export type AppRoutes = {

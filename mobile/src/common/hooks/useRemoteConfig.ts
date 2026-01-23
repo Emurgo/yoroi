@@ -15,7 +15,7 @@ const url = `${basePath}${isDev ? 'dev.json' : 'prod.json'}`
 export const useRemoteConfig = () => {
   const query = useQuery({
     queryKey,
-    queryFn: async (): Promise<App.Config> => {
+    queryFn: async (): Promise<App.Config | undefined> => {
       const response = await fetchData<App.Config>({
         url,
       })
@@ -25,7 +25,7 @@ export const useRemoteConfig = () => {
           origin: 'useRemoteConfig',
           response: response,
         })
-        return {} as App.Config
+        return undefined
       }
 
       return response.value.data

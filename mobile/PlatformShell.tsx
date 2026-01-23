@@ -51,17 +51,38 @@ export function PlatformShell({children}: React.PropsWithChildren) {
 
 function usePosthogClient(enabled: boolean) {
   const installationId = React.useMemo(() => initInstallationId(), [])
+  const hasIdentifiedRef = React.useRef(false)
 
-  const client = React.useMemo(() => {
+  // Create SDK once
+  const {sdk, client} = React.useMemo(() => {
     const apiKey = process.env.EXPO_PUBLIC_POSTHOG_KEY
     const host = process.env.EXPO_PUBLIC_POSTHOG_HOST
     if (!apiKey || !host) throw new Error('Analytics client is not configured')
-    const sdk = new PostHog(apiKey, {host, disabled: !enabled})
-    return createPosthogClient({sdk})
-  }, [enabled])
+    // Type definitions may be incomplete - these options are documented
+    const devOptions = __DEV__ ? {flushAt: 1, flushInterval: 1000} : {}
+    const sdk = new PostHog(apiKey, {
+      host,
+      defaultOptIn: true,
+      ...(devOptions as Record<string, unknown>),
+    })
+    return {sdk, client: createPosthogClient({sdk})}
+  }, [])
 
+  // Sync opt-in/opt-out state with enabled
   React.useEffect(() => {
-    if (installationId && enabled) client.identify(installationId)
+    if (enabled) {
+      sdk.optIn()
+    } else {
+      sdk.optOut()
+    }
+  }, [sdk, enabled])
+
+  // Identify only once when enabled
+  React.useEffect(() => {
+    if (enabled && installationId && !hasIdentifiedRef.current) {
+      hasIdentifiedRef.current = true
+      client.identify(installationId)
+    }
   }, [client, installationId, enabled])
 
   return client

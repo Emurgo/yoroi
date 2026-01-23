@@ -10,7 +10,7 @@ import {
 } from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {TransactionOutput} from '@yoroi/tx'
-import {Branded, Portfolio, UtxoId} from '@yoroi/types'
+import {Branded, Portfolio} from '@yoroi/types'
 import {useCollateralInfo, useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as CSL from '@emurgo/cross-csl-core'
@@ -21,8 +21,6 @@ import {
   Alert,
   LayoutAnimation,
   ScrollView,
-  TouchableOpacity,
-  TouchableOpacityProps,
   View,
   ViewProps,
   useWindowDimensions,
@@ -37,7 +35,6 @@ import {SettingsStackRoutes} from '~/kernel/navigation/types'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Copiable} from '~/ui/Copiable/Copiable'
 import {ErrorPanel} from '~/ui/ErrorPanel/ErrorPanel'
-import {Icon} from '~/ui/Icon'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {Space} from '~/ui/Space/Space'
@@ -76,10 +73,6 @@ export const ManageCollateralScreen = () => {
 
   const {isPending: isLoadingCollateral, setCollateralId} =
     useSetCollateralId(wallet)
-  const handleRemoveCollateral = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    setCollateralId('' as UtxoId)
-  }
   const handleSetCollateralId = (collateralId: RawUtxo['utxo_id']) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setCollateralId(collateralId)
@@ -200,12 +193,7 @@ export const ManageCollateralScreen = () => {
           {strings.manageCollateral.lockedAsCollateral}
         </Text>
         <Space.Height.sm />
-        <ActionableAmount
-          amount={amount}
-          onRemove={handleRemoveCollateral}
-          collateralId={collateralId}
-          disabled={isLoading}
-        />
+        <ActionableAmount amount={amount} />
         {hasCollateral && (
           <>
             <Space.Height.lg />
@@ -224,10 +212,6 @@ export const ManageCollateralScreen = () => {
                 </Text>
               </Copiable>
             </Row>
-
-            <Space.Height.lg />
-
-            <Text>{strings.manageCollateral.removeCollateral}</Text>
           </>
         )}
         <Space.Height.lg fill />
@@ -262,19 +246,9 @@ export const ManageCollateralScreen = () => {
 }
 
 type ActionableAmountProps = {
-  collateralId: RawUtxo['utxo_id']
   amount: Portfolio.Token.Amount
-  onRemove(): void
-  disabled?: boolean
 }
-const ActionableAmount = ({
-  onRemove,
-  collateralId,
-  amount,
-  disabled,
-}: ActionableAmountProps) => {
-  const handleRemove = () => onRemove()
-
+const ActionableAmount = ({amount}: ActionableAmountProps) => {
   return (
     <View
       style={[a.flex_row, a.justify_between, a.align_center]}
@@ -283,12 +257,6 @@ const ActionableAmount = ({
       <Left>
         <TokenAmountItem amount={amount} />
       </Left>
-
-      {collateralId !== '' && (
-        <Right>
-          <RemoveAmountButton onPress={handleRemove} disabled={disabled} />
-        </Right>
-      )}
     </View>
   )
 }
@@ -296,24 +264,6 @@ const ActionableAmount = ({
 const Left = ({style, ...props}: ViewProps) => (
   <View style={[style, a.flex_1]} {...props} />
 )
-const Right = ({style, ...props}: ViewProps) => (
-  <View style={[style, a.pl_lg]} {...props} />
-)
 const Row = ({style, ...props}: ViewProps) => (
   <View style={[style, a.flex_row, a.align_center]} {...props} />
 )
-
-const RemoveAmountButton = ({disabled, ...props}: TouchableOpacityProps) => {
-  const {palette: p} = useTheme()
-
-  return (
-    <TouchableOpacity
-      testID="removeAmountButton"
-      {...props}
-      disabled={disabled}
-      style={{opacity: disabled ? 0.5 : 1}}
-    >
-      <Icon.CrossCircle size={26} color={p.gray_900} />
-    </TouchableOpacity>
-  )
-}

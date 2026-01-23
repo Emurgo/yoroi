@@ -57,7 +57,7 @@ export type DAppItem = {
 const googleDappId = 'google_search'
 const directUrlId = 'direct_url'
 
-/**
+/**s
  * Checks if a string looks like a URL
  * Matches patterns like:
  * - example.com

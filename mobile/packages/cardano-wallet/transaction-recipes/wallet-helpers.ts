@@ -37,10 +37,16 @@ async function getAbsoluteSlotNumberFromWallet(
 /**
  * Helper to get modern UTXOs from wallet
  * Excludes collateral UTXO to prevent it from being used in regular transactions
+ * However, when sending MAX (subtractFeeFromAmount=true), includes collateral
+ * since it's not locked by assets and should be included in MAX sends
  */
-function getModernUtxosFromWallet(wallet: YoroiWallet) {
+function getModernUtxosFromWallet(
+  wallet: YoroiWallet,
+  includeCollateral = false,
+) {
+  const rawUtxos = includeCollateral ? wallet.allUtxos() : wallet.utxos()
   return convertRawUtxosToModernUtxos(
-    wallet.utxos(), // Use wallet.utxos instead of allUtxos to exclude collateral
+    rawUtxos,
     (address) => wallet.getAddressing(address),
     wallet.portfolioPrimaryTokenInfo.id,
   )
@@ -288,11 +294,15 @@ export async function createSendTxFromWallet(
      * If true, subtract transaction fee from the primary token amount in the first output.
      * This is useful when sending MAX amount - the output will be automatically adjusted
      * to account for fees, ensuring the transaction can be built successfully.
+     * When true, also includes collateral UTXO in the selection since it's not locked by assets.
      */
     subtractFeeFromAmount?: boolean
   },
 ): Promise<{cbor: string}> {
-  const modernUtxos = getModernUtxosFromWallet(wallet)
+  // When sending MAX (subtractFeeFromAmount=true), include collateral UTXO
+  // Collateral is not locked by assets, so it should be included in MAX sends
+  const includeCollateral = params.subtractFeeFromAmount === true
+  const modernUtxos = getModernUtxosFromWallet(wallet, includeCollateral)
 
   return createSendTx({
     utxos: modernUtxos,

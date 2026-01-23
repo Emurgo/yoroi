@@ -42,7 +42,7 @@ export const useAirdropEligibility = () => {
       !isByronWallet,
     staleTime: time.fiveMinutes,
     retry: false,
-    queryFn: async (): Promise<AddressAllocation[]> => {
+    queryFn: async (): Promise<AddressAllocation[] | undefined> => {
       if (!wallet || !wallet.isMainnet) {
         return []
       }
@@ -57,7 +57,7 @@ export const useAirdropEligibility = () => {
         addresses = wallet.receiveAddresses() || []
       } catch (error) {
         logger.warn('Failed to get receive addresses', {error})
-        return []
+        return undefined
       }
 
       if (addresses.length === 0) {

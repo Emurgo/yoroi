@@ -16,13 +16,13 @@ import {usePromise} from '~/common/hooks/usePromise'
 import {usePortfolioBalances} from '~/features/Portfolio/common/hooks/usePortfolioBalances'
 import {usePortfolioPrimaryBreakdown} from '~/features/Portfolio/common/hooks/usePortfolioPrimaryBreakdown'
 import {useSearch} from '~/features/Search/SearchContext'
+import {useDynamicLockedDeposit} from '~/features/Send/common/hooks/useDynamicLockedDeposit'
 import {useNavigateTo} from '~/features/Send/common/navigation'
 import {toTransactionOutput} from '~/features/Send/common/toTransactionOutput'
 import {isInsufficientBalanceError} from '~/features/Staking/Governance/common/transactionErrorHandling'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {BackButton} from '~/kernel/navigation/common/helpers'
-import {useResultNavigation} from '~/kernel/navigation/hooks/useResultNavigation'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {AddTokenButton} from '~/ui/AddTokenButton/AddTokenButton'
 import {Boundary} from '~/ui/Boundary/Boundary'
@@ -33,7 +33,6 @@ import {TokenAmountItem} from '~/ui/TokenAmountItem/TokenAmountItem'
 
 export const ListAmountsToSendScreen = () => {
   const navigateTo = useNavigateTo()
-  const resultNavigation = useResultNavigation()
   const {navigateToTxReview, resetToStartTransfer} = useWalletNavigation()
   const strings = useStrings()
   const {clearSearch} = useSearch()
@@ -65,22 +64,52 @@ export const ListAmountsToSendScreen = () => {
   const primaryBreakdown = usePortfolioPrimaryBreakdown({wallet})
   const primaryTokenId = wallet.portfolioPrimaryTokenInfo.id
   const primaryAmount = amounts[primaryTokenId]
+
+  // Get tokens being sent (excluding primary token for dynamic calculation)
+  const tokensBeingSent = React.useMemo(() => {
+    const tokens: Record<Portfolio.Token.Id, Portfolio.Token.Amount> = {}
+    for (const [tokenId, amount] of Object.entries(amounts)) {
+      if (tokenId !== primaryTokenId && !isPrimaryToken(amount.info)) {
+        tokens[tokenId as Portfolio.Token.Id] = amount
+      }
+    }
+    return tokens
+  }, [amounts, primaryTokenId])
+
+  // Calculate dynamic locked deposit based on tokens being sent
+  const {dynamicLocked, currentLocked} = useDynamicLockedDeposit({
+    tokensBeingSent,
+  })
+
   const isSendingMaxAda = React.useMemo(() => {
     if (!primaryAmount || !isPrimaryToken(primaryAmount.info)) return false
 
-    const available =
+    // Calculate available balance excluding staking rewards
+    // Staking rewards are not in UTXOs and require withdrawal first
+    const balanceWithRewards =
       (balances.records.get(primaryTokenId)?.quantity ?? BigInt(0)) -
       (allocated.get(selectedTargetIndex)?.get(primaryTokenId) ?? BigInt(0))
-    const spendable = available - primaryBreakdown.lockedAsStorageCost
+    const availableRewards = primaryBreakdown.availableRewards ?? BigInt(0)
+    const available = balanceWithRewards - availableRewards
+
+    // Use dynamic locked if tokens are being sent, otherwise use current locked
+    const lockedToUse =
+      Object.keys(tokensBeingSent).length > 0 ? dynamicLocked : currentLocked
+    const spendable = available - lockedToUse
 
     // Check if the amount equals spendable (MAX was used)
     const isMax = primaryAmount.quantity === spendable && spendable > BigInt(0)
 
     logger.info('ListAmountsToSendScreen: MAX detection', {
       primaryAmount: primaryAmount.quantity.toString(),
+      balanceWithRewards: balanceWithRewards.toString(),
+      availableRewards: availableRewards.toString(),
       available: available.toString(),
-      lockedAsStorageCost: primaryBreakdown.lockedAsStorageCost.toString(),
+      currentLocked: currentLocked.toString(),
+      dynamicLocked: dynamicLocked.toString(),
+      lockedToUse: lockedToUse.toString(),
       spendable: spendable.toString(),
+      tokensBeingSent: Object.keys(tokensBeingSent),
       isSendingMaxAda: isMax,
     })
 
@@ -88,7 +117,10 @@ export const ListAmountsToSendScreen = () => {
   }, [
     primaryAmount,
     balances,
-    primaryBreakdown.lockedAsStorageCost,
+    primaryBreakdown.availableRewards,
+    currentLocked,
+    dynamicLocked,
+    tokensBeingSent,
     primaryTokenId,
     selectedTargetIndex,
     allocated,
@@ -183,31 +215,56 @@ export const ListAmountsToSendScreen = () => {
 
   const handleCreateUnsignedTxError = React.useCallback(
     (error: Error) => {
-      // Check for insufficient balance errors and show error screen
+      logger.error('ListAmountsToSendScreen: Transaction creation failed', {
+        errorMessage: error.message,
+        errorStack: error.stack,
+      })
+
       if (
         error instanceof NotEnoughMoneyToSendError ||
         isInsufficientBalanceError(error)
       ) {
-        logger.info('ListAmountsToSendScreen: Insufficient balance error', {
-          errorMessage: error.message,
-        })
         // Use unified result screen with insufficient balance message
-        resultNavigation.showResultScreen({
-          type: 'error',
-          context: 'send',
-          title: strings.send.noBalance,
-          message: strings.send.failedTxText,
-          primaryAction: {
-            title: strings.send.failedTxButton,
-            onPress: resetToStartTransfer,
+        // @ts-ignore - Navigating to a screen in a sibling navigator
+        navigation.navigate('manage-wallets', {
+          screen: 'review-tx-routes',
+          params: {
+            screen: 'result-screen',
+            params: {
+              type: 'error',
+              context: 'send',
+              title: strings.send.noBalance,
+              message: strings.send.failedTxText,
+              primaryAction: {
+                title: strings.send.failedTxButton,
+                onPress: resetToStartTransfer,
+              },
+            },
           },
         })
         return
       }
-      // Re-throw other errors to be handled by default error handling
-      throw error
+
+      // Show generic error screen for other unexpected errors
+      // @ts-ignore - Navigating to a screen in a sibling navigator
+      navigation.navigate('manage-wallets', {
+        screen: 'review-tx-routes',
+        params: {
+          screen: 'result-screen',
+          params: {
+            type: 'error',
+            context: 'send',
+            title: strings.send.failedTxTitle,
+            message: error.message,
+            primaryAction: {
+              title: strings.send.failedTxButton,
+              onPress: resetToStartTransfer,
+            },
+          },
+        },
+      })
     },
-    [resultNavigation, strings, resetToStartTransfer],
+    [navigation, strings, resetToStartTransfer],
   )
 
   const {resolve: createUnsignedTx, isPending} = usePromise({

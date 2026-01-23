@@ -8,8 +8,7 @@ import {
 import {linksYoroiModuleMaker} from '@yoroi/links'
 import {atoms as a} from '@yoroi/theme'
 import {Chain, Exchange} from '@yoroi/types'
-import {useSelectedWallet} from '@yoroi/wallet-manager'
-import {useWalletManager} from '@yoroi/wallet-manager'
+import {useSelectedWallet, useWalletManager} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {Linking, View} from 'react-native'
@@ -121,8 +120,10 @@ export const CreateExchangeOrderScreen = () => {
           ),
         })
       },
-      onSuccess: (referralLink) => {
+      onSuccess: async (referralLink) => {
         closeModal()
+
+        await delay(100)
 
         if (referralLink.toString() !== '') {
           Linking.openURL(referralLink.toString())

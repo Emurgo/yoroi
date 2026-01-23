@@ -7,8 +7,6 @@ import {
 } from '@react-navigation/stack'
 import * as React from 'react'
 
-import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
-import {AirdropNavigator} from '~/features/Airdrop/ui/AirdropNavigator'
 import {ClaimScreen} from '~/features/Claim/useCases/ClaimScreen'
 import {ShowSuccessScreen} from '~/features/Claim/useCases/ShowSuccessScreen'
 import {CreateExchangeOrderScreen} from '~/features/Exchange/useCases/CreateExchangeOrderScreen/CreateExchangeOrderScreen'
@@ -34,6 +32,7 @@ import {
 } from '~/kernel/navigation/common/helpers'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {TxHistoryRoutes} from '~/kernel/navigation/types'
+import {ResultScreen} from '~/ui/ResultScreen/ResultScreen'
 
 import {AddressDetailsScreen} from '../Transactions/useCases/AddressDetails/AddressDetailsScreen'
 import {BlockDetails} from '../Transactions/useCases/BlockDetails/BlockDetails'
@@ -52,8 +51,6 @@ export const TxHistoryNavigator = () => {
   const {palette: p, atoms: ta} = useTheme()
   const {meta} = useSelectedWallet()
   const walletNavigation = useWalletNavigation()
-  const {config} = useRemoteConfig()
-  const isAirdropEnabled = config?.features?.midnightAirdrop?.enabled ?? false
 
   // Memoize headerTitle component to prevent recreation on every render
   const headerTitle = React.useCallback(
@@ -309,16 +306,11 @@ export const TxHistoryNavigator = () => {
           getComponent={() => SelectProviderFromListScreen}
         />
 
-        {/* Menu Screens */}
-        {isAirdropEnabled && (
-          <Stack.Screen
-            name="airdrop"
-            options={{
-              headerShown: false,
-            }}
-            getComponent={() => AirdropNavigator}
-          />
-        )}
+        <Stack.Screen
+          name="result-screen"
+          component={ResultScreen}
+          options={{headerShown: true}}
+        />
       </Stack.Navigator>
     </WithWalletOpened>
   )

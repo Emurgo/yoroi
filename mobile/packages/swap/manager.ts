@@ -279,29 +279,27 @@ const apiManagerMaker = (
           enabledAggregators.map(async (aggregator) => {
             // If amountOut is provided and adapter supports reverse estimate, rely on adapter implementation.
             const response = await adapters[aggregator]!.estimate(body)
-            return response
+            return {aggregator, response}
           }),
         )
 
         const responses: Array<Api.Response<Swap.EstimateResponse>> = []
         const errors: Array<string> = []
+        const aggregatorResponses: Array<{
+          aggregator: Swap.Aggregator
+          response: Api.Response<Swap.EstimateResponse>
+        }> = []
 
         settledResults.forEach((result, index) => {
           if (result.status === 'fulfilled') {
-            responses.push(result.value)
+            aggregatorResponses.push(result.value)
+            responses.push(result.value.response)
           } else {
             errors.push(
               `Aggregator ${enabledAggregators[index]} failed: ${result.reason}`,
             )
           }
         })
-
-        if (errors.length > 0) {
-          getLogger().warn('Some aggregators failed during estimate', {
-            origin: 'swap',
-            errors,
-          })
-        }
 
         warnAllLeft(...responses)
 
@@ -345,10 +343,16 @@ const apiManagerMaker = (
 
         if (singleAdapterCreate && body.routeHint?.aggregator != null) {
           const adapter = adapters[body.routeHint.aggregator]
-          if (adapter == null)
+          if (adapter == null) {
+            getLogger().warn('Swap Manager: Route hint aggregator not found', {
+              origin: 'swap',
+              aggregator: body.routeHint.aggregator,
+            })
             return invalid as Api.Response<Swap.CreateResponse>
+          }
 
           const response = await adapter.create(body)
+
           if (isLeft(response)) return standarizeError(response)
           return response
         }
@@ -358,9 +362,10 @@ const apiManagerMaker = (
 
         const responses: Array<Api.Response<Swap.CreateResponse>> =
           await Promise.all(
-            enabledAggregators.map((aggregator) =>
-              adapters[aggregator]!.create(body),
-            ),
+            enabledAggregators.map(async (aggregator) => {
+              const response = await adapters[aggregator]!.create(body)
+              return response
+            }),
           )
 
         warnAllLeft(...responses)
@@ -472,7 +477,7 @@ export const standarizeError = <T>(input: Api.Response<T>): Api.Response<T> => {
     ):
     case response.error.message.includes('Insufficient balance'):
       response.error.message =
-        'Insufficient balance: consider fees and assets blocked by staking.'
+        'Insufficient balance: consider fees and Ada locked by other assets.'
 
       break
     case response.error.message.includes('amount_in_invalid'):
