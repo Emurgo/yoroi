@@ -29,6 +29,168 @@ import {
 import {logger} from '~/kernel/logger/logger'
 import {debugStorage} from '~/kernel/storage/debug-storage'
 
+/**
+ * Storage integrity check result
+ */
+export type StorageIntegrityResult = {
+  isHealthy: boolean
+  mmkvHealthy: boolean
+  asyncStorageHealthy: boolean
+  errors: string[]
+  warnings: string[]
+}
+
+/**
+ * Validates storage integrity before migrations
+ * Attempts basic read/write operations to detect corruption
+ */
+export const validateStorageIntegrity =
+  async (): Promise<StorageIntegrityResult> => {
+    const result: StorageIntegrityResult = {
+      isHealthy: true,
+      mmkvHealthy: true,
+      asyncStorageHealthy: true,
+      errors: [],
+      warnings: [],
+    }
+
+    // Test MMKV integrity
+    try {
+      const testKey = '__integrity_check__'
+      const testValue = `test_${Date.now()}`
+
+      // Write test
+      rootMMKV.set(testKey, testValue)
+
+      // Read test
+      const readValue = rootMMKV.getString(testKey)
+      if (readValue !== testValue) {
+        result.mmkvHealthy = false
+        result.errors.push('MMKV read/write mismatch')
+      }
+
+      // Delete test
+      rootMMKV.delete(testKey)
+
+      // Verify all keys can be listed
+      const allKeys = rootMMKV.getAllKeys()
+      if (!Array.isArray(allKeys)) {
+        result.mmkvHealthy = false
+        result.errors.push('MMKV getAllKeys returned invalid result')
+      }
+    } catch (error) {
+      result.mmkvHealthy = false
+      result.errors.push(
+        `MMKV integrity check failed: ${error instanceof Error ? error.message : String(error)}`,
+      )
+    }
+
+    // Test AsyncStorage integrity
+    try {
+      const testKey = '__integrity_check__'
+      const testValue = `test_${Date.now()}`
+
+      // Write test
+      await rootStorage.setItem(testKey, testValue)
+
+      // Read test
+      const readValue = await rootStorage.getItem(testKey)
+      if (readValue !== testValue) {
+        result.asyncStorageHealthy = false
+        result.errors.push('AsyncStorage read/write mismatch')
+      }
+
+      // Delete test
+      await rootStorage.removeItem(testKey)
+
+      // Verify getAllKeys works
+      const allKeys = await rootStorage.getAllKeys()
+      if (!Array.isArray(allKeys)) {
+        result.asyncStorageHealthy = false
+        result.errors.push('AsyncStorage getAllKeys returned invalid result')
+      }
+    } catch (error) {
+      result.asyncStorageHealthy = false
+      result.errors.push(
+        `AsyncStorage integrity check failed: ${error instanceof Error ? error.message : String(error)}`,
+      )
+    }
+
+    // Overall health status
+    result.isHealthy = result.mmkvHealthy && result.asyncStorageHealthy
+
+    // Log results
+    if (!result.isHealthy) {
+      logger.error('Storage integrity check failed', {
+        result,
+      })
+    } else {
+      logger.debug('Storage integrity check passed')
+    }
+
+    return result
+  }
+
+/**
+ * Attempt to recover from storage corruption
+ * Returns true if recovery was successful
+ */
+export const attemptStorageRecovery = async (): Promise<boolean> => {
+  logger.warn('Attempting storage recovery...')
+
+  try {
+    // For MMKV, we can try to trim
+    rootMMKV.trim()
+
+    // Re-validate after recovery attempt
+    const result = await validateStorageIntegrity()
+    if (result.isHealthy) {
+      logger.info('Storage recovery successful')
+      return true
+    }
+
+    logger.error(
+      'Storage recovery failed - manual intervention may be required',
+    )
+    return false
+  } catch (error) {
+    logger.error('Storage recovery threw error', {error})
+    return false
+  }
+}
+
+/**
+ * Clear all storage data - used for unrecoverable corruption
+ * WARNING: This will delete all wallets and settings!
+ * Users will need to restore from recovery phrase
+ */
+export const clearAllStorage = async (): Promise<void> => {
+  logger.warn('Clearing all storage due to unrecoverable corruption')
+
+  try {
+    // Clear MMKV
+    rootMMKV.clearAll()
+    logger.info('MMKV storage cleared')
+  } catch (error) {
+    logger.error('Failed to clear MMKV storage', {error})
+  }
+
+  try {
+    // Clear AsyncStorage
+    const allKeys = await rootStorage.getAllKeys()
+    for (const key of allKeys) {
+      await rootStorage.removeItem(key)
+    }
+    logger.info('AsyncStorage cleared')
+  } catch (error) {
+    logger.error('Failed to clear AsyncStorage', {error})
+  }
+
+  // Re-initialize as fresh install
+  initInstallationId()
+  logger.info('Storage cleared and re-initialized as fresh install')
+}
+
 export const rootMMKV = new MMKV({id: 'default.mmkv'})
 export const rootSyncStorage = observableStorageMaker<false, string>(
   mountMMKVStorage({path: '/'}, {instance: rootMMKV}),

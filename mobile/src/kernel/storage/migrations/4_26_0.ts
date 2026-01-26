@@ -1,21 +1,63 @@
 import {App} from '@yoroi/types'
 
+import {logger} from '~/kernel/logger/logger'
+
 export const migrateAddressMode = async (rootStorage: App.Storage) => {
   const walletsRootStorage = rootStorage.join('wallet/')
   const addAddressMode = addAddressModeWrapper(walletsRootStorage)
 
   // moved from /wallet/ -> /
-  await walletsRootStorage.removeItem('deletedWalletIds')
+  try {
+    await walletsRootStorage.removeItem('deletedWalletIds')
+  } catch (error) {
+    logger.warn('4_26_0: Failed to remove deletedWalletIds, continuing', {
+      error,
+    })
+  }
 
   // add the addressMode defaulted to 'single' to all wallet metas
-  const walletIds = await walletsRootStorage.getAllKeys()
-  const walletMetas = await walletsRootStorage
-    .multiGet(walletIds)
-    .then((tuples) => tuples.map(([_, walletMeta]) => walletMeta))
+  let walletIds: readonly string[] = []
+  try {
+    walletIds = await walletsRootStorage.getAllKeys()
+  } catch (error) {
+    logger.error('4_26_0: Failed to get wallet keys', {error})
+    // If we can't get wallet IDs, skip this migration gracefully
+    return
+  }
+
+  let walletMetas: unknown[] = []
+  try {
+    walletMetas = await walletsRootStorage
+      .multiGet(walletIds)
+      .then((tuples) => tuples.map(([_, walletMeta]) => walletMeta))
+  } catch (error) {
+    logger.error('4_26_0: Failed to get wallet metas', {error})
+    // If we can't get metas, skip this migration gracefully
+    return
+  }
 
   const metasToMigrate = walletMetas.filter(isWalletMetaV1)
-  const migrations = metasToMigrate.map(addAddressMode)
-  await Promise.all(migrations)
+
+  // Use Promise.allSettled to handle individual wallet failures gracefully
+  const results = await Promise.allSettled(metasToMigrate.map(addAddressMode))
+
+  // Log any failures but don't throw - migration should continue
+  const failures = results.filter(
+    (r): r is PromiseRejectedResult => r.status === 'rejected',
+  )
+  if (failures.length > 0) {
+    logger.warn('4_26_0: Some wallet migrations failed', {
+      totalWallets: metasToMigrate.length,
+      failedCount: failures.length,
+      errors: failures.map((f) => String(f.reason)),
+    })
+  }
+
+  logger.info('4_26_0: Address mode migration completed', {
+    totalWallets: metasToMigrate.length,
+    successCount: results.filter((r) => r.status === 'fulfilled').length,
+    failedCount: failures.length,
+  })
 }
 
 const addAddressModeWrapper =
