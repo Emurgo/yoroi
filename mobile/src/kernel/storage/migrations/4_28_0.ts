@@ -10,29 +10,31 @@ const migrateWalletMeta = async (rootStorage: App.Storage) => {
   const walletsRootStorage = rootStorage.join('wallet/')
   const migrate = updateMeta(walletsRootStorage)
 
-  let walletIds: readonly string[] = []
-  try {
-    walletIds = await walletsRootStorage.getAllKeys()
-  } catch (error) {
-    logger.error('4_28_0: Failed to get wallet keys', {error})
-    // If we can't get wallet IDs, skip this migration gracefully
+  // Get wallet IDs - throw on error to trigger retry (don't skip permanently)
+  const walletIds = await walletsRootStorage.getAllKeys()
+
+  // If no wallets exist, migration is complete (nothing to migrate)
+  if (walletIds.length === 0) {
+    logger.info('4_28_0: No wallets found, migration skipped')
     return
   }
 
-  let walletMetas: unknown[] = []
-  try {
-    walletMetas = await walletsRootStorage
-      .multiGet(walletIds)
-      .then((tuples) => tuples.map(([_, walletMeta]) => walletMeta))
-  } catch (error) {
-    logger.error('4_28_0: Failed to get wallet metas', {error})
-    // If we can't get metas, skip this migration gracefully
-    return
-  }
+  // Get wallet metas - throw on error to trigger retry (don't skip permanently)
+  const walletMetas = await walletsRootStorage
+    .multiGet(walletIds)
+    .then((tuples) => tuples.map(([_, walletMeta]) => walletMeta))
 
   const metas = walletMetas.filter(isWalletMetaV2)
+
+  // If no wallets need migration, we're done
+  if (metas.length === 0) {
+    logger.info('4_28_0: No wallets need version/implementation migration')
+    return
+  }
+
   let successCount = 0
   let failedCount = 0
+  const errors: string[] = []
 
   // Process wallets individually with error handling
   for (const meta of metas) {
@@ -41,10 +43,14 @@ const migrateWalletMeta = async (rootStorage: App.Storage) => {
       successCount++
     } catch (error) {
       failedCount++
+      const errorMessage =
+        error instanceof Error ? error.message : String(error)
+      errors.push(errorMessage)
+
       logger.warn('4_28_0: Failed to migrate wallet, continuing with others', {
         walletId: meta.id,
         walletName: meta.name,
-        error: error instanceof Error ? error.message : String(error),
+        error: errorMessage,
       })
       // Continue with other wallets - don't let one bad wallet block all
     }
@@ -55,6 +61,15 @@ const migrateWalletMeta = async (rootStorage: App.Storage) => {
     successCount,
     failedCount,
   })
+
+  // If ALL wallets failed to migrate, throw to trigger retry
+  // This indicates a systemic storage issue, not individual wallet corruption
+  if (failedCount > 0 && successCount === 0) {
+    logger.error('4_28_0: All wallet migrations failed', {errors})
+    throw new Error(
+      `Failed to migrate version/implementation for all ${metas.length} wallets`,
+    )
+  }
 }
 
 // before 4.28 yoroi supported only account 0
