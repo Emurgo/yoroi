@@ -207,15 +207,16 @@ export const runMigrations = async (
     }
   }
 
-  // Verify final version
+  // Verify final version - don't throw, let caller handle via results
   const finalVersion = await storageVersion.read()
   if (finalVersion !== targetVersion) {
-    const error = new ErrorMigrationVersion()
     logger.error('runMigrations: Version mismatch after migrations', {
       expected: targetVersion,
       actual: finalVersion,
     })
-    throw error
+    // Return results with failures instead of throwing
+    // Caller can inspect results and decide how to handle
+    return results
   }
 
   // Initialize installation ID after successful migrations

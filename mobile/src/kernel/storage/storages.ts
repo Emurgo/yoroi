@@ -163,6 +163,7 @@ export const attemptStorageRecovery = async (): Promise<boolean> => {
  * Clear all storage data - used for unrecoverable corruption
  * WARNING: This will delete all wallets and settings!
  * Users will need to restore from recovery phrase
+ * This function never throws - all errors are caught and logged
  */
 export const clearAllStorage = async (): Promise<void> => {
   logger.warn('Clearing all storage due to unrecoverable corruption')
@@ -186,9 +187,16 @@ export const clearAllStorage = async (): Promise<void> => {
     logger.error('Failed to clear AsyncStorage', {error})
   }
 
-  // Re-initialize as fresh install
-  initInstallationId()
-  logger.info('Storage cleared and re-initialized as fresh install')
+  // Re-initialize as fresh install - wrapped in try-catch since MMKV might still be corrupted
+  try {
+    initInstallationId()
+    logger.info('Storage cleared and re-initialized as fresh install')
+  } catch (error) {
+    logger.error('Failed to initialize fresh install after clearing storage', {
+      error,
+    })
+    // App will behave as fresh install anyway since storage is cleared
+  }
 }
 
 export const rootMMKV = new MMKV({id: 'default.mmkv'})

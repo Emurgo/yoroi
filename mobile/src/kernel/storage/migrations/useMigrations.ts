@@ -22,16 +22,26 @@ export const useMigrations = (storage: App.Storage): boolean => {
 
   React.useEffect(() => {
     let isMounted = true
+    let isAborted = false // Tracks if this attempt was aborted (timeout/error triggered retry)
     let timeoutId: ReturnType<typeof setTimeout> | null = null
 
     // Validate migration registry on first run
     if (!validateMigrationRegistry()) {
       logger.error('useMigrations: Migration registry validation failed')
-      // Continue anyway - individual migrations will fail gracefully
+    }
+
+    const safeClearStorage = async () => {
+      try {
+        await clearAllStorage()
+      } catch (error) {
+        logger.error('useMigrations: clearAllStorage threw unexpectedly', {
+          error,
+        })
+      }
     }
 
     const executeMigrations = async () => {
-      // Set up timeout to prevent infinite hang
+      // Set up timeout
       const timeoutPromise = new Promise<'timeout'>((resolve) => {
         timeoutId = setTimeout(() => resolve('timeout'), MIGRATION_TIMEOUT_MS)
       })
@@ -40,30 +50,28 @@ export const useMigrations = (storage: App.Storage): boolean => {
         const migrationPromise = runMigrations(storage)
         const result = await Promise.race([migrationPromise, timeoutPromise])
 
-        if (!isMounted) return
+        // Check if this attempt was aborted or component unmounted
+        if (!isMounted || isAborted) return
 
-        // Handle timeout - clear storage and retry
+        // Handle timeout
         if (result === 'timeout') {
+          isAborted = true // Mark aborted to ignore late migration completion
           logger.error('useMigrations: Migration timeout', {
             timeout: MIGRATION_TIMEOUT_MS,
             retryCount,
           })
 
           if (retryCount < MAX_RETRY_ATTEMPTS) {
-            logger.warn(
-              'useMigrations: Clearing storage due to timeout and retrying',
-            )
-            await clearAllStorage()
-            setRetryCount((c) => c + 1)
+            logger.warn('useMigrations: Clearing storage due to timeout')
+            await safeClearStorage()
+            if (isMounted) setRetryCount((c) => c + 1)
             return
           }
 
-          // Max retries exceeded - clear and continue as fresh install
-          logger.error(
-            'useMigrations: Max retries exceeded, continuing as fresh install',
-          )
-          await clearAllStorage()
-          setDone(true)
+          // Max retries exceeded
+          logger.error('useMigrations: Max retries exceeded after timeout')
+          await safeClearStorage()
+          if (isMounted) setDone(true)
           return
         }
 
@@ -95,25 +103,24 @@ export const useMigrations = (storage: App.Storage): boolean => {
           )
 
           if (hasCriticalFailure && retryCount < MAX_RETRY_ATTEMPTS) {
-            logger.warn(
-              'useMigrations: Critical migration failure, clearing storage and retrying',
-            )
-            await clearAllStorage()
-            setRetryCount((c) => c + 1)
+            isAborted = true
+            logger.warn('useMigrations: Critical failure, clearing storage')
+            await safeClearStorage()
+            if (isMounted) setRetryCount((c) => c + 1)
             return
           }
 
           // Non-critical failures or max retries - continue anyway
-          // App may have limited functionality but won't be stuck
           logger.warn('useMigrations: Continuing despite migration failures', {
             failedCount: failed.length,
           })
         }
 
         // Success (or acceptable failures)
-        setDone(true)
+        if (isMounted) setDone(true)
       } catch (err) {
-        if (!isMounted) return
+        // Check if this attempt was aborted or component unmounted
+        if (!isMounted || isAborted) return
 
         const migrationError =
           err instanceof Error ? err : new Error(String(err))
@@ -127,23 +134,21 @@ export const useMigrations = (storage: App.Storage): boolean => {
           migrationError.message.includes('corrupt') ||
           migrationError.message.includes('MMKV') ||
           migrationError.message.includes('storage') ||
-          migrationError.message.includes('integrity')
+          migrationError.message.includes('integrity') ||
+          migrationError.message.includes('version')
 
         if (isStorageError && retryCount < MAX_RETRY_ATTEMPTS) {
-          logger.warn(
-            'useMigrations: Storage error detected, clearing storage and retrying',
-          )
-          await clearAllStorage()
-          setRetryCount((c) => c + 1)
+          isAborted = true
+          logger.warn('useMigrations: Storage error, clearing and retrying')
+          await safeClearStorage()
+          if (isMounted) setRetryCount((c) => c + 1)
           return
         }
 
         // Max retries exceeded or non-storage error - clear and continue
-        logger.error(
-          'useMigrations: Unrecoverable error, clearing storage and continuing as fresh install',
-        )
-        await clearAllStorage()
-        setDone(true)
+        logger.error('useMigrations: Unrecoverable error, clearing storage')
+        await safeClearStorage()
+        if (isMounted) setDone(true)
       }
     }
 
@@ -151,6 +156,7 @@ export const useMigrations = (storage: App.Storage): boolean => {
 
     return () => {
       isMounted = false
+      isAborted = true // Abort any in-flight operations
       if (timeoutId) clearTimeout(timeoutId)
     }
   }, [storage, retryCount])
