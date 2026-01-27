@@ -10,6 +10,7 @@ describe('parseCardanoLink', () => {
     expect(result).toEqual({
       action: 'send-only-receiver',
       receiver: codeContent.noLink.success.address,
+      network: 'preprod',
     })
   })
 
@@ -44,7 +45,55 @@ describe('parseCardanoLink', () => {
     expect(result).toEqual({
       action: 'send-single-pt',
       receiver: expect.any(String),
+      network: 'preprod',
       params: expect.any(Object),
+    })
+  })
+
+  it('should correctly parse modern pay format with decimal amount', () => {
+    // Modern format: web+cardano://pay/v1?address=...&amount=30.000001
+    const url =
+      'web+cardano://pay/v1?address=addr_test1qrtckf85609ucg5sdq5kgdef94058cnmfrw3ukupnay4va555stym27wkwyqw3z6uwr57plm22pyse00u9atdyzecg8s27xq0m&amount=30.000001'
+    const result = parseCardanoLink(url)
+    expect(result).toEqual({
+      action: 'pay-request',
+      address: expect.any(String),
+      network: 'preprod',
+      amount: '30.000001',
+      asset: undefined,
+      memo: undefined,
+    })
+  })
+
+  it('should correctly parse legacy format with decimal amount', () => {
+    // Legacy format: web+cardano:addr...?amount=30.000001
+    const url =
+      'web+cardano:addr_test1qrtckf85609ucg5sdq5kgdef94058cnmfrw3ukupnay4va555stym27wkwyqw3z6uwr57plm22pyse00u9atdyzecg8s27xq0m?amount=30.000001'
+    const result = parseCardanoLink(url)
+    expect(result).toEqual({
+      action: 'send-single-pt',
+      receiver: expect.any(String),
+      network: 'preprod',
+      params: {
+        amount: '30.000001',
+        memo: undefined,
+        message: undefined,
+      },
+    })
+  })
+
+  it('should detect mainnet network for mainnet addresses', () => {
+    // Mainnet address starts with 'addr1' (not 'addr_test1')
+    const url =
+      'web+cardano://pay/v1?address=addr1qxvn5nehgdjadqpztxqckh4yz37h0vc7rnl57x9jfaraxxe627hhjyls27xwmke4e4ewn27rv3qcntakvp7wd53dqahqxuhfua&amount=10'
+    const result = parseCardanoLink(url)
+    expect(result).toEqual({
+      action: 'pay-request',
+      address: expect.any(String),
+      network: 'mainnet',
+      amount: '10',
+      asset: undefined,
+      memo: undefined,
     })
   })
 
