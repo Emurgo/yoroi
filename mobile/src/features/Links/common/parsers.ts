@@ -94,11 +94,17 @@ export const parseCardanoLink = (codeContent: string): Links.CardanoAction => {
   // Handle pay authority (CIP-PR843)
   if (authority === 'pay') {
     const {address, amount, asset, memo} = parsedCardanoLink.params
-    const addressStr = address as string
+    // Defensive validation: While @yoroi/links library validates required params,
+    // we guard against undefined to prevent TypeError in detectNetwork()
+    if (typeof address !== 'string') {
+      throw new Links.Errors.ParamsValidationFailed(
+        'address parameter is required',
+      )
+    }
     return freeze({
       action: 'pay-request',
-      address: Branded.asAddress(addressStr),
-      network: detectNetwork(addressStr),
+      address: Branded.asAddress(address),
+      network: detectNetwork(address),
       amount: amount ? Branded.asBalanceQuantity(String(amount)) : undefined,
       asset: asset as string | undefined,
       memo: memo as string | undefined,
@@ -108,11 +114,17 @@ export const parseCardanoLink = (codeContent: string): Links.CardanoAction => {
   // Handle payment authority (CIP-13)
   if (authority === 'payment') {
     const {address, amount, asset, memo} = parsedCardanoLink.params
-    const addressStr = address as string
+    // Defensive validation: While @yoroi/links library validates required params,
+    // we guard against undefined to prevent TypeError in detectNetwork()
+    if (typeof address !== 'string') {
+      throw new Links.Errors.ParamsValidationFailed(
+        'address parameter is required',
+      )
+    }
     return freeze({
       action: 'pay-request',
-      address: Branded.asAddress(addressStr),
-      network: detectNetwork(addressStr),
+      address: Branded.asAddress(address),
+      network: detectNetwork(address),
       amount: amount ? Branded.asBalanceQuantity(String(amount)) : undefined,
       asset: asset as string | undefined,
       memo: memo as string | undefined,
@@ -161,11 +173,17 @@ export const parseCardanoLink = (codeContent: string): Links.CardanoAction => {
   // Handle address authority (CIP-134)
   if (authority === 'address') {
     const {address} = parsedCardanoLink.params
-    const addressStr = address as string
+    // Defensive validation: While @yoroi/links library validates required params,
+    // we guard against undefined to prevent TypeError in detectNetwork()
+    if (typeof address !== 'string') {
+      throw new Links.Errors.ParamsValidationFailed(
+        'address parameter is required',
+      )
+    }
     return freeze({
       action: 'view-address',
-      address: Branded.asAddress(addressStr),
-      network: detectNetwork(addressStr),
+      address: Branded.asAddress(address),
+      network: detectNetwork(address),
     } as const)
   }
 

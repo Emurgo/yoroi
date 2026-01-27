@@ -1,14 +1,18 @@
-import {createDelegationTxFromWallet} from '@yoroi/cardano-wallet'
-import {pastedFormatter} from '@yoroi/cardano-wallet'
+import {
+  createDelegationTxFromWallet,
+  pastedFormatter,
+} from '@yoroi/cardano-wallet'
 import {toBigInt} from '@yoroi/common'
 import {PendingAction, linksCardanoModuleMaker} from '@yoroi/links'
 import {createPrimaryTokenInfo} from '@yoroi/portfolio'
 import {useTransfer} from '@yoroi/transfer'
 import {Links, Portfolio} from '@yoroi/types'
-import {useHasWallets} from '@yoroi/wallet-manager'
-import {useWalletManager} from '@yoroi/wallet-manager'
-import {useSelectedNetwork} from '@yoroi/wallet-manager'
-import {useWalletManagerSelector} from '@yoroi/wallet-manager'
+import {
+  useHasWallets,
+  useSelectedNetwork,
+  useWalletManager,
+  useWalletManagerSelector,
+} from '@yoroi/wallet-manager'
 
 import {useNavigation} from '@react-navigation/native'
 import * as Linking from 'expo-linking'
@@ -602,6 +606,8 @@ export const useActionExecutor = () => {
       memoChanged,
       linkActionChanged,
       rootNavigation,
+      currentNetwork,
+      walletManager,
     ],
   )
 

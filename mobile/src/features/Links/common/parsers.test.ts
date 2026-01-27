@@ -106,4 +106,29 @@ describe('parseCardanoLink', () => {
       url: codeContent.links.success.yoroiPaymentRequestWithLink,
     })
   })
+
+  // Note: The following tests verify error handling for malformed URLs.
+  // The @yoroi/links library performs initial validation and may throw
+  // RequiredParamsMissing or UnsupportedVersion before our parser code runs.
+  // Our defensive validation provides an additional safety layer.
+
+  it('should throw error for pay authority without address', () => {
+    // The library throws RequiredParamsMissing when address param is missing
+    const url = 'web+cardano://pay/v1?amount=10'
+    expect(() => parseCardanoLink(url)).toThrow(
+      Links.Errors.RequiredParamsMissing,
+    )
+  })
+
+  it('should throw error for payment authority without address', () => {
+    // The library throws UnsupportedVersion for invalid payment URL format
+    const url = 'web+cardano://payment?amount=10'
+    expect(() => parseCardanoLink(url)).toThrow()
+  })
+
+  it('should throw error for address authority without address', () => {
+    // The library throws UnsupportedVersion for invalid address URL format
+    const url = 'web+cardano://address'
+    expect(() => parseCardanoLink(url)).toThrow()
+  })
 })
