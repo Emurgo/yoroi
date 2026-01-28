@@ -1,9 +1,10 @@
 import {App} from '@yoroi/types'
+import {recoverOrphanedWallets} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 
 import {logger} from '~/kernel/logger/logger'
-import {clearAllStorage} from '~/kernel/storage/storages'
+import {clearRecoverableStorage} from '~/kernel/storage/storages'
 
 import {runMigrations, validateMigrationRegistry} from './runner'
 import type {MigrationResult} from './types'
@@ -32,11 +33,26 @@ export const useMigrations = (storage: App.Storage): boolean => {
 
     const safeClearStorage = async () => {
       try {
-        await clearAllStorage()
+        await clearRecoverableStorage()
+        // After clearing recoverable storage, attempt to recover orphaned wallets
+        // This rebuilds wallet metadata for wallets that have keys but lost their metadata
+        const recoveryResult = await recoverOrphanedWallets(storage)
+        if (recoveryResult.recoveredCount > 0) {
+          logger.info(
+            'useMigrations: Recovered orphaned wallets after storage clear',
+            {
+              recoveredCount: recoveryResult.recoveredCount,
+              walletIds: recoveryResult.walletIds,
+            },
+          )
+        }
       } catch (error) {
-        logger.error('useMigrations: clearAllStorage threw unexpectedly', {
-          error,
-        })
+        logger.error(
+          'useMigrations: clearRecoverableStorage threw unexpectedly',
+          {
+            error,
+          },
+        )
       }
     }
 

@@ -199,6 +199,60 @@ export const clearAllStorage = async (): Promise<void> => {
   }
 }
 
+/**
+ * Clear recoverable storage data while preserving keystore (wallet keys)
+ * This allows wallet recovery without needing seed phrase restoration
+ * Clears: app settings, wallet metadata, cache data
+ * Preserves: keystore/ (encrypted xpriv and xpub keys)
+ * This function never throws - all errors are caught and logged
+ */
+export const clearRecoverableStorage = async (): Promise<void> => {
+  logger.warn('Clearing recoverable storage, preserving keystore')
+
+  const keystorePrefix = 'keystore/'
+
+  try {
+    // Clear MMKV (keys are stored in AsyncStorage, not MMKV)
+    rootMMKV.clearAll()
+    logger.info('MMKV storage cleared')
+  } catch (error) {
+    logger.error('Failed to clear MMKV storage', {error})
+  }
+
+  try {
+    // Get all keys from AsyncStorage
+    const allKeys = await rootStorage.getAllKeys()
+
+    // Filter out keystore keys (preserve wallet keys)
+    const keysToDelete = allKeys.filter(
+      (key) => !key.startsWith(keystorePrefix),
+    )
+
+    // Clear non-key data from AsyncStorage
+    for (const key of keysToDelete) {
+      await rootStorage.removeItem(key)
+    }
+
+    logger.info('AsyncStorage cleared (keystore preserved)', {
+      totalKeys: allKeys.length,
+      deletedKeys: keysToDelete.length,
+      preservedKeys: allKeys.length - keysToDelete.length,
+    })
+  } catch (error) {
+    logger.error('Failed to clear AsyncStorage', {error})
+  }
+
+  // Re-initialize as fresh install (without touching keystore)
+  try {
+    initInstallationId()
+    logger.info('Storage cleared and re-initialized, keystore preserved')
+  } catch (error) {
+    logger.error('Failed to initialize fresh install after clearing storage', {
+      error,
+    })
+  }
+}
+
 export const rootMMKV = new MMKV({id: 'default.mmkv'})
 export const rootSyncStorage = observableStorageMaker<false, string>(
   mountMMKVStorage({path: '/'}, {instance: rootMMKV}),
