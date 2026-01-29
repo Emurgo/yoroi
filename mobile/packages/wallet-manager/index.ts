@@ -63,6 +63,9 @@ export * from './network-manager/get-wallet-factory'
 // Lifecycle
 export * from './lifecycle/wallet-lifecycle'
 
+// Recovery
+export {recoverOrphanedWallets} from './recovery/recover-orphaned-wallets'
+
 // Common
 export * from './common/constants'
 export * from './common/validators/wallet-meta'
