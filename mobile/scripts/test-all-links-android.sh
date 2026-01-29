@@ -3,23 +3,24 @@
 # Test script for all Yoroi deep link types on Android
 # Usage: ./scripts/test-all-links-android.sh [package_name] [test_number]
 #   package_name: Android package name (default: com.emurgo.dev)
-#   test_number: Test number 1-14 to run a specific test (default: run all tests)
+#   test_number: Test number to run a specific test (default: run all tests)
 # Examples:
 #   ./scripts/test-all-links-android.sh                    # Run all tests with default package
 #   ./scripts/test-all-links-android.sh com.emurgo 5       # Run only test 5 with production package
-#   ./scripts/test-all-links-android.sh com.emurgo.dev 1   # Run only test 1 with dev package
+#   ./scripts/test-all-links-android.sh com.emurgo.dev 81  # Run only test 81 with dev package
+#   ./scripts/test-all-links-android.sh 81                 # Run only test 81 with default package
 
 # Parse arguments: handle both cases
 # Case 1: ./script.sh [package] [test_number]
 # Case 2: ./script.sh [test_number] (uses default package)
-if [[ "$1" =~ ^[0-9]+$ ]] && [[ "$1" -ge 1 ]] && [[ "$1" -le 14 ]]; then
+if [[ "$1" =~ ^[0-9]+$ ]] && [[ "$1" -ge 1 ]] && [[ "$1" -le 100 ]]; then
   # First arg is a test number
   TEST_NUMBER=$1
   PACKAGE_NAME=${2:-com.emurgo.dev}
 else
   # First arg is package name (or default)
   PACKAGE_NAME=${1:-com.emurgo.dev}
-  if [[ "$2" =~ ^[0-9]+$ ]] && [[ "$2" -ge 1 ]] && [[ "$2" -le 14 ]]; then
+  if [[ "$2" =~ ^[0-9]+$ ]] && [[ "$2" -ge 1 ]] && [[ "$2" -le 100 ]]; then
     TEST_NUMBER=$2
   else
     TEST_NUMBER=""
@@ -168,6 +169,24 @@ if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 7 ]; then
   fi
 fi
 
+# Test 71: Cardano Pay Link with Decimal Amount (CIP-PR843 decimal precision verification)
+if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 71 ]; then
+  echo "71. Testing: Pay Link with Decimal Amount (30.000001 ADA)"
+  echo "----------------------------------------------------------"
+  # This tests the fix for the amount prefilling bug with decimal precision
+  # Using modern pay format with testnet address and decimal amount
+  PAY_DECIMAL_URL="web+cardano://pay/v1?address=addr_test1qrtckf85609ucg5sdq5kgdef94058cnmfrw3ukupnay4va555stym27wkwyqw3z6uwr57plm22pyse00u9atdyzecg8s27xq0m&amount=30.000001"
+  ESCAPED_URL=$(echo "$PAY_DECIMAL_URL" | sed "s/'/'\\\\''/g")
+  adb shell "am start -W -a android.intent.action.VIEW -d '$ESCAPED_URL'"
+  echo "Expected: Amount field should be prefilled with '30.000001'"
+  echo ""
+  if [ -z "$TEST_NUMBER" ]; then
+    read -q "?Press any key to continue to next test..."
+    echo ""
+    echo ""
+  fi
+fi
+
 # Test 8: Cardano Legacy Payment Link (web+cardano:) PASSED
 if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 8 ]; then
   echo "8. Testing: Cardano Legacy Payment Link (CIP-13)"
@@ -178,6 +197,24 @@ if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 8 ]; then
   LEGACY_PAYMENT_URL="web+cardano:addr1q9shdvgxddemdxkdwp493le8yhengzk6fuwsewzx42sjpjkr3y3kdut55a40jff00qmg74686vz44v6k363md06qkq0ql6fur2?amount=1&memo=Legacy+payment+test"
   ESCAPED_URL=$(echo "$LEGACY_PAYMENT_URL" | sed "s/'/'\\\\''/g")
   adb shell "am start -W -a android.intent.action.VIEW -d '$ESCAPED_URL'"
+  echo ""
+  if [ -z "$TEST_NUMBER" ]; then
+    read -q "?Press any key to continue to next test..."
+    echo ""
+    echo ""
+  fi
+fi
+
+# Test 81: Cardano Legacy Payment Link with Decimal Amount (CIP-13 decimal precision verification)
+if [ -z "$TEST_NUMBER" ] || [ "$TEST_NUMBER" -eq 81 ]; then
+  echo "81. Testing: Legacy Payment with Decimal Amount (30.000001 ADA)"
+  echo "---------------------------------------------------------------"
+  # This tests the fix for the amount prefilling bug with decimal precision
+  # Using legacy format (no //) with testnet address and decimal amount
+  LEGACY_DECIMAL_URL="web+cardano:addr_test1qrtckf85609ucg5sdq5kgdef94058cnmfrw3ukupnay4va555stym27wkwyqw3z6uwr57plm22pyse00u9atdyzecg8s27xq0m?amount=30.000001"
+  ESCAPED_URL=$(echo "$LEGACY_DECIMAL_URL" | sed "s/'/'\\\\''/g")
+  adb shell "am start -W -a android.intent.action.VIEW -d '$ESCAPED_URL'"
+  echo "Expected: Amount field should be prefilled with '30.000001'"
   echo ""
   if [ -z "$TEST_NUMBER" ]; then
     read -q "?Press any key to continue to next test..."
