@@ -5,15 +5,18 @@ import {
   DRepId,
   TransactionHash,
 } from '../branded'
+import {ChainSupportedNetworks} from '../chain/network'
 
 export type CardanoActionSendOnlyReceiver = Readonly<{
   action: 'send-only-receiver'
   receiver: Address
+  network?: ChainSupportedNetworks
 }>
 
 export type CardanoActionSendSinglePt = Readonly<{
   action: 'send-single-pt'
   receiver: Address
+  network?: ChainSupportedNetworks
   params:
     | {
         amount: number | undefined
@@ -58,6 +61,7 @@ export type CardanoActionBrowseDapp = Readonly<{
 export type CardanoActionPayRequest = Readonly<{
   action: 'pay-request'
   address: Address
+  network?: ChainSupportedNetworks
   amount?: BalanceQuantity
   asset?: string
   memo?: string
@@ -87,6 +91,7 @@ export type CardanoActionViewBlock = Readonly<{
 export type CardanoActionViewAddress = Readonly<{
   action: 'view-address'
   address: Address
+  network?: ChainSupportedNetworks
 }>
 
 export type CardanoActionP2PConnect = Readonly<{

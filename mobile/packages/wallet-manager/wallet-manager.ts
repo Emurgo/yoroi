@@ -852,18 +852,58 @@ export const makeWalletManager = (
     }: {isForced?: boolean; network?: Chain.SupportedNetworks} = {}) {
       // Clean up any wallets that were marked for deletion before the refactor
       // (now removeWallet deletes immediately, but we need to clean up old marked wallets)
-      await this.removeWalletsMarkedForDeletion()
+      try {
+        await this.removeWalletsMarkedForDeletion()
+      } catch (error) {
+        getLogger().warn(
+          'WalletManager: Failed to remove wallets marked for deletion, continuing',
+          {error},
+        )
+      }
 
-      const deletedWalletIds = await parseDeletedWalletIds(
-        await rootStorage.getItem('deletedWalletIds'),
-      )
-      const walletIds = await walletsRootStorage
-        .getAllKeys()
-        .then((ids) => ids.filter((id) => !deletedWalletIds.includes(id)))
-      const walletMetas = await walletsRootStorage
-        .multiGet(walletIds, parseWalletMeta)
-        .then((tuples) => tuples.map(([_, walletMeta]) => walletMeta))
-        .then((walletMetas) => walletMetas.filter(isWalletMeta))
+      // Get deleted wallet IDs with error handling
+      let deletedWalletIds: string[] = []
+      try {
+        deletedWalletIds = await parseDeletedWalletIds(
+          await rootStorage.getItem('deletedWalletIds'),
+        )
+      } catch (error) {
+        getLogger().warn(
+          'WalletManager: Failed to get deleted wallet IDs, continuing',
+          {error},
+        )
+      }
+
+      // Get wallet IDs with error handling
+      let walletIds: string[] = []
+      try {
+        walletIds = await walletsRootStorage
+          .getAllKeys()
+          .then((ids) => ids.filter((id) => !deletedWalletIds.includes(id)))
+      } catch (error) {
+        getLogger().error('WalletManager: Failed to get wallet IDs', {error})
+        // Return empty result - app can still function without wallets
+        return {
+          wallets: Array.from(wallets.values()),
+          metas: Array.from(stateSubjects.walletMetas.value.values()),
+        }
+      }
+
+      // Get wallet metas with error handling
+      let walletMetas: Wallet.Meta[] = []
+      try {
+        walletMetas = await walletsRootStorage
+          .multiGet(walletIds, parseWalletMeta)
+          .then((tuples) => tuples.map(([_, walletMeta]) => walletMeta))
+          .then((walletMetas) => walletMetas.filter(isWalletMeta))
+      } catch (error) {
+        getLogger().error('WalletManager: Failed to get wallet metas', {error})
+        // Return empty result - app can still function without wallets
+        return {
+          wallets: Array.from(wallets.values()),
+          metas: Array.from(stateSubjects.walletMetas.value.values()),
+        }
+      }
 
       const allMetas = new Map(stateSubjects.walletMetas.value)
       for (const meta of walletMetas) {

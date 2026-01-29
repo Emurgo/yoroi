@@ -82,6 +82,8 @@ function AppShell({children}: React.PropsWithChildren) {
   const isMigrated = useMigrations(rootStorage)
   const isLoaded = useFonts()
 
+  // Wait for migrations and fonts to load
+  // useMigrations handles errors internally by clearing storage if needed
   if (!isMigrated || !isLoaded) return null
 
   return (

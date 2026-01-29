@@ -3,8 +3,10 @@ import {App} from '@yoroi/types'
 
 import {logger} from '~/kernel/logger/logger'
 import {
+  attemptStorageRecovery,
   initInstallationId,
   storageCurrentVersion,
+  validateStorageIntegrity,
 } from '~/kernel/storage/storages'
 
 import {ErrorMigrationVersion} from './errors'
@@ -53,6 +55,25 @@ const storageVersionMaker = (storage: App.Storage) => {
 export const runMigrations = async (
   storage: App.Storage,
 ): Promise<MigrationResult[]> => {
+  // Validate storage integrity before running any migrations
+  const integrityResult = await validateStorageIntegrity()
+  if (!integrityResult.isHealthy) {
+    logger.warn(
+      'runMigrations: Storage integrity check failed, attempting recovery',
+      {
+        errors: integrityResult.errors,
+      },
+    )
+
+    const recovered = await attemptStorageRecovery()
+    if (!recovered) {
+      logger.error(
+        'runMigrations: Storage recovery failed, proceeding with caution',
+      )
+      // Continue anyway - migrations might still work, and we'll catch errors individually
+    }
+  }
+
   const storageVersion = storageVersionMaker(storage)
   const currentVersion = await storageVersion.read()
   const targetVersion = storageCurrentVersion
@@ -60,6 +81,7 @@ export const runMigrations = async (
   logger.debug('runMigrations: Starting', {
     currentVersion,
     targetVersion,
+    storageHealthy: integrityResult.isHealthy,
   })
 
   // If already at target version, no migrations needed
@@ -185,15 +207,16 @@ export const runMigrations = async (
     }
   }
 
-  // Verify final version
+  // Verify final version - don't throw, let caller handle via results
   const finalVersion = await storageVersion.read()
   if (finalVersion !== targetVersion) {
-    const error = new ErrorMigrationVersion()
     logger.error('runMigrations: Version mismatch after migrations', {
       expected: targetVersion,
       actual: finalVersion,
     })
-    throw error
+    // Return results with failures instead of throwing
+    // Caller can inspect results and decide how to handle
+    return results
   }
 
   // Initialize installation ID after successful migrations

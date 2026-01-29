@@ -1,12 +1,18 @@
-import {createDelegationTxFromWallet} from '@yoroi/cardano-wallet'
-import {pastedFormatter} from '@yoroi/cardano-wallet'
+import {
+  createDelegationTxFromWallet,
+  pastedFormatter,
+} from '@yoroi/cardano-wallet'
 import {toBigInt} from '@yoroi/common'
 import {PendingAction, linksCardanoModuleMaker} from '@yoroi/links'
 import {createPrimaryTokenInfo} from '@yoroi/portfolio'
 import {useTransfer} from '@yoroi/transfer'
 import {Links, Portfolio} from '@yoroi/types'
-import {useHasWallets} from '@yoroi/wallet-manager'
-import {useWalletManagerSelector} from '@yoroi/wallet-manager'
+import {
+  useHasWallets,
+  useSelectedNetwork,
+  useWalletManager,
+  useWalletManagerSelector,
+} from '@yoroi/wallet-manager'
 
 import {useNavigation} from '@react-navigation/native'
 import * as Linking from 'expo-linking'
@@ -50,6 +56,8 @@ export const useActionExecutor = () => {
   const {isLoggedIn} = useAuth()
   const hasWallets = useHasWallets()
   const rootNavigation = useNavigation<AppRouteNavigation>()
+  const {walletManager} = useWalletManager()
+  const {network: currentNetwork} = useSelectedNetwork()
   const wallet = useWalletManagerSelector((ctx) => ctx.selected.wallet)
   const meta = useWalletManagerSelector((ctx) => ctx.selected.meta)
   const selectedWalletData = React.useMemo(
@@ -257,6 +265,13 @@ export const useActionExecutor = () => {
       } else {
         // Cardano action
         const cardanoAction = pendingAction.action
+
+        // Switch network BEFORE processing the action if needed
+        const actionNetwork =
+          'network' in cardanoAction ? cardanoAction.network : undefined
+        if (actionNetwork && actionNetwork !== currentNetwork) {
+          walletManager.setSelectedNetwork(actionNetwork)
+        }
 
         switch (cardanoAction.action) {
           case 'launch-url': {
@@ -591,6 +606,8 @@ export const useActionExecutor = () => {
       memoChanged,
       linkActionChanged,
       rootNavigation,
+      currentNetwork,
+      walletManager,
     ],
   )
 
