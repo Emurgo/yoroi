@@ -6,6 +6,16 @@ import {freeze} from 'immer'
 import {logger} from '~/kernel/logger/logger'
 
 /**
+ * Detects if a Cardano address is a testnet address
+ * Testnet addresses start with 'addr_test1' prefix
+ * @param address - The address to check
+ * @returns 'preprod' for testnet addresses, 'mainnet' for mainnet addresses
+ */
+const detectNetwork = (address: string): 'mainnet' | 'preprod' => {
+  return address.startsWith('addr_test1') ? 'preprod' : 'mainnet'
+}
+
+/**
  * Parse a Cardano link string into a CardanoAction.
  * Handles web+cardano:// links and converts them to structured actions.
  */
@@ -19,6 +29,7 @@ export const parseCardanoLink = (codeContent: string): Links.CardanoAction => {
     return freeze({
       action: 'send-only-receiver',
       receiver: Branded.asAddress(codeContent),
+      network: detectNetwork(codeContent),
     } as const)
   }
 
@@ -83,9 +94,17 @@ export const parseCardanoLink = (codeContent: string): Links.CardanoAction => {
   // Handle pay authority (CIP-PR843)
   if (authority === 'pay') {
     const {address, amount, asset, memo} = parsedCardanoLink.params
+    // Defensive validation: While @yoroi/links library validates required params,
+    // we guard against undefined to prevent TypeError in detectNetwork()
+    if (typeof address !== 'string') {
+      throw new Links.Errors.ParamsValidationFailed(
+        'address parameter is required',
+      )
+    }
     return freeze({
       action: 'pay-request',
-      address: Branded.asAddress(address as string),
+      address: Branded.asAddress(address),
+      network: detectNetwork(address),
       amount: amount ? Branded.asBalanceQuantity(String(amount)) : undefined,
       asset: asset as string | undefined,
       memo: memo as string | undefined,
@@ -95,9 +114,17 @@ export const parseCardanoLink = (codeContent: string): Links.CardanoAction => {
   // Handle payment authority (CIP-13)
   if (authority === 'payment') {
     const {address, amount, asset, memo} = parsedCardanoLink.params
+    // Defensive validation: While @yoroi/links library validates required params,
+    // we guard against undefined to prevent TypeError in detectNetwork()
+    if (typeof address !== 'string') {
+      throw new Links.Errors.ParamsValidationFailed(
+        'address parameter is required',
+      )
+    }
     return freeze({
       action: 'pay-request',
-      address: Branded.asAddress(address as string),
+      address: Branded.asAddress(address),
+      network: detectNetwork(address),
       amount: amount ? Branded.asBalanceQuantity(String(amount)) : undefined,
       asset: asset as string | undefined,
       memo: memo as string | undefined,
@@ -146,9 +173,17 @@ export const parseCardanoLink = (codeContent: string): Links.CardanoAction => {
   // Handle address authority (CIP-134)
   if (authority === 'address') {
     const {address} = parsedCardanoLink.params
+    // Defensive validation: While @yoroi/links library validates required params,
+    // we guard against undefined to prevent TypeError in detectNetwork()
+    if (typeof address !== 'string') {
+      throw new Links.Errors.ParamsValidationFailed(
+        'address parameter is required',
+      )
+    }
     return freeze({
       action: 'view-address',
-      address: Branded.asAddress(address as string),
+      address: Branded.asAddress(address),
+      network: detectNetwork(address),
     } as const)
   }
 
@@ -198,12 +233,17 @@ export const parseCardanoLink = (codeContent: string): Links.CardanoAction => {
   // This handles the old format where address was in the path
   if (authority === '') {
     const {address: receiver, amount, memo, message} = parsedCardanoLink.params
+    const receiverStr = typeof receiver === 'string' ? receiver : ''
     return freeze(
       {
         action: 'send-single-pt',
-        receiver: typeof receiver === 'string' ? receiver : '',
+        receiver: receiverStr,
+        network: detectNetwork(receiverStr),
         params: {
-          amount: typeof amount === 'string' ? amount : undefined,
+          amount:
+            typeof amount === 'string' || typeof amount === 'number'
+              ? String(amount)
+              : undefined,
           memo: typeof memo === 'string' ? memo : undefined,
           message: typeof message === 'string' ? message : undefined,
         },
@@ -215,12 +255,17 @@ export const parseCardanoLink = (codeContent: string): Links.CardanoAction => {
   // Fallback: if we don't recognize the authority, treat as legacy transfer
   // This maintains backward compatibility
   const {address: receiver, amount, memo, message} = parsedCardanoLink.params
+  const receiverStr = typeof receiver === 'string' ? receiver : ''
   return freeze(
     {
       action: 'send-single-pt',
-      receiver: typeof receiver === 'string' ? receiver : '',
+      receiver: receiverStr,
+      network: detectNetwork(receiverStr),
       params: {
-        amount: typeof amount === 'string' ? amount : undefined,
+        amount:
+          typeof amount === 'string' || typeof amount === 'number'
+            ? String(amount)
+            : undefined,
         memo: typeof memo === 'string' ? memo : undefined,
         message: typeof message === 'string' ? message : undefined,
       },
