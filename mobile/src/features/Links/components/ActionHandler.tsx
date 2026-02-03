@@ -139,18 +139,7 @@ export const ActionHandler = () => {
   // Update observables when React state changes
   React.useEffect(() => {
     if (pendingAction) {
-      const newActionId = createActionId(pendingAction)
-      // If this actionId was processed before, check if it's a new instance
-      if (newActionId && processedActionsRef.current.has(newActionId)) {
-        const previousAction = processedActionsRef.current.get(newActionId)
-        // If the action object reference is different, it's a new trigger
-        if (previousAction !== pendingAction) {
-          // Same actionId but new instance - clear to allow reprocessing
-          processedActionsRef.current.delete(newActionId)
-          isProcessingRef.current = false
-        }
-      }
-      currentActionIdRef.current = newActionId
+      currentActionIdRef.current = createActionId(pendingAction)
     } else {
       currentActionIdRef.current = null
     }
@@ -168,10 +157,8 @@ export const ActionHandler = () => {
   }, [wallet])
 
   // Track processing state
-  // Map actionId -> pendingAction object reference to detect new triggers
-  const processedActionsRef = React.useRef<Map<string, PendingAction | null>>(
-    new Map(),
-  )
+  // Set of actionIds that have been processed
+  const processedActionsRef = React.useRef<Set<string>>(new Set())
   const isProcessingRef = React.useRef(false)
   const hasShownModalRef = React.useRef(false)
   const prevWalletRef = React.useRef<typeof wallet>(wallet)
@@ -319,19 +306,8 @@ export const ActionHandler = () => {
             return
           }
 
-          // Check if we've already processed this exact action instance
-          if (actionId && processedActionsRef.current.has(actionId)) {
-            const processedAction = processedActionsRef.current.get(actionId)
-            // If it's the same action object reference, skip (already processing)
-            if (processedAction === action) {
-              return
-            }
-            // Different action object with same actionId - new trigger, allow it
-            processedActionsRef.current.delete(actionId)
-            isProcessingRef.current = false
-          }
-
-          if (!actionId) {
+          // Check if we've already processed this action
+          if (!actionId || processedActionsRef.current.has(actionId)) {
             return
           }
 
@@ -340,8 +316,7 @@ export const ActionHandler = () => {
           }
 
           isProcessingRef.current = true
-          // Store action object reference, not just actionId
-          processedActionsRef.current.set(actionId, action)
+          processedActionsRef.current.add(actionId)
 
           InteractionManager.runAfterInteractions(() => {
             try {
