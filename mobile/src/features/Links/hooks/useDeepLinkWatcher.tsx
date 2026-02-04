@@ -12,6 +12,10 @@ export const useDeepLinkWatcher = () => {
   const {isLoggedIn} = useAuth()
   const {pendingAction, setPendingAction} = useLinks()
 
+  // Track URLs that have already been processed to prevent re-processing
+  // when processLink callback reference changes
+  const processedUrlsRef = React.useRef<Set<string>>(new Set())
+
   const processLink = React.useCallback(
     (url: string) => {
       // Try Yoroi links first (yoroi://)
@@ -70,7 +74,8 @@ export const useDeepLinkWatcher = () => {
   React.useEffect(() => {
     const getInitialURL = async () => {
       const url = await Linking.getInitialURL()
-      if (url !== null) {
+      if (url !== null && !processedUrlsRef.current.has(url)) {
+        processedUrlsRef.current.add(url)
         processLink(url)
       }
     }
@@ -92,40 +97,42 @@ export const useDeepLinkWatcher = () => {
     const checkInitialUrlAfterLogin = async () => {
       const url = await Linking.getInitialURL()
 
-      if (url !== null) {
-        // Try both Yoroi and Cardano links
-        const parsedYoroiAction = linksYoroiParser(url)
-        if (parsedYoroiAction != null) {
-          if (
-            parsedYoroiAction.params?.isSandbox === true &&
-            __DEV__ === false
-          ) {
-            return
-          }
-          const pendingAction: PendingAction = {
-            source: 'yoroi',
-            action: {info: parsedYoroiAction, isTrusted: false},
-          }
-          setPendingAction(pendingAction)
+      // Skip if URL was already processed
+      if (url === null || processedUrlsRef.current.has(url)) {
+        return
+      }
+
+      // Try both Yoroi and Cardano links
+      const parsedYoroiAction = linksYoroiParser(url)
+      if (parsedYoroiAction != null) {
+        if (parsedYoroiAction.params?.isSandbox === true && __DEV__ === false) {
           return
         }
+        processedUrlsRef.current.add(url)
+        const pendingAction: PendingAction = {
+          source: 'yoroi',
+          action: {info: parsedYoroiAction, isTrusted: false},
+        }
+        setPendingAction(pendingAction)
+        return
+      }
 
-        if (isWebCardanoLink(url)) {
-          try {
-            const cardanoAction = parseCardanoLink(url)
-            const pendingAction: PendingAction = {
-              source: 'cardano',
-              action: cardanoAction,
-            }
-            setPendingAction(pendingAction)
-          } catch (error) {
-            logger.error('useDeepLinkWatcher: error parsing URL after login', {
-              error,
-              errorMessage:
-                error instanceof Error ? error.message : String(error),
-              url,
-            })
+      if (isWebCardanoLink(url)) {
+        try {
+          processedUrlsRef.current.add(url)
+          const cardanoAction = parseCardanoLink(url)
+          const pendingAction: PendingAction = {
+            source: 'cardano',
+            action: cardanoAction,
           }
+          setPendingAction(pendingAction)
+        } catch (error) {
+          logger.error('useDeepLinkWatcher: error parsing URL after login', {
+            error,
+            errorMessage:
+              error instanceof Error ? error.message : String(error),
+            url,
+          })
         }
       }
     }

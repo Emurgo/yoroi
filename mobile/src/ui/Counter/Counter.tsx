@@ -44,7 +44,7 @@ export const Counter = ({
 
         {unitsText !== undefined && (
           <Text style={[a.body_2_md_medium, {color: p.primary_600}]}>
-            {unitsText ?? ''}
+            {` ${unitsText}`}
           </Text>
         )}
 
@@ -56,7 +56,7 @@ export const Counter = ({
                 : [a.body_2_md_regular, {color: p.primary_600}],
             ]}
           >
-            {closingText ?? ''}
+            {` ${closingText}`}
           </Text>
         )}
       </Text>

@@ -18,7 +18,8 @@ import {logger} from '~/kernel/logger/logger'
 export const ClaimActionHandler = () => {
   const {pendingAction} = useLinks()
   const {reset: resetClaimState, scanActionClaimChanged, address} = useClaim()
-  const processedActionRef = React.useRef<Links.CardanoActionClaim | null>(null)
+  // Track processed claim URLs to prevent re-processing
+  const processedClaimUrlsRef = React.useRef<Set<string>>(new Set())
 
   // Handle claim action from pendingAction context
   // Use useFocusEffect to ensure we process when screen is focused
@@ -48,12 +49,9 @@ export const ClaimActionHandler = () => {
       ) {
         const cardanoAction = pendingAction.action as Links.CardanoActionClaim
 
-        // Check if we've already processed this action
-        if (
-          processedActionRef.current &&
-          processedActionRef.current.url === cardanoAction.url &&
-          processedActionRef.current.code === cardanoAction.code
-        ) {
+        // Check if we've already processed this claim URL
+        const claimKey = `${cardanoAction.url}:${cardanoAction.code}`
+        if (processedClaimUrlsRef.current.has(claimKey)) {
           logger.info(
             'ClaimActionHandler: action already processed, skipping',
             {
@@ -75,7 +73,7 @@ export const ClaimActionHandler = () => {
         scanActionClaimChanged(cardanoAction)
 
         // Mark as processed to prevent re-processing if screen refocuses
-        processedActionRef.current = cardanoAction
+        processedClaimUrlsRef.current.add(claimKey)
       } else {
         logger.info('ClaimActionHandler: conditions not met', {
           hasPendingAction: !!pendingAction,
