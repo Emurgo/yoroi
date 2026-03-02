@@ -176,7 +176,7 @@ export const getOperationDisplayText = (
   const hasWithdrawals = withdrawals.length > 0
 
   // Extract certificate kinds as strings to handle all certificate types
-  const certificateKinds = certificates.map((cert) => cert.kind as string)
+  const certificateKinds = certificates.filter((cert) => cert != null).map((cert) => cert.kind as string)
   const hasStakeRegistration =
     certificateKinds.includes(CertificateKind.StakeRegistration) ||
     certificateKinds.includes(CertificateKind.StakeRegistrationAndDelegation) ||

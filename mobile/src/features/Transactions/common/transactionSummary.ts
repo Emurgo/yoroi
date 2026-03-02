@@ -104,7 +104,7 @@ const calculateImplicitOutput = (
   let totalRewards = Quantities.zero
 
   for (const cert of tx.certificates) {
-    if (cert.kind !== CertificateKind.MoveInstantaneousRewardsCert) {
+    if (cert == null || cert.kind !== CertificateKind.MoveInstantaneousRewardsCert) {
       continue
     }
 

@@ -942,7 +942,9 @@ const parseTx = (
   }
 
   const tx = parseSafe(data)
-  return isTx(tx) ? tx : undefined
+  if (!isTx(tx)) return undefined
+  tx.certificates = tx.certificates.filter((cert) => cert != null)
+  return tx
 }
 
 const exists = <T>(data: unknown): data is NonNullable<T> => !!data
