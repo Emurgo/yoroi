@@ -30,7 +30,9 @@ export const getOperationTypeKey = (
     return null
   }
 
-  const certificates = walletTransaction.certificates || []
+  const certificates = (walletTransaction.certificates || []).filter(
+    (cert) => cert != null,
+  )
   const withdrawals = walletTransaction.withdrawals || []
 
   // 1. Check for withdrawal
@@ -73,7 +75,7 @@ export const getOperationTypeKey = (
 
   // 2. Certificate logic
   const hasWithdrawals = withdrawals.length > 0
-  const certificateKinds = certificates.filter((cert) => cert != null).map((cert) => cert.kind as string)
+  const certificateKinds = certificates.map((cert) => cert.kind as string)
   const hasStakeRegistration =
     certificateKinds.includes(CertificateKind.StakeRegistration) ||
     certificateKinds.includes(CertificateKind.StakeRegistrationAndDelegation) ||
