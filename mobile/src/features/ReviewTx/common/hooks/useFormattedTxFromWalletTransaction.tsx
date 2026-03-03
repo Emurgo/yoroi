@@ -426,6 +426,7 @@ const formatCertificatesFromWalletTransaction = (
   // We only have the certificate kind and limited fields, so we create minimal certificates
   // that can still be displayed in the UI (operations only need the type for most cases)
   return certificates
+    .filter((cert) => cert != null)
     .map((cert): FormattedCertificate | null => {
       const kind = cert.kind
       if (!kind) return null
