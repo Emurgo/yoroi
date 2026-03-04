@@ -116,7 +116,9 @@ export const getOperationDisplayText = (
     return null
   }
 
-  const certificates = walletTransaction.certificates || []
+  const certificates = (walletTransaction.certificates || []).filter(
+    (cert) => cert != null,
+  )
   const withdrawals = walletTransaction.withdrawals || []
 
   // 1. Check for withdrawal (no certs, SELF direction, withdrawals present)
