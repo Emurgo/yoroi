@@ -5,7 +5,7 @@ import {
 } from '@yoroi/staking'
 import {ThemedPalette, atoms as a, useTheme} from '@yoroi/theme'
 import {NotEnoughMoneyToSendError} from '@yoroi/tx'
-import {useSelectedWallet} from '@yoroi/wallet-manager'
+import {useSelectedWallet, useWalletEvent} from '@yoroi/wallet-manager'
 
 import {useRoute} from '@react-navigation/native'
 import * as React from 'react'
@@ -217,6 +217,7 @@ const NeverParticipatedInGovernanceVariant = ({
   const {manager} = useGovernance()
   const {wallet, meta} = useSelectedWallet()
   const stakingInfo = useStakingInfo(wallet)
+  useWalletEvent(wallet, 'utxos', stakingInfo.refetch)
   const needsToRegisterStakingKey =
     stakingInfo?.data?.status === 'not-registered'
   const {handleExploreOtherOptions} = useNeverParticipatedGovernance()
