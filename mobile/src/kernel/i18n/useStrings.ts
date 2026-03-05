@@ -1431,11 +1431,6 @@ export const useStrings = () => {
 
       // Staking/PoolTransition strings
       staking: {
-        earnRewardsBannerTitle: f(stakingMessages.earnRewardsBannerTitle),
-        earnRewardsBannerDescription: f(
-          stakingMessages.earnRewardsBannerDescription,
-        ),
-        earnRewardsBannerCta: f(stakingMessages.earnRewardsBannerCta),
         title: f(stakingMessages.title),
         warning: f(stakingMessages.warning),
         finalWarning: f(stakingMessages.finalWarning),

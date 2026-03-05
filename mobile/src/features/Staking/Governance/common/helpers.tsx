@@ -2,7 +2,6 @@ import {CardanoMobile, isByron} from '@yoroi/cardano-wallet'
 import {isNonNullable, isString, useAsyncStorage} from '@yoroi/common'
 import {
   type StakingKeyState,
-  getYoroiDrepIdHex,
   governanceApiMaker,
   governanceManagerMaker,
   useDelegationCertificate,
@@ -225,18 +224,11 @@ export const useParticipatingGovernance = ({
 
   const isPending = isCreatingTx || pendingVote !== null || isTxPending
 
-  const yoroiDrepIdHex = React.useMemo(
-    () => getYoroiDrepIdHex(wallet.networkManager.network),
-    [wallet.networkManager.network],
-  )
   const displayedHash =
     action.kind === 'delegate'
       ? formatDrepHashToCIP129Format(action.hash, action.type)
       : null
-  const isDelegatingToYoroiDrep =
-    action.kind === 'delegate' && action.hash === yoroiDrepIdHex
-  const isDelegatingToDrep =
-    action.kind === 'delegate' && action.hash !== yoroiDrepIdHex
+  const isDelegatingToDrep = action.kind === 'delegate'
 
   const handleDelegateToOtherDrep = async (options: {
     hash: string
@@ -267,7 +259,6 @@ export const useParticipatingGovernance = ({
     manager,
     isPending,
     displayedHash,
-    isDelegatingToYoroiDrep,
     isDelegatingToDrep,
     handleDelegateToOtherDrep,
     navigateToVotingOptions,
@@ -277,16 +268,7 @@ export const useParticipatingGovernance = ({
 export const useNeverParticipatedGovernance = (initialDrepId?: string) => {
   const navigateTo = useNavigateTo()
   const {wallet, meta} = useSelectedWallet()
-  const {manager} = useGovernance()
-  const stakingInfo = useStakingInfo(wallet)
-
-  const hasStakingKeyRegistered = stakingInfo?.data?.status !== 'not-registered'
-  useWalletEvent(wallet, 'utxos', stakingInfo.refetch)
-  const needsToRegisterStakingKey = !hasStakingKeyRegistered
-
-  const createDelegationCertificate = useDelegationCertificate()
-
-  const {pendingVote, isCreatingTx, submitDelegate} = useGovernanceVoteFlow({
+  const {pendingVote, isCreatingTx} = useGovernanceVoteFlow({
     wallet,
     addressMode: meta.addressMode,
     options: {
@@ -303,41 +285,12 @@ export const useNeverParticipatedGovernance = (initialDrepId?: string) => {
 
   const isPending = isCreatingTx || pendingVote !== null
 
-  const yoroiDrepIdHex = React.useMemo(
-    () => getYoroiDrepIdHex(wallet.networkManager.network),
-    [wallet.networkManager.network],
-  )
-
-  const handleDelegateToYoroi = async () => {
-    if (isPending) return
-    const stakingKey = wallet.getStakingKey()
-
-    const options = {
-      hash: yoroiDrepIdHex,
-      type: 'key' as const,
-      CIP105: false,
-    }
-
-    const certificate = await createDelegationCertificate({
-      hash: yoroiDrepIdHex,
-      type: 'key',
-      stakingKey,
-    })
-    const stakeCert = needsToRegisterStakingKey
-      ? manager.createStakeRegistrationCertificate(stakingKey)
-      : null
-    const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
-
-    submitDelegate(certs, options)
-  }
-
   const handleExploreOtherOptions = () => {
     navigateTo.votingOptions()
   }
 
   return {
     isPending,
-    handleDelegateToYoroi,
     handleExploreOtherOptions,
     initialDrepId,
   }
@@ -400,11 +353,6 @@ export const useVotingOptions = () => {
       ? action.type
       : 'key'
 
-  const yoroiDrepIdHex = React.useMemo(
-    () => getYoroiDrepIdHex(wallet.networkManager.network),
-    [wallet.networkManager.network],
-  )
-
   const pendingTxHash =
     isTxPendingConfirmation && lastSubmittedTx?.kind === 'delegate-to-drep'
       ? lastSubmittedTx.hash
@@ -414,35 +362,28 @@ export const useVotingOptions = () => {
       ? lastSubmittedTx.type
       : 'key'
 
-  const isPendingDelegateToYoroi = pendingTxHash === yoroiDrepIdHex
-  const isPendingDelegateToOther = Boolean(
-    pendingTxHash && !isPendingDelegateToYoroi,
+  const isPendingDelegatingToDrep = Boolean(
+    isTxPendingConfirmation &&
+      lastSubmittedTx?.kind === 'delegate-to-drep' &&
+      pendingTxHash,
   )
+  const confirmedDelegatingToDrep = Boolean(voteKind === 'delegate' && voteHash)
+  const isDelegatingToDrep = isTxPendingConfirmation
+    ? isPendingDelegatingToDrep
+    : confirmedDelegatingToDrep
 
-  const confirmedDelegatingToYoroi = voteHash === yoroiDrepIdHex
-  const confirmedDelegatingToOther = Boolean(
-    voteKind === 'delegate' && voteHash && !confirmedDelegatingToYoroi,
-  )
-
-  const isDelegatingToYoroiDrep = isTxPendingConfirmation
-    ? isPendingDelegateToYoroi
-    : confirmedDelegatingToYoroi
-  const isDelegatingToOtherDrep = isTxPendingConfirmation
-    ? isPendingDelegateToOther
-    : confirmedDelegatingToOther
-
-  const otherDrepHash = isDelegatingToOtherDrep
-    ? isPendingDelegateToOther
+  const drepHash = isDelegatingToDrep
+    ? isPendingDelegatingToDrep
       ? pendingTxHash
       : voteHash
     : null
-  const otherDrepType = isDelegatingToOtherDrep
-    ? isPendingDelegateToOther
+  const drepType = isDelegatingToDrep
+    ? isPendingDelegatingToDrep
       ? pendingTxType
       : voteType
     : 'key'
-  const otherDrepDisplayId = otherDrepHash
-    ? formatDrepHashToCIP129Format(otherDrepHash, otherDrepType)
+  const drepDisplayId = drepHash
+    ? formatDrepHashToCIP129Format(drepHash, drepType)
     : null
 
   const isPendingAbstain =
@@ -472,29 +413,6 @@ export const useVotingOptions = () => {
     const certificate = await createDelegationCertificate({
       hash: options.hash,
       type: options.type,
-      stakingKey,
-    })
-    const stakeCert = needsToRegisterStakingKey
-      ? manager.createStakeRegistrationCertificate(stakingKey)
-      : null
-    const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
-
-    submitDelegate(certs, options)
-  }
-
-  const handleDelegateToYoroi = async () => {
-    if (isPending) return
-    const stakingKey = wallet.getStakingKey()
-
-    const options = {
-      hash: yoroiDrepIdHex,
-      type: 'key' as const,
-      CIP105: false,
-    }
-
-    const certificate = await createDelegationCertificate({
-      hash: yoroiDrepIdHex,
-      type: 'key',
       stakingKey,
     })
     const stakeCert = needsToRegisterStakingKey
@@ -540,14 +458,12 @@ export const useVotingOptions = () => {
   return {
     manager,
     isPending,
-    isDelegatingToYoroiDrep,
-    isDelegatingToOtherDrep,
-    confirmedDelegatingToOther,
-    otherDrepDisplayId,
+    isDelegatingToDrep,
+    confirmedDelegatingToDrep,
+    drepDisplayId,
     isAbstaining,
     isNoConfidence,
     handleDelegate,
-    handleDelegateToYoroi,
     handleAbstain,
     handleNoConfidence,
   }

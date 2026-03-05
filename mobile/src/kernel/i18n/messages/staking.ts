@@ -601,19 +601,6 @@ export const stakingMessages = defineMessages({
     id: 'global.cancel',
     defaultMessage: '!!!Cancel',
   },
-  earnRewardsBannerTitle: {
-    id: 'components.governance.earnRewardsBanner.title',
-    defaultMessage: '!!!Earn Rewards with Yoroi',
-  },
-  earnRewardsBannerDescription: {
-    id: 'components.governance.earnRewardsBanner.description',
-    defaultMessage:
-      '!!!Delegate your ADA to our stake pool and DRep in one step. Support Cardano governance, strengthen the network, and earn rewards along the way.',
-  },
-  earnRewardsBannerCta: {
-    id: 'components.governance.earnRewardsBanner.cta',
-    defaultMessage: '!!!EARN ADA',
-  },
   governanceRequiredTitle: {
     id: 'components.stakingcenter.governanceRequired.title',
     defaultMessage: '!!!Governance updates',
@@ -621,7 +608,7 @@ export const stakingMessages = defineMessages({
   governanceRequiredDescription: {
     id: 'components.stakingcenter.governanceRequired.description',
     defaultMessage:
-      '!!!To withdraw rewards from your stake delegation, you must also delegate your voting power. Save time and fees by delegating to our Yoroi DRep now, alongside your stake pool delegation.',
+      '!!!To withdraw rewards from your stake delegation, you must also delegate your voting power. Choose any DRep from governance options, or continue with stake-only delegation for now.',
   },
   delegateToYoroiDRep: {
     id: 'components.stakingcenter.governanceRequired.delegateToYoroiDRep',
