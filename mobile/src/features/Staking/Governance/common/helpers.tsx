@@ -265,34 +265,15 @@ export const useParticipatingGovernance = ({
   }
 }
 
-export const useNeverParticipatedGovernance = (initialDrepId?: string) => {
+export const useNeverParticipatedGovernance = () => {
   const navigateTo = useNavigateTo()
-  const {wallet, meta} = useSelectedWallet()
-  const {pendingVote, isCreatingTx} = useGovernanceVoteFlow({
-    wallet,
-    addressMode: meta.addressMode,
-    options: {
-      shouldThrow: false,
-      onError: (error) => {
-        if (error instanceof NotEnoughMoneyToSendError) {
-          navigateTo.noFunds()
-          return
-        }
-        throw error
-      },
-    },
-  })
-
-  const isPending = isCreatingTx || pendingVote !== null
 
   const handleExploreOtherOptions = () => {
     navigateTo.votingOptions()
   }
 
   return {
-    isPending,
     handleExploreOtherOptions,
-    initialDrepId,
   }
 }
 

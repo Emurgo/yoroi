@@ -1639,7 +1639,6 @@ export const useStrings = () => {
         governanceRequiredDescription: f(
           stakingMessages.governanceRequiredDescription,
         ),
-        delegateToYoroiDRep: f(stakingMessages.delegateToYoroiDRep),
         delegateStakeOnly: f(stakingMessages.delegateStakeOnly),
         poolROA: f(stakingMessages.poolROA),
         poolSaturation: f(stakingMessages.poolSaturation),

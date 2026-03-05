@@ -217,8 +217,7 @@ const NeverParticipatedInGovernanceVariant = ({
   const stakingInfo = useStakingInfo(wallet)
   const needsToRegisterStakingKey =
     stakingInfo?.data?.status === 'not-registered'
-  const {isPending, handleExploreOtherOptions} =
-    useNeverParticipatedGovernance(initialDrepId)
+  const {handleExploreOtherOptions} = useNeverParticipatedGovernance()
 
   // Track if we've already opened the modal for this initialDrepId to prevent reopening
   const hasOpenedModalRef = React.useRef<string | undefined>(undefined)
@@ -269,7 +268,7 @@ const NeverParticipatedInGovernanceVariant = ({
   }, [closeModal, markJustClosed])
 
   const createDelegationCertificate = useDelegationCertificate()
-  const {submitDelegate} = useGovernanceVoteFlow({
+  const {pendingVote, isCreatingTx, submitDelegate} = useGovernanceVoteFlow({
     wallet,
     addressMode: meta.addressMode,
     options: {
@@ -280,6 +279,7 @@ const NeverParticipatedInGovernanceVariant = ({
       },
     },
   })
+  const isPending = isCreatingTx || pendingVote !== null
 
   const openDRepIdModal = React.useCallback(
     (

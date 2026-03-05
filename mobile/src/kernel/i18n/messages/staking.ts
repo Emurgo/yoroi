@@ -610,10 +610,6 @@ export const stakingMessages = defineMessages({
     defaultMessage:
       '!!!To withdraw rewards from your stake delegation, you must also delegate your voting power. Choose any DRep from governance options, or continue with stake-only delegation for now.',
   },
-  delegateToYoroiDRep: {
-    id: 'components.stakingcenter.governanceRequired.delegateToYoroiDRep',
-    defaultMessage: '!!!Delegate to Yoroi DRep',
-  },
   delegateStakeOnly: {
     id: 'components.stakingcenter.governanceRequired.delegateStakeOnly',
     defaultMessage: '!!!Delegate stake only',
