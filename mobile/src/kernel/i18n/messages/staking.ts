@@ -520,25 +520,9 @@ export const stakingMessages = defineMessages({
     id: 'components.governance.invalidDRepId',
     defaultMessage: '!!!Invalid DRep Id',
   },
-  delegateToAYoroiDrep: {
-    id: 'components.governance.delegateToAYoroiDrep',
-    defaultMessage: '!!!Delegate To A Yoroi Drep',
-  },
-  delegatingToYoroiDRep: {
-    id: 'components.governance.delegatingToYoroiDRep',
-    defaultMessage: '!!!Delegating To Yoroi DRep',
-  },
-  delegateToAYoroiDRepDescription: {
-    id: 'components.governance.delegateToAYoroiDRepDescription',
-    defaultMessage: '!!!Delegate To A Yoroi DRep Description',
-  },
   delegateVotingToDRepDeprecatedFormatNotice: {
     id: 'components.governance.delegateVotingToDRepDeprecatedFormatNotice',
     defaultMessage: '!!!Delegate Voting To DRep Deprecated Format Notice',
-  },
-  yoroiRecord: {
-    id: 'components.governance.yoroiRecord',
-    defaultMessage: '!!!Yoroi Record',
   },
   newToGovernanceTitle: {
     id: 'components.governance.newToGovernance.title',
@@ -646,10 +630,6 @@ export const stakingMessages = defineMessages({
     id: 'components.governance.drepStatusActive',
     defaultMessage: '!!!Active',
   },
-  yoroiDrep: {
-    id: 'components.governance.yoroiDrep',
-    defaultMessage: '!!!Yoroi DRep',
-  },
   delegationStatusLabel: {
     id: 'components.governance.delegationStatusLabel',
     defaultMessage: '!!!Delegation status',
@@ -673,10 +653,6 @@ export const stakingMessages = defineMessages({
   dontHaveAnID: {
     id: 'components.governance.dontHaveAnID',
     defaultMessage: "!!!Don't have an ID?",
-  },
-  orDelegateToYoroiDrepBelow: {
-    id: 'components.governance.orDelegateToYoroiDrepBelow',
-    defaultMessage: '!!!or delegate to Yoroi DRep below',
   },
   failedToLoadPools: {
     id: 'components.staking.failedToLoadPools',

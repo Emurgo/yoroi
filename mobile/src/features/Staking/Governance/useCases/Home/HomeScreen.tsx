@@ -4,6 +4,7 @@ import {
   useGovernance,
 } from '@yoroi/staking'
 import {ThemedPalette, atoms as a, useTheme} from '@yoroi/theme'
+import {NotEnoughMoneyToSendError} from '@yoroi/tx'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {useRoute} from '@react-navigation/native'
@@ -211,6 +212,7 @@ const NeverParticipatedInGovernanceVariant = ({
 }) => {
   const strings = useStrings()
   const {atoms: ta} = useTheme()
+  const navigateTo = useNavigateTo()
   const {openModal, closeModal} = useModal()
   const {manager} = useGovernance()
   const {wallet, meta} = useSelectedWallet()
@@ -272,9 +274,14 @@ const NeverParticipatedInGovernanceVariant = ({
     wallet,
     addressMode: meta.addressMode,
     options: {
-      onError: () => {
-        // Error handling (including insufficient balance) is done by useCreateGovernanceTx
-        // This ensures the modal is closed if an error occurs
+      shouldThrow: false,
+      onError: (error) => {
+        if (error instanceof NotEnoughMoneyToSendError) {
+          navigateTo.noFunds()
+          return
+        }
+
+        // Keep modal-close behavior for other failures in this flow
         closeModalWrapped()
       },
     },
