@@ -11,11 +11,9 @@ import * as React from 'react'
 import {Keyboard, Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
 import {GovernanceStatusCard} from '~/features/Staking/Governance/common/GovernanceStatusCard/GovernanceStatusCard'
 import {LearnMoreLink} from '~/features/Staking/Governance/common/LearnMoreLink/LearnMoreLink'
 import {OtherDrepCard} from '~/features/Staking/Governance/common/OtherDrepCard/OtherDrepCard'
-import {YoroiDrepCard} from '~/features/Staking/Governance/common/YoroiDrepCard/YoroiDrepCard'
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useModal} from '~/ui/Modal/context/ModalContext'
@@ -30,7 +28,11 @@ import {
 import {useNavigateTo} from '../../common/navigation'
 import {useGovernanceVoteFlow} from '../../common/useGovernanceVoteFlow'
 import {GovernanceVote} from '../../types'
-import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
+import {
+  EnterDrepIdModal,
+  HEIGHT_DEFAULT,
+  HEIGHT_PREFILLED,
+} from '../EnterDrepIdModal/EnterDrepIdModal'
 import {useOpenDrepIdModal} from '../EnterDrepIdModal/useOpenDrepIdModal'
 
 export const HomeScreen = () => {
@@ -94,20 +96,17 @@ const ParticipatingInGovernanceVariant = ({
   const {
     isPending,
     displayedHash,
-    isDelegatingToYoroiDrep,
     isDelegatingToDrep,
     handleDelegateToOtherDrep,
     navigateToVotingOptions,
   } = useParticipatingGovernance({action, isTxPending})
 
   const actionsTitles = (action: GovernanceVote) =>
-    isDelegatingToYoroiDrep
-      ? strings.staking.delegateToAYoroiDrep
-      : isDelegatingToDrep
-        ? strings.staking.delegateToADRep
-        : action.kind === 'abstain'
-          ? strings.staking.actionAbstainTitle
-          : strings.staking.actionNoConfidenceTitle
+    isDelegatingToDrep
+      ? strings.staking.delegateToADRep
+      : action.kind === 'abstain'
+        ? strings.staking.actionAbstainTitle
+        : strings.staking.actionNoConfidenceTitle
   const selectedActionTitle = actionsTitles(action)
 
   const introduction = isTxPending
@@ -138,10 +137,6 @@ const ParticipatingInGovernanceVariant = ({
       <Space.Height.lg />
 
       <View style={[a.gap_lg]}>
-        {isDelegatingToYoroiDrep && (
-          <YoroiDrepCard isDelegating pending={isPending} />
-        )}
-
         {isDelegatingToDrep && displayedHash && (
           <OtherDrepCard
             drepId={displayedHash}
@@ -214,8 +209,6 @@ const NeverParticipatedInGovernanceVariant = ({
 }: {
   initialDrepId?: string
 }) => {
-  const {config} = useRemoteConfig()
-  const isYoroiDrepBannerEnabled = config?.banners?.yoroiDrep?.display ?? false
   const strings = useStrings()
   const {atoms: ta} = useTheme()
   const {openModal, closeModal} = useModal()
@@ -224,7 +217,7 @@ const NeverParticipatedInGovernanceVariant = ({
   const stakingInfo = useStakingInfo(wallet)
   const needsToRegisterStakingKey =
     stakingInfo?.data?.status === 'not-registered'
-  const {isPending, handleDelegateToYoroi, handleExploreOtherOptions} =
+  const {isPending, handleExploreOtherOptions} =
     useNeverParticipatedGovernance(initialDrepId)
 
   // Track if we've already opened the modal for this initialDrepId to prevent reopening
@@ -311,8 +304,7 @@ const NeverParticipatedInGovernanceVariant = ({
             />
           </GovernanceProvider>
         ),
-        // Height is managed dynamically by EnterDrepIdModal based on whether Yoroi card is shown
-        height: prefilledDrepId ? 340 : 650,
+        height: prefilledDrepId ? HEIGHT_PREFILLED : HEIGHT_DEFAULT,
         canDiscard: true,
         onClose: markJustClosed,
       })
@@ -389,13 +381,6 @@ const NeverParticipatedInGovernanceVariant = ({
       <Space.Height.lg />
 
       <View style={[a.gap_lg]}>
-        {isYoroiDrepBannerEnabled && (
-          <YoroiDrepCard
-            onDelegate={handleDelegateToYoroi}
-            pending={isPending}
-          />
-        )}
-
         <Action
           title={strings.staking.exploreOtherGovernanceOptions}
           description={strings.staking.exploreOtherGovernanceOptionsDescription}

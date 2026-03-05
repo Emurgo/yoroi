@@ -1,8 +1,5 @@
 import {YoroiWallet} from '@yoroi/cardano-wallet'
-import {
-  getYoroiDrepIdHex,
-  useUpdateLatestGovernanceAction,
-} from '@yoroi/staking'
+import {useUpdateLatestGovernanceAction} from '@yoroi/staking'
 import {Wallet} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
@@ -19,12 +16,7 @@ import {InfoBanner} from '~/ui/InfoBanner/InfoBanner'
 
 import {useNavigateTo} from './navigation'
 
-type PendingVote =
-  | 'abstain'
-  | 'no-confidence'
-  | 'delegate-yoroi'
-  | 'delegate-other'
-  | null
+type PendingVote = 'abstain' | 'no-confidence' | 'delegate' | null
 
 type DelegateOptions = {
   hash: string
@@ -303,10 +295,7 @@ export const useGovernanceVoteFlow = ({
   })
 
   const setDelegatePending = (options: DelegateOptions) => {
-    const yoroiDrepIdHex = getYoroiDrepIdHex(wallet.networkManager.network)
-    const pendingVoteValue =
-      options.hash === yoroiDrepIdHex ? 'delegate-yoroi' : 'delegate-other'
-    setPendingVote(pendingVoteValue)
+    setPendingVote('delegate')
     pendingActionRef.current = {type: 'delegate', options}
   }
 

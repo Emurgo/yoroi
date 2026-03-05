@@ -5,7 +5,7 @@ import * as React from 'react'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 
-import {EnterDrepIdModal, HEIGHT_WITH_CARD} from './EnterDrepIdModal'
+import {EnterDrepIdModal, HEIGHT_DEFAULT} from './EnterDrepIdModal'
 
 type OnSubmit = (options: {
   hash: string
@@ -27,7 +27,7 @@ export const useOpenDrepIdModal = () => {
             <EnterDrepIdModal onSubmit={onSubmit} />
           </GovernanceProvider>
         ),
-        height: HEIGHT_WITH_CARD,
+        height: HEIGHT_DEFAULT,
       })
     },
     [manager, openModal, strings.staking.enterDRepID],

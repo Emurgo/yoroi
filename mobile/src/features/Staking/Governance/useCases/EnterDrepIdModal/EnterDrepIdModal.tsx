@@ -1,7 +1,7 @@
 import {CardanoMobile} from '@yoroi/cardano-wallet'
 import {isNonNullable} from '@yoroi/common'
 import {isAdaHandleDomain, useResolverDRepId} from '@yoroi/resolver'
-import {getYoroiDrepIdHex, parseDrepId, useIsValidDRepID} from '@yoroi/staking'
+import {parseDrepId, useIsValidDRepID} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
@@ -9,7 +9,6 @@ import {useSelectedWallet} from '@yoroi/wallet-manager'
 import * as React from 'react'
 import {Alert, Linking, Text, View} from 'react-native'
 
-import {YoroiDrepCard} from '~/features/Staking/Governance/common/YoroiDrepCard/YoroiDrepCard'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'
@@ -32,9 +31,9 @@ const FIND_DREPS_LINKS: Record<Chain.SupportedNetworks, string> = {
   [Chain.Network.Mainnet]: 'https://beta.cexplorer.io/drep',
 }
 
-export const HEIGHT_WITH_CARD = 660
+export const HEIGHT_DEFAULT = 420
+export const HEIGHT_PREFILLED = 340
 export const HEIGHT_INPUT_FOCUSED = 400
-export const HEIGHT_WITHOUT_CARD = 350
 
 const shortenDRepId = (id: string) => {
   if (id.length > 20) {
@@ -50,53 +49,32 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
   const {wallet} = useSelectedWallet()
   const network = wallet.networkManager.network
 
-  const [showCard, setShowCard] = React.useState(true)
   const [drepId, setDrepId] = React.useState(initialDrepId ?? '')
 
-  const showCardRef = React.useRef(showCard)
-  const isInputFocusedRef = React.useRef(false)
   // Track if we've already set initialDrepId to prevent overriding user input
   const hasSetInitialDrepIdRef = React.useRef(false)
 
   const {
     handleInputFocus: defaultHandleInputFocus,
     handleInputBlur: defaultHandleInputBlur,
-    scheduleHeightChange,
   } = useModalKeyboardResize({
-    defaultHeight: HEIGHT_WITH_CARD,
+    defaultHeight:
+      initialDrepId != null && initialDrepId.length > 0
+        ? HEIGHT_PREFILLED
+        : HEIGHT_DEFAULT,
     focusedHeight: HEIGHT_INPUT_FOCUSED,
   })
 
-  const handleDrepIdChange = React.useCallback(
-    (text: string) => {
-      setDrepId(text)
-      if (text.length > 0 && showCardRef.current) {
-        showCardRef.current = false
-        setShowCard(false)
-        scheduleHeightChange(HEIGHT_WITHOUT_CARD)
-      } else if (text.length === 0 && !showCardRef.current) {
-        showCardRef.current = true
-        setShowCard(true)
-        scheduleHeightChange(
-          isInputFocusedRef.current ? HEIGHT_INPUT_FOCUSED : HEIGHT_WITH_CARD,
-        )
-      }
-    },
-    [scheduleHeightChange],
-  )
+  const handleDrepIdChange = React.useCallback((text: string) => {
+    setDrepId(text)
+  }, [])
 
   const handleInputFocus = React.useCallback(() => {
-    isInputFocusedRef.current = true
-    if (showCardRef.current) {
-      defaultHandleInputFocus()
-    }
+    defaultHandleInputFocus()
   }, [defaultHandleInputFocus])
 
   const handleInputBlur = React.useCallback(() => {
-    isInputFocusedRef.current = false
-    if (showCardRef.current) {
-      defaultHandleInputBlur()
-    }
+    defaultHandleInputBlur()
   }, [defaultHandleInputBlur])
 
   // Trim whitespace from input, ensure drepId is always a string
@@ -138,8 +116,7 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
     refetchOnMount: 'always',
   })
 
-  // Update drepId when initialDrepId changes (only once, not on every drepId change)
-  // Use handleDrepIdChange to ensure all side effects (card hiding, validation) are triggered
+  // Update drepId when initialDrepId is provided (only once).
   React.useEffect(() => {
     if (
       initialDrepId !== undefined &&
@@ -147,7 +124,6 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
       !hasSetInitialDrepIdRef.current
     ) {
       hasSetInitialDrepIdRef.current = true
-      // Use handleDrepIdChange instead of setDrepId directly to trigger all side effects
       handleDrepIdChange(initialDrepId)
     }
   }, [initialDrepId, handleDrepIdChange])
@@ -248,15 +224,6 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
     Linking.openURL(FIND_DREPS_LINKS[network])
   }
 
-  const handleDelegateToYoroi = () => {
-    onSubmit?.({
-      hash: getYoroiDrepIdHex(network),
-      type: 'key',
-      CIP105: false,
-    })
-    closeModal()
-  }
-
   return (
     <Modal.Content>
       <Space.Height.sm />
@@ -308,45 +275,23 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
         </>
       )}
 
-      {showCard && (
-        <>
-          <Space.Height.lg />
+      <Space.Height.lg />
 
-          <View style={[a.flex_row, a.justify_center, a.flex_wrap]}>
-            <Text
-              style={[a.body_1_lg_regular, ta.text_gray_medium, a.text_center]}
-            >
-              {strings.staking.dontHaveAnID}{' '}
-            </Text>
+      <View style={[a.flex_row, a.justify_center, a.flex_wrap]}>
+        <Text style={[a.body_1_lg_regular, ta.text_gray_medium, a.text_center]}>
+          {strings.staking.dontHaveAnID}{' '}
+        </Text>
 
-            <Text
-              style={[
-                a.body_1_lg_regular,
-                {color: p.primary_500, textDecorationLine: 'underline'},
-              ]}
-              onPress={handleOnLinkPress}
-            >
-              {strings.staking.findDRepHere}
-            </Text>
-          </View>
-
-          <Space.Height.xs />
-
-          <Text
-            style={[a.body_1_lg_regular, ta.text_gray_medium, a.text_center]}
-          >
-            {strings.staking.orDelegateToYoroiDrepBelow}
-          </Text>
-
-          <Space.Height.lg />
-
-          <YoroiDrepCard
-            onDelegate={handleDelegateToYoroi}
-            truncateId
-            variant="plain"
-          />
-        </>
-      )}
+        <Text
+          style={[
+            a.body_1_lg_regular,
+            {color: p.primary_500, textDecorationLine: 'underline'},
+          ]}
+          onPress={handleOnLinkPress}
+        >
+          {strings.staking.findDRepHere}
+        </Text>
+      </View>
 
       <Space.Height.sm fill />
 

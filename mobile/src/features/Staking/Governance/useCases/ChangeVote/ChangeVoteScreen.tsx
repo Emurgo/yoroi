@@ -1,7 +1,6 @@
 import {isNonNullable} from '@yoroi/common'
 import {
   GovernanceProvider,
-  getYoroiDrepIdHex,
   useDelegationCertificate,
   useGovernance,
   useStakingKeyState,
@@ -15,9 +14,7 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
 import {LearnMoreLink} from '~/features/Staking/Governance/common/LearnMoreLink/LearnMoreLink'
-import {YoroiRecordLink} from '~/features/Staking/Governance/common/YoroiRecordLink/YoroiRecordLink'
 import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useModal} from '~/ui/Modal/context/ModalContext'
@@ -26,14 +23,16 @@ import {Space} from '~/ui/Space/Space'
 import {Action} from '../../common/Action/Action'
 import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'
 import {useGovernanceVoteFlow} from '../../common/useGovernanceVoteFlow'
-import {EnterDrepIdModal} from '../EnterDrepIdModal/EnterDrepIdModal'
+import {
+  EnterDrepIdModal,
+  HEIGHT_DEFAULT,
+  HEIGHT_PREFILLED,
+} from '../EnterDrepIdModal/EnterDrepIdModal'
 
 export const ChangeVoteScreen = () => {
   const route = useRoute()
   const routeParams = route.params as {drepId?: string} | undefined
 
-  const {config} = useRemoteConfig()
-  const isYoroiDrepBannerEnabled = Boolean(config?.banners?.yoroiDrep?.display)
   const strings = useStrings()
   const {wallet, meta} = useSelectedWallet()
   const {atoms: ta} = useTheme()
@@ -89,7 +88,7 @@ export const ChangeVoteScreen = () => {
             />
           </GovernanceProvider>
         ),
-        height: prefilledDrepId ? 340 : 650,
+        height: prefilledDrepId ? HEIGHT_PREFILLED : HEIGHT_DEFAULT,
         canDiscard: true,
       })
       // Set ref only after modal is actually opened
@@ -165,30 +164,6 @@ export const ChangeVoteScreen = () => {
     }
   }, [])
 
-  const yoroiDrepIdHex = React.useMemo(
-    () => getYoroiDrepIdHex(wallet.networkManager.network),
-    [wallet.networkManager.network],
-  )
-
-  const handleDelegateToYoroi = async () => {
-    if (isPending) return
-    const stakingKey = wallet.getStakingKey()
-
-    const options = {
-      hash: yoroiDrepIdHex,
-      type: 'key' as const,
-      CIP105: false,
-    }
-
-    const certificate = await createDelegationCertificate({
-      hash: yoroiDrepIdHex,
-      type: 'key',
-      stakingKey,
-    })
-
-    submitDelegate([certificate], options)
-  }
-
   const handleAbstain = async () => {
     if (isPending) return
     const stakingKey = wallet.getStakingKey()
@@ -214,10 +189,6 @@ export const ChangeVoteScreen = () => {
   }
 
   const voteKind = action?.kind
-  const voteHash =
-    voteKind === 'delegate' && action != null ? action.hash : undefined
-  const isDelegatingNotToYoroiDrep =
-    voteKind === 'delegate' && voteHash !== yoroiDrepIdHex
 
   return (
     <ScrollView style={[a.flex_1, a.px_lg, ta.bg_color_max]}>
@@ -230,25 +201,12 @@ export const ChangeVoteScreen = () => {
       <Space.Height.lg />
 
       <View style={[a.flex_1, a.gap_lg]}>
-        {isYoroiDrepBannerEnabled &&
-          (voteKind !== 'delegate' || isDelegatingNotToYoroiDrep) && (
-            <Action
-              title={strings.staking.delegateToAYoroiDrep}
-              description={strings.staking.delegateToAYoroiDRepDescription}
-              onPress={handleDelegateToYoroi}
-              pending={isCreatingTx && pendingVote === 'delegate-yoroi'}
-              showGradient
-            >
-              <YoroiRecordLink />
-            </Action>
-          )}
-
         {voteKind !== 'delegate' && (
           <Action
             title={strings.staking.actionDelegateToADRepTitle}
             description={strings.staking.actionDelegateToADRepDescription}
             onPress={() => handleDelegate()}
-            pending={isCreatingTx && pendingVote === 'delegate-other'}
+            pending={isCreatingTx && pendingVote === 'delegate'}
           />
         )}
 
@@ -257,7 +215,7 @@ export const ChangeVoteScreen = () => {
             title={strings.staking.changeDRep}
             description={strings.staking.actionDelegateToADRepDescription}
             onPress={() => handleDelegate()}
-            pending={isCreatingTx && pendingVote === 'delegate-other'}
+            pending={isCreatingTx && pendingVote === 'delegate'}
           />
         )}
 
