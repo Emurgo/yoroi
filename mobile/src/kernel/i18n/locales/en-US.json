@@ -642,7 +642,6 @@
   "components.stakingcenter.noPoolDataDialog.title": "Invalid pool data",
   "components.stakingcenter.governanceRequired.title": "Governance updates",
   "components.stakingcenter.governanceRequired.description": "To withdraw rewards from your stake delegation, you must also delegate your voting power. Choose any DRep from governance options, or continue with stake-only delegation for now.",
-  "components.stakingcenter.governanceRequired.delegateToYoroiDRep": "Delegate to Yoroi DRep",
   "components.stakingcenter.governanceRequired.delegateStakeOnly": "Delegate stake only",
   "components.stakingcenter.pooldetailscreen.title": "Nightly TESTING POOL",
   "components.stakingcenter.poolwarningmodal.censoringTxs": "Purposely excludes transactions from blocks (censoring the network)",
