@@ -284,6 +284,7 @@ const NeverParticipatedInGovernanceVariant = ({
 
         // Keep modal-close behavior for other failures in this flow
         closeModalWrapped()
+        throw error
       },
     },
   })

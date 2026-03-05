@@ -63,7 +63,7 @@ const GovernanceRequiredModalFooter = ({
     <Modal.Footer>
       <Button
         type={ButtonType.Primary}
-        title={strings.staking.actionDelegateToADRepTitle}
+        title={strings.staking.exploreOtherGovernanceOptions}
         onPress={handleExploreGovernance}
       />
 
