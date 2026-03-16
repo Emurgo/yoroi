@@ -34,8 +34,14 @@ export const GovernanceNavigator = () => {
             ...screenOptions(p),
             headerTitle: ({children}) => <NetworkTag>{children}</NetworkTag>,
           }}
-          initialRouteName="staking-gov-home"
+          initialRouteName="staking-gov-voting-options"
         >
+          <Stack.Screen
+            name="staking-gov-voting-options"
+            component={VotingOptionsScreen}
+            options={{title: strings.staking.governanceCentreTitle}}
+          />
+
           <Stack.Screen
             name="staking-gov-home"
             component={HomeScreen}
@@ -48,12 +54,6 @@ export const GovernanceNavigator = () => {
             name="staking-gov-change-vote"
             component={ChangeVoteScreen}
             options={{title: strings.staking.governanceCentreTitle}}
-          />
-
-          <Stack.Screen
-            name="staking-gov-voting-options"
-            component={VotingOptionsScreen}
-            options={{title: strings.staking.otherGovernanceOptions}}
           />
 
           <Stack.Screen
