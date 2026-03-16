@@ -63,14 +63,14 @@ const GovernanceRequiredModalFooter = ({
     <Modal.Footer>
       <Button
         type={ButtonType.Primary}
-        title={strings.staking.exploreOtherGovernanceOptions}
-        onPress={handleExploreGovernance}
+        title={strings.staking.delegateStakeOnly}
+        onPress={handleDelegateStakeOnly}
       />
 
       <Button
         type={ButtonType.Text}
-        title={strings.staking.delegateStakeOnly}
-        onPress={handleDelegateStakeOnly}
+        title={strings.staking.exploreOtherGovernanceOptions}
+        onPress={handleExploreGovernance}
       />
     </Modal.Footer>
   )
