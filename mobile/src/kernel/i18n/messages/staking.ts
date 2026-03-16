@@ -616,7 +616,7 @@ export const stakingMessages = defineMessages({
   },
   otherDReps: {
     id: 'components.governance.otherDReps',
-    defaultMessage: '!!!Other DReps',
+    defaultMessage: '!!!DRep',
   },
   id: {
     id: 'components.governance.id',
