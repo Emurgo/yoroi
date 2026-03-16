@@ -46,14 +46,9 @@ const GovernanceRequiredModalContent = () => {
 }
 
 const GovernanceRequiredModalFooter = ({
-  onExploreGovernance,
   onDelegateStakeOnly,
 }: Props) => {
   const strings = useStrings()
-
-  const handleExploreGovernance = React.useCallback(() => {
-    onExploreGovernance()
-  }, [onExploreGovernance])
 
   const handleDelegateStakeOnly = React.useCallback(() => {
     onDelegateStakeOnly()
@@ -66,12 +61,6 @@ const GovernanceRequiredModalFooter = ({
         title={strings.staking.delegateStakeOnly}
         onPress={handleDelegateStakeOnly}
       />
-
-      <Button
-        type={ButtonType.Text}
-        title={strings.staking.exploreOtherGovernanceOptions}
-        onPress={handleExploreGovernance}
-      />
     </Modal.Footer>
   )
 }
@@ -82,6 +71,5 @@ export const GovernanceRequiredModal = {
 }
 
 type Props = {
-  onExploreGovernance: () => void
   onDelegateStakeOnly: () => void
 }
