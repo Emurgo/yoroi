@@ -138,10 +138,6 @@ export const StakingCenter = () => {
       content: <GovernanceRequiredModal.Content />,
       footer: (
         <GovernanceRequiredModal.Footer
-          onExploreGovernance={() => {
-            closeModal()
-            navigateTo.home()
-          }}
           onDelegateStakeOnly={() => {
             closeModal()
             buildDelegationTransaction(poolIdToUse)
@@ -157,7 +153,6 @@ export const StakingCenter = () => {
     closeModal,
     strings.staking.governanceRequiredTitle,
     buildDelegationTransaction,
-    navigateTo,
   ])
 
   const handlePoolSelect = async (poolHash: string) => {

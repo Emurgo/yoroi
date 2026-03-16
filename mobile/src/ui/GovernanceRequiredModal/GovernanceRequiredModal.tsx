@@ -45,9 +45,7 @@ const GovernanceRequiredModalContent = () => {
   )
 }
 
-const GovernanceRequiredModalFooter = ({
-  onDelegateStakeOnly,
-}: Props) => {
+const GovernanceRequiredModalFooter = ({onDelegateStakeOnly}: Props) => {
   const strings = useStrings()
 
   const handleDelegateStakeOnly = React.useCallback(() => {
