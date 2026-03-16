@@ -10,7 +10,6 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useAirdropBanner} from '~/features/Airdrop/common/useAirdropBanner'
 import {useBuyCryptoBanner} from '~/features/Exchange/common/useBuyCryptoBanner'
 import {useRequestSystemNotifications} from '~/features/Notifications/common/tools'
-import {useEarnRewardsBanner} from '~/features/Staking/Governance/useCases/EarnRewardsBanner/useEarnRewardsBanner'
 import {useGovernanceBanner} from '~/features/Staking/Governance/useCases/useGovernanceBanner'
 import {usePoolTransitionModal} from '~/features/Staking/Staking/PoolTransition/usePoolTransitionModal'
 import {useStakingUpdateModal} from '~/features/Staking/Staking/StakingUpdateModal/useStakingUpdateModal'
@@ -38,7 +37,6 @@ export const TxHistory = () => {
   useGovernanceBanner()
   useBuyCryptoBanner()
   useUtxoConsolidationBanner()
-  const {banner: earnRewardsBanner} = useEarnRewardsBanner()
   useAirdropBanner()
 
   const strings = useStrings()
@@ -203,7 +201,6 @@ export const TxHistory = () => {
             onScroll={onScroll}
             refreshing={isLoading}
             onRefresh={handleOnRefresh}
-            listHeaderComponent={earnRewardsBanner}
           />
         </TxFilter>
       </View>

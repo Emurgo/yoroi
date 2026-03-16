@@ -1,10 +1,5 @@
-import {
-  createCombinedDelegationTxFromWallet,
-  createDelegationTxFromWallet,
-} from '@yoroi/cardano-wallet'
-import {getYoroiDrepIdHex} from '@yoroi/staking'
+import {createDelegationTxFromWallet} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {Branded, KeyHash} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {useFocusEffect} from '@react-navigation/native'
@@ -83,38 +78,17 @@ export const StakingCenter = () => {
 
   // Build transaction when pool is selected
   const buildDelegationTransaction = React.useCallback(
-    async (poolId: string, includeGovernance: boolean) => {
+    async (poolId: string) => {
       setIsBuildingTx(true)
       setBuildError(null)
 
       try {
-        logger.debug('building delegation transaction', {
+        logger.debug('building delegation transaction', {poolId})
+
+        const stakingTx = await createDelegationTxFromWallet(wallet, {
           poolId,
-          includeGovernance,
+          addressMode: meta.addressMode,
         })
-
-        let stakingTx: {cbor: string}
-
-        if (includeGovernance) {
-          // Create combined transaction with both stake pool and DRep delegation
-          const yoroiDrepIdHex = getYoroiDrepIdHex(
-            wallet.networkManager.network,
-          )
-          const drepValue: {KeyHash: KeyHash} = {
-            KeyHash: Branded.asKeyHash(yoroiDrepIdHex),
-          }
-          stakingTx = await createCombinedDelegationTxFromWallet(wallet, {
-            poolId,
-            drepValue,
-            addressMode: meta.addressMode,
-          })
-        } else {
-          // Create stake-only delegation transaction
-          stakingTx = await createDelegationTxFromWallet(wallet, {
-            poolId,
-            addressMode: meta.addressMode,
-          })
-        }
 
         setIsBuildingTx(false)
 
@@ -151,7 +125,7 @@ export const StakingCenter = () => {
     if (isGovernanceParticipating) {
       const poolIdToUse = pendingPoolId
       setPendingPoolId(null)
-      buildDelegationTransaction(poolIdToUse, false)
+      buildDelegationTransaction(poolIdToUse)
       return
     }
 
@@ -164,15 +138,13 @@ export const StakingCenter = () => {
       content: <GovernanceRequiredModal.Content />,
       footer: (
         <GovernanceRequiredModal.Footer
-          onDelegateToYoroiDRep={() => {
+          onExploreGovernance={() => {
             closeModal()
-            // Build transaction with governance delegation
-            buildDelegationTransaction(poolIdToUse, true)
+            navigateTo.home()
           }}
           onDelegateStakeOnly={() => {
             closeModal()
-            // Build transaction without governance delegation
-            buildDelegationTransaction(poolIdToUse, false)
+            buildDelegationTransaction(poolIdToUse)
           }}
         />
       ),
@@ -185,6 +157,7 @@ export const StakingCenter = () => {
     closeModal,
     strings.staking.governanceRequiredTitle,
     buildDelegationTransaction,
+    navigateTo,
   ])
 
   const handlePoolSelect = async (poolHash: string) => {
