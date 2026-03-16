@@ -1431,11 +1431,6 @@ export const useStrings = () => {
 
       // Staking/PoolTransition strings
       staking: {
-        earnRewardsBannerTitle: f(stakingMessages.earnRewardsBannerTitle),
-        earnRewardsBannerDescription: f(
-          stakingMessages.earnRewardsBannerDescription,
-        ),
-        earnRewardsBannerCta: f(stakingMessages.earnRewardsBannerCta),
         title: f(stakingMessages.title),
         warning: f(stakingMessages.warning),
         finalWarning: f(stakingMessages.finalWarning),
@@ -1566,15 +1561,9 @@ export const useStrings = () => {
         failedTxText: f(stakingMessages.failedTxText),
         failedTxTitle: f(stakingMessages.failedTxTitle),
         invalidDRepId: f(stakingMessages.invalidDRepId),
-        delegateToAYoroiDrep: f(stakingMessages.delegateToAYoroiDrep),
-        delegatingToYoroiDRep: f(stakingMessages.delegatingToYoroiDRep),
-        delegateToAYoroiDRepDescription: f(
-          stakingMessages.delegateToAYoroiDRepDescription,
-        ),
         delegateVotingToDRepDeprecatedFormatNotice: f(
           stakingMessages.delegateVotingToDRepDeprecatedFormatNotice,
         ),
-        yoroiRecord: f(stakingMessages.yoroiRecord),
         newToGovernanceTitle: f(stakingMessages.newToGovernanceTitle),
         newToGovernanceText: f(stakingMessages.newToGovernanceText),
         votingOptionsTitle: f(stakingMessages.votingOptionsTitle),
@@ -1589,7 +1578,6 @@ export const useStrings = () => {
         id: f(stakingMessages.id),
         drepStatusLabel: f(stakingMessages.drepStatusLabel),
         drepStatusActive: f(stakingMessages.drepStatusActive),
-        yoroiDrep: f(stakingMessages.yoroiDrep),
         delegationStatusLabel: f(stakingMessages.delegationStatusLabel),
         delegationStatusDelegating: f(
           stakingMessages.delegationStatusDelegating,
@@ -1598,9 +1586,6 @@ export const useStrings = () => {
         delegateToOtherDrep: f(stakingMessages.delegateToOtherDrep),
         changeToDrep: f(stakingMessages.changeToDrep),
         dontHaveAnID: f(stakingMessages.dontHaveAnID),
-        orDelegateToYoroiDrepBelow: f(
-          stakingMessages.orDelegateToYoroiDrepBelow,
-        ),
         failedToLoadPools: f(stakingMessages.failedToLoadPools),
         poolStake: f(stakingMessages.poolStake),
         poweredBy: f(stakingMessages.poweredBy),
@@ -1644,7 +1629,6 @@ export const useStrings = () => {
         governanceRequiredDescription: f(
           stakingMessages.governanceRequiredDescription,
         ),
-        delegateToYoroiDRep: f(stakingMessages.delegateToYoroiDRep),
         delegateStakeOnly: f(stakingMessages.delegateStakeOnly),
         poolROA: f(stakingMessages.poolROA),
         poolSaturation: f(stakingMessages.poolSaturation),
