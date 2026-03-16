@@ -9,7 +9,6 @@ import {Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
-import {useGovernanceParticipation} from '~/features/Staking/Governance/common/helpers'
 import {useNavigateTo} from '~/features/Staking/Governance/common/navigation'
 import {isInsufficientBalanceError} from '~/features/Staking/Governance/common/transactionErrorHandling'
 import {PoolDetailScreen} from '~/features/Staking/Staking/PoolDetails/PoolDetailScreen'
@@ -18,9 +17,7 @@ import {usePrefetchPoolList} from '~/features/Staking/Staking/PoolList/usePoolLi
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
-import {GovernanceRequiredModal} from '~/ui/GovernanceRequiredModal/GovernanceRequiredModal'
 import {LoadingOverlay} from '~/ui/LoadingOverlay/LoadingOverlay'
-import {useModal} from '~/ui/Modal/context/ModalContext'
 
 export const StakingCenter = () => {
   const strings = useStrings()
@@ -31,9 +28,6 @@ export const StakingCenter = () => {
   const {navigateToTxReview} = useWalletNavigation()
   const navigateTo = useNavigateTo()
   const prefetchPoolList = usePrefetchPoolList()
-  const {isParticipating: isGovernanceParticipating} =
-    useGovernanceParticipation()
-  const {openModal, closeModal} = useModal()
 
   // Add search to navigation header
   useSearchOnNavBar({
@@ -117,43 +111,14 @@ export const StakingCenter = () => {
     [wallet, meta, navigateToTxReview, navigateTo, onSuccess, onError],
   )
 
-  // Handle pool selection - check if governance modal is needed
+  // Handle pool selection - build delegation transaction directly
   React.useEffect(() => {
     if (!pendingPoolId) return
 
-    // If user is already participating in governance, proceed directly without modal
-    if (isGovernanceParticipating) {
-      const poolIdToUse = pendingPoolId
-      setPendingPoolId(null)
-      buildDelegationTransaction(poolIdToUse)
-      return
-    }
-
-    // If user is not participating in governance, show modal
     const poolIdToUse = pendingPoolId
-    setPendingPoolId(null) // Clear immediately to prevent re-triggering
-
-    openModal({
-      title: strings.staking.governanceRequiredTitle,
-      content: <GovernanceRequiredModal.Content />,
-      footer: (
-        <GovernanceRequiredModal.Footer
-          onDelegateStakeOnly={() => {
-            closeModal()
-            buildDelegationTransaction(poolIdToUse)
-          }}
-        />
-      ),
-      height: 680,
-    })
-  }, [
-    pendingPoolId,
-    isGovernanceParticipating,
-    openModal,
-    closeModal,
-    strings.staking.governanceRequiredTitle,
-    buildDelegationTransaction,
-  ])
+    setPendingPoolId(null)
+    buildDelegationTransaction(poolIdToUse)
+  }, [pendingPoolId, buildDelegationTransaction])
 
   const handlePoolSelect = async (poolHash: string) => {
     logger.debug('selected pool from native list', {poolHash})
