@@ -4,11 +4,9 @@ import * as React from 'react'
 import {Text, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {useRemoteConfig} from '~/common/hooks/useRemoteConfig'
 import {GovernanceStatusCard} from '~/features/Staking/Governance/common/GovernanceStatusCard/GovernanceStatusCard'
 import {LearnMoreLink} from '~/features/Staking/Governance/common/LearnMoreLink/LearnMoreLink'
 import {OtherDrepCard} from '~/features/Staking/Governance/common/OtherDrepCard/OtherDrepCard'
-import {YoroiDrepCard} from '~/features/Staking/Governance/common/YoroiDrepCard/YoroiDrepCard'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
@@ -18,22 +16,18 @@ import {useVotingOptions} from '../../common/helpers'
 import {useOpenDrepIdModal} from '../EnterDrepIdModal/useOpenDrepIdModal'
 
 export const VotingOptionsScreen = () => {
-  const {config} = useRemoteConfig()
-  const isYoroiDrepBannerEnabled = config?.banners?.yoroiDrep?.display ?? false
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
   const {openDrepIdModal} = useOpenDrepIdModal()
 
   const {
     isPending,
-    isDelegatingToYoroiDrep,
-    isDelegatingToOtherDrep,
-    confirmedDelegatingToOther,
-    otherDrepDisplayId,
+    isDelegatingToDrep,
+    confirmedDelegatingToDrep,
+    drepDisplayId,
     isAbstaining,
     isNoConfidence,
     handleDelegate,
-    handleDelegateToYoroi,
     handleAbstain,
     handleNoConfidence,
   } = useVotingOptions()
@@ -41,8 +35,6 @@ export const VotingOptionsScreen = () => {
   const onDelegate = () => {
     openDrepIdModal(handleDelegate)
   }
-
-  const showYoroiDrep = isYoroiDrepBannerEnabled
 
   return (
     <ScrollView style={[a.px_lg, a.flex_1, ta.bg_color_max]}>
@@ -55,23 +47,10 @@ export const VotingOptionsScreen = () => {
       <Space.Height.lg />
 
       <View style={[a.flex_1, a.gap_lg]}>
-        {showYoroiDrep && (
-          <YoroiDrepCard
-            onDelegate={
-              isDelegatingToYoroiDrep || isPending
-                ? undefined
-                : handleDelegateToYoroi
-            }
-            pending={isPending}
-            isDelegating={isDelegatingToYoroiDrep}
-            truncateId
-          />
-        )}
-
-        {isDelegatingToOtherDrep && otherDrepDisplayId ? (
+        {isDelegatingToDrep && drepDisplayId ? (
           <OtherDrepCard
-            drepId={otherDrepDisplayId}
-            isDelegating={confirmedDelegatingToOther}
+            drepId={drepDisplayId}
+            isDelegating={confirmedDelegatingToDrep}
             truncateId
             onDelegate={isPending ? undefined : onDelegate}
             pending={isPending}

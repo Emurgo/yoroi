@@ -45,15 +45,8 @@ const GovernanceRequiredModalContent = () => {
   )
 }
 
-const GovernanceRequiredModalFooter = ({
-  onDelegateToYoroiDRep,
-  onDelegateStakeOnly,
-}: Props) => {
+const GovernanceRequiredModalFooter = ({onDelegateStakeOnly}: Props) => {
   const strings = useStrings()
-
-  const handleDelegateToYoroiDRep = React.useCallback(() => {
-    onDelegateToYoroiDRep()
-  }, [onDelegateToYoroiDRep])
 
   const handleDelegateStakeOnly = React.useCallback(() => {
     onDelegateStakeOnly()
@@ -63,12 +56,6 @@ const GovernanceRequiredModalFooter = ({
     <Modal.Footer>
       <Button
         type={ButtonType.Primary}
-        title={strings.staking.delegateToYoroiDRep}
-        onPress={handleDelegateToYoroiDRep}
-      />
-
-      <Button
-        type={ButtonType.Text}
         title={strings.staking.delegateStakeOnly}
         onPress={handleDelegateStakeOnly}
       />
@@ -82,6 +69,5 @@ export const GovernanceRequiredModal = {
 }
 
 type Props = {
-  onDelegateToYoroiDRep: () => void
   onDelegateStakeOnly: () => void
 }

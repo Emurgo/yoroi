@@ -1,10 +1,5 @@
-import {
-  createCombinedDelegationTxFromWallet,
-  createDelegationTxFromWallet,
-} from '@yoroi/cardano-wallet'
-import {getYoroiDrepIdHex} from '@yoroi/staking'
+import {createDelegationTxFromWallet} from '@yoroi/cardano-wallet'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {Branded, KeyHash} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {useFocusEffect} from '@react-navigation/native'
@@ -14,7 +9,6 @@ import {Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useSearch, useSearchOnNavBar} from '~/features/Search/SearchContext'
-import {useGovernanceParticipation} from '~/features/Staking/Governance/common/helpers'
 import {useNavigateTo} from '~/features/Staking/Governance/common/navigation'
 import {isInsufficientBalanceError} from '~/features/Staking/Governance/common/transactionErrorHandling'
 import {PoolDetailScreen} from '~/features/Staking/Staking/PoolDetails/PoolDetailScreen'
@@ -23,9 +17,7 @@ import {usePrefetchPoolList} from '~/features/Staking/Staking/PoolList/usePoolLi
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {logger} from '~/kernel/logger/logger'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
-import {GovernanceRequiredModal} from '~/ui/GovernanceRequiredModal/GovernanceRequiredModal'
 import {LoadingOverlay} from '~/ui/LoadingOverlay/LoadingOverlay'
-import {useModal} from '~/ui/Modal/context/ModalContext'
 
 export const StakingCenter = () => {
   const strings = useStrings()
@@ -36,9 +28,6 @@ export const StakingCenter = () => {
   const {navigateToTxReview} = useWalletNavigation()
   const navigateTo = useNavigateTo()
   const prefetchPoolList = usePrefetchPoolList()
-  const {isParticipating: isGovernanceParticipating} =
-    useGovernanceParticipation()
-  const {openModal, closeModal} = useModal()
 
   // Add search to navigation header
   useSearchOnNavBar({
@@ -83,38 +72,17 @@ export const StakingCenter = () => {
 
   // Build transaction when pool is selected
   const buildDelegationTransaction = React.useCallback(
-    async (poolId: string, includeGovernance: boolean) => {
+    async (poolId: string) => {
       setIsBuildingTx(true)
       setBuildError(null)
 
       try {
-        logger.debug('building delegation transaction', {
+        logger.debug('building delegation transaction', {poolId})
+
+        const stakingTx = await createDelegationTxFromWallet(wallet, {
           poolId,
-          includeGovernance,
+          addressMode: meta.addressMode,
         })
-
-        let stakingTx: {cbor: string}
-
-        if (includeGovernance) {
-          // Create combined transaction with both stake pool and DRep delegation
-          const yoroiDrepIdHex = getYoroiDrepIdHex(
-            wallet.networkManager.network,
-          )
-          const drepValue: {KeyHash: KeyHash} = {
-            KeyHash: Branded.asKeyHash(yoroiDrepIdHex),
-          }
-          stakingTx = await createCombinedDelegationTxFromWallet(wallet, {
-            poolId,
-            drepValue,
-            addressMode: meta.addressMode,
-          })
-        } else {
-          // Create stake-only delegation transaction
-          stakingTx = await createDelegationTxFromWallet(wallet, {
-            poolId,
-            addressMode: meta.addressMode,
-          })
-        }
 
         setIsBuildingTx(false)
 
@@ -143,49 +111,14 @@ export const StakingCenter = () => {
     [wallet, meta, navigateToTxReview, navigateTo, onSuccess, onError],
   )
 
-  // Handle pool selection - check if governance modal is needed
+  // Handle pool selection - build delegation transaction directly
   React.useEffect(() => {
     if (!pendingPoolId) return
 
-    // If user is already participating in governance, proceed directly without modal
-    if (isGovernanceParticipating) {
-      const poolIdToUse = pendingPoolId
-      setPendingPoolId(null)
-      buildDelegationTransaction(poolIdToUse, false)
-      return
-    }
-
-    // If user is not participating in governance, show modal
     const poolIdToUse = pendingPoolId
-    setPendingPoolId(null) // Clear immediately to prevent re-triggering
-
-    openModal({
-      title: strings.staking.governanceRequiredTitle,
-      content: <GovernanceRequiredModal.Content />,
-      footer: (
-        <GovernanceRequiredModal.Footer
-          onDelegateToYoroiDRep={() => {
-            closeModal()
-            // Build transaction with governance delegation
-            buildDelegationTransaction(poolIdToUse, true)
-          }}
-          onDelegateStakeOnly={() => {
-            closeModal()
-            // Build transaction without governance delegation
-            buildDelegationTransaction(poolIdToUse, false)
-          }}
-        />
-      ),
-      height: 680,
-    })
-  }, [
-    pendingPoolId,
-    isGovernanceParticipating,
-    openModal,
-    closeModal,
-    strings.staking.governanceRequiredTitle,
-    buildDelegationTransaction,
-  ])
+    setPendingPoolId(null)
+    buildDelegationTransaction(poolIdToUse)
+  }, [pendingPoolId, buildDelegationTransaction])
 
   const handlePoolSelect = async (poolHash: string) => {
     logger.debug('selected pool from native list', {poolHash})
