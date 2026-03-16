@@ -273,7 +273,7 @@ export const stakingMessages = defineMessages({
   },
   governanceCentreTitle: {
     id: 'components.governance.governanceCentreTitle',
-    defaultMessage: '!!!Governance Dashboard',
+    defaultMessage: '!!!Governance',
   },
   confirmTxTitle: {
     id: 'components.stakingcenter.confirmDelegation.title',
@@ -604,7 +604,8 @@ export const stakingMessages = defineMessages({
   },
   votingOptionsDescription: {
     id: 'components.governance.votingOptionsDescription',
-    defaultMessage: '!!!Voting Options Description',
+    defaultMessage:
+      '!!!You can pick a DRep using their ID, choose to abstain or show no confidence.',
   },
   exploreOtherGovernanceOptions: {
     id: 'components.governance.exploreOtherGovernanceOptions',
