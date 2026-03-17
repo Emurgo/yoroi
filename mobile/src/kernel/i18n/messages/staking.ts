@@ -475,11 +475,7 @@ export const stakingMessages = defineMessages({
   connectToGovtools: {
     id: 'components.governance.connectToGovtools',
     defaultMessage:
-      '!!!Or connect to [link] to participate in governance through their UI',
-  },
-  govtoolsLinkText: {
-    id: 'components.governance.govtoolsLinkText',
-    defaultMessage: '!!!Govtools',
+      '!!!Or connect to <link>Govtools</link> to participate in governance through their UI',
   },
   goToStaking: {
     id: 'components.governance.goToStaking',

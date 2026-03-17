@@ -299,11 +299,13 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
       <Space.Height.sm />
 
       <Text style={[a.body_1_lg_regular, ta.text_gray_medium, a.text_center]}>
-        {strings.staking.connectToGovtools.split('[link]')[0]}
-        <Text style={{color: p.primary_500}} onPress={handleGovtoolsPress}>
-          {strings.staking.govtoolsLinkText}
-        </Text>
-        {strings.staking.connectToGovtools.split('[link]')[1]}
+        {strings.staking.connectToGovtools({
+          link: (text) => (
+            <Text style={{color: p.primary_500}} onPress={handleGovtoolsPress}>
+              {text}
+            </Text>
+          ),
+        })}
       </Text>
 
       <Space.Height.sm fill />
