@@ -31,6 +31,8 @@ const FIND_DREPS_LINKS: Record<Chain.SupportedNetworks, string> = {
   [Chain.Network.Mainnet]: 'https://cexplorer.io/drep',
 }
 
+const GOVTOOLS_URL = 'https://gov.tools/'
+
 export const HEIGHT_DEFAULT = 420
 export const HEIGHT_PREFILLED = 340
 export const HEIGHT_INPUT_FOCUSED = 400
@@ -220,8 +222,12 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
     }
   }
 
-  const handleOnLinkPress = () => {
+  const handleFindDRepPress = () => {
     Linking.openURL(FIND_DREPS_LINKS[network])
+  }
+
+  const handleGovtoolsPress = () => {
+    Linking.openURL(GOVTOOLS_URL)
   }
 
   return (
@@ -283,15 +289,25 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
         </Text>
 
         <Text
-          style={[
-            a.body_1_lg_regular,
-            {color: p.primary_500, textDecorationLine: 'underline'},
-          ]}
-          onPress={handleOnLinkPress}
+          style={[a.body_1_lg_regular, {color: p.primary_500}]}
+          onPress={handleFindDRepPress}
         >
           {strings.staking.findDRepHere}
         </Text>
       </View>
+
+      <Space.Height.sm />
+
+      <Text style={[a.body_1_lg_regular, ta.text_gray_medium, a.text_center]}>
+        Or connect to{' '}
+        <Text
+          style={{color: p.primary_500}}
+          onPress={handleGovtoolsPress}
+        >
+          Govtools
+        </Text>
+        {' '}to participate in governance through their UI
+      </Text>
 
       <Space.Height.sm fill />
 

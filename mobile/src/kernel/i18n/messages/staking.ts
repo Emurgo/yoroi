@@ -474,7 +474,16 @@ export const stakingMessages = defineMessages({
   enterDrepIDInfo: {
     id: 'components.governance.enterDrepIDInfo',
     defaultMessage:
-      '!!!Identify your preferred DRep and enter their ID or ADA handle below to delegate your vote',
+      '!!!Find your preferred DRep and enter their ID or ADA handle below to delegate your vote:',
+  },
+  connectToGovtools: {
+    id: 'components.governance.connectToGovtools',
+    defaultMessage:
+      '!!!Or connect to {link} to participate in governance through their UI',
+  },
+  govtoolsLinkText: {
+    id: 'components.governance.govtoolsLinkText',
+    defaultMessage: '!!!Govtools',
   },
   goToStaking: {
     id: 'components.governance.goToStaking',

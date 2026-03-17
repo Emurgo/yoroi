@@ -1550,6 +1550,8 @@ export const useStrings = () => {
         txFees: f(stakingMessages.txFees),
         registerStakingKey: f(stakingMessages.registerStakingKey),
         enterDrepIDInfo: f(stakingMessages.enterDrepIDInfo),
+        connectToGovtools: f(stakingMessages.connectToGovtools),
+        govtoolsLinkText: f(stakingMessages.govtoolsLinkText),
         goToStaking: f(stakingMessages.goToStaking),
         readyToCollectRewards: f(stakingMessages.readyToCollectRewards),
         notSupportedVersionButton: f(stakingMessages.notSupportedVersionButton),
