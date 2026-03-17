@@ -8,8 +8,11 @@ import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {Alert, Linking, Text, View} from 'react-native'
+import {v4 as uuid} from 'uuid'
 
+import {useBrowser} from '~/features/Discover/common/BrowserProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {useModalKeyboardResize} from '~/ui/Modal/hooks/useModalKeyboardResize'
@@ -31,6 +34,8 @@ const FIND_DREPS_LINKS: Record<Chain.SupportedNetworks, string> = {
   [Chain.Network.Mainnet]: 'https://cexplorer.io/drep',
 }
 
+const GOVTOOLS_URL = 'https://gov.tools/'
+
 export const HEIGHT_DEFAULT = 420
 export const HEIGHT_PREFILLED = 340
 export const HEIGHT_INPUT_FOCUSED = 400
@@ -48,6 +53,8 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
   const {closeModal} = useModal()
   const {wallet} = useSelectedWallet()
   const network = wallet.networkManager.network
+  const {addTabAndSetActive} = useBrowser()
+  const walletNavigation = useWalletNavigation()
 
   const [drepId, setDrepId] = React.useState(initialDrepId ?? '')
 
@@ -220,8 +227,15 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
     }
   }
 
-  const handleOnLinkPress = () => {
+  const handleFindDRepPress = () => {
     Linking.openURL(FIND_DREPS_LINKS[network])
+  }
+
+  const handleGovtoolsPress = () => {
+    const tabId = uuid()
+    addTabAndSetActive(GOVTOOLS_URL, tabId)
+    closeModal()
+    walletNavigation.navigateToDiscoverBrowserDapp()
   }
 
   return (
@@ -283,15 +297,24 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
         </Text>
 
         <Text
-          style={[
-            a.body_1_lg_regular,
-            {color: p.primary_500, textDecorationLine: 'underline'},
-          ]}
-          onPress={handleOnLinkPress}
+          style={[a.body_1_lg_regular, {color: p.primary_500}]}
+          onPress={handleFindDRepPress}
         >
           {strings.staking.findDRepHere}
         </Text>
       </View>
+
+      <Space.Height.sm />
+
+      <Text style={[a.body_1_lg_regular, ta.text_gray_medium, a.text_center]}>
+        {strings.staking.connectToGovtools({
+          link: (text) => (
+            <Text style={{color: p.primary_500}} onPress={handleGovtoolsPress}>
+              {text}
+            </Text>
+          ),
+        })}
+      </Text>
 
       <Space.Height.sm fill />
 

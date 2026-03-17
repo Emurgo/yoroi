@@ -258,10 +258,6 @@ export const stakingMessages = defineMessages({
     id: 'components.staking.cardanoCardAnnouncementTitle',
     defaultMessage: '!!!Physical Cardano Card Now Available',
   },
-  cardanoCardAnnouncementHeading: {
-    id: 'components.staking.cardanoCardAnnouncementHeading',
-    defaultMessage: '!!!Physical Cardano Card Now Available',
-  },
   cardanoCardAnnouncementDescription: {
     id: 'components.staking.cardanoCardAnnouncementDescription',
     defaultMessage:
@@ -474,7 +470,12 @@ export const stakingMessages = defineMessages({
   enterDrepIDInfo: {
     id: 'components.governance.enterDrepIDInfo',
     defaultMessage:
-      '!!!Identify your preferred DRep and enter their ID or ADA handle below to delegate your vote',
+      '!!!Find your preferred DRep and enter their ID or ADA handle below to delegate your vote:',
+  },
+  connectToGovtools: {
+    id: 'components.governance.connectToGovtools',
+    defaultMessage:
+      '!!!Or connect to <link>Govtools</link> to participate in governance through their UI',
   },
   goToStaking: {
     id: 'components.governance.goToStaking',
