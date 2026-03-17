@@ -272,7 +272,7 @@ export const useWalletNavigation = () => {
       navigation.navigate('manage-wallets', {
         screen: 'governance',
         params: {
-          screen: 'staking-gov-home',
+          screen: 'staking-gov-voting-options',
         },
       })
     },
