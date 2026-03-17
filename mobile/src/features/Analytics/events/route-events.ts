@@ -38,6 +38,8 @@ export const routeToEvent: RouteToEventMap = {
   'send-select-token-from-list': AnalyticsEventEnum.SendSelectAssetPageViewed,
   'staking-center': AnalyticsEventEnum.StakingCenterPageViewed,
   'staking-gov-home': AnalyticsEventEnum.GovernanceDashboardPageViewed,
+  'staking-gov-voting-options':
+    AnalyticsEventEnum.GovernanceDashboardPageViewed,
   'staking-gov-change-vote': AnalyticsEventEnum.GovernanceDashboardPageViewed,
   'download-catalyst': AnalyticsEventEnum.VotingPageViewed,
   'wallet-settings': AnalyticsEventEnum.SettingsPageViewed,
