@@ -18,20 +18,10 @@ const CardanoCardAnnouncementModalContent = () => {
 
   return (
     <Modal.Content>
-      <View style={[a.align_center, a.px_lg]}>
-        <CardAnnouncementIllustration width={320} height={270} />
+      <View style={[a.align_center, a.px_lg, a.pt_lg]}>
+        <CardAnnouncementIllustration width={328} height={246} />
 
         <Space.Height.md />
-
-        <Text
-          style={[
-            a.heading_3_medium,
-            {color: p.gray_900, textAlign: 'center'},
-            a.pb_md,
-          ]}
-        >
-          {strings.staking.cardanoCardAnnouncementHeading}
-        </Text>
 
         <Text
           style={[
