@@ -1451,9 +1451,6 @@ export const useStrings = () => {
         cardanoCardAnnouncementTitle: f(
           stakingMessages.cardanoCardAnnouncementTitle,
         ),
-        cardanoCardAnnouncementHeading: f(
-          stakingMessages.cardanoCardAnnouncementHeading,
-        ),
         cardanoCardAnnouncementDescription: f(
           stakingMessages.cardanoCardAnnouncementDescription,
         ),
@@ -1550,6 +1547,9 @@ export const useStrings = () => {
         txFees: f(stakingMessages.txFees),
         registerStakingKey: f(stakingMessages.registerStakingKey),
         enterDrepIDInfo: f(stakingMessages.enterDrepIDInfo),
+        connectToGovtools: (options: {
+          link: (content: ReactNode[]) => ReactNode
+        }) => f(stakingMessages.connectToGovtools, options),
         goToStaking: f(stakingMessages.goToStaking),
         readyToCollectRewards: f(stakingMessages.readyToCollectRewards),
         notSupportedVersionButton: f(stakingMessages.notSupportedVersionButton),
