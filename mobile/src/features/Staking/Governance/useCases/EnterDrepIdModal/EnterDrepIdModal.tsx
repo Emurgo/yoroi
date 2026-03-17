@@ -8,8 +8,11 @@ import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import * as React from 'react'
 import {Alert, Linking, Text, View} from 'react-native'
+import {v4 as uuid} from 'uuid'
 
+import {useBrowser} from '~/features/Discover/common/BrowserProvider'
 import {useStrings} from '~/kernel/i18n/useStrings'
+import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {useModalKeyboardResize} from '~/ui/Modal/hooks/useModalKeyboardResize'
@@ -50,6 +53,8 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
   const {closeModal} = useModal()
   const {wallet} = useSelectedWallet()
   const network = wallet.networkManager.network
+  const {addTabAndSetActive} = useBrowser()
+  const walletNavigation = useWalletNavigation()
 
   const [drepId, setDrepId] = React.useState(initialDrepId ?? '')
 
@@ -227,7 +232,10 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
   }
 
   const handleGovtoolsPress = () => {
-    Linking.openURL(GOVTOOLS_URL)
+    const tabId = uuid()
+    addTabAndSetActive(GOVTOOLS_URL, tabId)
+    closeModal()
+    walletNavigation.navigateToDiscoverBrowserDapp()
   }
 
   return (
