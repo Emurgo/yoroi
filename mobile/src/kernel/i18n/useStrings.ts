@@ -1451,9 +1451,6 @@ export const useStrings = () => {
         cardanoCardAnnouncementTitle: f(
           stakingMessages.cardanoCardAnnouncementTitle,
         ),
-        cardanoCardAnnouncementHeading: f(
-          stakingMessages.cardanoCardAnnouncementHeading,
-        ),
         cardanoCardAnnouncementDescription: f(
           stakingMessages.cardanoCardAnnouncementDescription,
         ),

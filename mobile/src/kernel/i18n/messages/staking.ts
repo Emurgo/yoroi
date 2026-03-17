@@ -258,10 +258,6 @@ export const stakingMessages = defineMessages({
     id: 'components.staking.cardanoCardAnnouncementTitle',
     defaultMessage: '!!!Physical Cardano Card Now Available',
   },
-  cardanoCardAnnouncementHeading: {
-    id: 'components.staking.cardanoCardAnnouncementHeading',
-    defaultMessage: '!!!Physical Cardano Card Now Available',
-  },
   cardanoCardAnnouncementDescription: {
     id: 'components.staking.cardanoCardAnnouncementDescription',
     defaultMessage:

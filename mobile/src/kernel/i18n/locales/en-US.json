@@ -1234,7 +1234,6 @@
   "components.staking.stakingUpdateDescription": "EMURGO is updating the margin fee on its stakepools as part of a broader 2026 modernization effort.",
   "components.staking.skip": "SKIP",
   "components.staking.cardanoCardAnnouncementTitle": "Physical Cardano Card Now\nAvailable",
-  "components.staking.cardanoCardAnnouncementHeading": "Physical Cardano Card Now Available",
   "components.staking.cardanoCardAnnouncementDescription": "Limited stock — secure yours now and start spending in the real world.",
   "components.staking.cardanoCardAnnouncementButton": "GET THE CARD",
   "components.staking.failedToLoadPools": "Failed to load pools",
