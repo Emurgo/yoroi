@@ -159,7 +159,7 @@
   "components.governance.enterADrepIDAndPassword": "Enter a Drep ID and password to sign this transaction",
   "components.governance.enterDRepID": "Choose your Drep",
   "components.governance.enterDrepIDInfo": "Find your preferred DRep and enter their ID or ADA handle below to delegate your vote:",
-  "components.governance.connectToGovtools": "Or connect to {link} to participate in governance through their UI",
+  "components.governance.connectToGovtools": "Or connect to [link] to participate in governance through their UI",
   "components.governance.govtoolsLinkText": "Govtools",
   "components.governance.enterPassword": "Enter password to sign this transaction",
   "components.governance.findDRepHere": "Find a DRep here",
