@@ -256,16 +256,16 @@ export const stakingMessages = defineMessages({
   },
   cardanoCardAnnouncementTitle: {
     id: 'components.staking.cardanoCardAnnouncementTitle',
-    defaultMessage: '!!!Cardano Card Has Arrived',
+    defaultMessage: '!!!Physical Cardano Card Now Available',
   },
   cardanoCardAnnouncementHeading: {
     id: 'components.staking.cardanoCardAnnouncementHeading',
-    defaultMessage: '!!!Cardano Card Has Arrived',
+    defaultMessage: '!!!Physical Cardano Card Now Available',
   },
   cardanoCardAnnouncementDescription: {
     id: 'components.staking.cardanoCardAnnouncementDescription',
     defaultMessage:
-      '!!!Pay. Earn. Borrow. Stake. Access the new era of crypto spending. Activate your Cardano Card today.',
+      '!!!Limited stock — secure yours now and start spending in the real world.',
   },
   cardanoCardAnnouncementButton: {
     id: 'components.staking.cardanoCardAnnouncementButton',

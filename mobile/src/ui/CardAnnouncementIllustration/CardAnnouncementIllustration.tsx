@@ -2,7 +2,7 @@ import {Image} from 'expo-image'
 import * as React from 'react'
 import {ImageStyle, StyleProp} from 'react-native'
 
-import appScreenshotSource from '~/assets/img/illustration-app-screenshot.png'
+import cardanoCardSource from '~/assets/img/illustration-cardano-card.png'
 
 export const CardAnnouncementIllustration = ({
   width = 280,
@@ -15,7 +15,7 @@ export const CardAnnouncementIllustration = ({
 }) => {
   return (
     <Image
-      source={appScreenshotSource}
+      source={cardanoCardSource}
       style={[{width, height}, style]}
       contentFit="contain"
     />
