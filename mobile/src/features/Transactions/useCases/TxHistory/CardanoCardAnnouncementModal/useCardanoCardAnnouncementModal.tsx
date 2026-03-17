@@ -10,11 +10,11 @@ import {useModal} from '~/ui/Modal/context/ModalContext'
 import {CardanoCardAnnouncementModal} from './CardanoCardAnnouncementModal'
 
 const CARDANO_CARD_ANNOUNCEMENT_MODAL_SHOWN_KEY =
-  'cardano-card-announcement-modal-shown'
+  'cardano-physical-card-announcement-modal-shown'
 const CARDANO_CARD_ANNOUNCEMENT_MODAL_OPEN_COUNT_KEY =
-  'cardano-card-announcement-modal-open-count'
+  'cardano-physical-card-announcement-modal-open-count'
 const CARDANO_CARD_ANNOUNCEMENT_MODAL_LAST_SHOWN_OPEN_COUNT_KEY =
-  'cardano-card-announcement-modal-last-shown-open-count'
+  'cardano-physical-card-announcement-modal-last-shown-open-count'
 const QUERY_KEY = ['cardanoCardAnnouncementModalState']
 
 type CardanoCardAnnouncementModalState = {
