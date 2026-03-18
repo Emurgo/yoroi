@@ -34,6 +34,7 @@ export {
   addOutput,
   addOutputs,
   addReferenceInput,
+  addScriptInput,
   addWithdrawal,
   buildTransaction,
   buildTransactionCBOR,
