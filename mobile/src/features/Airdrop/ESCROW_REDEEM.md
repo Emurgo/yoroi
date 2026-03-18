@@ -127,9 +127,9 @@ common/
 
 ## Eligibility (`canUseClientSideRedeem`)
 
-Returns true when:
+Returns true when all of:
 1. The allocation has ≥ 2 thaws in the schedule
-2. Thaw #1 (index 0) status is `'confirmed'` (already claimed)
+2. Thaw #1 (index 0) status is `'confirmed'`, `'failed'`, or `'skipped'` — the Midnight API may misreport the status even when thaw #1 succeeded on-chain, so we accept all terminal states; the real check is whether an escrow UTxO exists (verified by `discoverEscrowUtxo`)
 3. At least one subsequent thaw (index > 0) has a past `thaw_date` and is not `'confirmed'` or `'confirming'`
 
 ## API response note

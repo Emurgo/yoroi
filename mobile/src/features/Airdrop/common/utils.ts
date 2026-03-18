@@ -72,11 +72,18 @@ export const canUseClientSideRedeem = (
   const now = new Date()
   const thaws = allocation.schedule.thaws
 
-  // Need at least 2 thaws and first thaw must be confirmed
+  // Need at least 2 thaws and first thaw must have been attempted
+  // Note: the Midnight API may report thaw #1 as 'failed' even when it succeeded on-chain.
+  // We accept 'confirmed', 'failed', or 'skipped' here because the real check is whether
+  // an escrow UTxO exists on-chain, which discoverEscrowUtxo will verify.
   if (thaws.length < 2) return false
 
   const firstThaw = thaws[0]
-  if (!firstThaw || firstThaw.status !== 'confirmed') return false
+  const firstThawAttempted =
+    firstThaw?.status === 'confirmed' ||
+    firstThaw?.status === 'failed' ||
+    firstThaw?.status === 'skipped'
+  if (!firstThaw || !firstThawAttempted) return false
 
   // Check if any subsequent thaw is past its date and not yet successfully claimed
   return thaws.some((thaw, index) => {
