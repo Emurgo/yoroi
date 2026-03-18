@@ -645,6 +645,14 @@ function createCSLTransactionBuilder(
   configBuilder = configBuilder.exUnitPrices(unitPrice)
   configBuilder = configBuilder.preferPureChange(true)
 
+  if (params.refScriptCoinsPerByte) {
+    const refScriptCost = csl.UnitInterval.new(
+      csl.BigNum.fromStr(params.refScriptCoinsPerByte.numerator),
+      csl.BigNum.fromStr(params.refScriptCoinsPerByte.denominator),
+    )
+    configBuilder = configBuilder.refScriptCoinsPerByte(refScriptCost)
+  }
+
   const config = configBuilder.build()
   return csl.TransactionBuilder.new(config)
 }
@@ -1055,21 +1063,36 @@ export async function buildTransaction(
       }
     }
 
-    // Set collateral inputs
+    // Set collateral inputs (CIP-40: collateral return for non-pure UTxOs)
+    let collateralReturnAddr: ReturnType<typeof normalizeToAddress> = undefined
     if (state.collateralInputs.length > 0) {
       const collateralBuilder = csl.TxInputsBuilder.new()
+
       for (const collateralInput of state.collateralInputs) {
         const utxo = collateralInput.utxo
         const cslAddr = normalizeToAddress(csl, utxo.receiver)
         if (!cslAddr) {
           throw new Error(`Invalid collateral address: ${utxo.receiver}`)
         }
+        collateralReturnAddr ??= cslAddr
         const txHash = csl.TransactionHash.fromHex(utxo.txHash)
         const txInput = csl.TransactionInput.new(txHash, utxo.txIndex)
         const cslAmount = amountsToValue(csl, utxo.balance, primaryTokenId)
         collateralBuilder.addRegularInput(cslAddr, txInput, cslAmount)
       }
       cslTxBuilder.setCollateral(collateralBuilder)
+
+      // CIP-40: set collateral return so only the required amount is at risk
+      // Must be set before addChangeIfNeeded so the fee accounts for the
+      // collateral return output size. We use 10 ADA as a generous upper bound;
+      // collateral is only consumed on script failure, overestimating is safe.
+      if (collateralReturnAddr && protocolParams.collateralPercentage) {
+        cslTxBuilder.setTotalCollateralAndReturn(
+          csl.BigNum.fromStr('1000000'),
+          collateralReturnAddr,
+        )
+      }
+
       getLogger().info('buildTransaction: Set collateral inputs', {
         count: state.collateralInputs.length,
       })
@@ -1564,10 +1587,25 @@ export async function buildTransaction(
           }
         }
 
+        // Compute script data hash before addChangeIfNeeded so the fee
+        // calculation accounts for the extra bytes in the tx body
+        if (state.scriptInputs.length > 0) {
+          const costModels = csl.Costmdls.new()
+          if (protocolParams.plutusV3CostModel) {
+            const v3Model = csl.CostModel.new()
+            for (let i = 0; i < protocolParams.plutusV3CostModel.length; i++) {
+              v3Model.set(i, csl.Int.newI32(protocolParams.plutusV3CostModel[i]!))
+            }
+            costModels.insert(csl.Language.newPlutusV3(), v3Model)
+          }
+          cslTxBuilder.calcScriptDataHash(costModels)
+        }
+
         cslTxBuilder.addChangeIfNeeded(changeAddr)
         getLogger().info(
           'buildTransaction: Successfully added change if needed',
         )
+
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : String(error)
@@ -1667,49 +1705,47 @@ export async function buildTransaction(
       cslTxBuilder.setAuxiliaryData(auxData)
     }
 
-    // Build the transaction body
+    // Build the full transaction using buildTx() which includes redeemers
+    // and script data hash in the witness set
+    if (state.scriptInputs.length > 0) {
+      const fullTx = cslTxBuilder.buildTx()
+      if (!fullTx) {
+        throw new Error('Failed to build Plutus transaction')
+      }
+
+      const feeBigNum = cslTxBuilder.getFeeIfSet()
+      const feeStr = feeBigNum ? feeBigNum.toStr() : '0'
+      const fee: Balance.Amounts = feeBigNum
+        ? ({[primaryTokenId]: feeStr} as Balance.Amounts)
+        : state.options.manualFee || {}
+
+      const txBytes = fullTx.toBytes()
+      const cbor: TransactionCbor = Buffer.from(txBytes).toString(
+        'hex',
+      ) as TransactionCbor
+
+      return {
+        inputs: state.inputs,
+        outputs: state.outputs,
+        certificates: state.certificates,
+        withdrawals: state.withdrawals,
+        referenceInputs: state.referenceInputs,
+        collateralInputs: state.collateralInputs,
+        metadata: state.metadata.length > 0 ? state.metadata : undefined,
+        options: state.options,
+        cbor,
+        fee,
+      }
+    }
+
+    // Non-script path: build body manually
     const txBody = cslTxBuilder.build()
     if (!txBody) {
       getLogger().error('buildTransaction: Failed to build transaction body')
       throw new Error('Failed to build transaction body')
     }
 
-    // Get fee from builder
-    const feeBigNum = cslTxBuilder.getFeeIfSet()
-    const feeStr = feeBigNum ? feeBigNum.toStr() : '0'
-    const fee: Balance.Amounts = feeBigNum
-      ? ({[primaryTokenId]: feeStr} as Balance.Amounts)
-      : state.options.manualFee || {}
-
-    // Validate sufficient funds
-    const totalInput = calculateTotalInputValue(state.inputs, state.scriptInputs)
-    const totalOutput = calculateTotalOutputValue(
-      state.outputs,
-      state.options.manualChangeOutput,
-    )
-    const feeAda = BigInt(fee[primaryTokenId] || '0')
-    const inputAda = BigInt(totalInput[primaryTokenId] || '0')
-    const outputAda = BigInt(totalOutput[primaryTokenId] || '0')
-
-    if (inputAda < outputAda + feeAda) {
-      getLogger().error('buildTransaction: Insufficient funds', {
-        inputAda: inputAda.toString(),
-        outputAda: outputAda.toString(),
-        feeAda: feeAda.toString(),
-        required: (outputAda + feeAda).toString(),
-      })
-      throw new NotEnoughMoneyToSendError()
-    }
-
-    // Create witness set - include native scripts if minting is present
-    // Native scripts used in minting need to be in the witness set
     const witnessSet = csl.TransactionWitnessSet.new()
-    if (!witnessSet) {
-      getLogger().error(
-        'buildTransaction: Failed to create TransactionWitnessSet',
-      )
-      throw new Error('Failed to create TransactionWitnessSet')
-    }
 
     // Add native scripts to witness set if minting is present
     if (state.options.mints && state.options.mints.length > 0) {
@@ -1739,12 +1775,37 @@ export async function buildTransaction(
       }
     }
 
-    // Create full transaction: [body, witness_set, auxiliary_data?]
-    // auxData was already created above if metadata exists
     const fullTx = csl.Transaction.new(txBody, witnessSet, auxData)
     if (!fullTx) {
       getLogger().error('buildTransaction: Failed to create Transaction')
       throw new Error('Failed to create Transaction')
+    }
+
+    // Get fee from builder
+    const feeBigNum = cslTxBuilder.getFeeIfSet()
+    const feeStr = feeBigNum ? feeBigNum.toStr() : '0'
+    const fee: Balance.Amounts = feeBigNum
+      ? ({[primaryTokenId]: feeStr} as Balance.Amounts)
+      : state.options.manualFee || {}
+
+    // Validate sufficient funds
+    const totalInput = calculateTotalInputValue(state.inputs, state.scriptInputs)
+    const totalOutput = calculateTotalOutputValue(
+      state.outputs,
+      state.options.manualChangeOutput,
+    )
+    const feeAda = BigInt(fee[primaryTokenId] || '0')
+    const inputAda = BigInt(totalInput[primaryTokenId] || '0')
+    const outputAda = BigInt(totalOutput[primaryTokenId] || '0')
+
+    if (inputAda < outputAda + feeAda) {
+      getLogger().error('buildTransaction: Insufficient funds', {
+        inputAda: inputAda.toString(),
+        outputAda: outputAda.toString(),
+        feeAda: feeAda.toString(),
+        required: (outputAda + feeAda).toString(),
+      })
+      throw new NotEnoughMoneyToSendError()
     }
 
     // Serialize full transaction to CBOR (not just the body)

@@ -19,7 +19,8 @@ export const KNOWN_REFERENCE_SCRIPT_UTXOS = [
 ]
 
 // Shelley mainnet slot config for time <-> slot conversion
+// Byron-Shelley transition: epoch 208, slot 4492800, 2020-07-29T21:44:51Z
 export const SHELLEY_SLOT_CONFIG = {
-  zeroTime: 1591566291, // unix seconds at slot 4924800
-  zeroSlot: 4924800,
+  zeroTime: 1596059091, // unix seconds at the Byron-Shelley transition
+  zeroSlot: 4492800, // absolute slot at the Byron-Shelley transition
 }

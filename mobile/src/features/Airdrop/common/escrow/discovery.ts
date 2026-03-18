@@ -17,9 +17,10 @@ type UtxoForAddressesResponse = Array<{
     name: string
     amount: string
   }>
-  inline_datum?: {
-    plutus_data?: Record<string, unknown>
-  }
+  // The API may return inline_datum as either:
+  // - a CBOR hex string (e.g. "d87999f...")
+  // - an object with plutus_data (e.g. {plutus_data: {constructor: 0, fields: [...]}})
+  inline_datum?: string | {plutus_data?: Record<string, unknown>}
 }>
 
 /**
@@ -56,11 +57,11 @@ export async function discoverEscrowUtxo(
         a.assetId === nightTokenId ||
         (a.policyId === NIGHT_POLICY_ID && a.name === NIGHT_ASSET_NAME_HEX),
     )
-    const hasDatum = !!utxo.inline_datum?.plutus_data
+    const hasDatum = !!utxo.inline_datum
     return hasNight && hasDatum
   })
 
-  if (!escrowUtxo || !escrowUtxo.inline_datum?.plutus_data) {
+  if (!escrowUtxo || !escrowUtxo.inline_datum) {
     logger.error('discoverEscrowUtxo: No escrow UTxO found', {
       escrowAddress,
       utxoCount: utxos.length,
@@ -78,14 +79,19 @@ export async function discoverEscrowUtxo(
     throw new Error('No NIGHT asset found in escrow UTxO')
   }
 
-  // Convert the parsed JSON datum to CBOR hex using CSL
-  const datumHex = await CardanoMobileWrapped.cslScope(async (csl) => {
-    const plutusData = csl.PlutusData.fromJson(
-      JSON.stringify(escrowUtxo.inline_datum!.plutus_data),
-      1,
-    )
-    return plutusData.toHex()
-  })
+  // Extract datum CBOR hex — API may return either a CBOR hex string or a JSON object
+  let datumHex: string
+  if (typeof escrowUtxo.inline_datum === 'string') {
+    datumHex = escrowUtxo.inline_datum
+  } else if (escrowUtxo.inline_datum.plutus_data) {
+    const plutusDataJson = JSON.stringify(escrowUtxo.inline_datum.plutus_data)
+    datumHex = await CardanoMobileWrapped.cslScope(async (csl) => {
+      const plutusData = csl.PlutusData.fromJson(plutusDataJson, 1)
+      return plutusData.toHex()
+    })
+  } else {
+    throw new Error('Unrecognized inline_datum format')
+  }
 
   const datum = parseEscrowDatum(datumHex)
 

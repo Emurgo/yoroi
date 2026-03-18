@@ -23,6 +23,7 @@ import {logger} from '~/kernel/logger/logger'
 import {deriveEscrowAddress} from './addressDerivation'
 import {buildEscrowRedeemTx} from './buildRedeemTx'
 import {SHELLEY_SLOT_CONFIG} from './constants'
+import {fetchPlutusV3CostModel} from './costModels'
 import {discoverEscrowUtxo} from './discovery'
 
 function currentSlotFromTime(): number {
@@ -128,26 +129,33 @@ export const useEscrowRedeem = () => {
             }
           })
 
-          // Find collateral
+          // Find collateral: prefer dedicated pure-ADA UTxOs, fall back to a funding UTxO
           const utxosList = utxosMaker(rawUtxos, collateralConfig)
           const collateralCandidates = utxosList.findCollateralCandidates()
           const availableCollateral = collateralCandidates.filter(
             (utxo: RawUtxo) => !selectedFundingUtxoIds.has(utxo.utxo_id),
           )
 
-          if (availableCollateral.length === 0) {
-            throw new Error('No collateral UTxO available')
+          let collateralModern: typeof modernUtxos[number] | undefined
+          if (availableCollateral.length > 0) {
+            const collateralRaw = availableCollateral[0]!
+            collateralModern = modernUtxos.find(
+              (utxo) =>
+                utxo.txHash === collateralRaw.tx_hash &&
+                utxo.txIndex === collateralRaw.tx_index,
+            )
           }
 
-          const collateralRaw = availableCollateral[0]!
-          const collateralModern = modernUtxos.find(
-            (utxo) =>
-              utxo.txHash === collateralRaw.tx_hash &&
-              utxo.txIndex === collateralRaw.tx_index,
-          )
+          // Fall back to using the first funding UTxO as collateral
+          if (!collateralModern) {
+            logger.info(
+              'useEscrowRedeem: No dedicated collateral, using funding UTxO',
+            )
+            collateralModern = selection.selected[0]
+          }
 
           if (!collateralModern) {
-            throw new Error('Failed to find collateral ModernUtxo')
+            throw new Error('No collateral UTxO available')
           }
 
           return {
@@ -157,11 +165,12 @@ export const useEscrowRedeem = () => {
           }
         })
 
-      // Get protocol params
-      const cardanoHaskellConfig = createCardanoHaskellConfig(
-        wallet.protocolParams,
-        networkId,
-      )
+      // Get protocol params and cost models for Plutus script
+      const plutusV3CostModel = await fetchPlutusV3CostModel()
+      const cardanoHaskellConfig = {
+        ...createCardanoHaskellConfig(wallet.protocolParams, networkId),
+        plutusV3CostModel,
+      }
 
       const changeAddress = wallet.getChangeAddress(meta.addressMode)
 

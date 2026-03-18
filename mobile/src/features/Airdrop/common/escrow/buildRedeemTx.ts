@@ -3,7 +3,6 @@ import {
   addCollateralInput,
   addInput,
   addOutput,
-  addReferenceInput,
   addScriptInput,
   buildTransaction,
   createTransactionBuilder,
@@ -66,29 +65,6 @@ function escrowToModernUtxo(
   } as unknown as ModernUtxo
 }
 
-/**
- * Create a ModernUtxo for a reference script UTxO (contains only min ADA).
- */
-function referenceScriptToModernUtxo(
-  txHash: string,
-  txIndex: number,
-  primaryTokenId: Portfolio.Token.Id,
-): ModernUtxo {
-  return {
-    receiver: '', // Not needed for reference inputs
-    txHash,
-    txIndex,
-    balance: {
-      [primaryTokenId]: '0' as Balance.Quantity,
-    },
-    toTransactionUnspentOutputHex: () => {
-      throw new Error('Not needed for reference inputs')
-    },
-    toTransactionUnspentOutput: () => {
-      throw new Error('Not needed for reference inputs')
-    },
-  } as unknown as ModernUtxo
-}
 
 export type BuildEscrowRedeemTxParams = {
   escrowUtxo: EscrowUtxo
@@ -142,7 +118,8 @@ export async function buildEscrowRedeemTx(
 
   // Script input: the escrow UTxO being spent
   const escrowModernUtxo = escrowToModernUtxo(escrowUtxo, primaryTokenId)
-  const refScriptUtxo = KNOWN_REFERENCE_SCRIPT_UTXOS[0]!
+  const refScriptUtxo = KNOWN_REFERENCE_SCRIPT_UTXOS[1] ?? KNOWN_REFERENCE_SCRIPT_UTXOS[0]!
+
   state = addScriptInput(state, {
     utxo: escrowModernUtxo,
     scriptHash: ESCROW_SCRIPT_HASH,
@@ -180,14 +157,6 @@ export async function buildEscrowRedeemTx(
       data: updatedDatumHex as DatumCbor,
     })
   }
-
-  // Reference input: the UTxO containing the escrow PlutusV3 script
-  const refModernUtxo = referenceScriptToModernUtxo(
-    refScriptUtxo.txHash,
-    refScriptUtxo.txIndex,
-    primaryTokenId,
-  )
-  state = addReferenceInput(state, refModernUtxo)
 
   // Collateral
   state = addCollateralInput(state, collateralUtxo)
