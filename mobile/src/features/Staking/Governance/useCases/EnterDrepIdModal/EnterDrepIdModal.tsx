@@ -1,7 +1,7 @@
 import {CardanoMobile} from '@yoroi/cardano-wallet'
 import {isNonNullable} from '@yoroi/common'
 import {isAdaHandleDomain, useResolverDRepId} from '@yoroi/resolver'
-import {parseDrepId, useIsValidDRepID} from '@yoroi/staking'
+import {getYoroiDrepIdHex, parseDrepId, useIsValidDRepID} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
@@ -35,10 +35,15 @@ const FIND_DREPS_LINKS: Record<Chain.SupportedNetworks, string> = {
 }
 
 const GOVTOOLS_URL = 'https://gov.tools/'
+const YOROI_DREP = [
+  'drep1ygr9tuapcanc3kpeyy4dc3vmrz9cfe5q7v9wj3x9j0ap3tswtre9j',
+  'drep1qe2l8gw8v7ydswfp9twytxcc3wzwdq8npt55f3vnlgv2u8sx3nt',
+  '220655f3a1c76788d839212adc459b188b84e680f30ae944c593fa18ae',
+]
 
-export const HEIGHT_DEFAULT = 420
-export const HEIGHT_PREFILLED = 340
-export const HEIGHT_INPUT_FOCUSED = 400
+export const HEIGHT_DEFAULT = 460
+export const HEIGHT_PREFILLED = 380
+export const HEIGHT_INPUT_FOCUSED = 440
 
 const shortenDRepId = (id: string) => {
   if (id.length > 20) {
@@ -57,6 +62,9 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
   const walletNavigation = useWalletNavigation()
 
   const [drepId, setDrepId] = React.useState(initialDrepId ?? '')
+  const [isYoroiDrep, setIsYoroiDrep] = React.useState<boolean>(
+    initialDrepId != null && YOROI_DREP.includes(initialDrepId.trim()),
+  )
 
   // Track if we've already set initialDrepId to prevent overriding user input
   const hasSetInitialDrepIdRef = React.useRef(false)
@@ -65,15 +73,13 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
     handleInputFocus: defaultHandleInputFocus,
     handleInputBlur: defaultHandleInputBlur,
   } = useModalKeyboardResize({
-    defaultHeight:
-      initialDrepId != null && initialDrepId.length > 0
-        ? HEIGHT_PREFILLED
-        : HEIGHT_DEFAULT,
+    defaultHeight: HEIGHT_DEFAULT,
     focusedHeight: HEIGHT_INPUT_FOCUSED,
   })
 
   const handleDrepIdChange = React.useCallback((text: string) => {
     setDrepId(text)
+    setIsYoroiDrep(YOROI_DREP.includes(text.trim()))
   }, [])
 
   const handleInputFocus = React.useCallback(() => {
@@ -83,6 +89,18 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
   const handleInputBlur = React.useCallback(() => {
     defaultHandleInputBlur()
   }, [defaultHandleInputBlur])
+
+  // Update drepId when initialDrepId is provided (only once).
+  React.useEffect(() => {
+    if (
+      initialDrepId !== undefined &&
+      initialDrepId !== null &&
+      !hasSetInitialDrepIdRef.current
+    ) {
+      hasSetInitialDrepIdRef.current = true
+      handleDrepIdChange(initialDrepId)
+    }
+  }, [initialDrepId, handleDrepIdChange])
 
   // Trim whitespace from input, ensure drepId is always a string
   const trimmedDrepId = (drepId ?? '').trim()
@@ -122,18 +140,6 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
     enabled: resolvedDrepId.length > 0 && !isResolvingHandle,
     refetchOnMount: 'always',
   })
-
-  // Update drepId when initialDrepId is provided (only once).
-  React.useEffect(() => {
-    if (
-      initialDrepId !== undefined &&
-      initialDrepId !== null &&
-      !hasSetInitialDrepIdRef.current
-    ) {
-      hasSetInitialDrepIdRef.current = true
-      handleDrepIdChange(initialDrepId)
-    }
-  }, [initialDrepId, handleDrepIdChange])
 
   // Ensure validation runs when resolvedDrepId changes (including when initialDrepId is set)
   // React Query should automatically run when enabled becomes true, but we ensure it runs
@@ -181,9 +187,11 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
     !isResolvingHandle &&
     drepInfo === null &&
     !handleResolutionError
-  const displayError = noDrepForHandle
-    ? 'This ADA handle does not have a DRep associated with it'
-    : handleResolutionError?.message || error?.message
+  const displayError = isYoroiDrep
+    ? strings.staking.delegationFailedYoroi
+    : noDrepForHandle
+      ? strings.staking.noDrepForHandle
+      : handleResolutionError?.message || error?.message
   const isLoading = isResolvingHandle || isFetching
 
   // Button is enabled when:
@@ -199,7 +207,8 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
     isLoading ||
     isNonNullable(error) ||
     !(isSuccess && isValidDRep === true) ||
-    (isHandle && drepInfo === null)
+    (isHandle && drepInfo === null) ||
+    isYoroiDrep
 
   const handleSubmit = () => {
     try {
@@ -213,6 +222,11 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
         const parsed = parseDrepId(resolvedDrepId, CardanoMobile)
         hash = parsed.hash
         type = parsed.type
+      }
+
+      if (hash === getYoroiDrepIdHex(network)) {
+        setIsYoroiDrep(true)
+        return
       }
 
       // CIP105 flag indicates if user entered deprecated CIP-105 format (58-char hex starting with 22/23)
