@@ -1525,6 +1525,10 @@ export const useStrings = () => {
         withdrawWarningDescription: f(
           stakingMessages.withdrawWarningDescription,
         ),
+        undelegateWarningTitle: f(stakingMessages.undelegateWarningTitle),
+        undelegateWarningDescription: f(
+          stakingMessages.undelegateWarningDescription,
+        ),
         withdrawWarningButton: f(stakingMessages.withdrawWarningButton),
         delegateAndWithdraw: f(stakingMessages.delegateAndWithdraw),
         goToGovernanceCenter: f(stakingMessages.goToGovernanceCenter),
