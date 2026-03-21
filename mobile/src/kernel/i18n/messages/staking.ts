@@ -258,6 +258,14 @@ export const stakingMessages = defineMessages({
     id: 'components.staking.cardanoCardAnnouncementTitle',
     defaultMessage: '!!!Physical Cardano Card Now Available',
   },
+  delegationFailedYoroi: {
+    id: 'components.staking.delegationFailedYoroi',
+    defaultMessage: '!!!Delegation Failed Yoroi',
+  },
+  noDrepForHandle: {
+    id: 'components.staking.noDrepForHandle',
+    defaultMessage: '!!!No DRep For Handle',
+  },
   cardanoCardAnnouncementDescription: {
     id: 'components.staking.cardanoCardAnnouncementDescription',
     defaultMessage:

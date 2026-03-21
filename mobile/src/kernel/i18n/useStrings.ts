@@ -1593,6 +1593,8 @@ export const useStrings = () => {
         delegationSuccess: f(stakingMessages.delegationSuccess),
         delegationFailed: f(stakingMessages.delegationFailed),
         delegationFailedMessage: f(stakingMessages.delegationFailed),
+        delegationFailedYoroi: f(stakingMessages.delegationFailedYoroi),
+        noDrepForHandle: f(stakingMessages.noDrepForHandle),
         retry: f(stakingMessages.retry),
         poolWarningCensoring: f(stakingMessages.warning),
         poolWarningMultiBlock: f(stakingMessages.warning),
