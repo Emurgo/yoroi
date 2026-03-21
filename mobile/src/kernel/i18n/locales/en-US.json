@@ -191,6 +191,8 @@
   "components.governance.withdrawWarningButton": "Participate on governance",
   "components.governance.withdrawWarningDescription": "Participating in governance is required to withdraw rewards on Cardano. First, delegate your ADA in the Governance Center. Once your delegation is confirmed, you can then withdraw your rewards.",
   "components.governance.withdrawWarningTitle": "Keep your rewards accessible",
+  "components.governance.undelegateWarningTitle": "One step left to make the change",
+  "components.governance.undelegateWarningDescription": "Undelegating causes any pending staking rewards to be withdrawn and participating in governance is required to withdraw rewards on Cardano. First, delegate your ADA in the governance center. Once your delegation is confirmed, you will then be able to undelegate.",
   "components.governance.delegateAndWithdraw": "Delegate and withdraw",
   "components.governance.goToGovernanceCenter": "Go to governance center",
   "components.governance.workingOnHardwareWalletSupport": "We are currently working on integrating hardware wallet support for Governance",
