@@ -62,7 +62,7 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
 
   const [drepId, setDrepId] = React.useState(initialDrepId ?? '')
   const [isYoroiDrep, setIsYoroiDrep] = React.useState<boolean>(
-    initialDrepId != null && YOROI_DREP.includes(initialDrepId),
+    initialDrepId != null && YOROI_DREP.includes(initialDrepId.trim()),
   )
 
   // Track if we've already set initialDrepId to prevent overriding user input
@@ -78,7 +78,7 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
 
   const handleDrepIdChange = React.useCallback((text: string) => {
     setDrepId(text)
-    setIsYoroiDrep(YOROI_DREP.includes(text))
+    setIsYoroiDrep(YOROI_DREP.includes(text.trim()))
   }, [])
 
   const handleInputFocus = React.useCallback(() => {
