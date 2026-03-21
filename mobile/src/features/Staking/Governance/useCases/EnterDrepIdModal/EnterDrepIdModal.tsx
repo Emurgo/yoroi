@@ -38,6 +38,7 @@ const GOVTOOLS_URL = 'https://gov.tools/'
 const YOROI_DREP = [
   'drep1ygr9tuapcanc3kpeyy4dc3vmrz9cfe5q7v9wj3x9j0ap3tswtre9j',
   'drep1qe2l8gw8v7ydswfp9twytxcc3wzwdq8npt55f3vnlgv2u8sx3nt',
+  '220655f3a1c76788d839212adc459b188b84e680f30ae944c593fa18ae',
 ]
 
 export const HEIGHT_DEFAULT = 460
