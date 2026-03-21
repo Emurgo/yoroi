@@ -258,6 +258,14 @@ export const stakingMessages = defineMessages({
     id: 'components.staking.cardanoCardAnnouncementTitle',
     defaultMessage: '!!!Physical Cardano Card Now Available',
   },
+  delegationFailedYoroi: {
+    id: 'components.staking.delegationFailedYoroi',
+    defaultMessage: '!!!Delegation Failed Yoroi',
+  },
+  noDrepForHandle: {
+    id: 'components.staking.noDrepForHandle',
+    defaultMessage: '!!!No DRep For Handle',
+  },
   cardanoCardAnnouncementDescription: {
     id: 'components.staking.cardanoCardAnnouncementDescription',
     defaultMessage:
@@ -426,6 +434,14 @@ export const stakingMessages = defineMessages({
   withdrawWarningDescription: {
     id: 'components.governance.withdrawWarningDescription',
     defaultMessage: '!!!Withdraw Warning Description',
+  },
+  undelegateWarningTitle: {
+    id: 'components.governance.undelegateWarningTitle',
+    defaultMessage: '!!!One step left to make the change',
+  },
+  undelegateWarningDescription: {
+    id: 'components.governance.undelegateWarningDescription',
+    defaultMessage: '!!!Undelegate Warning Description',
   },
   withdrawWarningButton: {
     id: 'components.governance.withdrawWarningButton',
