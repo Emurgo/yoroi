@@ -26,6 +26,7 @@ export type Props = {
     hash: string
     CIP105: boolean
   }) => void
+  initialDrepId?: string
 }
 
 const FIND_DREPS_LINKS: Record<Chain.SupportedNetworks, string> = {
@@ -50,7 +51,7 @@ const shortenDRepId = (id: string) => {
   return id
 }
 
-export const EnterDrepIdModal = ({onSubmit}: Props) => {
+export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
   const {closeModal} = useModal()
@@ -59,8 +60,13 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
   const {addTabAndSetActive} = useBrowser()
   const walletNavigation = useWalletNavigation()
 
-  const [drepId, setDrepId] = React.useState('')
-  const [isYoroiDrep, setIsYoroiDrep] = React.useState<boolean>(false)
+  const [drepId, setDrepId] = React.useState(initialDrepId ?? '')
+  const [isYoroiDrep, setIsYoroiDrep] = React.useState<boolean>(
+    initialDrepId != null && YOROI_DREP.includes(initialDrepId),
+  )
+
+  // Track if we've already set initialDrepId to prevent overriding user input
+  const hasSetInitialDrepIdRef = React.useRef(false)
 
   const {
     handleInputFocus: defaultHandleInputFocus,
@@ -82,6 +88,18 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
   const handleInputBlur = React.useCallback(() => {
     defaultHandleInputBlur()
   }, [defaultHandleInputBlur])
+
+  // Update drepId when initialDrepId is provided (only once).
+  React.useEffect(() => {
+    if (
+      initialDrepId !== undefined &&
+      initialDrepId !== null &&
+      !hasSetInitialDrepIdRef.current
+    ) {
+      hasSetInitialDrepIdRef.current = true
+      handleDrepIdChange(initialDrepId)
+    }
+  }, [initialDrepId, handleDrepIdChange])
 
   // Trim whitespace from input, ensure drepId is always a string
   const trimmedDrepId = (drepId ?? '').trim()
