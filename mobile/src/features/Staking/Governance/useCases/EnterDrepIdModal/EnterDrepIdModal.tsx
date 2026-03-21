@@ -1,7 +1,7 @@
 import {CardanoMobile} from '@yoroi/cardano-wallet'
 import {isNonNullable} from '@yoroi/common'
 import {isAdaHandleDomain, useResolverDRepId} from '@yoroi/resolver'
-import {parseDrepId, useIsValidDRepID} from '@yoroi/staking'
+import {getYoroiDrepIdHex, parseDrepId, useIsValidDRepID} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
@@ -222,6 +222,11 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
         const parsed = parseDrepId(resolvedDrepId, CardanoMobile)
         hash = parsed.hash
         type = parsed.type
+      }
+
+      if (hash === getYoroiDrepIdHex(network)) {
+        setIsYoroiDrep(true)
+        return
       }
 
       // CIP105 flag indicates if user entered deprecated CIP-105 format (58-char hex starting with 22/23)
