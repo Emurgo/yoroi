@@ -1,7 +1,7 @@
 import {CardanoMobile} from '@yoroi/cardano-wallet'
 import {isNonNullable} from '@yoroi/common'
 import {isAdaHandleDomain, useResolverDRepId} from '@yoroi/resolver'
-import {parseDrepId, useIsValidDRepID} from '@yoroi/staking'
+import {getYoroiDrepIdHex, parseDrepId, useIsValidDRepID} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {Chain} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
@@ -72,8 +72,26 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
 
   const handleDrepIdChange = React.useCallback((text: string) => {
     setDrepId(text)
-    setIsYoroiDrep(YOROI_DREP.includes(text))
-  }, [])
+    const input = (text ?? '').trim()
+    // First, block explicit Yoroi bech32 IDs (after trimming)
+    let blocked = YOROI_DREP.includes(input)
+
+    // Also block if the parsed hash matches Yoroi's known hex hash for the current network.
+    // This covers CIP-129 bech32, CIP-105 bech32, and raw CIP-105 hex formats.
+    if (!blocked) {
+      try {
+        const parsed = parseDrepId(input, CardanoMobile)
+        const yoroiHashHex = getYoroiDrepIdHex(network)
+        blocked =
+          typeof parsed?.hash === 'string' &&
+          parsed.hash.toLowerCase() === yoroiHashHex.toLowerCase()
+      } catch {
+        // Ignore parse errors here; validation will handle non-DRep inputs.
+      }
+    }
+
+    setIsYoroiDrep(blocked)
+  }, [network])
 
   const handleInputFocus = React.useCallback(() => {
     defaultHandleInputFocus()
