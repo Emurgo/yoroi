@@ -23,6 +23,7 @@ import {
 import {useBalances} from '~/features/Portfolio/common/hooks/useBalances'
 import {StakeRewardsWithdrawalOperation} from '~/features/ReviewTx/common/operations'
 import {useGovernanceParticipation} from '~/features/Staking/Governance/common/helpers'
+import {UndelegateGovernanceWarningModal} from '~/features/Staking/Governance/useCases/UndelegateGovernanceWarningModal/UndelegateGovernanceWarningModal'
 import {WithdrawGovernanceWarningModal} from '~/features/Staking/Governance/useCases/WithdrawGovernanceWarningModal/WithdrawGovernanceWarningModal'
 import {usePrefetchPoolList} from '~/features/Staking/Staking/PoolList/usePoolList'
 import {PoolTransitionNotice} from '~/features/Staking/Staking/PoolTransition/PoolTransitionNotice'
@@ -113,10 +114,13 @@ export const DashboardScreen = () => {
         return
       }
       if (!isParticipating) {
+        const WarningModal = shouldDeregister
+          ? UndelegateGovernanceWarningModal
+          : WithdrawGovernanceWarningModal
         openModal({
           title: strings.staking.governanceRequiredTitle,
-          content: React.createElement(WithdrawGovernanceWarningModal.Content),
-          footer: React.createElement(WithdrawGovernanceWarningModal.Footer),
+          content: React.createElement(WarningModal.Content),
+          footer: React.createElement(WarningModal.Footer),
           height: screenHeight * 0.7,
         })
         return
