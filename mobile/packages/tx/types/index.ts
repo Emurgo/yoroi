@@ -135,6 +135,10 @@ export type CardanoHaskellConfig = {
   coinsPerUtxoByte: string
   poolDeposit: string
   networkId: number
+  collateralPercentage?: string
+  refScriptCoinsPerByte?: {numerator: string; denominator: string}
+  /** PlutusV3 cost model values (array of integers). Required for Plutus script transactions. */
+  plutusV3CostModel?: number[]
 }
 
 // UnsignedTx type - matches TransactionBody structure

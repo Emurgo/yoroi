@@ -137,7 +137,8 @@ export const ThawScheduleScreen = () => {
   )
   const allocation = allocationFromQuery ?? allocationFromParams
 
-  const {buildTransaction, submitTransaction} = useRedeemThaw()
+  const {buildTransaction, submitTransaction, lastBuildWasEscrow} =
+    useRedeemThaw(allocation)
   const {navigateToTxReview} = useWalletNavigation()
   const resultNavigation = useResultNavigation()
   const navigateTo = useNavigateTo()
@@ -225,6 +226,7 @@ export const ThawScheduleScreen = () => {
             await submitTransaction({
               destAddress: allocation.address,
               signedTx: args.signedTx,
+              isEscrowRedeem: lastBuildWasEscrow.current,
             })
             setIsRedeeming(false)
             navigateTo.showSubmittedTxScreen('default')
