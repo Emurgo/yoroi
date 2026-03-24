@@ -209,9 +209,7 @@ export const useRedeemThaw = (allocation?: AddressAllocation) => {
             {
               destAddress,
               error:
-                apiError instanceof Error
-                  ? apiError.message
-                  : String(apiError),
+                apiError instanceof Error ? apiError.message : String(apiError),
             },
           )
           const cbor = await buildEscrowTransaction(destAddress)

@@ -65,7 +65,6 @@ function escrowToModernUtxo(
   } as unknown as ModernUtxo
 }
 
-
 export type BuildEscrowRedeemTxParams = {
   escrowUtxo: EscrowUtxo
   eligibleAddress: string
@@ -118,7 +117,8 @@ export async function buildEscrowRedeemTx(
 
   // Script input: the escrow UTxO being spent
   const escrowModernUtxo = escrowToModernUtxo(escrowUtxo, primaryTokenId)
-  const refScriptUtxo = KNOWN_REFERENCE_SCRIPT_UTXOS[1] ?? KNOWN_REFERENCE_SCRIPT_UTXOS[0]!
+  const refScriptUtxo =
+    KNOWN_REFERENCE_SCRIPT_UTXOS[1] ?? KNOWN_REFERENCE_SCRIPT_UTXOS[0]!
 
   state = addScriptInput(state, {
     utxo: escrowModernUtxo,

@@ -987,8 +987,15 @@ export async function buildTransaction(
 
       try {
         const txHash = csl.TransactionHash.fromHex(scriptInput.utxo.txHash)
-        const txInput = csl.TransactionInput.new(txHash, scriptInput.utxo.txIndex)
-        const cslAmount = amountsToValue(csl, scriptInput.utxo.balance, primaryTokenId)
+        const txInput = csl.TransactionInput.new(
+          txHash,
+          scriptInput.utxo.txIndex,
+        )
+        const cslAmount = amountsToValue(
+          csl,
+          scriptInput.utxo.balance,
+          primaryTokenId,
+        )
 
         // Build redeemer
         const redeemerData = csl.PlutusData.fromHex(scriptInput.redeemer)
@@ -1006,8 +1013,13 @@ export async function buildTransaction(
         // Build script source and datum source
         let plutusWitness
         if (scriptInput.referenceScriptUtxo) {
-          const refTxHash = csl.TransactionHash.fromHex(scriptInput.referenceScriptUtxo.txHash)
-          const refInput = csl.TransactionInput.new(refTxHash, scriptInput.referenceScriptUtxo.txIndex)
+          const refTxHash = csl.TransactionHash.fromHex(
+            scriptInput.referenceScriptUtxo.txHash,
+          )
+          const refInput = csl.TransactionInput.new(
+            refTxHash,
+            scriptInput.referenceScriptUtxo.txIndex,
+          )
           const scriptHash = csl.ScriptHash.fromHex(scriptInput.scriptHash)
 
           const langVersion =
@@ -1029,18 +1041,26 @@ export async function buildTransaction(
           if (scriptInput.datumSource === 'inline') {
             datumSource = csl.DatumSource.newRefInput(txInput)
           } else {
-            const datumData = csl.PlutusData.fromHex(scriptInput.datumSource.data)
+            const datumData = csl.PlutusData.fromHex(
+              scriptInput.datumSource.data,
+            )
             datumSource = csl.DatumSource.new(datumData)
           }
 
-          plutusWitness = csl.PlutusWitness.newWithRef(scriptSource, datumSource, redeemer)
+          plutusWitness = csl.PlutusWitness.newWithRef(
+            scriptSource,
+            datumSource,
+            redeemer,
+          )
         } else {
           // Inline script (not via reference input)
           const script = csl.PlutusScript.fromHex(scriptInput.scriptHash)
           if (scriptInput.datumSource === 'inline') {
             plutusWitness = csl.PlutusWitness.newWithoutDatum(script, redeemer)
           } else {
-            const datumData = csl.PlutusData.fromHex(scriptInput.datumSource.data)
+            const datumData = csl.PlutusData.fromHex(
+              scriptInput.datumSource.data,
+            )
             plutusWitness = csl.PlutusWitness.new(script, datumData, redeemer)
           }
         }
@@ -1064,7 +1084,7 @@ export async function buildTransaction(
     }
 
     // Set collateral inputs (CIP-40: collateral return for non-pure UTxOs)
-    let collateralReturnAddr: ReturnType<typeof normalizeToAddress> = undefined
+    let collateralReturnAddr: ReturnType<typeof normalizeToAddress>
     if (state.collateralInputs.length > 0) {
       const collateralBuilder = csl.TxInputsBuilder.new()
 
@@ -1112,7 +1132,9 @@ export async function buildTransaction(
 
     // Set validity interval
     if (state.options.validityInterval) {
-      const startSlot = csl.BigNum.fromStr(state.options.validityInterval.start.toString())
+      const startSlot = csl.BigNum.fromStr(
+        state.options.validityInterval.start.toString(),
+      )
       cslTxBuilder.setValidityStartIntervalBignum(startSlot)
       if (state.options.validityInterval.end) {
         cslTxBuilder.setTtl(state.options.validityInterval.end)
@@ -1265,7 +1287,10 @@ export async function buildTransaction(
       }
 
       // Calculate totals before adding change to help debug issues
-      const totalInput = calculateTotalInputValue(state.inputs, state.scriptInputs)
+      const totalInput = calculateTotalInputValue(
+        state.inputs,
+        state.scriptInputs,
+      )
       const totalOutput = calculateTotalOutputValue(
         state.outputs,
         state.options.manualChangeOutput,
@@ -1594,7 +1619,10 @@ export async function buildTransaction(
           if (protocolParams.plutusV3CostModel) {
             const v3Model = csl.CostModel.new()
             for (let i = 0; i < protocolParams.plutusV3CostModel.length; i++) {
-              v3Model.set(i, csl.Int.newI32(protocolParams.plutusV3CostModel[i]!))
+              v3Model.set(
+                i,
+                csl.Int.newI32(protocolParams.plutusV3CostModel[i]!),
+              )
             }
             costModels.insert(csl.Language.newPlutusV3(), v3Model)
           }
@@ -1605,7 +1633,6 @@ export async function buildTransaction(
         getLogger().info(
           'buildTransaction: Successfully added change if needed',
         )
-
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : String(error)
@@ -1789,7 +1816,10 @@ export async function buildTransaction(
       : state.options.manualFee || {}
 
     // Validate sufficient funds
-    const totalInput = calculateTotalInputValue(state.inputs, state.scriptInputs)
+    const totalInput = calculateTotalInputValue(
+      state.inputs,
+      state.scriptInputs,
+    )
     const totalOutput = calculateTotalOutputValue(
       state.outputs,
       state.options.manualChangeOutput,

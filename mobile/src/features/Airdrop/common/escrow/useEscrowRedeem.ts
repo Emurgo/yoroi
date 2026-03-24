@@ -136,7 +136,7 @@ export const useEscrowRedeem = () => {
             (utxo: RawUtxo) => !selectedFundingUtxoIds.has(utxo.utxo_id),
           )
 
-          let collateralModern: typeof modernUtxos[number] | undefined
+          let collateralModern: (typeof modernUtxos)[number] | undefined
           if (availableCollateral.length > 0) {
             const collateralRaw = availableCollateral[0]!
             collateralModern = modernUtxos.find(
