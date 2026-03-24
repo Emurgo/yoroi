@@ -126,7 +126,6 @@ export const AirdropDetailsScreen = () => {
   const wallet = walletManager.selected.wallet
   const meta = walletManager.selected.meta ?? null
 
-  const {buildTransaction, submitTransaction} = useRedeemThaw()
   const {navigateToTxReview} = useWalletNavigation()
   const resultNavigation = useResultNavigation()
   const navigateTo = useNavigateTo()
@@ -145,6 +144,9 @@ export const AirdropDetailsScreen = () => {
     (a) => a.address === allocation.address,
   )
   const currentAllocation = allocationFromQuery ?? allocation
+
+  const {buildTransaction, submitTransaction, lastBuildWasEscrow} =
+    useRedeemThaw(currentAllocation)
 
   const currentThawIndex = getCurrentThawIndex(currentAllocation.schedule.thaws)
   const currentThaw =
@@ -235,10 +237,11 @@ export const AirdropDetailsScreen = () => {
           }
 
           try {
-            // Submit signed transaction to redemption API
+            // Submit signed transaction (via Midnight API or directly to Cardano)
             await submitTransaction({
               destAddress: currentAllocation.address,
               signedTx: args.signedTx,
+              isEscrowRedeem: lastBuildWasEscrow.current,
             })
             setIsRedeeming(false)
             navigateTo.showSubmittedTxScreen('default')
