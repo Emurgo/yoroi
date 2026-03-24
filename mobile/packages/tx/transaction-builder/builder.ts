@@ -29,6 +29,7 @@ import {normalizeToAddress} from '../utils/addresses'
 import {ModernUtxo} from '../utxo/models'
 import {createCertificateFromData} from './certificates'
 import type {
+  ScriptInput,
   TransactionCertificate,
   TransactionInput,
   TransactionOptions,
@@ -48,6 +49,7 @@ export type TransactionBuilderState = {
   withdrawals: TransactionWithdrawal[]
   referenceInputs: TransactionReferenceInput[]
   collateralInputs: TransactionInput[]
+  scriptInputs: ScriptInput[]
   metadata: TransactionMetadata[]
   options: TransactionOptions
   excludedUtxos: Set<UtxoId>
@@ -64,6 +66,7 @@ export function createTransactionBuilder(): TransactionBuilderState {
     withdrawals: [],
     referenceInputs: [],
     collateralInputs: [],
+    scriptInputs: [],
     metadata: [],
     options: {
       mints: [],
@@ -218,6 +221,17 @@ export function removeCollateralInput(
   }
 }
 
+// Script input operations
+export function addScriptInput(
+  state: TransactionBuilderState,
+  scriptInput: ScriptInput,
+): TransactionBuilderState {
+  return {
+    ...state,
+    scriptInputs: [...state.scriptInputs, scriptInput],
+  }
+}
+
 // UTXO exclusion operations
 export function excludeUtxo(
   state: TransactionBuilderState,
@@ -354,10 +368,17 @@ function validateInputs(state: TransactionBuilderState): void {
 /**
  * Calculate total value from inputs
  */
-function calculateTotalInputValue(inputs: TransactionInput[]): Balance.Amounts {
+function calculateTotalInputValue(
+  inputs: TransactionInput[],
+  scriptInputs: ScriptInput[] = [],
+): Balance.Amounts {
   const total: Balance.Amounts = {} as Balance.Amounts
-  for (const input of inputs) {
-    for (const [tokenId, quantity] of Object.entries(input.utxo.balance)) {
+  const allUtxos = [
+    ...inputs.map((i) => i.utxo),
+    ...scriptInputs.map((s) => s.utxo),
+  ]
+  for (const utxo of allUtxos) {
+    for (const [tokenId, quantity] of Object.entries(utxo.balance)) {
       const current = BigInt(total[tokenId as TokenId] || '0')
       const added = BigInt(quantity)
       total[tokenId as TokenId] = (
@@ -570,10 +591,9 @@ function outputToCSL(
   // Add datum if present
   if (output.datum) {
     if ('data' in output.datum) {
-      // Inline datum: create PlutusData from hex, hash it, and set the hash
+      // Inline datum: set PlutusData directly on the output
       const plutusData = csl.PlutusData.fromHex(output.datum.data)
-      const datumHash = csl.hashPlutusData(plutusData)
-      cslOutput.setDataHash(datumHash)
+      cslOutput.setPlutusData(plutusData)
     } else if ('hash' in output.datum) {
       // Datum hash: set the hash directly
       const datumHash = csl.DataHash.fromHex(output.datum.hash)
@@ -624,6 +644,14 @@ function createCSLTransactionBuilder(
   configBuilder = configBuilder.maxTxSize(16384)
   configBuilder = configBuilder.exUnitPrices(unitPrice)
   configBuilder = configBuilder.preferPureChange(true)
+
+  if (params.refScriptCoinsPerByte) {
+    const refScriptCost = csl.UnitInterval.new(
+      csl.BigNum.fromStr(params.refScriptCoinsPerByte.numerator),
+      csl.BigNum.fromStr(params.refScriptCoinsPerByte.denominator),
+    )
+    configBuilder = configBuilder.refScriptCoinsPerByte(refScriptCost)
+  }
 
   const config = configBuilder.build()
   return csl.TransactionBuilder.new(config)
@@ -952,6 +980,171 @@ export async function buildTransaction(
       }
     }
 
+    // Add script inputs (Plutus script spending)
+    for (let i = 0; i < state.scriptInputs.length; i++) {
+      const scriptInput = state.scriptInputs[i]
+      if (!scriptInput) continue
+
+      try {
+        const txHash = csl.TransactionHash.fromHex(scriptInput.utxo.txHash)
+        const txInput = csl.TransactionInput.new(
+          txHash,
+          scriptInput.utxo.txIndex,
+        )
+        const cslAmount = amountsToValue(
+          csl,
+          scriptInput.utxo.balance,
+          primaryTokenId,
+        )
+
+        // Build redeemer
+        const redeemerData = csl.PlutusData.fromHex(scriptInput.redeemer)
+        const exUnits = csl.ExUnits.new(
+          csl.BigNum.fromStr(scriptInput.redeemerExUnits.mem),
+          csl.BigNum.fromStr(scriptInput.redeemerExUnits.steps),
+        )
+        const redeemer = csl.Redeemer.new(
+          csl.RedeemerTag.newSpend(),
+          csl.BigNum.fromStr(i.toString()),
+          redeemerData,
+          exUnits,
+        )
+
+        // Build script source and datum source
+        let plutusWitness
+        if (scriptInput.referenceScriptUtxo) {
+          const refTxHash = csl.TransactionHash.fromHex(
+            scriptInput.referenceScriptUtxo.txHash,
+          )
+          const refInput = csl.TransactionInput.new(
+            refTxHash,
+            scriptInput.referenceScriptUtxo.txIndex,
+          )
+          const scriptHash = csl.ScriptHash.fromHex(scriptInput.scriptHash)
+
+          const langVersion =
+            scriptInput.referenceScriptUtxo.langVersion === 'v3'
+              ? csl.Language.newPlutusV3()
+              : scriptInput.referenceScriptUtxo.langVersion === 'v2'
+                ? csl.Language.newPlutusV2()
+                : csl.Language.newPlutusV1()
+
+          const scriptSource = csl.PlutusScriptSource.newRefInput(
+            scriptHash,
+            refInput,
+            langVersion,
+            scriptInput.referenceScriptUtxo.scriptSize,
+          )
+
+          // Build datum source
+          let datumSource
+          if (scriptInput.datumSource === 'inline') {
+            datumSource = csl.DatumSource.newRefInput(txInput)
+          } else {
+            const datumData = csl.PlutusData.fromHex(
+              scriptInput.datumSource.data,
+            )
+            datumSource = csl.DatumSource.new(datumData)
+          }
+
+          plutusWitness = csl.PlutusWitness.newWithRef(
+            scriptSource,
+            datumSource,
+            redeemer,
+          )
+        } else {
+          // Inline script (not via reference input)
+          const script = csl.PlutusScript.fromHex(scriptInput.scriptHash)
+          if (scriptInput.datumSource === 'inline') {
+            plutusWitness = csl.PlutusWitness.newWithoutDatum(script, redeemer)
+          } else {
+            const datumData = csl.PlutusData.fromHex(
+              scriptInput.datumSource.data,
+            )
+            plutusWitness = csl.PlutusWitness.new(script, datumData, redeemer)
+          }
+        }
+
+        cslTxBuilder.addPlutusScriptInput(plutusWitness, txInput, cslAmount)
+        getLogger().info('buildTransaction: Added script input', {
+          scriptInputIndex: i,
+          txHash: scriptInput.utxo.txHash,
+          txIndex: scriptInput.utxo.txIndex,
+          hasRefScript: !!scriptInput.referenceScriptUtxo,
+        })
+      } catch (error) {
+        getLogger().error('buildTransaction: Error adding script input', {
+          scriptInputIndex: i,
+          txHash: scriptInput.utxo.txHash,
+          txIndex: scriptInput.utxo.txIndex,
+          error: error instanceof Error ? error.message : String(error),
+        })
+        throw error
+      }
+    }
+
+    // Set collateral inputs (CIP-40: collateral return for non-pure UTxOs)
+    let collateralReturnAddr: ReturnType<typeof normalizeToAddress>
+    if (state.collateralInputs.length > 0) {
+      const collateralBuilder = csl.TxInputsBuilder.new()
+
+      for (const collateralInput of state.collateralInputs) {
+        const utxo = collateralInput.utxo
+        const cslAddr = normalizeToAddress(csl, utxo.receiver)
+        if (!cslAddr) {
+          throw new Error(`Invalid collateral address: ${utxo.receiver}`)
+        }
+        collateralReturnAddr ??= cslAddr
+        const txHash = csl.TransactionHash.fromHex(utxo.txHash)
+        const txInput = csl.TransactionInput.new(txHash, utxo.txIndex)
+        const cslAmount = amountsToValue(csl, utxo.balance, primaryTokenId)
+        collateralBuilder.addRegularInput(cslAddr, txInput, cslAmount)
+      }
+      cslTxBuilder.setCollateral(collateralBuilder)
+
+      // CIP-40: set collateral return so only the required amount is at risk
+      // Must be set before addChangeIfNeeded so the fee accounts for the
+      // collateral return output size. We use 10 ADA as a generous upper bound;
+      // collateral is only consumed on script failure, overestimating is safe.
+      if (collateralReturnAddr && protocolParams.collateralPercentage) {
+        cslTxBuilder.setTotalCollateralAndReturn(
+          csl.BigNum.fromStr('1000000'),
+          collateralReturnAddr,
+        )
+      }
+
+      getLogger().info('buildTransaction: Set collateral inputs', {
+        count: state.collateralInputs.length,
+      })
+    }
+
+    // Add reference inputs
+    for (const refInput of state.referenceInputs) {
+      const txHash = csl.TransactionHash.fromHex(refInput.utxo.txHash)
+      const txInput = csl.TransactionInput.new(txHash, refInput.utxo.txIndex)
+      cslTxBuilder.addReferenceInput(txInput)
+    }
+    if (state.referenceInputs.length > 0) {
+      getLogger().info('buildTransaction: Added reference inputs', {
+        count: state.referenceInputs.length,
+      })
+    }
+
+    // Set validity interval
+    if (state.options.validityInterval) {
+      const startSlot = csl.BigNum.fromStr(
+        state.options.validityInterval.start.toString(),
+      )
+      cslTxBuilder.setValidityStartIntervalBignum(startSlot)
+      if (state.options.validityInterval.end) {
+        cslTxBuilder.setTtl(state.options.validityInterval.end)
+      }
+      getLogger().info('buildTransaction: Set validity interval', {
+        start: state.options.validityInterval.start,
+        end: state.options.validityInterval.end,
+      })
+    }
+
     // Handle manual fee
     if (state.options.manualFee) {
       const feeAmount = state.options.manualFee[primaryTokenId] || '0'
@@ -1094,7 +1287,10 @@ export async function buildTransaction(
       }
 
       // Calculate totals before adding change to help debug issues
-      const totalInput = calculateTotalInputValue(state.inputs)
+      const totalInput = calculateTotalInputValue(
+        state.inputs,
+        state.scriptInputs,
+      )
       const totalOutput = calculateTotalOutputValue(
         state.outputs,
         state.options.manualChangeOutput,
@@ -1416,6 +1612,23 @@ export async function buildTransaction(
           }
         }
 
+        // Compute script data hash before addChangeIfNeeded so the fee
+        // calculation accounts for the extra bytes in the tx body
+        if (state.scriptInputs.length > 0) {
+          const costModels = csl.Costmdls.new()
+          if (protocolParams.plutusV3CostModel) {
+            const v3Model = csl.CostModel.new()
+            for (let i = 0; i < protocolParams.plutusV3CostModel.length; i++) {
+              v3Model.set(
+                i,
+                csl.Int.newI32(protocolParams.plutusV3CostModel[i]!),
+              )
+            }
+            costModels.insert(csl.Language.newPlutusV3(), v3Model)
+          }
+          cslTxBuilder.calcScriptDataHash(costModels)
+        }
+
         cslTxBuilder.addChangeIfNeeded(changeAddr)
         getLogger().info(
           'buildTransaction: Successfully added change if needed',
@@ -1519,59 +1732,47 @@ export async function buildTransaction(
       cslTxBuilder.setAuxiliaryData(auxData)
     }
 
-    // Build the transaction body
+    // Build the full transaction using buildTx() which includes redeemers
+    // and script data hash in the witness set
+    if (state.scriptInputs.length > 0) {
+      const fullTx = cslTxBuilder.buildTx()
+      if (!fullTx) {
+        throw new Error('Failed to build Plutus transaction')
+      }
+
+      const feeBigNum = cslTxBuilder.getFeeIfSet()
+      const feeStr = feeBigNum ? feeBigNum.toStr() : '0'
+      const fee: Balance.Amounts = feeBigNum
+        ? ({[primaryTokenId]: feeStr} as Balance.Amounts)
+        : state.options.manualFee || {}
+
+      const txBytes = fullTx.toBytes()
+      const cbor: TransactionCbor = Buffer.from(txBytes).toString(
+        'hex',
+      ) as TransactionCbor
+
+      return {
+        inputs: state.inputs,
+        outputs: state.outputs,
+        certificates: state.certificates,
+        withdrawals: state.withdrawals,
+        referenceInputs: state.referenceInputs,
+        collateralInputs: state.collateralInputs,
+        metadata: state.metadata.length > 0 ? state.metadata : undefined,
+        options: state.options,
+        cbor,
+        fee,
+      }
+    }
+
+    // Non-script path: build body manually
     const txBody = cslTxBuilder.build()
     if (!txBody) {
       getLogger().error('buildTransaction: Failed to build transaction body')
       throw new Error('Failed to build transaction body')
     }
 
-    // Handle reference inputs and collateral inputs
-    // CSL TransactionBuilder doesn't support these directly
-    // TODO: Check CSL API for reference/collateral inputs support
-    // For now, we'll note that these are in the state but not yet added to the transaction
-    // They will be included in the returned UnsignedTransaction for future processing
-
-    // Handle validity interval
-    // CSL TransactionBuilder may support this via setValidityStartInterval
-    // TODO: Check CSL API for validity interval support
-
-    // Get fee from builder
-    const feeBigNum = cslTxBuilder.getFeeIfSet()
-    const feeStr = feeBigNum ? feeBigNum.toStr() : '0'
-    const fee: Balance.Amounts = feeBigNum
-      ? ({[primaryTokenId]: feeStr} as Balance.Amounts)
-      : state.options.manualFee || {}
-
-    // Validate sufficient funds
-    const totalInput = calculateTotalInputValue(state.inputs)
-    const totalOutput = calculateTotalOutputValue(
-      state.outputs,
-      state.options.manualChangeOutput,
-    )
-    const feeAda = BigInt(fee[primaryTokenId] || '0')
-    const inputAda = BigInt(totalInput[primaryTokenId] || '0')
-    const outputAda = BigInt(totalOutput[primaryTokenId] || '0')
-
-    if (inputAda < outputAda + feeAda) {
-      getLogger().error('buildTransaction: Insufficient funds', {
-        inputAda: inputAda.toString(),
-        outputAda: outputAda.toString(),
-        feeAda: feeAda.toString(),
-        required: (outputAda + feeAda).toString(),
-      })
-      throw new NotEnoughMoneyToSendError()
-    }
-
-    // Create witness set - include native scripts if minting is present
-    // Native scripts used in minting need to be in the witness set
     const witnessSet = csl.TransactionWitnessSet.new()
-    if (!witnessSet) {
-      getLogger().error(
-        'buildTransaction: Failed to create TransactionWitnessSet',
-      )
-      throw new Error('Failed to create TransactionWitnessSet')
-    }
 
     // Add native scripts to witness set if minting is present
     if (state.options.mints && state.options.mints.length > 0) {
@@ -1601,12 +1802,40 @@ export async function buildTransaction(
       }
     }
 
-    // Create full transaction: [body, witness_set, auxiliary_data?]
-    // auxData was already created above if metadata exists
     const fullTx = csl.Transaction.new(txBody, witnessSet, auxData)
     if (!fullTx) {
       getLogger().error('buildTransaction: Failed to create Transaction')
       throw new Error('Failed to create Transaction')
+    }
+
+    // Get fee from builder
+    const feeBigNum = cslTxBuilder.getFeeIfSet()
+    const feeStr = feeBigNum ? feeBigNum.toStr() : '0'
+    const fee: Balance.Amounts = feeBigNum
+      ? ({[primaryTokenId]: feeStr} as Balance.Amounts)
+      : state.options.manualFee || {}
+
+    // Validate sufficient funds
+    const totalInput = calculateTotalInputValue(
+      state.inputs,
+      state.scriptInputs,
+    )
+    const totalOutput = calculateTotalOutputValue(
+      state.outputs,
+      state.options.manualChangeOutput,
+    )
+    const feeAda = BigInt(fee[primaryTokenId] || '0')
+    const inputAda = BigInt(totalInput[primaryTokenId] || '0')
+    const outputAda = BigInt(totalOutput[primaryTokenId] || '0')
+
+    if (inputAda < outputAda + feeAda) {
+      getLogger().error('buildTransaction: Insufficient funds', {
+        inputAda: inputAda.toString(),
+        outputAda: outputAda.toString(),
+        feeAda: feeAda.toString(),
+        required: (outputAda + feeAda).toString(),
+      })
+      throw new NotEnoughMoneyToSendError()
     }
 
     // Serialize full transaction to CBOR (not just the body)
