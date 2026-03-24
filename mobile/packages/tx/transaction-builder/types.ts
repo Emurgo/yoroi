@@ -156,6 +156,20 @@ export type TransactionReferenceInput = {
   utxo: ModernUtxo
 }
 
+export type ScriptInput = {
+  utxo: ModernUtxo
+  scriptHash: string
+  redeemer: string // Redeemer PlutusData CBOR hex
+  redeemerExUnits: {mem: string; steps: string}
+  referenceScriptUtxo?: {
+    txHash: string
+    txIndex: number
+    langVersion: 'v1' | 'v2' | 'v3'
+    scriptSize: number
+  }
+  datumSource: 'inline' | {data: string} // 'inline' = from UTxO, or explicit data hex
+}
+
 export type {MetadataDataValue}
 
 export type TransactionOptions = {

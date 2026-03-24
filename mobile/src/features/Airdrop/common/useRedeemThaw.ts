@@ -12,12 +12,15 @@ import {useWalletManager} from '@yoroi/wallet-manager'
 import type {Transaction, WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {Buffer} from 'buffer'
+import React from 'react'
 
 import {persistPrefixKeyword} from '~/kernel/connection/ConnectionProvider'
 import {logger} from '~/kernel/logger/logger'
 
 import {redemptionApi} from '../api/redemptionApi'
-import type {BuildTransactionRequest} from '../types'
+import type {AddressAllocation, BuildTransactionRequest} from '../types'
+import {useEscrowRedeem} from './escrow/useEscrowRedeem'
+import {canUseClientSideRedeem} from './utils'
 
 /**
  * Hook for redeeming thawed NIGHT tokens
@@ -28,11 +31,15 @@ import type {BuildTransactionRequest} from '../types'
  * - Build transaction via API (returns CBOR)
  * - Signing and submission handled by review transaction flow
  */
-export const useRedeemThaw = () => {
+export const useRedeemThaw = (allocation?: AddressAllocation) => {
   const walletManager = useWalletManager()
   const queryClient = useQueryClient()
   const wallet = walletManager.selected.wallet
   const meta = walletManager.selected.meta
+  const {buildEscrowTransaction, submitEscrowTransaction} = useEscrowRedeem()
+
+  // Track whether the last build was via client-side escrow (affects submit path)
+  const lastBuildWasEscrowRef = React.useRef(false)
 
   /**
    * Build a redemption transaction
@@ -172,26 +179,45 @@ export const useRedeemThaw = () => {
         },
       )
 
-      // Build transaction
-      const buildResponse = await redemptionApi.buildTransaction(
-        destAddress,
-        buildRequest,
-      )
-
-      logger.info(
-        'useRedeemThaw.buildTransaction: Received transaction build response',
-        {
+      // Build transaction — try Midnight API first, fall back to client-side escrow
+      try {
+        const buildResponse = await redemptionApi.buildTransaction(
           destAddress,
-          redeemedAmount: buildResponse.redeemed_amount,
-          requireThawingExtraSignature:
-            buildResponse.require_thawing_extra_signature,
-          transactionId: buildResponse.transaction_id,
-          transactionCborLength: buildResponse.transaction.length,
-          transactionCborPreview: `${buildResponse.transaction.substring(0, 64)}...`,
-        },
-      )
+          buildRequest,
+        )
 
-      return buildResponse.transaction
+        logger.info(
+          'useRedeemThaw.buildTransaction: Received transaction build response',
+          {
+            destAddress,
+            redeemedAmount: buildResponse.redeemed_amount,
+            requireThawingExtraSignature:
+              buildResponse.require_thawing_extra_signature,
+            transactionId: buildResponse.transaction_id,
+            transactionCborLength: buildResponse.transaction.length,
+            transactionCborPreview: `${buildResponse.transaction.substring(0, 64)}...`,
+          },
+        )
+
+        lastBuildWasEscrowRef.current = false
+        return buildResponse.transaction
+      } catch (apiError) {
+        // Fall back to client-side escrow redeem for thaw #2+
+        if (allocation && canUseClientSideRedeem(allocation)) {
+          logger.info(
+            'useRedeemThaw.buildTransaction: API failed, falling back to client-side escrow redeem',
+            {
+              destAddress,
+              error:
+                apiError instanceof Error ? apiError.message : String(apiError),
+            },
+          )
+          const cbor = await buildEscrowTransaction(destAddress)
+          lastBuildWasEscrowRef.current = true
+          return cbor
+        }
+        throw apiError
+      }
     },
     onError: (error) => {
       logger.info('Failed to build redemption transaction', {error})
@@ -206,9 +232,11 @@ export const useRedeemThaw = () => {
     mutationFn: async ({
       destAddress,
       signedTx,
+      isEscrowRedeem,
     }: {
       destAddress: string
       signedTx: Transaction | ((csl: WasmModuleProxy) => Transaction)
+      isEscrowRedeem?: boolean
     }): Promise<string> => {
       if (!wallet) {
         logger.error('useRedeemThaw.submitTransaction: Wallet not available')
@@ -220,6 +248,16 @@ export const useRedeemThaw = () => {
         const tx = typeof signedTx === 'function' ? signedTx(csl) : signedTx
         return tx.toBytes()
       })
+
+      // Client-side escrow: submit directly to Cardano network
+      if (isEscrowRedeem) {
+        logger.info(
+          'useRedeemThaw.submitTransaction: Submitting escrow redeem directly to Cardano network',
+          {destAddress},
+        )
+        await submitEscrowTransaction({signedTx})
+        return 'escrow-direct-submit'
+      }
 
       const signedTxHex = Buffer.from(signedTxBytes).toString('hex')
 
@@ -273,5 +311,6 @@ export const useRedeemThaw = () => {
     submitTransactionIsLoading: submitTransactionMutation.isPending,
     submitTransactionError: submitTransactionMutation.error,
     isSuccess: submitTransactionMutation.isSuccess,
+    lastBuildWasEscrow: lastBuildWasEscrowRef,
   }
 }

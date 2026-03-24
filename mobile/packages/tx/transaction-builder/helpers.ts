@@ -529,7 +529,13 @@ export function createCardanoHaskellConfig(
   protocolParams: Pick<
     Chain.Cardano.ProtocolParams,
     'keyDeposit' | 'linearFee' | 'coinsPerUtxoByte' | 'poolDeposit'
-  >,
+  > &
+    Partial<
+      Pick<
+        Chain.Cardano.ProtocolParams,
+        'collateralPercentage' | 'minFeeReferenceScript'
+      >
+    >,
   networkId: number,
 ): CardanoHaskellConfig {
   return {
@@ -539,6 +545,8 @@ export function createCardanoHaskellConfig(
     coinsPerUtxoByte: protocolParams.coinsPerUtxoByte,
     poolDeposit: protocolParams.poolDeposit,
     networkId,
+    collateralPercentage: protocolParams.collateralPercentage,
+    refScriptCoinsPerByte: protocolParams.minFeeReferenceScript?.coinsPerByte,
   }
 }
 
