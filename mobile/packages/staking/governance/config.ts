@@ -22,7 +22,7 @@ export const GOVERNANCE_ENDPOINTS: Readonly<
     getDRepById:
       'https://yoroi-backend-zero-preprod-prod.emurgornd.com/dreps/{{DREP_ID}}/state',
     getActiveDreps:
-      'https://yoroi-backend-zero-preprod.emurgornd.com/dreps/active',
+      'https://yoroi-backend-zero-preprod-prod.emurgornd.com/dreps/active',
   },
 } as const
 
