@@ -1,6 +1,4 @@
-import {useDelegationCertificate, useGovernance} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {NotEnoughMoneyToSendError} from '@yoroi/tx'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {RouteProp, useRoute} from '@react-navigation/native'
@@ -13,8 +11,7 @@ import {
   Routes,
   useNavigateTo,
 } from '~/features/Staking/Governance/common/navigation'
-import {useGovernanceVoteFlow} from '~/features/Staking/Governance/common/useGovernanceVoteFlow'
-import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
+import {useVotingOptions} from '~/features/Staking/Governance/common/helpers'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
@@ -25,51 +22,16 @@ export const DrepDetailScreen = () => {
   const {params} = useRoute<RouteProp<Routes, 'staking-gov-drep-detail'>>()
   const {atoms: ta, palette: p} = useTheme()
   const {wallet, meta} = useSelectedWallet()
-  const {manager} = useGovernance()
   const navigateTo = useNavigateTo()
 
-  const stakingInfo = useStakingInfo(wallet)
-  const needsToRegisterStakingKey =
-    stakingInfo?.data?.status === 'not-registered'
-
-  const createDelegationCertificate = useDelegationCertificate()
-
-  const {pendingVote, isCreatingTx, submitDelegate} = useGovernanceVoteFlow({
-    wallet,
-    addressMode: meta.addressMode,
-    options: {
-      shouldThrow: false,
-      onError: (error) => {
-        if (error instanceof NotEnoughMoneyToSendError) {
-          navigateTo.noFunds()
-          return
-        }
-        throw error
-      },
-    },
-  })
-
-  const isPending = isCreatingTx || pendingVote !== null
+  const {isPending, handleDelegate: delegateToDrep} = useVotingOptions()
 
   const cip105Id = formatDrepHashToCIP105Format(params.hexId)
   const isVerified = params.metadataVerification === 'verified'
 
   const handleDelegate = async () => {
-    if (isPending) return
-    const stakingKey = wallet.getStakingKey()
     const type = params.from === 'verificationKey' ? 'key' : 'script'
-
-    const certificate = await createDelegationCertificate({
-      hash: params.hexId,
-      type,
-      stakingKey,
-    })
-    const stakeCert = needsToRegisterStakingKey
-      ? manager.createStakeRegistrationCertificate(stakingKey)
-      : null
-    const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
-
-    submitDelegate(certs, {hash: params.hexId, type, CIP105: false})
+    delegateToDrep({hash: params.hexId, type, CIP105: false})
   }
 
   return (

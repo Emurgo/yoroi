@@ -2,12 +2,9 @@ import {isLeft} from '@yoroi/common'
 import {
   ActiveDRepEntry,
   governanceApiMaker,
-  useDelegationCertificate,
-  useGovernance,
   useStakingKeyState,
 } from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
-import {NotEnoughMoneyToSendError} from '@yoroi/tx'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {useQuery} from '@tanstack/react-query'
@@ -27,8 +24,7 @@ import {
 
 import {formatDrepHashToCIP129Format} from '~/features/Staking/Governance/common/drep'
 import {useNavigateTo} from '~/features/Staking/Governance/common/navigation'
-import {useGovernanceVoteFlow} from '~/features/Staking/Governance/common/useGovernanceVoteFlow'
-import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
+import {useVotingOptions} from '~/features/Staking/Governance/common/helpers'
 import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
@@ -60,11 +56,12 @@ const formatADA = (lovelace: number): string => {
 }
 
 const formatRelativeDate = (dateStr: string): string => {
+  if (!dateStr) return '—'
   const date = new Date(dateStr)
+  const time = date.getTime()
+  if (!Number.isFinite(time)) return '—'
   const now = new Date()
-  const diffDays = Math.floor(
-    (now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24),
-  )
+  const diffDays = Math.floor((now.getTime() - time) / (1000 * 60 * 60 * 24))
   if (diffDays < 1) return 'today'
   if (diffDays < 30) return `${diffDays}d ago`
   const totalMonths = Math.floor(diffDays / 30)
@@ -89,10 +86,18 @@ const sortDreps = (dreps: DRepDisplay[], method: SortMethod): DRepDisplay[] => {
         return a.stake - b.stake
       case 'registered-asc':
       case 'registered-desc':
-        return (
-          new Date(a.registeredDate).getTime() -
-          new Date(b.registeredDate).getTime()
-        )
+        {
+          const ta = new Date(a.registeredDate).getTime()
+          const tb = new Date(b.registeredDate).getTime()
+          // Ensure entries with invalid/empty dates always sort LAST
+          const sentinel =
+            method === 'registered-asc'
+              ? Number.POSITIVE_INFINITY
+              : Number.NEGATIVE_INFINITY
+          const sa = Number.isFinite(ta) ? ta : sentinel
+          const sb = Number.isFinite(tb) ? tb : sentinel
+          return sa - sb
+        }
       case 'delegators-asc':
       case 'delegators-desc':
         return a.delegatorCount - b.delegatorCount
@@ -402,7 +407,6 @@ const DRepCard = ({
 export const DrepListScreen = () => {
   const {atoms: ta, palette: p} = useTheme()
   const {wallet, meta} = useSelectedWallet()
-  const {manager} = useGovernance()
   const navigateTo = useNavigateTo()
   const strings = useDrepListStrings()
 
@@ -413,28 +417,7 @@ export const DrepListScreen = () => {
       ? stakingStatus.drepDelegation.hash
       : null
 
-  const stakingInfo = useStakingInfo(wallet)
-  const needsToRegisterStakingKey =
-    stakingInfo?.data?.status === 'not-registered'
-
-  const createDelegationCertificate = useDelegationCertificate()
-
-  const {pendingVote, isCreatingTx, submitDelegate} = useGovernanceVoteFlow({
-    wallet,
-    addressMode: meta.addressMode,
-    options: {
-      shouldThrow: false,
-      onError: (error) => {
-        if (error instanceof NotEnoughMoneyToSendError) {
-          navigateTo.noFunds()
-          return
-        }
-        throw error
-      },
-    },
-  })
-
-  const isPending = isCreatingTx || pendingVote !== null
+  const {isPending, handleDelegate: delegateToDrep} = useVotingOptions()
 
   const [searchQuery, setSearchQuery] = React.useState('')
   const [sortMethod, setSortMethod] =
@@ -484,31 +467,12 @@ export const DrepListScreen = () => {
   )
 
   const handleDelegate = React.useCallback(
-    async (drep: DRepDisplay) => {
-      if (isPending) return
-      const stakingKey = wallet.getStakingKey()
+    (drep: DRepDisplay) => {
       const type = drep.from === 'verificationKey' ? 'key' : 'script'
-
-      const certificate = await createDelegationCertificate({
-        hash: drep.id,
-        type,
-        stakingKey,
-      })
-      const stakeCert = needsToRegisterStakingKey
-        ? manager.createStakeRegistrationCertificate(stakingKey)
-        : null
-      const certs =
-        stakeCert !== null ? [stakeCert, certificate] : [certificate]
-
-      submitDelegate(certs, {hash: drep.id, type, CIP105: false})
+      delegateToDrep({hash: drep.id, type, CIP105: false})
     },
     [
-      isPending,
-      wallet,
-      createDelegationCertificate,
-      needsToRegisterStakingKey,
-      manager,
-      submitDelegate,
+      delegateToDrep,
     ],
   )
 
