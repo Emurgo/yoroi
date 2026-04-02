@@ -13,12 +13,12 @@ import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
 
 import {useVotingOptions} from '../../common/helpers'
-import {useOpenDrepIdModal} from '../EnterDrepIdModal/useOpenDrepIdModal'
+import {useNavigateTo} from '../../common/navigation'
 
 export const VotingOptionsScreen = () => {
   const strings = useStrings()
   const {atoms: ta, palette: p} = useTheme()
-  const {openDrepIdModal} = useOpenDrepIdModal()
+  const navigateTo = useNavigateTo()
 
   const {
     isPending,
@@ -27,13 +27,12 @@ export const VotingOptionsScreen = () => {
     drepDisplayId,
     isAbstaining,
     isNoConfidence,
-    handleDelegate,
     handleAbstain,
     handleNoConfidence,
   } = useVotingOptions()
 
   const onDelegate = () => {
-    openDrepIdModal(handleDelegate)
+    navigateTo.drepList()
   }
 
   return (

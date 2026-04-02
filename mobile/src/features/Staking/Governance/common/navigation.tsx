@@ -24,6 +24,7 @@ export type Routes = {
   'staking-gov-change-vote': {drepId?: string} | undefined
   'staking-gov-voting-options': undefined
   'staking-gov-not-supported-version': undefined
+  'staking-gov-drep-list': undefined
 }
 
 export const NavigationStack = createStackNavigator<Routes>()
@@ -81,6 +82,10 @@ export const useNavigateTo = () => {
       votingOptions: () =>
         navigation.navigate('governance', {
           screen: 'staking-gov-voting-options',
+        }),
+      drepList: () =>
+        navigation.navigate('governance', {
+          screen: 'staking-gov-drep-list',
         }),
       notSupportedVersion: () =>
         navigation.navigate('governance', {

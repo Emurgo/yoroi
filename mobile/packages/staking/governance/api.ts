@@ -4,6 +4,19 @@ import {Api, Chain} from '@yoroi/types'
 import {GOVERNANCE_ENDPOINTS} from './config'
 import {DRepId} from './types'
 
+export type ActiveDRepEntry = {
+  type: string
+  from: 'verificationKey' | 'scriptHash'
+  id: string
+  stake: number
+  mandateEpoch: number
+  deposit: number
+  delegatorCount: number
+  registeredDate: string
+  metadataHash: string
+  metadataVerification: string
+}
+
 export type GovernanceApi = {
   getDRepById: (
     drepId: DRepId,
@@ -11,6 +24,10 @@ export type GovernanceApi = {
   getStakingKeyState: (
     stakeKeyHash: string,
   ) => Promise<Api.Response<GetStakingKeyStateResponse>>
+  getActiveDreps: (
+    page: number,
+    pageSize: number,
+  ) => Promise<Api.Response<ActiveDRepEntry[]>>
 }
 
 export const governanceApiMaker = ({
@@ -49,6 +66,28 @@ class GovernanceApiImpl implements GovernanceApi {
         status,
         data: txId && epoch ? {txId, epoch} : null,
       },
+    } as const
+  }
+
+  async getActiveDreps(
+    page: number,
+    pageSize: number,
+  ): Promise<Api.Response<ActiveDRepEntry[]>> {
+    const {network, request} = this.config
+    const backend = getApiConfig(network)
+    const url = `${backend.getActiveDreps}?pageSize=${pageSize}&page=${page}`
+
+    const response = await request<ActiveDRepEntry[]>({url})
+
+    if (isLeft(response)) {
+      return response
+    }
+
+    const {data, status} = response.value
+
+    return {
+      tag: 'right',
+      value: {status, data: data ?? []},
     } as const
   }
 

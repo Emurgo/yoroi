@@ -6,6 +6,7 @@ export const GOVERNANCE_ENDPOINTS: Readonly<
     {
       getStakeKeyState: string
       getDRepById: string
+      getActiveDreps: string
     }
   >
 > = {
@@ -13,12 +14,17 @@ export const GOVERNANCE_ENDPOINTS: Readonly<
     getStakeKeyState:
       'https://zero.yoroiwallet.com/stakekeys/{{STAKE_KEY_HASH}}/state',
     getDRepById: 'https://zero.yoroiwallet.com/dreps/{{DREP_ID}}/state',
+    // DO NOT MERGE!!! NOT FOR PRODUCTION!!!
+    // getActiveDreps: 'https://zero.yoroiwallet.com/dreps/active',
+    getActiveDreps: 'https://yoroi-backend-zero-mainnet-staging.emurgornd.com/dreps/active',
   },
   [Chain.Network.Preprod]: {
     getStakeKeyState:
       'https://yoroi-backend-zero-preprod-prod.emurgornd.com/stakekeys/{{STAKE_KEY_HASH}}/state',
     getDRepById:
       'https://yoroi-backend-zero-preprod-prod.emurgornd.com/dreps/{{DREP_ID}}/state',
+    getActiveDreps:
+      'https://yoroi-backend-zero-preprod.emurgornd.com/dreps/active',
   },
 } as const
 

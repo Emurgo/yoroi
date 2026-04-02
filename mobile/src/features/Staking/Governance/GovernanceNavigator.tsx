@@ -11,6 +11,7 @@ import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {useGovernanceManagerMaker} from './common/helpers'
 import {NavigationStack} from './common/navigation'
 import {ChangeVoteScreen} from './useCases/ChangeVote/ChangeVoteScreen'
+import {DrepListScreen} from './useCases/DrepList/DrepListScreen'
 import {HomeScreen} from './useCases/Home/HomeScreen'
 import {NotSupportedCardanoAppVersion} from './useCases/NotSupportedCardanoAppVersion/NotSupportedCardanoAppVersion'
 import {VotingOptionsScreen} from './useCases/VotingOptions/VotingOptionsScreen'
@@ -53,6 +54,12 @@ export const GovernanceNavigator = () => {
           <Stack.Screen
             name="staking-gov-change-vote"
             component={ChangeVoteScreen}
+            options={{title: strings.staking.governanceCentreTitle}}
+          />
+
+          <Stack.Screen
+            name="staking-gov-drep-list"
+            component={DrepListScreen}
             options={{title: strings.staking.governanceCentreTitle}}
           />
 
