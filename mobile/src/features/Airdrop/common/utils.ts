@@ -1,6 +1,6 @@
 import {BigNumber} from 'bignumber.js'
 
-import type {Thaw} from '../types'
+import type {AddressAllocation, Thaw} from '../types'
 
 // NIGHT token has 6 decimals
 export const NIGHT_DECIMALS = 6
@@ -59,4 +59,39 @@ export const calculateRedeemableAmount = (
     }
     return sum
   }, 0)
+}
+
+/**
+ * Check if client-side escrow redeem can be used for this allocation.
+ * Returns true when any thaw with index > 0 has a past date but is not confirmed/confirming.
+ * The first thaw (index 0) always requires the Midnight API for the Merkle proof.
+ */
+export const canUseClientSideRedeem = (
+  allocation: AddressAllocation,
+): boolean => {
+  const now = new Date()
+  const thaws = allocation.schedule.thaws
+
+  // Need at least 2 thaws and first thaw must have been attempted
+  // Note: the Midnight API may report thaw #1 as 'failed' even when it succeeded on-chain.
+  // We accept 'confirmed', 'failed', or 'skipped' here because the real check is whether
+  // an escrow UTxO exists on-chain, which discoverEscrowUtxo will verify.
+  if (thaws.length < 2) return false
+
+  const firstThaw = thaws[0]
+  const firstThawAttempted =
+    firstThaw?.status === 'confirmed' ||
+    firstThaw?.status === 'failed' ||
+    firstThaw?.status === 'skipped'
+  if (!firstThaw || !firstThawAttempted) return false
+
+  // Check if any subsequent thaw is past its date and not yet successfully claimed
+  return thaws.some((thaw, index) => {
+    if (index === 0) return false
+    const thawDate = new Date(thaw.thawing_period_start.replace(/\s/g, ''))
+    const hasStarted = thawDate <= now
+    const isNotClaimed =
+      thaw.status !== 'confirmed' && thaw.status !== 'confirming'
+    return hasStarted && isNotClaimed
+  })
 }

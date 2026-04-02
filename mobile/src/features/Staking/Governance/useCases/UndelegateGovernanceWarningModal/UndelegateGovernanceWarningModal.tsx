@@ -10,9 +10,7 @@ import GovernanceIllustration from '~/ui/GovernanceIllustration/GovernanceIllust
 import {useModal} from '~/ui/Modal/context/ModalContext'
 import {Modal} from '~/ui/Modal/ui/screens/Modal/Modal'
 
-export const withdrawGovernanceWarningModalHeight = 1200
-
-const WithdrawGovernanceWarningModalContent = () => {
+const UndelegateGovernanceWarningModalContent = () => {
   const strings = useStrings()
   const {atoms: ta} = useTheme()
 
@@ -30,7 +28,7 @@ const WithdrawGovernanceWarningModalContent = () => {
           a.pb_sm,
         ]}
       >
-        {strings.staking.withdrawWarningTitle}
+        {strings.staking.undelegateWarningTitle}
       </Text>
       <Text
         style={[
@@ -40,13 +38,13 @@ const WithdrawGovernanceWarningModalContent = () => {
           ta.text_gray_medium,
         ]}
       >
-        {strings.staking.withdrawWarningDescription}
+        {strings.staking.undelegateWarningDescription}
       </Text>
     </Modal.Content>
   )
 }
 
-const WithdrawGovernanceWarningModalFooter = () => {
+const UndelegateGovernanceWarningModalFooter = () => {
   const walletNavigateTo = useWalletNavigation()
   const strings = useStrings()
   const {closeModal} = useModal()
@@ -67,7 +65,7 @@ const WithdrawGovernanceWarningModalFooter = () => {
   )
 }
 
-export const WithdrawGovernanceWarningModal = {
-  Content: WithdrawGovernanceWarningModalContent,
-  Footer: WithdrawGovernanceWarningModalFooter,
+export const UndelegateGovernanceWarningModal = {
+  Content: UndelegateGovernanceWarningModalContent,
+  Footer: UndelegateGovernanceWarningModalFooter,
 }
