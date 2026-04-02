@@ -28,6 +28,11 @@ const apiMock: GovernanceApi = {
         },
       },
     } as const),
+  getActiveDreps: () =>
+    Promise.resolve({
+      tag: 'right',
+      value: {status: 200, data: []},
+    } as const),
 }
 
 describe('createGovernanceManager', () => {

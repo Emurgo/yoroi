@@ -10,6 +10,7 @@ const mockManager = governanceManagerMaker({
   api: {
     getStakingKeyState: jest.fn(),
     getDRepById: jest.fn(),
+    getActiveDreps: jest.fn(),
   },
   storage: {
     getItem: jest.fn().mockResolvedValue(null),
