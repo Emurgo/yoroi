@@ -444,7 +444,7 @@ export const DrepListScreen = () => {
     if (!currentDelegatedId) return sorted
     const idx = sorted.findIndex((d) => d.id === currentDelegatedId)
     if (idx <= 0) return sorted
-    const pinned = sorted[idx]
+    const pinned = sorted[idx]!
     const rest = [...sorted.slice(0, idx), ...sorted.slice(idx + 1)]
     return [pinned, ...rest]
   }, [allDreps, searchQuery, sortMethod, currentDelegatedId])

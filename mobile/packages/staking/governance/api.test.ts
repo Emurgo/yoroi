@@ -276,7 +276,7 @@ describe('Governance API with Monad Pattern', () => {
 
       expect(isRight(result)).toBe(true)
       if (isRight(result)) {
-        const [entry] = result.value.data
+        const entry = result.value.data[0]!
         expect(entry.id).toBe('abc123')
         expect(entry.name).toBe('Test DRep')
         expect(entry.imageUrl).toBe('https://example.com/avatar.png')
@@ -310,7 +310,7 @@ describe('Governance API with Monad Pattern', () => {
 
       expect(isRight(result)).toBe(true)
       if (isRight(result)) {
-        expect(result.value.data[0].name).toBe('JSON-LD Name')
+        expect(result.value.data[0]!.name).toBe('JSON-LD Name')
       }
     })
 
@@ -339,7 +339,7 @@ describe('Governance API with Monad Pattern', () => {
 
       expect(isRight(result)).toBe(true)
       if (isRight(result)) {
-        const entry = result.value.data[0]
+        const entry = result.value.data[0]!
         expect(entry.name).toBe('Flat DRep')
         expect(entry.objectives).toBe('Flat objective')
         expect(entry.motivations).toBe('Flat motivation')
@@ -367,7 +367,7 @@ describe('Governance API with Monad Pattern', () => {
       expect(isRight(result)).toBe(true)
       if (isRight(result)) {
         expect(result.value.data).toHaveLength(1)
-        const entry = result.value.data[0]
+        const entry = result.value.data[0]!
         expect(entry.id).toBe('valid')
         expect(entry.name).toBe('')
         expect(entry.imageUrl).toBe('')
