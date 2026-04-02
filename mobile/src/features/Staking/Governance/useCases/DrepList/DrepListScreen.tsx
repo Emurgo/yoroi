@@ -3,6 +3,7 @@ import {
   governanceApiMaker,
   useDelegationCertificate,
   useGovernance,
+  useStakingKeyState,
 } from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {NotEnoughMoneyToSendError} from '@yoroi/tx'
@@ -10,6 +11,7 @@ import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {isLeft} from '@yoroi/common'
 import {useQuery} from '@tanstack/react-query'
+import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
 import {
   ActivityIndicator,
@@ -27,6 +29,7 @@ import {formatDrepHashToCIP129Format} from '~/features/Staking/Governance/common
 import {useNavigateTo} from '~/features/Staking/Governance/common/navigation'
 import {useGovernanceVoteFlow} from '~/features/Staking/Governance/common/useGovernanceVoteFlow'
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
+import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {Button, ButtonType} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
@@ -255,22 +258,29 @@ type DRepCardProps = {
   drep: DRepDisplay
   onDelegate: (drep: DRepDisplay) => void
   isPending: boolean
+  isCurrentlyDelegated?: boolean
 }
 
-const DRepCard = ({drep, onDelegate, isPending}: DRepCardProps) => {
+const DRepCard = ({drep, onDelegate, isPending, isCurrentlyDelegated = false}: DRepCardProps) => {
   const {palette: p} = useTheme()
   const strings = useDrepListStrings()
   const [imageError, setImageError] = React.useState(false)
 
   const showImage = Boolean(drep.imageUrl) && !imageError
+  const gradientColors = isCurrentlyDelegated
+    ? p.bg_gradient_2
+    : ([p.bg_color_max, p.bg_color_max] as const)
 
   return (
-    <View
+    <LinearGradient
+      start={{x: 1, y: 1}}
+      end={{x: 0, y: 0}}
+      colors={gradientColors}
       style={[
         a.rounded_sm,
         a.p_lg,
         a.border,
-        {borderColor: p.gray_200, backgroundColor: p.bg_color_max},
+        {borderColor: p.gray_200},
       ]}
     >
       {/* Avatar + Name */}
@@ -356,7 +366,7 @@ const DRepCard = ({drep, onDelegate, isPending}: DRepCardProps) => {
             title={strings.delegate}
             size="S"
             onPress={() => onDelegate(drep)}
-            disabled={isPending}
+            disabled={isPending || isCurrentlyDelegated}
           />
         </View>
 
@@ -371,7 +381,7 @@ const DRepCard = ({drep, onDelegate, isPending}: DRepCardProps) => {
           />
         </View>
       </View>
-    </View>
+    </LinearGradient>
   )
 }
 
@@ -383,6 +393,13 @@ export const DrepListScreen = () => {
   const {manager} = useGovernance()
   const navigateTo = useNavigateTo()
   const strings = useDrepListStrings()
+
+  const stakingKeyHash = useStakingKey(wallet)
+  const {data: stakingStatus} = useStakingKeyState(stakingKeyHash)
+  const currentDelegatedId =
+    stakingStatus?.drepDelegation?.action === 'drep'
+      ? stakingStatus.drepDelegation.hash
+      : null
 
   const stakingInfo = useStakingInfo(wallet)
   const needsToRegisterStakingKey =
@@ -423,8 +440,14 @@ export const DrepListScreen = () => {
             d.id.toLowerCase().includes(q),
         )
       : allDreps
-    return sortDreps(filtered, sortMethod)
-  }, [allDreps, searchQuery, sortMethod])
+    const sorted = sortDreps(filtered, sortMethod)
+    if (!currentDelegatedId) return sorted
+    const idx = sorted.findIndex((d) => d.id === currentDelegatedId)
+    if (idx <= 0) return sorted
+    const pinned = sorted[idx]
+    const rest = [...sorted.slice(0, idx), ...sorted.slice(idx + 1)]
+    return [pinned, ...rest]
+  }, [allDreps, searchQuery, sortMethod, currentDelegatedId])
 
   const handleDelegate = React.useCallback(
     async (drep: DRepDisplay) => {
@@ -529,6 +552,7 @@ export const DrepListScreen = () => {
             drep={item}
             onDelegate={handleDelegate}
             isPending={isPending}
+            isCurrentlyDelegated={item.id === currentDelegatedId}
           />
         )}
         ListEmptyComponent={
