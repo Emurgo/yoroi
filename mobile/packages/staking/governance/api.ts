@@ -15,6 +15,8 @@ export type ActiveDRepEntry = {
   registeredDate: string
   metadataHash: string
   metadataVerification: string
+  name: string
+  imageUrl: string
 }
 
 export type GovernanceApi = {
@@ -77,17 +79,18 @@ class GovernanceApiImpl implements GovernanceApi {
     const backend = getApiConfig(network)
     const url = `${backend.getActiveDreps}?pageSize=${pageSize}&page=${page}`
 
-    const response = await request<ActiveDRepEntry[]>({url})
+    const response = await request<unknown>({url})
 
     if (isLeft(response)) {
       return response
     }
 
     const {data, status} = response.value
+    const sanitized = sanitizeActiveDreps(data)
 
     return {
       tag: 'right',
-      value: {status, data: data ?? []},
+      value: {status, data: sanitized},
     } as const
   }
 
@@ -121,6 +124,80 @@ class GovernanceApiImpl implements GovernanceApi {
       value: {status, data},
     } as const
   }
+}
+
+const sanitizeActiveDrep = (raw: unknown): ActiveDRepEntry | null => {
+  if (raw === null || typeof raw !== 'object') return null
+  const r = raw as Record<string, unknown>
+
+  const id = typeof r['id'] === 'string' ? r['id'] : ''
+  const from =
+    r['from'] === 'verificationKey' || r['from'] === 'scriptHash'
+      ? r['from']
+      : 'verificationKey'
+  const stake = typeof r['stake'] === 'number' ? r['stake'] : 0
+  const mandateEpoch =
+    typeof r['mandateEpoch'] === 'number' ? r['mandateEpoch'] : 0
+  const deposit = typeof r['deposit'] === 'number' ? r['deposit'] : 0
+  const delegatorCount =
+    typeof r['delegatorCount'] === 'number' ? r['delegatorCount'] : 0
+  const registeredDate =
+    typeof r['registeredDate'] === 'string' ? r['registeredDate'] : ''
+  const metadataHash =
+    typeof r['metadataHash'] === 'string' ? r['metadataHash'] : ''
+  const metadataVerification =
+    typeof r['metadataVerification'] === 'string'
+      ? r['metadataVerification']
+      : ''
+  const type = typeof r['type'] === 'string' ? r['type'] : ''
+
+  const metadata =
+    r['metadata'] !== null && typeof r['metadata'] === 'object'
+      ? (r['metadata'] as Record<string, unknown>)
+      : {}
+
+  const givenNameRaw = metadata['givenName']
+  const name =
+    typeof givenNameRaw === 'string'
+      ? givenNameRaw
+      : givenNameRaw !== null &&
+          typeof givenNameRaw === 'object' &&
+          typeof (givenNameRaw as Record<string, unknown>)['@value'] === 'string'
+        ? ((givenNameRaw as Record<string, unknown>)['@value'] as string)
+        : ''
+
+  const imageRaw =
+    metadata['image'] !== null && typeof metadata['image'] === 'object'
+      ? (metadata['image'] as Record<string, unknown>)
+      : {}
+  const imageUrl =
+    typeof imageRaw['contentUrl'] === 'string' ? imageRaw['contentUrl'] : ''
+
+  if (!id) return null
+
+  return {
+    id,
+    from,
+    stake,
+    mandateEpoch,
+    deposit,
+    delegatorCount,
+    registeredDate,
+    metadataHash,
+    metadataVerification,
+    type,
+    name,
+    imageUrl,
+  }
+}
+
+const sanitizeActiveDreps = (raw: unknown): ActiveDRepEntry[] => {
+  if (!Array.isArray(raw)) return []
+  return raw.reduce<ActiveDRepEntry[]>((acc, item) => {
+    const entry = sanitizeActiveDrep(item)
+    if (entry !== null) acc.push(entry)
+    return acc
+  }, [])
 }
 
 const getApiConfig = (network: Chain.SupportedNetworks) => {

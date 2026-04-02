@@ -14,6 +14,7 @@ import * as React from 'react'
 import {
   ActivityIndicator,
   FlatList,
+  Image,
   Modal,
   Pressable,
   Text,
@@ -79,7 +80,7 @@ const sortDreps = (dreps: DRepDisplay[], method: SortMethod): DRepDisplay[] => {
     switch (method) {
       case 'alphabetical-asc':
       case 'alphabetical-desc':
-        return a.bech32Id.localeCompare(b.bech32Id)
+        return a.name.localeCompare(b.name)
       case 'voting-power-asc':
       case 'voting-power-desc':
         return a.stake - b.stake
@@ -140,13 +141,17 @@ const useActiveDreps = () => {
         if (entries.length < PAGE_SIZE) break
         page++
       }
-      return all.map((entry) => ({
-        ...entry,
-        bech32Id: formatDrepHashToCIP129Format(
+      return all.map((entry) => {
+        const bech32Id = formatDrepHashToCIP129Format(
           entry.id,
           entry.from === 'verificationKey' ? 'key' : 'script',
-        ),
-      }))
+        )
+        return {
+          ...entry,
+          bech32Id,
+          name: entry.name || bech32Id,
+        }
+      })
     },
   })
 }
@@ -255,11 +260,9 @@ type DRepCardProps = {
 const DRepCard = ({drep, onDelegate, isPending}: DRepCardProps) => {
   const {palette: p} = useTheme()
   const strings = useDrepListStrings()
+  const [imageError, setImageError] = React.useState(false)
 
-  const truncatedId =
-    drep.bech32Id.length > 16
-      ? `${drep.bech32Id.slice(0, 8)}...${drep.bech32Id.slice(-8)}`
-      : drep.bech32Id
+  const showImage = Boolean(drep.imageUrl) && !imageError
 
   return (
     <View
@@ -277,10 +280,18 @@ const DRepCard = ({drep, onDelegate, isPending}: DRepCardProps) => {
             a.align_center,
             a.justify_center,
             a.rounded_full,
-            {width: 48, height: 48, backgroundColor: p.bg_color_min},
+            {width: 48, height: 48, backgroundColor: p.bg_color_min, overflow: 'hidden'},
           ]}
         >
-          <Icon.OtherDreps size={24} color={p.el_gray_medium} />
+          {showImage ? (
+            <Image
+              source={{uri: drep.imageUrl}}
+              style={{width: 48, height: 48, borderRadius: 24}}
+              onError={() => setImageError(true)}
+            />
+          ) : (
+            <Icon.OtherDreps size={24} color={p.el_gray_medium} />
+          )}
         </View>
 
         <Text
@@ -290,7 +301,7 @@ const DRepCard = ({drep, onDelegate, isPending}: DRepCardProps) => {
           ]}
           numberOfLines={1}
         >
-          {truncatedId}
+          {drep.name}
         </Text>
       </View>
 
@@ -407,6 +418,7 @@ export const DrepListScreen = () => {
     const filtered = q
       ? allDreps.filter(
           (d) =>
+            d.name.toLowerCase().includes(q) ||
             d.bech32Id.toLowerCase().includes(q) ||
             d.id.toLowerCase().includes(q),
         )
