@@ -257,11 +257,12 @@ const SortPicker = ({value, onChange}: SortPickerProps) => {
 type DRepCardProps = {
   drep: DRepDisplay
   onDelegate: (drep: DRepDisplay) => void
+  onDetails: (drep: DRepDisplay) => void
   isPending: boolean
   isCurrentlyDelegated?: boolean
 }
 
-const DRepCard = ({drep, onDelegate, isPending, isCurrentlyDelegated = false}: DRepCardProps) => {
+const DRepCard = ({drep, onDelegate, onDetails, isPending, isCurrentlyDelegated = false}: DRepCardProps) => {
   const {palette: p} = useTheme()
   const strings = useDrepListStrings()
   const [imageError, setImageError] = React.useState(false)
@@ -375,9 +376,7 @@ const DRepCard = ({drep, onDelegate, isPending, isCurrentlyDelegated = false}: D
             title={strings.details}
             type={ButtonType.Secondary}
             size="S"
-            onPress={() => {
-              // Details button: not yet handled
-            }}
+            onPress={() => onDetails(drep)}
           />
         </View>
       </View>
@@ -448,6 +447,27 @@ export const DrepListScreen = () => {
     const rest = [...sorted.slice(0, idx), ...sorted.slice(idx + 1)]
     return [pinned, ...rest]
   }, [allDreps, searchQuery, sortMethod, currentDelegatedId])
+
+  const handleDetails = React.useCallback(
+    (drep: DRepDisplay) => {
+      navigateTo.drepDetail({
+        hexId: drep.id,
+        bech32Id: drep.bech32Id,
+        name: drep.name,
+        imageUrl: drep.imageUrl,
+        stake: drep.stake,
+        delegatorCount: drep.delegatorCount,
+        registeredDate: drep.registeredDate,
+        metadataVerification: drep.metadataVerification,
+        objectives: drep.objectives,
+        motivations: drep.motivations,
+        qualifications: drep.qualifications,
+        socialMedia: drep.socialMedia,
+        from: drep.from,
+      })
+    },
+    [navigateTo],
+  )
 
   const handleDelegate = React.useCallback(
     async (drep: DRepDisplay) => {
@@ -551,6 +571,7 @@ export const DrepListScreen = () => {
           <DRepCard
             drep={item}
             onDelegate={handleDelegate}
+            onDetails={handleDetails}
             isPending={isPending}
             isCurrentlyDelegated={item.id === currentDelegatedId}
           />

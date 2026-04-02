@@ -11,6 +11,7 @@ import {SafeArea} from '~/ui/SafeArea/SafeArea'
 import {useGovernanceManagerMaker} from './common/helpers'
 import {NavigationStack} from './common/navigation'
 import {ChangeVoteScreen} from './useCases/ChangeVote/ChangeVoteScreen'
+import {DrepDetailScreen} from './useCases/DrepDetail/DrepDetailScreen'
 import {DrepListScreen} from './useCases/DrepList/DrepListScreen'
 import {HomeScreen} from './useCases/Home/HomeScreen'
 import {NotSupportedCardanoAppVersion} from './useCases/NotSupportedCardanoAppVersion/NotSupportedCardanoAppVersion'
@@ -61,6 +62,12 @@ export const GovernanceNavigator = () => {
             name="staking-gov-drep-list"
             component={DrepListScreen}
             options={{title: strings.staking.governanceCentreTitle}}
+          />
+
+          <Stack.Screen
+            name="staking-gov-drep-detail"
+            component={DrepDetailScreen}
+            options={({route}) => ({title: route.params.name})}
           />
 
           <Stack.Screen

@@ -17,6 +17,10 @@ export type ActiveDRepEntry = {
   metadataVerification: string
   name: string
   imageUrl: string
+  objectives: string
+  motivations: string
+  qualifications: string
+  socialMedia: string
 }
 
 export type GovernanceApi = {
@@ -173,6 +177,22 @@ const sanitizeActiveDrep = (raw: unknown): ActiveDRepEntry | null => {
   const imageUrl =
     typeof imageRaw['contentUrl'] === 'string' ? imageRaw['contentUrl'] : ''
 
+  // CIP-119 body fields may be nested under 'body' or flat in metadata
+  const body =
+    metadata['body'] !== null && typeof metadata['body'] === 'object'
+      ? (metadata['body'] as Record<string, unknown>)
+      : metadata
+  const objectives =
+    typeof body['objectives'] === 'string' ? body['objectives'] : ''
+  const motivations =
+    typeof body['motivations'] === 'string' ? body['motivations'] : ''
+  const qualifications =
+    typeof body['qualifications'] === 'string' ? body['qualifications'] : ''
+
+  // Social media: first Link URI from references array
+  const referencesRaw = body['references'] ?? metadata['references']
+  const socialMedia = extractFirstLinkUri(referencesRaw)
+
   if (!id) return null
 
   return {
@@ -188,7 +208,21 @@ const sanitizeActiveDrep = (raw: unknown): ActiveDRepEntry | null => {
     type,
     name,
     imageUrl,
+    objectives,
+    motivations,
+    qualifications,
+    socialMedia,
   }
+}
+
+const extractFirstLinkUri = (raw: unknown): string => {
+  if (!Array.isArray(raw)) return ''
+  for (const item of raw) {
+    if (item === null || typeof item !== 'object') continue
+    const entry = item as Record<string, unknown>
+    if (typeof entry['uri'] === 'string' && entry['uri']) return entry['uri']
+  }
+  return ''
 }
 
 const sanitizeActiveDreps = (raw: unknown): ActiveDRepEntry[] => {

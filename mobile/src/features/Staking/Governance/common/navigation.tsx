@@ -19,12 +19,29 @@ import {Space} from '~/ui/Space/Space'
 import {LearnMoreLink} from '../common/LearnMoreLink/LearnMoreLink'
 import {NoFunds} from '../illustrations/NoFunds'
 
+export type DRepDetailParams = {
+  hexId: string
+  bech32Id: string
+  name: string
+  imageUrl: string
+  stake: number
+  delegatorCount: number
+  registeredDate: string
+  metadataVerification: string
+  objectives: string
+  motivations: string
+  qualifications: string
+  socialMedia: string
+  from: 'verificationKey' | 'scriptHash'
+}
+
 export type Routes = {
   'staking-gov-home': {drepId?: string} | undefined
   'staking-gov-change-vote': {drepId?: string} | undefined
   'staking-gov-voting-options': undefined
   'staking-gov-not-supported-version': undefined
   'staking-gov-drep-list': undefined
+  'staking-gov-drep-detail': DRepDetailParams
 }
 
 export const NavigationStack = createStackNavigator<Routes>()
@@ -86,6 +103,11 @@ export const useNavigateTo = () => {
       drepList: () =>
         navigation.navigate('governance', {
           screen: 'staking-gov-drep-list',
+        }),
+      drepDetail: (params: DRepDetailParams) =>
+        navigation.navigate('governance', {
+          screen: 'staking-gov-drep-detail',
+          params,
         }),
       notSupportedVersion: () =>
         navigation.navigate('governance', {
