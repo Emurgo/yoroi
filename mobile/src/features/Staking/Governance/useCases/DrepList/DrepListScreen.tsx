@@ -122,6 +122,7 @@ const SORT_LABELS: Record<SortMethod, string> = {
 }
 
 const PAGE_SIZE = 1000
+const MAX_PAGES = 10
 
 // ── Hook: fetch all active DReps ──────────────────────────────────────────────
 
@@ -136,7 +137,7 @@ const useActiveDreps = () => {
     queryFn: async () => {
       const all: ActiveDRepEntry[] = []
       let page = 1
-      while (true) {
+      while (page <= MAX_PAGES) {
         const response = await api.getActiveDreps(page, PAGE_SIZE)
         if (isLeft(response)) throw new Error('Failed to fetch DRep list')
         const entries = response.value.data
