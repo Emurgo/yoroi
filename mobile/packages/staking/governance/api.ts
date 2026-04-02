@@ -134,63 +134,59 @@ const sanitizeActiveDrep = (raw: unknown): ActiveDRepEntry | null => {
   if (raw === null || typeof raw !== 'object') return null
   const r = raw as Record<string, unknown>
 
-  const id = typeof r['id'] === 'string' ? r['id'] : ''
+  const id = typeof r.id === 'string' ? r.id : ''
   const from =
-    r['from'] === 'verificationKey' || r['from'] === 'scriptHash'
-      ? r['from']
+    r.from === 'verificationKey' || r.from === 'scriptHash'
+      ? r.from
       : 'verificationKey'
-  const stake = typeof r['stake'] === 'number' ? r['stake'] : 0
-  const mandateEpoch =
-    typeof r['mandateEpoch'] === 'number' ? r['mandateEpoch'] : 0
-  const deposit = typeof r['deposit'] === 'number' ? r['deposit'] : 0
+  const stake = typeof r.stake === 'number' ? r.stake : 0
+  const mandateEpoch = typeof r.mandateEpoch === 'number' ? r.mandateEpoch : 0
+  const deposit = typeof r.deposit === 'number' ? r.deposit : 0
   const delegatorCount =
-    typeof r['delegatorCount'] === 'number' ? r['delegatorCount'] : 0
+    typeof r.delegatorCount === 'number' ? r.delegatorCount : 0
   const registeredDate =
-    typeof r['registeredDate'] === 'string' ? r['registeredDate'] : ''
-  const metadataHash =
-    typeof r['metadataHash'] === 'string' ? r['metadataHash'] : ''
+    typeof r.registeredDate === 'string' ? r.registeredDate : ''
+  const metadataHash = typeof r.metadataHash === 'string' ? r.metadataHash : ''
   const metadataVerification =
-    typeof r['metadataVerification'] === 'string'
-      ? r['metadataVerification']
-      : ''
-  const type = typeof r['type'] === 'string' ? r['type'] : ''
+    typeof r.metadataVerification === 'string' ? r.metadataVerification : ''
+  const type = typeof r.type === 'string' ? r.type : ''
 
   const metadata =
-    r['metadata'] !== null && typeof r['metadata'] === 'object'
-      ? (r['metadata'] as Record<string, unknown>)
+    r.metadata !== null && typeof r.metadata === 'object'
+      ? (r.metadata as Record<string, unknown>)
       : {}
 
-  const givenNameRaw = metadata['givenName']
+  const givenNameRaw = metadata.givenName
   const name =
     typeof givenNameRaw === 'string'
       ? givenNameRaw
       : givenNameRaw !== null &&
           typeof givenNameRaw === 'object' &&
-          typeof (givenNameRaw as Record<string, unknown>)['@value'] === 'string'
+          typeof (givenNameRaw as Record<string, unknown>)['@value'] ===
+            'string'
         ? ((givenNameRaw as Record<string, unknown>)['@value'] as string)
         : ''
 
   const imageRaw =
-    metadata['image'] !== null && typeof metadata['image'] === 'object'
-      ? (metadata['image'] as Record<string, unknown>)
+    metadata.image !== null && typeof metadata.image === 'object'
+      ? (metadata.image as Record<string, unknown>)
       : {}
   const imageUrl =
-    typeof imageRaw['contentUrl'] === 'string' ? imageRaw['contentUrl'] : ''
+    typeof imageRaw.contentUrl === 'string' ? imageRaw.contentUrl : ''
 
   // CIP-119 body fields may be nested under 'body' or flat in metadata
   const body =
-    metadata['body'] !== null && typeof metadata['body'] === 'object'
-      ? (metadata['body'] as Record<string, unknown>)
+    metadata.body !== null && typeof metadata.body === 'object'
+      ? (metadata.body as Record<string, unknown>)
       : metadata
-  const objectives =
-    typeof body['objectives'] === 'string' ? body['objectives'] : ''
+  const objectives = typeof body.objectives === 'string' ? body.objectives : ''
   const motivations =
-    typeof body['motivations'] === 'string' ? body['motivations'] : ''
+    typeof body.motivations === 'string' ? body.motivations : ''
   const qualifications =
-    typeof body['qualifications'] === 'string' ? body['qualifications'] : ''
+    typeof body.qualifications === 'string' ? body.qualifications : ''
 
   // Social media: first Link URI from references array
-  const referencesRaw = body['references'] ?? metadata['references']
+  const referencesRaw = body.references ?? metadata.references
   const socialMedia = extractFirstLinkUri(referencesRaw)
 
   if (!id) return null
@@ -220,7 +216,7 @@ const extractFirstLinkUri = (raw: unknown): string => {
   for (const item of raw) {
     if (item === null || typeof item !== 'object') continue
     const entry = item as Record<string, unknown>
-    if (typeof entry['uri'] === 'string' && entry['uri']) return entry['uri']
+    if (typeof entry.uri === 'string' && entry.uri) return entry.uri
   }
   return ''
 }

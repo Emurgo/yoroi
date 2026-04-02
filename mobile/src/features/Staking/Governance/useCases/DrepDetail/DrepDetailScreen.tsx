@@ -1,24 +1,19 @@
-import {
-  useDelegationCertificate,
-  useGovernance,
-} from '@yoroi/staking'
+import {useDelegationCertificate, useGovernance} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {NotEnoughMoneyToSendError} from '@yoroi/tx'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
-import {useRoute, RouteProp} from '@react-navigation/native'
+import {RouteProp, useRoute} from '@react-navigation/native'
 import * as React from 'react'
 import {Image, Linking, Pressable, ScrollView, Text, View} from 'react-native'
 
 import {useCopy} from '~/features/Copy/context/CopyProvider'
-import {
-  formatDrepHashToCIP105Format,
-} from '~/features/Staking/Governance/common/drep'
-import {useGovernanceVoteFlow} from '~/features/Staking/Governance/common/useGovernanceVoteFlow'
+import {formatDrepHashToCIP105Format} from '~/features/Staking/Governance/common/drep'
 import {
   Routes,
   useNavigateTo,
 } from '~/features/Staking/Governance/common/navigation'
+import {useGovernanceVoteFlow} from '~/features/Staking/Governance/common/useGovernanceVoteFlow'
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
@@ -85,12 +80,7 @@ export const DrepDetailScreen = () => {
       >
         {/* Avatar + Name header */}
         <View
-          style={[
-            a.flex_row,
-            a.align_center,
-            a.gap_sm,
-            {marginBottom: 16},
-          ]}
+          style={[a.flex_row, a.align_center, a.gap_sm, {marginBottom: 16}]}
         >
           <AvatarImage imageUrl={params.imageUrl} />
 
@@ -168,7 +158,12 @@ const AvatarImage = ({imageUrl}: {imageUrl: string}) => {
         a.align_center,
         a.justify_center,
         a.rounded_full,
-        {width: 56, height: 56, backgroundColor: p.bg_color_min, overflow: 'hidden'},
+        {
+          width: 56,
+          height: 56,
+          backgroundColor: p.bg_color_min,
+          overflow: 'hidden',
+        },
       ]}
     >
       {showImage ? (
@@ -288,7 +283,10 @@ const TextSection = ({title, body}: {title: string; body: string}) => {
   return (
     <View style={[a.gap_sm]}>
       <Text
-        style={[a.body_1_lg_regular, {color: p.text_gray_medium, fontWeight: '500'}]}
+        style={[
+          a.body_1_lg_regular,
+          {color: p.text_gray_medium, fontWeight: '500'},
+        ]}
       >
         {title}
       </Text>

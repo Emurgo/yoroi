@@ -1,3 +1,4 @@
+import {isLeft} from '@yoroi/common'
 import {
   ActiveDRepEntry,
   governanceApiMaker,
@@ -9,7 +10,6 @@ import {atoms as a, useTheme} from '@yoroi/theme'
 import {NotEnoughMoneyToSendError} from '@yoroi/tx'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
-import {isLeft} from '@yoroi/common'
 import {useQuery} from '@tanstack/react-query'
 import {LinearGradient} from 'expo-linear-gradient'
 import * as React from 'react'
@@ -118,7 +118,7 @@ const SORT_LABELS: Record<SortMethod, string> = {
   'registered-desc': 'Registered (Newest first)',
   'delegators-asc': 'Delegators (Low→High)',
   'delegators-desc': 'Delegators (High→Low)',
-  random: 'Random',
+  'random': 'Random',
 }
 
 const PAGE_SIZE = 1000
@@ -263,7 +263,13 @@ type DRepCardProps = {
   isCurrentlyDelegated?: boolean
 }
 
-const DRepCard = ({drep, onDelegate, onDetails, isPending, isCurrentlyDelegated = false}: DRepCardProps) => {
+const DRepCard = ({
+  drep,
+  onDelegate,
+  onDetails,
+  isPending,
+  isCurrentlyDelegated = false,
+}: DRepCardProps) => {
   const {palette: p} = useTheme()
   const strings = useDrepListStrings()
   const [imageError, setImageError] = React.useState(false)
@@ -278,12 +284,7 @@ const DRepCard = ({drep, onDelegate, onDetails, isPending, isCurrentlyDelegated 
       start={{x: 1, y: 1}}
       end={{x: 0, y: 0}}
       colors={gradientColors}
-      style={[
-        a.rounded_sm,
-        a.p_lg,
-        a.border,
-        {borderColor: p.gray_200},
-      ]}
+      style={[a.rounded_sm, a.p_lg, a.border, {borderColor: p.gray_200}]}
     >
       {/* Avatar + Name */}
       <View style={[a.flex_row, a.align_center, a.gap_sm]}>
@@ -292,7 +293,12 @@ const DRepCard = ({drep, onDelegate, onDetails, isPending, isCurrentlyDelegated 
             a.align_center,
             a.justify_center,
             a.rounded_full,
-            {width: 48, height: 48, backgroundColor: p.bg_color_min, overflow: 'hidden'},
+            {
+              width: 48,
+              height: 48,
+              backgroundColor: p.bg_color_min,
+              overflow: 'hidden',
+            },
           ]}
         >
           {showImage ? (
@@ -331,15 +337,21 @@ const DRepCard = ({drep, onDelegate, onDetails, isPending, isCurrentlyDelegated 
 
       {/* Stats row labels */}
       <View style={[a.flex_row]}>
-        <Text style={[a.body_2_md_regular, {color: p.text_gray_medium, flex: 1}]}>
+        <Text
+          style={[a.body_2_md_regular, {color: p.text_gray_medium, flex: 1}]}
+        >
           {strings.delegators}
         </Text>
 
-        <Text style={[a.body_2_md_regular, {color: p.text_gray_medium, flex: 1}]}>
+        <Text
+          style={[a.body_2_md_regular, {color: p.text_gray_medium, flex: 1}]}
+        >
           {strings.votingPower}
         </Text>
 
-        <Text style={[a.body_2_md_regular, {color: p.text_gray_medium, flex: 1}]}>
+        <Text
+          style={[a.body_2_md_regular, {color: p.text_gray_medium, flex: 1}]}
+        >
           {strings.registered}
         </Text>
       </View>
@@ -425,7 +437,8 @@ export const DrepListScreen = () => {
   const isPending = isCreatingTx || pendingVote !== null
 
   const [searchQuery, setSearchQuery] = React.useState('')
-  const [sortMethod, setSortMethod] = React.useState<SortMethod>('alphabetical-asc')
+  const [sortMethod, setSortMethod] =
+    React.useState<SortMethod>('alphabetical-asc')
 
   const {data: allDreps, isLoading, error} = useActiveDreps()
 
@@ -484,7 +497,8 @@ export const DrepListScreen = () => {
       const stakeCert = needsToRegisterStakingKey
         ? manager.createStakeRegistrationCertificate(stakingKey)
         : null
-      const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
+      const certs =
+        stakeCert !== null ? [stakeCert, certificate] : [certificate]
 
       submitDelegate(certs, {hash: drep.id, type, CIP105: false})
     },
@@ -500,7 +514,9 @@ export const DrepListScreen = () => {
 
   if (isLoading) {
     return (
-      <View style={[a.flex_1, a.align_center, a.justify_center, ta.bg_color_max]}>
+      <View
+        style={[a.flex_1, a.align_center, a.justify_center, ta.bg_color_max]}
+      >
         <ActivityIndicator size="large" color={p.primary_500} />
       </View>
     )
@@ -508,8 +524,22 @@ export const DrepListScreen = () => {
 
   if (error) {
     return (
-      <View style={[a.flex_1, a.align_center, a.justify_center, a.px_lg, ta.bg_color_max]}>
-        <Text style={[a.body_1_lg_regular, {color: p.sys_magenta_500}, a.text_center]}>
+      <View
+        style={[
+          a.flex_1,
+          a.align_center,
+          a.justify_center,
+          a.px_lg,
+          ta.bg_color_max,
+        ]}
+      >
+        <Text
+          style={[
+            a.body_1_lg_regular,
+            {color: p.sys_magenta_500},
+            a.text_center,
+          ]}
+        >
           {strings.loadError}
         </Text>
       </View>

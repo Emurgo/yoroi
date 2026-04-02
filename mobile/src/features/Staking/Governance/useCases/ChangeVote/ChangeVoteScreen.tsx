@@ -1,8 +1,5 @@
 import {isNonNullable} from '@yoroi/common'
-import {
-  useStakingKeyState,
-  useVotingCertificate,
-} from '@yoroi/staking'
+import {useStakingKeyState, useVotingCertificate} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
@@ -33,15 +30,11 @@ export const ChangeVoteScreen = () => {
 
   const createVotingCertificate = useVotingCertificate()
 
-  const {
-    pendingVote,
-    isCreatingTx,
-    submitAbstain,
-    submitNoConfidence,
-  } = useGovernanceVoteFlow({
-    wallet,
-    addressMode: meta.addressMode,
-  })
+  const {pendingVote, isCreatingTx, submitAbstain, submitNoConfidence} =
+    useGovernanceVoteFlow({
+      wallet,
+      addressMode: meta.addressMode,
+    })
 
   if (!isNonNullable(action)) throw new Error('User has never voted')
 
