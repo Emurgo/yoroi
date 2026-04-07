@@ -359,7 +359,7 @@ const DRepCard = ({
       {/* Stats row values */}
       <View style={[a.flex_row]}>
         <Text style={[a.body_2_md_regular, {color: p.text_gray_low, flex: 1}]}>
-          {drep.delegatorCount.toLocaleString()}
+          {drep.delegatorCount.toLocaleString('en-US')}
         </Text>
 
         <Text style={[a.body_2_md_regular, {color: p.text_gray_low, flex: 1}]}>
