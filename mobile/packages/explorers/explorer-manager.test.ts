@@ -62,7 +62,7 @@ describe('explorerManager', () => {
       mainnetExplorer[Explorers.Explorer.Cardanoscan].stake('stakeAddress'),
     ).toBe('https://cardanoscan.io/stakeKey/stakeAddress')
     expect(mainnetExplorer[Explorers.Explorer.Cardanoscan].drep('drepId')).toBe(
-      'https://cardanoscan.io/drep/drepId',
+      'https://cardanoscan.io/dRep/drepId',
     )
 
     expect(
@@ -103,7 +103,7 @@ describe('explorerManager', () => {
       preprodExplorer[Explorers.Explorer.Cardanoscan].stake('stakeAddress'),
     ).toBe('https://preprod.cardanoscan.io/stakeKey/stakeAddress')
     expect(preprodExplorer[Explorers.Explorer.Cardanoscan].drep('drepId')).toBe(
-      'https://preprod.cardanoscan.io/drep/drepId',
+      'https://preprod.cardanoscan.io/dRep/drepId',
     )
 
     expect(
