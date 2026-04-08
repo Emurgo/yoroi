@@ -2,12 +2,6 @@ import {
   convertDrepHashToCIP105Format,
   convertDrepHashToCIP129Format,
 } from '@yoroi/staking'
-import {Chain} from '@yoroi/types'
-
-export const CEXPLORER_DREP_URLS: Record<Chain.SupportedNetworks, string> = {
-  [Chain.Network.Mainnet]: 'https://cexplorer.io/drep',
-  [Chain.Network.Preprod]: 'https://preprod.cexplorer.io/drep',
-}
 
 export const formatDrepHashToCIP129Format = (
   hash: string,

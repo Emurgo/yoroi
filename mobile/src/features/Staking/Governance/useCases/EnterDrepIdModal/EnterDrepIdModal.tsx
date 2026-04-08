@@ -11,7 +11,6 @@ import {Alert, Linking, Text, View} from 'react-native'
 import {v4 as uuid} from 'uuid'
 
 import {useBrowser} from '~/features/Discover/common/BrowserProvider'
-import {CEXPLORER_DREP_URLS} from '~/features/Staking/Governance/common/drep'
 import {useStrings} from '~/kernel/i18n/useStrings'
 import {useWalletNavigation} from '~/kernel/navigation/hooks/useWalletNavigation'
 import {Button} from '~/ui/Button/Button'
@@ -28,6 +27,11 @@ export type Props = {
     CIP105: boolean
   }) => void
   initialDrepId?: string
+}
+
+const FIND_DREPS_LINKS: Record<Chain.SupportedNetworks, string> = {
+  [Chain.Network.Preprod]: 'https://preprod.cexplorer.io/drep',
+  [Chain.Network.Mainnet]: 'https://cexplorer.io/drep',
 }
 
 const GOVTOOLS_URL = 'https://gov.tools/'
@@ -238,7 +242,7 @@ export const EnterDrepIdModal = ({onSubmit, initialDrepId}: Props) => {
   }
 
   const handleFindDRepPress = () => {
-    Linking.openURL(CEXPLORER_DREP_URLS[network])
+    Linking.openURL(FIND_DREPS_LINKS[network])
   }
 
   const handleGovtoolsPress = () => {

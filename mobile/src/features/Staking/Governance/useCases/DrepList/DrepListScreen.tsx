@@ -8,7 +8,7 @@ import {
 } from '@yoroi/staking'
 import {atoms as a, fontSize, useTheme} from '@yoroi/theme'
 import {NotEnoughMoneyToSendError} from '@yoroi/tx'
-import {Chain} from '@yoroi/types'
+import {Chain, Explorers} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {useQuery} from '@tanstack/react-query'
@@ -27,10 +27,8 @@ import {
   View,
 } from 'react-native'
 
-import {
-  CEXPLORER_DREP_URLS,
-  formatDrepHashToCIP129Format,
-} from '~/features/Staking/Governance/common/drep'
+import {explorerManager} from '@yoroi/explorers'
+import {formatDrepHashToCIP129Format} from '~/features/Staking/Governance/common/drep'
 import {useNavigateTo} from '~/features/Staking/Governance/common/navigation'
 import {useGovernanceVoteFlow} from '~/features/Staking/Governance/common/useGovernanceVoteFlow'
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
@@ -321,7 +319,11 @@ const DRepCard = ({
 
         <Pressable
           onPress={() =>
-            Linking.openURL(`${CEXPLORER_DREP_URLS[network]}/${drep.bech32Id}`)
+            Linking.openURL(
+              explorerManager[network][Explorers.Explorer.Cexplorer].drep(
+                drep.bech32Id,
+              ),
+            )
           }
           style={{flex: 1}}
         >
