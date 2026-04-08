@@ -41,8 +41,7 @@ export const explorerManager: Readonly<
       pool: (poolId: string) => `https://preprod.cardanoscan.io/pool/${poolId}`,
       stake: (stakeAddress: string) =>
         `https://preprod.cardanoscan.io/stakeKey/${stakeAddress}`,
-      drep: (drepId: string) =>
-        `https://preprod.cardanoscan.io/drep/${drepId}`,
+      drep: (drepId: string) => `https://preprod.cardanoscan.io/drep/${drepId}`,
     },
     [Explorers.Explorer.Cexplorer]: {
       token: (fingerprint: string) =>

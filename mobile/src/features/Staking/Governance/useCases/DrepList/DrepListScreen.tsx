@@ -1,4 +1,5 @@
 import {isLeft} from '@yoroi/common'
+import {explorerManager} from '@yoroi/explorers'
 import {
   ActiveDRepEntry,
   governanceApiMaker,
@@ -27,7 +28,6 @@ import {
   View,
 } from 'react-native'
 
-import {explorerManager} from '@yoroi/explorers'
 import {formatDrepHashToCIP129Format} from '~/features/Staking/Governance/common/drep'
 import {useNavigateTo} from '~/features/Staking/Governance/common/navigation'
 import {useGovernanceVoteFlow} from '~/features/Staking/Governance/common/useGovernanceVoteFlow'
@@ -585,7 +585,11 @@ export const DrepListScreen = () => {
             onChangeText={setSearchQuery}
             placeholder={strings.searchPlaceholder}
             placeholderTextColor={p.text_gray_low}
-            style={[a.flex_1, a.font_normal, {color: p.text_gray_medium, fontSize: fontSize.sm}]}
+            style={[
+              a.flex_1,
+              a.font_normal,
+              {color: p.text_gray_medium, fontSize: fontSize.sm},
+            ]}
             autoCapitalize="none"
             autoCorrect={false}
           />
