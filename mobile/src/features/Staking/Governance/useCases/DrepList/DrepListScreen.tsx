@@ -585,7 +585,7 @@ export const DrepListScreen = () => {
             onChangeText={setSearchQuery}
             placeholder={strings.searchPlaceholder}
             placeholderTextColor={p.text_gray_low}
-            style={[a.flex_1, {color: p.text_gray_medium, fontSize: fontSize.sm}]}
+            style={[a.flex_1, a.font_normal, {color: p.text_gray_medium, fontSize: fontSize.sm}]}
             autoCapitalize="none"
             autoCorrect={false}
           />
