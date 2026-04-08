@@ -6,8 +6,9 @@ import {
   useGovernance,
   useStakingKeyState,
 } from '@yoroi/staking'
-import {atoms as a, useTheme} from '@yoroi/theme'
+import {atoms as a, fontSize, useTheme} from '@yoroi/theme'
 import {NotEnoughMoneyToSendError} from '@yoroi/tx'
+import {Chain} from '@yoroi/types'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {useQuery} from '@tanstack/react-query'
@@ -17,6 +18,7 @@ import {
   ActivityIndicator,
   FlatList,
   Image,
+  Linking,
   Modal,
   Pressable,
   Text,
@@ -25,7 +27,10 @@ import {
   View,
 } from 'react-native'
 
-import {formatDrepHashToCIP129Format} from '~/features/Staking/Governance/common/drep'
+import {
+  CEXPLORER_DREP_URLS,
+  formatDrepHashToCIP129Format,
+} from '~/features/Staking/Governance/common/drep'
 import {useNavigateTo} from '~/features/Staking/Governance/common/navigation'
 import {useGovernanceVoteFlow} from '~/features/Staking/Governance/common/useGovernanceVoteFlow'
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
@@ -261,6 +266,7 @@ type DRepCardProps = {
   onDetails: (drep: DRepDisplay) => void
   isPending: boolean
   isCurrentlyDelegated?: boolean
+  network: Chain.SupportedNetworks
 }
 
 const DRepCard = ({
@@ -269,6 +275,7 @@ const DRepCard = ({
   onDetails,
   isPending,
   isCurrentlyDelegated = false,
+  network,
 }: DRepCardProps) => {
   const {palette: p} = useTheme()
   const strings = useDrepListStrings()
@@ -312,15 +319,22 @@ const DRepCard = ({
           )}
         </View>
 
-        <Text
-          style={[
-            a.heading_4_medium,
-            {color: p.primary_600, textDecorationLine: 'underline', flex: 1},
-          ]}
-          numberOfLines={1}
+        <Pressable
+          onPress={() =>
+            Linking.openURL(`${CEXPLORER_DREP_URLS[network]}/${drep.bech32Id}`)
+          }
+          style={{flex: 1}}
         >
-          {drep.name}
-        </Text>
+          <Text
+            style={[
+              a.heading_4_medium,
+              {color: p.primary_600, textDecorationLine: 'underline'},
+            ]}
+            numberOfLines={1}
+          >
+            {drep.name}
+          </Text>
+        </Pressable>
       </View>
 
       <Space.Height.sm />
@@ -402,6 +416,7 @@ const DRepCard = ({
 export const DrepListScreen = () => {
   const {atoms: ta, palette: p} = useTheme()
   const {wallet, meta} = useSelectedWallet()
+  const network = wallet.networkManager.network
   const {manager} = useGovernance()
   const navigateTo = useNavigateTo()
   const strings = useDrepListStrings()
@@ -568,11 +583,7 @@ export const DrepListScreen = () => {
             onChangeText={setSearchQuery}
             placeholder={strings.searchPlaceholder}
             placeholderTextColor={p.text_gray_low}
-            style={[
-              a.flex_1,
-              a.body_2_md_regular,
-              {color: p.text_gray_medium, paddingVertical: 0},
-            ]}
+            style={[a.flex_1, {color: p.text_gray_medium, fontSize: fontSize.sm}]}
             autoCapitalize="none"
             autoCorrect={false}
           />
@@ -605,6 +616,7 @@ export const DrepListScreen = () => {
             onDetails={handleDetails}
             isPending={isPending}
             isCurrentlyDelegated={item.id === currentDelegatedId}
+            network={network}
           />
         )}
         ListEmptyComponent={

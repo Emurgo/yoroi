@@ -5,7 +5,7 @@ import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {RouteProp, useRoute} from '@react-navigation/native'
 import * as React from 'react'
-import {Image, Linking, Pressable, ScrollView, Text, View} from 'react-native'
+import {Linking, Pressable, ScrollView, Text, View} from 'react-native'
 
 import {useCopy} from '~/features/Copy/context/CopyProvider'
 import {formatDrepHashToCIP105Format} from '~/features/Staking/Governance/common/drep'
@@ -78,22 +78,6 @@ export const DrepDetailScreen = () => {
         style={[a.flex_1]}
         contentContainerStyle={[a.px_lg, a.pt_sm, {paddingBottom: 120}]}
       >
-        {/* Avatar + Name header */}
-        <View
-          style={[a.flex_row, a.align_center, a.gap_sm, {marginBottom: 16}]}
-        >
-          <AvatarImage imageUrl={params.imageUrl} />
-
-          <View style={[a.flex_1]}>
-            <Text
-              style={[a.heading_3_medium, {color: p.text_gray_medium}]}
-              numberOfLines={2}
-            >
-              {params.name}
-            </Text>
-          </View>
-        </View>
-
         {/* Connection details */}
         <IdRow label="DRep ID" value={params.bech32Id} />
         <Space.Height.sm />
@@ -146,38 +130,6 @@ export const DrepDetailScreen = () => {
 }
 
 // ── Sub-components ────────────────────────────────────────────────────────────
-
-const AvatarImage = ({imageUrl}: {imageUrl: string}) => {
-  const {palette: p} = useTheme()
-  const [imageError, setImageError] = React.useState(false)
-  const showImage = Boolean(imageUrl) && !imageError
-
-  return (
-    <View
-      style={[
-        a.align_center,
-        a.justify_center,
-        a.rounded_full,
-        {
-          width: 56,
-          height: 56,
-          backgroundColor: p.bg_color_min,
-          overflow: 'hidden',
-        },
-      ]}
-    >
-      {showImage ? (
-        <Image
-          source={{uri: imageUrl}}
-          style={{width: 56, height: 56, borderRadius: 28}}
-          onError={() => setImageError(true)}
-        />
-      ) : (
-        <Icon.OtherDreps size={28} color={p.el_gray_medium} />
-      )}
-    </View>
-  )
-}
 
 type IdRowProps = {label: string; value: string}
 

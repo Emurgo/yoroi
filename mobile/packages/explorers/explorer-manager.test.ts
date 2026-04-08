@@ -12,6 +12,7 @@ describe('explorerManager', () => {
           tx: expect.any(Function),
           pool: expect.any(Function),
           stake: expect.any(Function),
+          drep: expect.any(Function),
         },
         [Explorers.Explorer.Cexplorer]: {
           token: expect.any(Function),
@@ -19,6 +20,7 @@ describe('explorerManager', () => {
           tx: expect.any(Function),
           pool: expect.any(Function),
           stake: expect.any(Function),
+          drep: expect.any(Function),
         },
       },
       [Chain.Network.Preprod]: {
@@ -28,6 +30,7 @@ describe('explorerManager', () => {
           tx: expect.any(Function),
           pool: expect.any(Function),
           stake: expect.any(Function),
+          drep: expect.any(Function),
         },
         [Explorers.Explorer.Cexplorer]: {
           token: expect.any(Function),
@@ -35,6 +38,7 @@ describe('explorerManager', () => {
           tx: expect.any(Function),
           pool: expect.any(Function),
           stake: expect.any(Function),
+          drep: expect.any(Function),
         },
       },
     })
@@ -57,6 +61,9 @@ describe('explorerManager', () => {
     expect(
       mainnetExplorer[Explorers.Explorer.Cardanoscan].stake('stakeAddress'),
     ).toBe('https://cardanoscan.io/stakeKey/stakeAddress')
+    expect(
+      mainnetExplorer[Explorers.Explorer.Cardanoscan].drep('drepId'),
+    ).toBe('https://cardanoscan.io/drep/drepId')
 
     expect(
       mainnetExplorer[Explorers.Explorer.Cexplorer].token('fingerprint'),
@@ -73,6 +80,9 @@ describe('explorerManager', () => {
     expect(
       mainnetExplorer[Explorers.Explorer.Cexplorer].stake('stakeAddress'),
     ).toBe('https://cexplorer.io/stake/stakeAddress')
+    expect(mainnetExplorer[Explorers.Explorer.Cexplorer].drep('drepId')).toBe(
+      'https://cexplorer.io/drep/drepId',
+    )
   })
 
   it('should generate the correct URLs for Preprod', () => {
@@ -92,6 +102,9 @@ describe('explorerManager', () => {
     expect(
       preprodExplorer[Explorers.Explorer.Cardanoscan].stake('stakeAddress'),
     ).toBe('https://preprod.cardanoscan.io/stakeKey/stakeAddress')
+    expect(
+      preprodExplorer[Explorers.Explorer.Cardanoscan].drep('drepId'),
+    ).toBe('https://preprod.cardanoscan.io/drep/drepId')
 
     expect(
       preprodExplorer[Explorers.Explorer.Cexplorer].token('fingerprint'),
@@ -108,5 +121,8 @@ describe('explorerManager', () => {
     expect(
       preprodExplorer[Explorers.Explorer.Cexplorer].stake('stakeAddress'),
     ).toBe('https://preprod.cexplorer.io/stake/stakeAddress')
+    expect(preprodExplorer[Explorers.Explorer.Cexplorer].drep('drepId')).toBe(
+      'https://preprod.cexplorer.io/drep/drepId',
+    )
   })
 })
