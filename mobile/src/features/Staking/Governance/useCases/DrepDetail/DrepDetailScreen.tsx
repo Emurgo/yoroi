@@ -1,4 +1,8 @@
-import {useDelegationCertificate, useGovernance} from '@yoroi/staking'
+import {
+  useDelegationCertificate,
+  useGovernance,
+  useStakingKeyState,
+} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {NotEnoughMoneyToSendError} from '@yoroi/tx'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
@@ -15,6 +19,7 @@ import {
 } from '~/features/Staking/Governance/common/navigation'
 import {useGovernanceVoteFlow} from '~/features/Staking/Governance/common/useGovernanceVoteFlow'
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
+import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
@@ -27,6 +32,14 @@ export const DrepDetailScreen = () => {
   const {wallet, meta} = useSelectedWallet()
   const {manager} = useGovernance()
   const navigateTo = useNavigateTo()
+
+  const stakingKeyHash = useStakingKey(wallet)
+  const {data: stakingStatus} = useStakingKeyState(stakingKeyHash)
+  const currentDelegatedId =
+    stakingStatus?.drepDelegation?.action === 'drep'
+      ? stakingStatus.drepDelegation.hash
+      : null
+  const isCurrentlyDelegated = params.hexId === currentDelegatedId
 
   const stakingInfo = useStakingInfo(wallet)
   const needsToRegisterStakingKey =
@@ -122,7 +135,7 @@ export const DrepDetailScreen = () => {
         <Button
           title="DELEGATE"
           onPress={handleDelegate}
-          disabled={isPending}
+          disabled={isPending || isCurrentlyDelegated}
         />
       </View>
     </View>
