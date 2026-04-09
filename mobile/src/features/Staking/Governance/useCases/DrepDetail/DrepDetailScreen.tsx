@@ -1,11 +1,15 @@
-import {useDelegationCertificate, useGovernance} from '@yoroi/staking'
+import {
+  useDelegationCertificate,
+  useGovernance,
+  useStakingKeyState,
+} from '@yoroi/staking'
 import {atoms as a, useTheme} from '@yoroi/theme'
 import {NotEnoughMoneyToSendError} from '@yoroi/tx'
 import {useSelectedWallet} from '@yoroi/wallet-manager'
 
 import {RouteProp, useRoute} from '@react-navigation/native'
 import * as React from 'react'
-import {Image, Linking, Pressable, ScrollView, Text, View} from 'react-native'
+import {Linking, Pressable, ScrollView, Text, View} from 'react-native'
 
 import {useCopy} from '~/features/Copy/context/CopyProvider'
 import {formatDrepHashToCIP105Format} from '~/features/Staking/Governance/common/drep'
@@ -15,6 +19,7 @@ import {
 } from '~/features/Staking/Governance/common/navigation'
 import {useGovernanceVoteFlow} from '~/features/Staking/Governance/common/useGovernanceVoteFlow'
 import {useStakingInfo} from '~/features/Staking/hooks/useStakingInfo'
+import {useStakingKey} from '~/features/Staking/hooks/useStakingKey'
 import {Button} from '~/ui/Button/Button'
 import {Icon} from '~/ui/Icon'
 import {Space} from '~/ui/Space/Space'
@@ -27,6 +32,14 @@ export const DrepDetailScreen = () => {
   const {wallet, meta} = useSelectedWallet()
   const {manager} = useGovernance()
   const navigateTo = useNavigateTo()
+
+  const stakingKeyHash = useStakingKey(wallet)
+  const {data: stakingStatus} = useStakingKeyState(stakingKeyHash)
+  const currentDelegatedId =
+    stakingStatus?.drepDelegation?.action === 'drep'
+      ? stakingStatus.drepDelegation.hash
+      : null
+  const isCurrentlyDelegated = params.hexId === currentDelegatedId
 
   const stakingInfo = useStakingInfo(wallet)
   const needsToRegisterStakingKey =
@@ -76,24 +89,8 @@ export const DrepDetailScreen = () => {
     <View style={[a.flex_1, ta.bg_color_max]}>
       <ScrollView
         style={[a.flex_1]}
-        contentContainerStyle={[a.px_lg, a.pt_sm, {paddingBottom: 120}]}
+        contentContainerStyle={[a.px_lg, a.pt_lg, {paddingBottom: 120}]}
       >
-        {/* Avatar + Name header */}
-        <View
-          style={[a.flex_row, a.align_center, a.gap_sm, {marginBottom: 16}]}
-        >
-          <AvatarImage imageUrl={params.imageUrl} />
-
-          <View style={[a.flex_1]}>
-            <Text
-              style={[a.heading_3_medium, {color: p.text_gray_medium}]}
-              numberOfLines={2}
-            >
-              {params.name}
-            </Text>
-          </View>
-        </View>
-
         {/* Connection details */}
         <IdRow label="DRep ID" value={params.bech32Id} />
         <Space.Height.sm />
@@ -138,7 +135,7 @@ export const DrepDetailScreen = () => {
         <Button
           title="DELEGATE"
           onPress={handleDelegate}
-          disabled={isPending}
+          disabled={isPending || isCurrentlyDelegated}
         />
       </View>
     </View>
@@ -146,38 +143,6 @@ export const DrepDetailScreen = () => {
 }
 
 // ── Sub-components ────────────────────────────────────────────────────────────
-
-const AvatarImage = ({imageUrl}: {imageUrl: string}) => {
-  const {palette: p} = useTheme()
-  const [imageError, setImageError] = React.useState(false)
-  const showImage = Boolean(imageUrl) && !imageError
-
-  return (
-    <View
-      style={[
-        a.align_center,
-        a.justify_center,
-        a.rounded_full,
-        {
-          width: 56,
-          height: 56,
-          backgroundColor: p.bg_color_min,
-          overflow: 'hidden',
-        },
-      ]}
-    >
-      {showImage ? (
-        <Image
-          source={{uri: imageUrl}}
-          style={{width: 56, height: 56, borderRadius: 28}}
-          onError={() => setImageError(true)}
-        />
-      ) : (
-        <Icon.OtherDreps size={28} color={p.el_gray_medium} />
-      )}
-    </View>
-  )
-}
 
 type IdRowProps = {label: string; value: string}
 
@@ -313,7 +278,7 @@ const UnverifiedSection = () => {
           Unverified DRep metadata
         </Text>
 
-        <Icon.Info size={24} color={p.text_gray_medium} />
+        <Icon.Warning size={24} color={p.text_gray_medium} />
       </View>
 
       <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}>
