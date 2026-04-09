@@ -1,13 +1,15 @@
+import {time} from '@yoroi/common'
 import {atoms as a, useTheme} from '@yoroi/theme'
 
 import * as React from 'react'
 import {Pressable, Modal as RNModal, Text, View} from 'react-native'
 import PagerView from 'react-native-pager-view'
 import Animated, {
-  FadeIn,
-  FadeOut,
-  SlideInDown,
-  SlideOutDown,
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
@@ -25,8 +27,41 @@ export const TeaserModal = ({isOpen, onClose}: TeaserModalProps) => {
   const {palette: p, isDark} = useTheme()
   const insets = useSafeAreaInsets()
   const [currentStep, setCurrentStep] = React.useState(1)
+  const [isVisible, setIsVisible] = React.useState(false)
   const totalSteps = teaserSteps.length
   const pagerRef = React.useRef<PagerView>(null)
+
+  const backdropOpacity = useSharedValue(0)
+  const sheetTranslateY = useSharedValue(48)
+
+  const backdropStyle = useAnimatedStyle(() => ({
+    opacity: backdropOpacity.value,
+  }))
+
+  const sheetStyle = useAnimatedStyle(() => ({
+    transform: [{translateY: sheetTranslateY.value}],
+  }))
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setIsVisible(true)
+      backdropOpacity.value = 0
+      sheetTranslateY.value = 48
+
+      backdropOpacity.value = withTiming(1, {duration: time.seconds(0.3)})
+      sheetTranslateY.value = withSpring(0, {damping: 20, stiffness: 100})
+    } else if (isVisible) {
+      backdropOpacity.value = withTiming(
+        0,
+        {duration: time.seconds(0.3)},
+        () => {
+          runOnJS(setIsVisible)(false)
+        },
+      )
+      sheetTranslateY.value = withSpring(48, {damping: 20, stiffness: 100})
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen])
 
   const handleNext = () => {
     if (currentStep < totalSteps) {
@@ -51,11 +86,11 @@ export const TeaserModal = ({isOpen, onClose}: TeaserModalProps) => {
 
   const isLastStep = currentStep === totalSteps
 
-  if (!isOpen) return null
+  if (!isVisible) return null
 
   return (
     <RNModal
-      visible={isOpen}
+      visible={isVisible}
       transparent
       animationType="none"
       statusBarTranslucent
@@ -64,17 +99,18 @@ export const TeaserModal = ({isOpen, onClose}: TeaserModalProps) => {
       <View style={[a.flex_1]}>
         {/* Backdrop */}
         <Animated.View
-          entering={FadeIn.duration(300)}
-          exiting={FadeOut.duration(300)}
-          style={[a.absolute, a.inset_0, {backgroundColor: 'rgba(0,0,0,0.4)'}]}
+          style={[
+            a.absolute,
+            a.inset_0,
+            {backgroundColor: 'rgba(0,0,0,0.4)'},
+            backdropStyle,
+          ]}
         />
 
         <Pressable style={[a.flex_1]} onPress={handleSkip} />
 
         {/* Bottom Sheet */}
         <Animated.View
-          entering={SlideInDown.springify().damping(20).stiffness(100)}
-          exiting={SlideOutDown.springify().damping(20).stiffness(100)}
           style={[
             {
               backgroundColor: isDark ? p.gray_50 : p.white_static,
@@ -82,6 +118,7 @@ export const TeaserModal = ({isOpen, onClose}: TeaserModalProps) => {
               borderTopRightRadius: 16,
               maxHeight: '85%',
             },
+            sheetStyle,
           ]}
         >
           {/* Drag indicator */}
