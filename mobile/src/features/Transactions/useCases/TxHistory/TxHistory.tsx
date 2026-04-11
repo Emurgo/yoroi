@@ -10,9 +10,9 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useAirdropBanner} from '~/features/Airdrop/common/useAirdropBanner'
 import {useBuyCryptoBanner} from '~/features/Exchange/common/useBuyCryptoBanner'
 import {useRequestSystemNotifications} from '~/features/Notifications/common/tools'
+import {TeaserModal, useTeaserModal} from '~/features/SecondFi'
 import {useGovernanceBanner} from '~/features/Staking/Governance/useCases/useGovernanceBanner'
 import {usePoolTransitionModal} from '~/features/Staking/Staking/PoolTransition/usePoolTransitionModal'
-import {useStakingUpdateModal} from '~/features/Staking/Staking/StakingUpdateModal/useStakingUpdateModal'
 import {useIsByronWallet} from '~/features/WalletManager/hooks/useIsByronWallet'
 import {features} from '~/kernel/features'
 import {useStrings} from '~/kernel/i18n/useStrings'
@@ -39,6 +39,15 @@ export const TxHistory = () => {
   useUtxoConsolidationBanner()
   useAirdropBanner()
 
+  const {
+    isLoading: isLoadingCardanoCardAnnouncement,
+    isShowing: isShowingCardanoCardAnnouncement,
+  } = useCardanoCardAnnouncementModal()
+
+  const {isOpen: isTeaserOpen, closeTeaser} = useTeaserModal({
+    enabled: !isShowingCardanoCardAnnouncement,
+  })
+
   const strings = useStrings()
   const {atoms: ta, palette: p, isDark} = useTheme()
   const navigation = useNavigation()
@@ -54,23 +63,15 @@ export const TxHistory = () => {
   const isByronWallet = useIsByronWallet()
 
   const {sync, isPending: isLoadingWallet} = useSync(wallet)
-  const {
-    isLoading: isLoadingCardanoCardAnnouncement,
-    isShowing: isShowingCardanoCardAnnouncement,
-  } = useCardanoCardAnnouncementModal()
   useRequestSystemNotifications({
     enabled: features.pushNotifications && !isShowingCardanoCardAnnouncement,
   })
   const {isLoading: isLoadingPoolTransition} = usePoolTransitionModal({
     enabled: !isShowingCardanoCardAnnouncement,
   })
-  const {isLoading: isLoadingStakingUpdate} = useStakingUpdateModal({
-    enabled: !isShowingCardanoCardAnnouncement,
-  })
   const isLoading =
     isLoadingWallet ||
     isLoadingPoolTransition ||
-    isLoadingStakingUpdate ||
     isLoadingCardanoCardAnnouncement
 
   const [expanded, setExpanded] = React.useState(true)
@@ -204,6 +205,8 @@ export const TxHistory = () => {
           />
         </TxFilter>
       </View>
+
+      <TeaserModal isOpen={isTeaserOpen} onClose={closeTeaser} />
     </LinearGradient>
   )
 }
