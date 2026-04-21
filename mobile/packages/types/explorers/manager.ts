@@ -4,5 +4,4 @@ export type ExplorersManager = Readonly<{
   tx: (txHash: string) => string
   pool: (poolId: string) => string
   stake: (stakeAddress: string) => string
-  drep: (drepId: string) => string
 }>
