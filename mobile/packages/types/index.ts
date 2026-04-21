@@ -365,6 +365,9 @@ export namespace App {
         display?: boolean
         affectedPools?: ReadonlyArray<string>
       }>
+      secondFiTeaser?: Readonly<{
+        display?: boolean
+      }>
     }>
     features?: Readonly<{
       midnightAirdrop?: Readonly<{
