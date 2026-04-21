@@ -1,4 +1,4 @@
-export {governanceApiMaker, type GovernanceApi, type ActiveDRepEntry} from './api'
+export {governanceApiMaker, type GovernanceApi} from './api'
 export {GOVERNANCE_YOROI_DREP_ID_HEX, getYoroiDrepIdHex} from './config'
 export {
   convertDrepHashToCIP105Format,

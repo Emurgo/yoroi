@@ -14,7 +14,6 @@ describe('governance config', () => {
       getStakeKeyState:
         'https://zero.yoroiwallet.com/stakekeys/{{STAKE_KEY_HASH}}/state',
       getDRepById: 'https://zero.yoroiwallet.com/dreps/{{DREP_ID}}/state',
-      getActiveDreps: 'https://zero.yoroiwallet.com/dreps/active',
     })
   })
 
@@ -24,8 +23,6 @@ describe('governance config', () => {
         'https://yoroi-backend-zero-preprod-prod.emurgornd.com/stakekeys/{{STAKE_KEY_HASH}}/state',
       getDRepById:
         'https://yoroi-backend-zero-preprod-prod.emurgornd.com/dreps/{{DREP_ID}}/state',
-      getActiveDreps:
-        'https://yoroi-backend-zero-preprod-prod.emurgornd.com/dreps/active',
     })
   })
 

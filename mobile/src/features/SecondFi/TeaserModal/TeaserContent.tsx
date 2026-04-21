@@ -32,7 +32,7 @@ export const teaserSteps: TeaserStep[] = [
   },
   {
     title: 'Your Yoroi wallet is getting bigger.',
-    subtitle: 'Think bank, but one that actually belongs to you.',
+    subtitle: 'Think neofinance that belongs entirely to you.',
     illustration: <IllustrationStep4 />,
   },
 ]

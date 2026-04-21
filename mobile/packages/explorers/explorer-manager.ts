@@ -17,7 +17,6 @@ export const explorerManager: Readonly<
       pool: (poolId: string) => `https://cardanoscan.io/pool/${poolId}`,
       stake: (stakeAddress: string) =>
         `https://cardanoscan.io/stakeKey/${stakeAddress}`,
-      drep: (drepId: string) => `https://cardanoscan.io/dRep/${drepId}`,
     },
     [Explorers.Explorer.Cexplorer]: {
       token: (fingerprint: string) =>
@@ -27,7 +26,6 @@ export const explorerManager: Readonly<
       pool: (poolId: string) => `https://cexplorer.io/pool/${poolId}`,
       stake: (stakeAddress: string) =>
         `https://cexplorer.io/stake/${stakeAddress}`,
-      drep: (drepId: string) => `https://cexplorer.io/drep/${drepId}`,
     },
   },
   [Chain.Network.Preprod]: {
@@ -41,7 +39,6 @@ export const explorerManager: Readonly<
       pool: (poolId: string) => `https://preprod.cardanoscan.io/pool/${poolId}`,
       stake: (stakeAddress: string) =>
         `https://preprod.cardanoscan.io/stakeKey/${stakeAddress}`,
-      drep: (drepId: string) => `https://preprod.cardanoscan.io/dRep/${drepId}`,
     },
     [Explorers.Explorer.Cexplorer]: {
       token: (fingerprint: string) =>
@@ -52,7 +49,6 @@ export const explorerManager: Readonly<
       pool: (poolId: string) => `https://preprod.cexplorer.io/pool/${poolId}`,
       stake: (stakeAddress: string) =>
         `https://preprod.cexplorer.io/stake/${stakeAddress}`,
-      drep: (drepId: string) => `https://preprod.cexplorer.io/drep/${drepId}`,
     },
   },
 })
