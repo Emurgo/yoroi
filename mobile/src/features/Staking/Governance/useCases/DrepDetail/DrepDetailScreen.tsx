@@ -89,7 +89,7 @@ export const DrepDetailScreen = () => {
     <View style={[a.flex_1, ta.bg_color_max]}>
       <ScrollView
         style={[a.flex_1]}
-        contentContainerStyle={[a.px_lg, a.pt_lg, {paddingBottom: 120}]}
+        contentContainerStyle={[a.px_lg, a.pt_sm, {paddingBottom: 120}]}
       >
         {/* Connection details */}
         <IdRow label="DRep ID" value={params.bech32Id} />
@@ -278,7 +278,7 @@ const UnverifiedSection = () => {
           Unverified DRep metadata
         </Text>
 
-        <Icon.Warning size={24} color={p.text_gray_medium} />
+        <Icon.Info size={24} color={p.text_gray_medium} />
       </View>
 
       <Text style={[a.body_1_lg_regular, {color: p.text_gray_medium}]}>
